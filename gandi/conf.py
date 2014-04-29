@@ -4,26 +4,26 @@ import os
 import yaml
 import socket
 import os.path
-import logging
 import xmlrpclib
 
 import click
-
-# logging.basicConfig(level=logging.DEBUG)
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger()
+from click.exceptions import UsageError
 
 
 class GandiContextHelper(object):
     """ Gandi context helper
 
-    Manage reading configuration files and initializing xml rpc connection
+    Manage
+    - reading configuration files
+    - initializing xmlrpc connection
+    - execute remote api calls
+
     """
 
     default_api_host = 'api-v3.dev.gandi.net'
 
     def __init__(self):
-        # initialize variables and api connection
+        """ initialize variables and api connection """
         try:
             config_file = os.path.expanduser("~/.config/gandi/gandirc")
             config = yaml.load(open(config_file))
@@ -32,8 +32,6 @@ class GandiContextHelper(object):
         self.apikey = config.get('apikey')
         self.apihost = config.get('apihost')
         self.api = xmlrpclib.ServerProxy(self.apihost)
-
-        log.debug('apikey found: %r' % self.apikey)
 
     @classmethod
     def configure(cls):
@@ -58,20 +56,17 @@ class GandiContextHelper(object):
         return config
 
     def call(self, method, args):
-
+        """ call a remote api method and returned the result """
         try:
             func = getattr(self.api, method)
             return func(self.apikey, *args)
-            #return self.api.vm.list(gandi.apikey, options)
         except socket.error:
-            log.error('Gandi API service is unreachable')
-            return
+            msg = 'Gandi API service is unreachable'
+            raise UsageError(msg)
         except xmlrpclib.Fault as err:
-            log.error('Gandi API has returned an error %s' % err)
-            return
+            msg = 'Gandi API has returned an error %s' % err
+            raise UsageError(msg)
 
 
 # create a decorator to pass the Gandi object as context to click calls
 pass_gandi = click.make_pass_decorator(GandiContextHelper)
-
-
