@@ -8,7 +8,7 @@ from gandi.conf import pass_gandi
 @click.option('--state', default=None, help='filter results by state')
 @pass_gandi
 def list(gandi, state):
-    """list user vm."""
+    """list virtual machines"""
 
     options = {}
     if state:
@@ -24,7 +24,7 @@ def list(gandi, state):
 @click.argument('id', type=click.INT)
 @pass_gandi
 def info(gandi, id):
-    """info for a user vm."""
+    """display information for a virtual machine"""
 
     result = gandi.call('vm.info', (id, ))
     from pprint import pprint
