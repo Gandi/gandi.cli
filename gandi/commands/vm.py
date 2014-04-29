@@ -29,3 +29,36 @@ def info(gandi, id):
     result = gandi.call('vm.info', (id, ))
     from pprint import pprint
     pprint(result)
+
+
+@cli.command()
+@click.argument('id', type=click.INT)
+@pass_gandi
+def stop(gandi, id):
+    """stop a virtual machine"""
+
+    result = gandi.call('vm.stop', (id, ))
+    from pprint import pprint
+    pprint(result)
+
+
+@cli.command()
+@click.argument('id', type=click.INT)
+@pass_gandi
+def start(gandi, id):
+    """start a virtual machine"""
+
+    result = gandi.call('vm.start', (id, ))
+    from pprint import pprint
+    pprint(result)
+
+
+@cli.command()
+@click.argument('id', type=click.INT)
+@pass_gandi
+def reboot(gandi, id):
+    """reboot a virtual machine"""
+
+    result = gandi.call('vm.reboot', (id, ))
+    from pprint import pprint
+    pprint(result)
