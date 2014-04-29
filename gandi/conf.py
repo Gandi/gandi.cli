@@ -20,6 +20,8 @@ class GandiContextHelper(object):
     Manage reading configuration files and initializing xml rpc connection
     """
 
+    default_api_host = 'api-v3.dev.gandi.net'
+
     def __init__(self):
         # initialize variables and api connection
         try:
@@ -38,10 +40,12 @@ class GandiContextHelper(object):
         print ("This is your first time running GandiCLI, let's configure "
                "a few things")
         apikey = raw_input("Api key: ")
+        apihost = (raw_input("Api host[%s]: " % cls.default_api_host)
+                   or cls.default_api_host)
 
         config = {
             'apikey': apikey,
-            'apihost': 'http://10.55.32.116:8083',
+            'apihost': 'http://%s' % apihost,
         }
 
         directory = os.path.expanduser("~/.config/gandi")
