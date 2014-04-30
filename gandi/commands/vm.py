@@ -65,3 +65,38 @@ def reboot(gandi, id):
     result = gandi.call('vm.reboot', id)
     from pprint import pprint
     pprint(result)
+
+
+@cli.command()
+@click.argument('id', type=click.INT)
+@pass_gandi
+def delete(gandi, id):
+    """delete a virtual machine"""
+
+    result = gandi.call('vm.delete', id)
+    from pprint import pprint
+    pprint(result)
+
+
+@cli.command()
+@pass_gandi
+def create(gandi):
+    """create a new virtual machine"""
+
+    vm_params = {
+        'hostname': 'tempo',
+        'datacenter_id': int(gandi.get('datacenter_id')),
+        'memory': int(gandi.get('memory')),
+        'cores': int(gandi.get('cores')),
+        'ip_version': int(gandi.get('ip_version')),
+        'bandwidth': int(gandi.get('bandwidth')),
+        'password': 'develdevel',
+        'login': 'admin'
+    }
+    disk_params = {'datacenter_id': int(gandi.get('datacenter_id')),
+                   'name': 'sysdisktempo'}
+    sys_disk_id = int(gandi.get('sys_disk_id'))
+
+    result = gandi.call('vm.create_from', vm_params, disk_params, sys_disk_id)
+    from pprint import pprint
+    pprint(result)
