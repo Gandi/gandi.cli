@@ -6,8 +6,9 @@ from gandi.conf import pass_gandi
 
 @cli.command()
 @click.option('--state', default=None, help='filter results by state')
+@click.option('--id', help='display ids', is_flag=True)
 @pass_gandi
-def list(gandi, state):
+def list(gandi, state, id):
     """list virtual machines"""
 
     options = {}
@@ -15,9 +16,11 @@ def list(gandi, state):
         options['state'] = state
 
     result = gandi.call('vm.list', options)
-
     for vm in result:
-        print '#%d - %s - %s' % (vm['id'], vm['hostname'], vm['state'])
+        if id:
+            print '#%d - %s - %s' % (vm['id'], vm['hostname'], vm['state'])
+        else:
+            print '%s - %s' % (vm['hostname'], vm['state'])
 
 
 @cli.command()
@@ -26,7 +29,7 @@ def list(gandi, state):
 def info(gandi, id):
     """display information for a virtual machine"""
 
-    result = gandi.call('vm.info', (id, ))
+    result = gandi.call('vm.info', id)
     from pprint import pprint
     pprint(result)
 
@@ -37,7 +40,7 @@ def info(gandi, id):
 def stop(gandi, id):
     """stop a virtual machine"""
 
-    result = gandi.call('vm.stop', (id, ))
+    result = gandi.call('vm.stop', id)
     from pprint import pprint
     pprint(result)
 
@@ -48,7 +51,7 @@ def stop(gandi, id):
 def start(gandi, id):
     """start a virtual machine"""
 
-    result = gandi.call('vm.start', (id, ))
+    result = gandi.call('vm.start', id)
     from pprint import pprint
     pprint(result)
 
@@ -59,6 +62,6 @@ def start(gandi, id):
 def reboot(gandi, id):
     """reboot a virtual machine"""
 
-    result = gandi.call('vm.reboot', (id, ))
+    result = gandi.call('vm.reboot', id)
     from pprint import pprint
     pprint(result)
