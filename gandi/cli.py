@@ -5,7 +5,7 @@ import os.path
 
 import click
 
-from .conf import GandiContextHelper
+from .conf import GandiContextHelper, pass_gandi
 
 
 class GandiCLI(click.Group):
@@ -26,6 +26,17 @@ class GandiCLI(click.Group):
 
 cli = GandiCLI()
 cli.load_plugins()
+
+
+@cli.command()
+@click.option('-g', help='edit global configuration (default=local)',
+              is_flag=True, default=False)
+@click.argument('key')
+@click.argument('value')
+@pass_gandi
+def config(gandi, g, key, value):
+    """Configure default values"""
+    gandi.configure(global_=g, key=key, val=value)
 
 
 def main():
