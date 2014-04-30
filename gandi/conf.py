@@ -143,11 +143,13 @@ class GandiContextHelper(object):
         if ret is None:
             return default
 
-    def call(self, method, args):
+    def call(self, method, *args):
         """ call a remote api method and returned the result """
+        print 'calling method:', method
+        print 'with params:', args
         try:
             func = getattr(self.api, method)
-            return func(self.apikey, args)
+            return func(self.apikey, *args)
         except socket.error:
             msg = 'Gandi API service is unreachable'
             raise UsageError(msg)
