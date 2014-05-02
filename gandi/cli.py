@@ -11,6 +11,18 @@ from .conf import GandiContextHelper, pass_gandi
 class GandiCLI(click.Group):
     """ Gandi command line utility."""
 
+    def __init__(self, help=None):
+
+        def set_debug(ctx, value):
+            ctx.obj['verbose'] = value
+
+        click.Group.__init__(self, help=help, params=[
+            click.Option(['-v', '--verbose'],
+                         help='Enable or disable verbose mode.',
+                         is_flag=True,
+                         default=False, callback=set_debug)
+        ])
+
     def load_plugins(self):
         plugin_folder = os.path.join(os.path.dirname(__file__), 'commands')
         for filename in os.listdir(plugin_folder):
@@ -20,7 +32,7 @@ class GandiCLI(click.Group):
                 __import__(module_name, fromlist=[module_name])
 
     def invoke(self, ctx):
-        ctx.obj = GandiContextHelper()
+        ctx.obj = GandiContextHelper(verbose=ctx.obj['verbose'])
         click.Group.invoke(self, ctx)
 
 

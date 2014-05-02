@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import os
+import sys
 import yaml
 import socket
 import os.path
@@ -29,9 +30,11 @@ class GandiContextHelper(object):
     default_api_host = 'api-v3.dev.gandi.net'
     home_config = '~/.config/gandi/gandirc'
     local_config = '.gandirc'
+    verbose = False
 
-    def __init__(self):
+    def __init__(self, verbose=False):
         """ initialize variables and api connection """
+        self.verbose = verbose
         config_file = os.path.expanduser(self.home_config)
         config = self.load(config_file, 'global')
         self.load(self.local_config, 'local')
@@ -145,8 +148,8 @@ class GandiContextHelper(object):
 
     def call(self, method, *args):
         """ call a remote api method and returned the result """
-        print 'calling method:', method
-        print 'with params:', args
+        self.echo('calling method: %s' % method)
+        self.echo('with params: %r' % args)
         try:
             func = getattr(self.api, method)
             return func(self.apikey, *args)
@@ -157,6 +160,9 @@ class GandiContextHelper(object):
             msg = 'Gandi API has returned an error %s' % err
             raise UsageError(msg)
 
+    def echo(self, message):
+        if self.verbose:
+            print >> sys.stdout, message
 
 # create a decorator to pass the Gandi object as context to click calls
 pass_gandi = click.make_pass_decorator(GandiContextHelper)
