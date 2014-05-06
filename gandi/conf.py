@@ -6,6 +6,7 @@ import yaml
 import socket
 import os.path
 import xmlrpclib
+from datetime import datetime
 
 try:
     from yaml import CSafeLoader as YAMLLoader
@@ -149,7 +150,8 @@ class GandiContextHelper(object):
     def call(self, method, *args):
         """ call a remote api method and returned the result """
         self.echo('calling method: %s' % method)
-        self.echo('with params: %r' % args)
+        for arg in args:
+            self.echo('with params: %r' % arg)
         try:
             func = getattr(self.api, method)
             return func(self.apikey, *args)
@@ -163,6 +165,37 @@ class GandiContextHelper(object):
     def echo(self, message):
         if self.verbose:
             print >> sys.stdout, message
+
+    @classmethod
+    def update_progress(cls, progress, starttime):
+        width, _height = click.get_terminal_size()
+        if not width:
+            return
+
+        duration = datetime.utcnow() - starttime
+        hours, remainder = divmod(duration.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+
+        size = int(width * .7)
+        status = ""
+        if isinstance(progress, int):
+            progress = float(progress)
+        if not isinstance(progress, float):
+            progress = 0
+            status = 'error: progress var must be float\r\n'
+            print type(progress)
+        if progress < 0:
+            progress = 0
+            status = 'Halt...\r\n'
+        if progress >= 1:
+            progress = 1
+            # status = 'Done...\r\n'
+        block = int(round(size * progress))
+        text = ('\rProgress: [{0}] {1:.2%}  {2}  {3:0>2}:{4:0>2}:{5:0>2}  '
+                ''.format('#' * block + '-' * (size - block), progress,
+                          status, hours, minutes, seconds))
+        sys.stdout.write(text)
+        sys.stdout.flush()
 
 # create a decorator to pass the Gandi object as context to click calls
 pass_gandi = click.make_pass_decorator(GandiContextHelper)
