@@ -224,6 +224,6 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
                 # stop on first access found
                 break
 
-        print 'Your VM have been created, requesting access...'
+        print 'Your VM have been created, requesting access using: %s' % access
         time.sleep(5)
         gandi.shell(access)
