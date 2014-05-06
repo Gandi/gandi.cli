@@ -1,5 +1,6 @@
 
 import time
+from subprocess import call
 
 import click
 from click.exceptions import UsageError
@@ -213,14 +214,15 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
             time.sleep(.5)
 
         print
-        access = []
         vm_info = gandi.call('vm.info', vm_id)
         for iface in vm_info['ifaces']:
             for ip in iface['ips']:
                 if ip['version'] == 4:
-                    access.append('ssh %s@%s' % (login_, ip['ip']))
+                    access = 'ssh %s@%s' % (login_, ip['ip'])
                 else:
-                    access.append('ssh -6 %s@%s' % (login_, ip['ip']))
+                    access = 'ssh -6 %s@%s' % (login_, ip['ip'])
+                # stop on first access found
+                break
 
-        print 'Your VM have been created, you can access it using:'
-        print '\n'.join(access)
+        print 'Your VM have been created, requesting access...'
+        gandi.shell(access)

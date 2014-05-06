@@ -71,11 +71,8 @@ def clone(gandi, vhost):
     # dev hack
     git_server = '10.55.32.107'
 
-    command = 'git clone ssh+git://%s@%s/%s.git' % (paas['user'], git_server,
-                                                    vhost)
-    gandi.echo(command)
-    from subprocess import call
-    call(command, shell=True)
+    gandi.shell('git clone ssh+git://%s@%s/%s.git' % (paas['user'], git_server,
+                                                      vhost))
 
 
 @cli.command()
@@ -102,29 +99,13 @@ def deploy(gandi, vhost, git_url):
     git_server = '10.55.32.107'
 
     if git_url:
-        command = 'git clone %s .' % git_url
-        gandi.echo(command)
-        from subprocess import call
-        call(command, shell=True)
-
-        command = ('git remote add gandi ssh+git://%s@%s/%s.git' %
-                   (paas['user'], git_server, vhost))
-        gandi.echo(command)
-        from subprocess import call
-        call(command, shell=True)
-
-        command = 'git push gandi'
-        gandi.echo(command)
-        from subprocess import call
-        call(command, shell=True)
+        # clone locally
+        gandi.shell('git clone %s .' % git_url)
+        gandi.shell('git remote add gandi ssh+git://%s@%s/%s.git' %
+                    (paas['user'], git_server, vhost))
+        gandi.shell('git push gandi')
     else:
-        command = 'git push origin'
-        gandi.echo(command)
-        from subprocess import call
-        call(command, shell=True)
+        gandi.shell('git push origin')
 
-    command = "ssh %s@%s 'deploy %s.git'" % (paas['user'], git_server, vhost)
-    gandi.echo(command)
-    from subprocess import call
-    ret_code = call(command, shell=True)
-    return ret_code
+    gandi.shell("ssh %s@%s 'deploy %s.git'" % (paas['user'], git_server,
+                                               vhost))

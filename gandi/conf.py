@@ -7,6 +7,7 @@ import socket
 import os.path
 import xmlrpclib
 from datetime import datetime
+from subprocess import call
 
 try:
     from yaml import CSafeLoader as YAMLLoader
@@ -165,6 +166,10 @@ class GandiContextHelper(object):
     def echo(self, message):
         if self.verbose:
             print >> sys.stdout, message
+
+    def shell(self, command):
+        self.echo(command)
+        call(command, shell=True)
 
     @classmethod
     def update_progress(cls, progress, starttime):
