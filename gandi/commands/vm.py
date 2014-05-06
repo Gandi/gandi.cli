@@ -21,10 +21,10 @@ def list(gandi, state, id):
 
     result = gandi.call('vm.list', options)
     for vm in result:
+        print '%s - %s' % (vm['hostname'], vm['state']),
         if id:
-            print '#%d - %s - %s' % (vm['id'], vm['hostname'], vm['state'])
-        else:
-            print '%s - %s' % (vm['hostname'], vm['state'])
+            print '- #%d' % vm['id'],
+        print
 
     return result
 
