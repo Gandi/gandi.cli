@@ -1,0 +1,14 @@
+Source: gandicli
+Section: python
+Priority: optional
+Maintainer: Nicolas Chipaux <aegiap@gandi.net>
+Build-Depends: debhelper (>= 8), python (>= 2.6)
+Build-Depends-Indep: python-setuptools
+Standards-Version: 3.9.4
+X-Python-Version: >= 2.6
+ 
+Package: gandicli
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+Description: commandline client for Gandi.net
+ tool in commandline to access Gandi.net services
