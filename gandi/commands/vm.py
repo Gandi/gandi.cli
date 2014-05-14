@@ -11,9 +11,8 @@ from gandi.conf import pass_gandi
 
 @cli.command()
 @click.option('--state', default=None, help='filter results by state')
-@click.option('--id', help='display ids', is_flag=True)
 @pass_gandi
-def list(gandi, state, id):
+def list(gandi, state):
     """list virtual machines"""
 
     options = {}
@@ -22,10 +21,7 @@ def list(gandi, state, id):
 
     result = gandi.call('vm.list', options)
     for vm in result:
-        print '%s - %s' % (vm['hostname'], vm['state']),
-        if id:
-            print '- #%d' % vm['id'],
-        print
+        print '%s - %s - #%d' % (vm['hostname'], vm['state'], vm['id'])
 
     return result
 
