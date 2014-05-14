@@ -126,9 +126,7 @@ of its boot: network interfaces and disks are mounted')
 @click.option('--interactive', default=True, is_flag=True,
               help='run creation in interactive mode (default=True)')
 @click.argument('ssh_key', default=None, type=click.File('rb'), required=False,
-                callback=read_ssh_key,
-                help='ssh public key to authorize to connect to the root \
-account and the created login')
+                callback=read_ssh_key)
 @pass_gandi
 def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
            password, run, interactive, ssh_key):
