@@ -18,11 +18,11 @@ def list(gandi, state, id, vhosts):
         options['state'] = state
 
     paas_hosts = {}
-    result = gandi.call('paas.list', options)
+    result = gandi.paas.list(options)
     for paas in result:
         paas_hosts[paas['id']] = []
         if vhosts:
-            list_vhost = gandi.call('paas.vhost.list', {'paas_id': paas['id']})
+            list_vhost = gandi.paas.list_vhost({'paas_id': paas['id']})
             for host in list_vhost:
                 paas_hosts[paas['id']].append(host['name'])
 
@@ -42,7 +42,7 @@ def list(gandi, state, id, vhosts):
 def info(gandi, id):
     """display information about a Paas instance"""
 
-    result = gandi.call('paas.info', id)
+    result = gandi.paas.info(id)
     from pprint import pprint
     pprint(result)
 
@@ -55,7 +55,7 @@ def info(gandi, id):
 def clone(gandi, vhost):
     """clone a remote vhost in a local git repository"""
 
-    result = gandi.call('paas.vhost.list')
+    result = gandi.paas.list_vhost()
     paas_hosts = {}
     for host in result:
         paas_hosts[host['name']] = host['paas_id']
@@ -65,7 +65,7 @@ def clone(gandi, vhost):
         raise UsageError(msg)
 
     paas_id = paas_hosts[vhost]
-    paas = gandi.call('paas.info', paas_id)
+    paas = gandi.paas.info(paas_id)
 
     git_server = paas['git_server']
     # dev hack
@@ -82,7 +82,7 @@ def clone(gandi, vhost):
 def deploy(gandi, vhost, git_url):
     """deploy code on a remote vhost"""
 
-    result = gandi.call('paas.vhost.list')
+    result = gandi.paas.list_vhost()
     paas_hosts = {}
     for host in result:
         paas_hosts[host['name']] = host['paas_id']
@@ -92,7 +92,7 @@ def deploy(gandi, vhost, git_url):
         raise UsageError(msg)
 
     paas_id = paas_hosts[vhost]
-    paas = gandi.call('paas.info', paas_id)
+    paas = gandi.paas.info(paas_id)
 
     git_server = paas['git_server']
     # dev hack

@@ -18,8 +18,8 @@ import click
 from click.exceptions import UsageError
 
 
-class GandiContextHelper(object):
-    """ Gandi context helper
+class GandiPlugin(object):
+    """ Base class for plugins
 
     Manage
     - reading configuration files
@@ -32,7 +32,9 @@ class GandiContextHelper(object):
     default_api_host = 'api-v3.dev.gandi.net'
     home_config = '~/.config/gandi/gandirc'
     local_config = '.gandirc'
+
     verbose = False
+    api = None
 
     def __init__(self, verbose=False):
         """ initialize variables and api connection """
@@ -48,6 +50,28 @@ class GandiContextHelper(object):
         self.apikey = config.get('apikey')
         self.apihost = config.get('apihost')
         self.api = xmlrpclib.ServerProxy(self.apihost)
+
+    def call(self, method, *args):
+        """ call a remote api method and returned the result """
+        self.echo('calling method: %s' % method)
+        for arg in args:
+            self.echo('with params: %r' % arg)
+        try:
+            func = getattr(self.api, method)
+            return func(self.apikey, *args)
+        except socket.error:
+            msg = 'Gandi API service is unreachable'
+            raise UsageError(msg)
+        except xmlrpclib.Fault as err:
+            msg = 'Gandi API has returned an error %s' % err
+            raise UsageError(msg)
+
+    def echo(self, message):
+        if self.verbose:
+            print >> sys.stdout, message
+
+    def error(self, msg):
+        raise UsageError(msg)
 
     @classmethod
     def load(cls, filename, name=None):
@@ -148,25 +172,6 @@ class GandiContextHelper(object):
         if ret is None:
             return default
 
-    def call(self, method, *args):
-        """ call a remote api method and returned the result """
-        self.echo('calling method: %s' % method)
-        for arg in args:
-            self.echo('with params: %r' % arg)
-        try:
-            func = getattr(self.api, method)
-            return func(self.apikey, *args)
-        except socket.error:
-            msg = 'Gandi API service is unreachable'
-            raise UsageError(msg)
-        except xmlrpclib.Fault as err:
-            msg = 'Gandi API has returned an error %s' % err
-            raise UsageError(msg)
-
-    def echo(self, message):
-        if self.verbose:
-            print >> sys.stdout, message
-
     def shell(self, command):
         self.echo(command)
         call(command, shell=True)
@@ -201,6 +206,38 @@ class GandiContextHelper(object):
                           status, hours, minutes, seconds))
         sys.stdout.write(text)
         sys.stdout.flush()
+
+
+class GandiContextHelper(GandiPlugin):
+    """ Gandi context helper
+
+    Load plugin classes from plugin directory at start
+    """
+
+    _plugins = {}
+
+    def __init__(self, verbose=False):
+        """ initialize variables and api connection """
+        GandiPlugin.__init__(self, verbose)
+        self.load_plugins()
+
+    def __getattribute__(self, item):
+        if item in object.__getattribute__(self, '_plugins'):
+            return object.__getattribute__(self, '_plugins')[item]()
+        return object.__getattribute__(self, item)
+
+    @classmethod
+    def load_plugins(cls):
+        plugin_folder = os.path.join(os.path.dirname(__file__), 'plugins')
+        for filename in os.listdir(plugin_folder):
+            if filename.endswith('.py') and '__init__' not in filename:
+                submod = filename[:-3]
+                module_name = __package__ + '.plugins.' + submod
+                __import__(module_name, fromlist=[module_name])
+
+        # save internal map of loaded plugin classes
+        for subclass in GandiPlugin.__subclasses__():
+            cls._plugins[subclass.__name__.lower()] = subclass
 
 # create a decorator to pass the Gandi object as context to click calls
 pass_gandi = click.make_pass_decorator(GandiContextHelper)
