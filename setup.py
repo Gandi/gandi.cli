@@ -28,7 +28,7 @@ setup(name=name,
       classifiers=[
           'Programming Language :: Python',
           'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
-          'License :: Other/Proprietary License'
+          'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
       ],
       url='http://www.gandi.net',
       packages=find_packages(),
