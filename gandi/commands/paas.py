@@ -22,7 +22,7 @@ def list(gandi, state, id, vhosts):
     for paas in result:
         paas_hosts[paas['id']] = []
         if vhosts:
-            list_vhost = gandi.paas.list_vhost({'paas_id': paas['id']})
+            list_vhost = gandi.vhost.list({'paas_id': paas['id']})
             for host in list_vhost:
                 paas_hosts[paas['id']].append(host['name'])
 
@@ -55,7 +55,7 @@ def info(gandi, id):
 def clone(gandi, vhost):
     """clone a remote vhost in a local git repository"""
 
-    result = gandi.paas.list_vhost()
+    result = gandi.vhost.list()
     paas_hosts = {}
     for host in result:
         paas_hosts[host['name']] = host['paas_id']
@@ -82,7 +82,7 @@ def clone(gandi, vhost):
 def deploy(gandi, vhost, git_url):
     """deploy code on a remote vhost"""
 
-    result = gandi.paas.list_vhost()
+    result = gandi.vhost.list()
     paas_hosts = {}
     for host in result:
         paas_hosts[host['name']] = host['paas_id']
