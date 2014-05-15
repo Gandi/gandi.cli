@@ -37,7 +37,7 @@ def list(gandi, state, id, vhosts):
 
 
 @cli.command(name='paas.info')
-@click.argument('id', type=click.INT)
+@click.argument('id')
 @pass_gandi
 def info(gandi, id):
     """display information about a Paas instance"""
@@ -55,17 +55,7 @@ def info(gandi, id):
 def clone(gandi, vhost):
     """clone a remote vhost in a local git repository"""
 
-    result = gandi.vhost.list()
-    paas_hosts = {}
-    for host in result:
-        paas_hosts[host['name']] = host['paas_id']
-
-    if not vhost in paas_hosts:
-        msg = 'vhost %s unknown' % vhost
-        raise UsageError(msg)
-
-    paas_id = paas_hosts[vhost]
-    paas = gandi.paas.info(paas_id)
+    paas = gandi.paas.info(vhost)
 
     git_server = paas['git_server']
     # dev hack
@@ -82,17 +72,7 @@ def clone(gandi, vhost):
 def deploy(gandi, vhost, git_url):
     """deploy code on a remote vhost"""
 
-    result = gandi.vhost.list()
-    paas_hosts = {}
-    for host in result:
-        paas_hosts[host['name']] = host['paas_id']
-
-    if not vhost in paas_hosts:
-        msg = 'vhost %s unknown' % vhost
-        raise UsageError(msg)
-
-    paas_id = paas_hosts[vhost]
-    paas = gandi.paas.info(paas_id)
+    paas = gandi.paas.info(vhost)
 
     git_server = paas['git_server']
     # dev hack

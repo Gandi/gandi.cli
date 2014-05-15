@@ -23,7 +23,7 @@ def list(gandi, state):
 
 
 @cli.command()
-@click.argument('id', type=click.INT)
+@click.argument('id')
 @pass_gandi
 def info(gandi, id):
     """display information about a virtual machine"""
@@ -36,7 +36,7 @@ def info(gandi, id):
 
 
 @cli.command()
-@click.argument('id', type=click.INT)
+@click.argument('id')
 @pass_gandi
 def stop(gandi, id):
     """stop a virtual machine"""
@@ -49,7 +49,7 @@ def stop(gandi, id):
 
 
 @cli.command()
-@click.argument('id', type=click.INT)
+@click.argument('id')
 @pass_gandi
 def start(gandi, id):
     """start a virtual machine"""
@@ -62,7 +62,7 @@ def start(gandi, id):
 
 
 @cli.command()
-@click.argument('id', type=click.INT)
+@click.argument('id')
 @pass_gandi
 def reboot(gandi, id):
     """reboot a virtual machine"""
@@ -75,7 +75,7 @@ def reboot(gandi, id):
 
 
 @cli.command()
-@click.argument('id', type=click.INT)
+@click.argument('id')
 @pass_gandi
 def delete(gandi, id):
     """delete a virtual machine"""

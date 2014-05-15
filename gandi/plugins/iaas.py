@@ -6,35 +6,38 @@ from gandi.conf import GandiPlugin
 
 class Iaas(GandiPlugin):
 
-    def list(self, options):
+    def list(self, options=None):
         """list virtual machines"""
+
+        if not options:
+            options = {}
 
         return self.call('vm.list', options)
 
     def info(self, id):
         """display information about a virtual machine"""
 
-        return self.call('vm.info', id)
+        return self.call('vm.info', self.usable_id(id))
 
     def stop(self, id):
         """stop a virtual machine"""
 
-        return self.call('vm.stop', id)
+        return self.call('vm.stop', self.usable_id(id))
 
     def start(self, id):
         """start a virtual machine"""
 
-        return self.call('vm.start', id)
+        return self.call('vm.start', self.usable_id(id))
 
     def reboot(self, id):
         """reboot a virtual machine"""
 
-        return self.call('vm.reboot', id)
+        return self.call('vm.reboot', self.usable_id(id))
 
     def delete(self, id):
         """delete a virtual machine"""
 
-        return self.call('vm.delete', id)
+        return self.call('vm.delete', self.usable_id(id))
 
     def create(self, datacenter_id, memory, cores, ip_version, bandwidth,
                login, password, run, interactive, ssh_key):
@@ -166,3 +169,26 @@ class Iaas(GandiPlugin):
             print 'Your VM have been created, requesting access using: %s' % access
             time.sleep(5)
             self.shell(access)
+
+    def from_hostname(self, hostname):
+        """retrieve virtual machine id associated to a hostname"""
+
+        result = self.list()
+        vm_hosts = {}
+        for host in result:
+            vm_hosts[host['hostname']] = host['id']
+
+        return vm_hosts.get(hostname)
+
+    def usable_id(self, id):
+        try:
+            qry_id = int(id)
+        except:
+            # id is maybe a hostname
+            qry_id = self.from_hostname(id)
+
+        if not qry_id:
+            msg = 'unknown identifier %s' % id
+            self.error(msg)
+
+        return qry_id
