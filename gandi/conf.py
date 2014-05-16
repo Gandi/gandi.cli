@@ -34,31 +34,46 @@ class GandiModule(object):
     local_config = '.gandirc'
 
     verbose = False
-    api = None
+    apikey = None
+    apihost = None
+    _api = None
 
-    def __init__(self, verbose=False):
-        """ initialize variables and api connection """
-        self.verbose = verbose
-        config_file = os.path.expanduser(self.home_config)
-        config = self.load(config_file, 'global')
-        self.load(self.local_config, 'local')
+    @classmethod
+    def load_config(cls):
+        """ Load global and local configuration files or initialize if needed
+        """
+        config_file = os.path.expanduser(cls.home_config)
+        config = cls.load(config_file, 'global')
+        cls.load(cls.local_config, 'local')
         if not config:
             print ("This is your first time running GandiCLI, let's configure "
                    "a few things")
-            config = self.init_config()
+            cls.init_config()
 
-        self.apikey = config.get('apikey')
-        self.apihost = config.get('apihost')
-        self.api = xmlrpclib.ServerProxy(self.apihost)
+    @classmethod
+    def get_api_connector(cls):
+        """ initialize an api connector for future use"""
+        if cls._api is None:
+            cls.load_config()
+            cls.echo('initialize connection to remote server')
+            apihost = cls.get('apihost')
+            cls._api = xmlrpclib.ServerProxy(apihost)
 
-    def call(self, method, *args):
+        return cls._api
+
+    @classmethod
+    def call(cls, method, *args):
         """ call a remote api method and returned the result """
-        self.echo('calling method: %s' % method)
+        api = cls.get_api_connector()
+        apikey = cls.get('apikey')
+
+        # make the call
+        cls.echo('calling method: %s' % method)
         for arg in args:
-            self.echo('with params: %r' % arg)
+            cls.echo('with params: %r' % arg)
         try:
-            func = getattr(self.api, method)
-            return func(self.apikey, *args)
+            func = getattr(api, method)
+            return func(apikey, *args)
         except socket.error:
             msg = 'Gandi API service is unreachable'
             raise UsageError(msg)
@@ -66,11 +81,13 @@ class GandiModule(object):
             msg = 'Gandi API has returned an error %s' % err
             raise UsageError(msg)
 
-    def echo(self, message):
-        if self.verbose:
-            print >> sys.stdout, message
+    @classmethod
+    def echo(cls, message):
+        if cls.verbose:
+            print >> sys.stdout, '[DEBUG] %s' % message
 
-    def error(self, msg):
+    @classmethod
+    def error(cls, msg):
         raise UsageError(msg)
 
     @classmethod
@@ -80,6 +97,7 @@ class GandiModule(object):
         name = name or filename
 
         if name not in cls._conffiles:
+            cls.echo('loading %s configuration' % name)
             with open(filename) as fdesc:
                 cls._conffiles[name] = yaml.load(fdesc, YAMLLoader)
 
@@ -140,9 +158,10 @@ class GandiModule(object):
                     value = value[k]
             last_val[k] = val
 
-    def _get(self, scope, key, default=None, separator='.'):
+    @classmethod
+    def _get(cls, scope, key, default=None, separator='.'):
         key = key.split(separator)
-        value = self._conffiles[scope]
+        value = cls._conffiles[scope]
         try:
             for k in key:
                 value = value[k]
@@ -150,7 +169,8 @@ class GandiModule(object):
         except KeyError:
             return default
 
-    def get(self, key, default=None, separator='.'):
+    @classmethod
+    def get(cls, key, default=None, separator='.'):
         """ Retrieve a key value from loaded configuration
 
         Order of search :
@@ -165,15 +185,16 @@ class GandiModule(object):
 
         # then check in local -> global configuration
         for scope in ['local', 'global']:
-            ret = self._get(scope, key, default, separator)
+            ret = cls._get(scope, key, default, separator)
             if ret is not None:
                 return ret
 
         if ret is None:
             return default
 
-    def shell(self, command):
-        self.echo(command)
+    @classmethod
+    def shell(cls, command):
+        cls.echo(command)
         call(command, shell=True)
 
     @classmethod
@@ -218,12 +239,13 @@ class GandiContextHelper(GandiModule):
 
     def __init__(self, verbose=False):
         """ initialize variables and api connection """
-        GandiModule.__init__(self, verbose)
+        GandiModule.verbose = verbose
+        GandiModule.load_config()
         self.load_modules()
 
     def __getattribute__(self, item):
         if item in object.__getattribute__(self, '_modules'):
-            return object.__getattribute__(self, '_modules')[item]()
+            return object.__getattribute__(self, '_modules')[item]
         return object.__getattribute__(self, item)
 
     @classmethod

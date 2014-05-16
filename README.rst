@@ -4,8 +4,13 @@ Gandi CLI project
 Gandi command line interface project
 
 -----------------
-You can also use Gandi cli as a python module
+You can use Gandi cli as a command line
+>>> gandi
+>>> gandi list --help
+
+-----------------
+You can also use Gandi cli modules as a python modules
 
 >>> from gandi.modules.iaas import Iaas
->>> Iaas().list()
->>> Iaas().info(648)
+>>> Iaas.list()
+>>> Iaas.info(648)

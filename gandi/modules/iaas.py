@@ -6,40 +6,47 @@ from gandi.conf import GandiModule
 
 class Iaas(GandiModule):
 
-    def list(self, options=None):
+    @classmethod
+    def list(cls, options=None):
         """list virtual machines"""
 
         if not options:
             options = {}
 
-        return self.call('vm.list', options)
+        return cls.call('vm.list', options)
 
-    def info(self, id):
+    @classmethod
+    def info(cls, id):
         """display information about a virtual machine"""
 
-        return self.call('vm.info', self.usable_id(id))
+        return cls.call('vm.info', cls.usable_id(id))
 
-    def stop(self, id):
+    @classmethod
+    def stop(cls, id):
         """stop a virtual machine"""
 
-        return self.call('vm.stop', self.usable_id(id))
+        return cls.call('vm.stop', cls.usable_id(id))
 
-    def start(self, id):
+    @classmethod
+    def start(cls, id):
         """start a virtual machine"""
 
-        return self.call('vm.start', self.usable_id(id))
+        return cls.call('vm.start', cls.usable_id(id))
 
-    def reboot(self, id):
+    @classmethod
+    def reboot(cls, id):
         """reboot a virtual machine"""
 
-        return self.call('vm.reboot', self.usable_id(id))
+        return cls.call('vm.reboot', cls.usable_id(id))
 
-    def delete(self, id):
+    @classmethod
+    def delete(cls, id):
         """delete a virtual machine"""
 
-        return self.call('vm.delete', self.usable_id(id))
+        return cls.call('vm.delete', cls.usable_id(id))
 
-    def create(self, datacenter_id, memory, cores, ip_version, bandwidth,
+    @classmethod
+    def create(cls, datacenter_id, memory, cores, ip_version, bandwidth,
                login, password, run, interactive, ssh_key):
         """create a new virtual machine.
 
@@ -56,37 +63,37 @@ class Iaas(GandiModule):
         if datacenter_id:
             datacenter_id_ = datacenter_id
         else:
-            datacenter_id_ = int(self.get('datacenter_id'))
+            datacenter_id_ = int(cls.get('datacenter_id'))
 
         if memory:
             memory_ = memory
         else:
-            memory_ = int(self.get('memory'))
+            memory_ = int(cls.get('memory'))
 
         if cores:
             cores_ = cores
         else:
-            cores_ = int(self.get('cores'))
+            cores_ = int(cls.get('cores'))
 
         if ip_version:
             ip_version_ = ip_version
         else:
-            ip_version_ = int(self.get('ip_version'))
+            ip_version_ = int(cls.get('ip_version'))
 
         if bandwidth:
             bandwidth_ = bandwidth
         else:
-            bandwidth_ = int(self.get('bandwidth'))
+            bandwidth_ = int(cls.get('bandwidth'))
 
         if login:
             login_ = login
         else:
-            login_ = self.get('login')
+            login_ = cls.get('login')
 
         if password:
             password_ = password
         else:
-            password_ = self.get('password')
+            password_ = cls.get('password')
 
         vm_params = {
             'hostname': 'tempo',
@@ -101,22 +108,22 @@ class Iaas(GandiModule):
         if run:
             run_ = run
         else:
-            run_ = self.get('run')
+            run_ = cls.get('run')
         if run_ is not None:
             vm_params['run'] = run_
 
         if ssh_key:
             ssh_key_ = ssh_key
         else:
-            ssh_key_ = self.get('ssh_key')
+            ssh_key_ = cls.get('ssh_key')
         if ssh_key_ is not None:
             vm_params['ssh_key'] = ssh_key_
 
-        disk_params = {'datacenter_id': int(self.get('datacenter_id')),
+        disk_params = {'datacenter_id': int(cls.get('datacenter_id')),
                        'name': 'sysdisktempo'}
-        sys_disk_id = int(self.get('sys_disk_id'))
+        sys_disk_id = int(cls.get('sys_disk_id'))
 
-        result = self.call('vm.create_from', vm_params, disk_params,
+        result = cls.call('vm.create_from', vm_params, disk_params,
                            sys_disk_id)
         if not interactive:
             return result
@@ -133,7 +140,7 @@ class Iaas(GandiModule):
             while not crea_done:
                 op_score = 0
                 for oper in result:
-                    op_step = self.call('operation.info', oper['id'])['step']
+                    op_step = cls.call('operation.info', oper['id'])['step']
                     if op_step == 'WAIT':
                         op_score += 1
                     elif op_step == 'RUN':
@@ -142,12 +149,12 @@ class Iaas(GandiModule):
                         op_score += 3
                     else:
                         msg = 'step %s unknown, exiting creation' % op_step
-                        self.error(msg)
+                        cls.error(msg)
 
                     if 'vm_id' in oper and oper['vm_id'] is not None:
                         vm_id = oper['vm_id']
 
-                self.update_progress(float(op_score) / count_operations,
+                cls.update_progress(float(op_score) / count_operations,
                                      start_crea)
 
                 if op_score == count_operations:
@@ -156,7 +163,7 @@ class Iaas(GandiModule):
                 time.sleep(.5)
 
             print
-            vm_info = self.call('vm.info', vm_id)
+            vm_info = cls.call('vm.info', vm_id)
             for iface in vm_info['ifaces']:
                 for ip in iface['ips']:
                     if ip['version'] == 4:
@@ -168,27 +175,29 @@ class Iaas(GandiModule):
 
             print 'Your VM have been created, requesting access using: %s' % access
             time.sleep(5)
-            self.shell(access)
+            cls.shell(access)
 
-    def from_hostname(self, hostname):
+    @classmethod
+    def from_hostname(cls, hostname):
         """retrieve virtual machine id associated to a hostname"""
 
-        result = self.list()
+        result = cls.list()
         vm_hosts = {}
         for host in result:
             vm_hosts[host['hostname']] = host['id']
 
         return vm_hosts.get(hostname)
 
-    def usable_id(self, id):
+    @classmethod
+    def usable_id(cls, id):
         try:
             qry_id = int(id)
         except:
             # id is maybe a hostname
-            qry_id = self.from_hostname(id)
+            qry_id = cls.from_hostname(id)
 
         if not qry_id:
             msg = 'unknown identifier %s' % id
-            self.error(msg)
+            cls.error(msg)
 
         return qry_id

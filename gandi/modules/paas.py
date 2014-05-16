@@ -4,41 +4,46 @@ from gandi.conf import GandiModule
 
 class Vhost(GandiModule):
 
-    def list(self, options=None):
+    @classmethod
+    def list(cls, options=None):
         """list virtual hosts"""
 
         if not options:
             options = {}
 
-        return self.call('paas.vhost.list', options)
+        return cls.call('paas.vhost.list', options)
 
 
 class Paas(GandiModule):
 
-    def list(self, options):
+    @classmethod
+    def list(cls, options):
         """list Paas instances"""
 
-        return self.call('paas.list', options)
+        return cls.call('paas.list', options)
 
-    def info(self, id):
+    @classmethod
+    def info(cls, id):
         """display information about a Paas instance"""
 
-        return self.call('paas.info', self.usable_id(id))
+        return cls.call('paas.info', cls.usable_id(id))
 
-    def usable_id(self, id):
+    @classmethod
+    def usable_id(cls, id):
         try:
             qry_id = int(id)
         except:
-            # id is maybe a hostname
-            qry_id = self.from_hostname(id)
+            # id is maybe a vhost
+            qry_id = cls.from_vhost(id)
 
         if not qry_id:
             msg = 'unknown identifier %s' % id
-            self.error(msg)
+            cls.error(msg)
 
         return qry_id
 
-    def from_vhost(self, vhost):
+    @classmethod
+    def from_vhost(cls, vhost):
         """retrieve paas instance id associated to a vhost"""
 
         result = Vhost().list()

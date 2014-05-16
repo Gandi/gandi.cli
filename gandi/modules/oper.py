@@ -4,12 +4,14 @@ from gandi.conf import GandiModule
 
 class Oper(GandiModule):
 
-    def list(self, options):
+    @classmethod
+    def list(cls, options):
         """list operation"""
 
-        return self.call('operation.list', options)
+        return cls.call('operation.list', options)
 
-    def info(self, id):
+    @classmethod
+    def info(cls, id):
         """display information about an operation"""
 
-        return self.call('operation.info', id)
+        return cls.call('operation.info', id)
