@@ -1,10 +1,10 @@
 
 import time
 
-from gandi.conf import GandiPlugin
+from gandi.conf import GandiModule
 
 
-class Iaas(GandiPlugin):
+class Iaas(GandiModule):
 
     def list(self, options=None):
         """list virtual machines"""

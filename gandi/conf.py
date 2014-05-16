@@ -18,7 +18,7 @@ import click
 from click.exceptions import UsageError
 
 
-class GandiPlugin(object):
+class GandiModule(object):
     """ Base class for plugins
 
     Manage
@@ -208,7 +208,7 @@ class GandiPlugin(object):
         sys.stdout.flush()
 
 
-class GandiContextHelper(GandiPlugin):
+class GandiContextHelper(GandiModule):
     """ Gandi context helper
 
     Load plugin classes from plugin directory at start
@@ -218,7 +218,7 @@ class GandiContextHelper(GandiPlugin):
 
     def __init__(self, verbose=False):
         """ initialize variables and api connection """
-        GandiPlugin.__init__(self, verbose)
+        GandiModule.__init__(self, verbose)
         self.load_plugins()
 
     def __getattribute__(self, item):
@@ -236,7 +236,7 @@ class GandiContextHelper(GandiPlugin):
                 __import__(module_name, fromlist=[module_name])
 
         # save internal map of loaded plugin classes
-        for subclass in GandiPlugin.__subclasses__():
+        for subclass in GandiModule.__subclasses__():
             cls._plugins[subclass.__name__.lower()] = subclass
 
 # create a decorator to pass the Gandi object as context to click calls

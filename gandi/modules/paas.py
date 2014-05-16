@@ -1,8 +1,8 @@
 
-from gandi.conf import GandiPlugin
+from gandi.conf import GandiModule
 
 
-class Vhost(GandiPlugin):
+class Vhost(GandiModule):
 
     def list(self, options=None):
         """list virtual hosts"""
@@ -13,7 +13,7 @@ class Vhost(GandiPlugin):
         return self.call('paas.vhost.list', options)
 
 
-class Paas(GandiPlugin):
+class Paas(GandiModule):
 
     def list(self, options):
         """list Paas instances"""

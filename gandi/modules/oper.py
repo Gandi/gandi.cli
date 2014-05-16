@@ -1,8 +1,8 @@
 
-from gandi.conf import GandiPlugin
+from gandi.conf import GandiModule
 
 
-class Oper(GandiPlugin):
+class Oper(GandiModule):
 
     def list(self, options):
         """list operation"""
