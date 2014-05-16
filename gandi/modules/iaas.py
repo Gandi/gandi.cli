@@ -47,7 +47,7 @@ class Iaas(GandiModule):
 
     @classmethod
     def create(cls, datacenter_id, memory, cores, ip_version, bandwidth,
-               login, password, run, interactive, ssh_key):
+               login, password, hostname, run, interactive, ssh_key):
         """create a new virtual machine.
 
         you can provide a ssh_key on command line calling this command as:
@@ -95,8 +95,13 @@ class Iaas(GandiModule):
         else:
             password_ = cls.get('password')
 
+        if hostname:
+            hostname_ = hostname
+        else:
+            hostname_ = cls.get('hostname')
+
         vm_params = {
-            'hostname': 'tempo',
+            'hostname': hostname_,
             'datacenter_id': datacenter_id_,
             'memory': memory_,
             'cores': cores_,
@@ -124,7 +129,7 @@ class Iaas(GandiModule):
         sys_disk_id = int(cls.get('sys_disk_id'))
 
         result = cls.call('vm.create_from', vm_params, disk_params,
-                           sys_disk_id)
+                          sys_disk_id)
         if not interactive:
             return result
         else:
@@ -155,7 +160,7 @@ class Iaas(GandiModule):
                         vm_id = oper['vm_id']
 
                 cls.update_progress(float(op_score) / count_operations,
-                                     start_crea)
+                                    start_crea)
 
                 if op_score == count_operations:
                     crea_done = True
@@ -173,7 +178,8 @@ class Iaas(GandiModule):
                     # stop on first access found
                     break
 
-            print 'Your VM have been created, requesting access using: %s' % access
+            print 'Your VM %s have been created.' % hostname_
+            print 'Requesting access using: %s ...' % access
             time.sleep(5)
             cls.shell(access)
 

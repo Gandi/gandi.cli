@@ -111,6 +111,8 @@ network interface")
               help='login to create on the VM')
 @click.option('--password', default=None,
               help='password to set to the root account and the created login')
+@click.option('--hostname', default='tempo',
+              help='hostname of the VM')
 @click.option('--run', default=None,
               help='shell command that will run at the first startup of a VM.\
 This command will run with root privileges in the ``/`` directory at the end \
@@ -121,7 +123,7 @@ of its boot: network interfaces and disks are mounted')
                 callback=read_ssh_key)
 @pass_gandi
 def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
-           password, run, interactive, ssh_key):
+           password, hostname, run, interactive, ssh_key):
     """create a new virtual machine.
 
     you can provide a ssh_key on command line calling this command as:
@@ -131,4 +133,4 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
     """
 
     gandi.iaas.create(datacenter_id, memory, cores, ip_version, bandwidth,
-                      login, password, run, interactive, ssh_key)
+                      login, password, hostname, run, interactive, ssh_key)
