@@ -132,5 +132,10 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
 
     """
 
-    gandi.iaas.create(datacenter_id, memory, cores, ip_version, bandwidth,
-                      login, password, hostname, run, interactive, ssh_key)
+    result = gandi.iaas.create(datacenter_id, memory, cores, ip_version,
+                               bandwidth, login, password, hostname, run,
+                               interactive, ssh_key)
+    from pprint import pprint
+    pprint(result)
+
+    return result
