@@ -149,17 +149,23 @@ class GandiModule(object):
     def _set(cls, scope, key, val, separator='.'):
         orig_key = key
 
+        cls.echo("saving key '%s' with value '%s' to scope %s" %
+                 (key, val, scope))
         key = key.split(separator)
         value = cls._conffiles[scope]
         if separator not in orig_key:
             value[orig_key] = val
-        else:
-            for k in key:
-                if k not in value:
-                    value[k] = {}
-                    last_val = value
-                    value = value[k]
-            last_val[k] = val
+            return
+
+        for k in key:
+            if k not in value:
+                value[k] = {}
+                last_val = value
+                value = value[k]
+            else:
+                last_val = value
+                value = value[k]
+        last_val[k] = val
 
     @classmethod
     def _get(cls, scope, key, default=None, separator='.'):
