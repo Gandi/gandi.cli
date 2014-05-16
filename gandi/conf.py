@@ -19,7 +19,7 @@ from click.exceptions import UsageError
 
 
 class GandiModule(object):
-    """ Base class for plugins
+    """ Base class for modules
 
     Manage
     - reading configuration files
@@ -211,33 +211,33 @@ class GandiModule(object):
 class GandiContextHelper(GandiModule):
     """ Gandi context helper
 
-    Load plugin classes from plugin directory at start
+    Load module classes from modules directory at start
     """
 
-    _plugins = {}
+    _modules = {}
 
     def __init__(self, verbose=False):
         """ initialize variables and api connection """
         GandiModule.__init__(self, verbose)
-        self.load_plugins()
+        self.load_modules()
 
     def __getattribute__(self, item):
-        if item in object.__getattribute__(self, '_plugins'):
-            return object.__getattribute__(self, '_plugins')[item]()
+        if item in object.__getattribute__(self, '_modules'):
+            return object.__getattribute__(self, '_modules')[item]()
         return object.__getattribute__(self, item)
 
     @classmethod
-    def load_plugins(cls):
-        plugin_folder = os.path.join(os.path.dirname(__file__), 'plugins')
-        for filename in os.listdir(plugin_folder):
+    def load_modules(cls):
+        module_folder = os.path.join(os.path.dirname(__file__), 'modules')
+        for filename in os.listdir(module_folder):
             if filename.endswith('.py') and '__init__' not in filename:
                 submod = filename[:-3]
-                module_name = __package__ + '.plugins.' + submod
+                module_name = __package__ + '.modules.' + submod
                 __import__(module_name, fromlist=[module_name])
 
-        # save internal map of loaded plugin classes
+        # save internal map of loaded module classes
         for subclass in GandiModule.__subclasses__():
-            cls._plugins[subclass.__name__.lower()] = subclass
+            cls._modules[subclass.__name__.lower()] = subclass
 
 # create a decorator to pass the Gandi object as context to click calls
 pass_gandi = click.make_pass_decorator(GandiContextHelper)

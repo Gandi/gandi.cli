@@ -23,9 +23,9 @@ class GandiCLI(click.Group):
                          default=False, callback=set_debug)
         ])
 
-    def load_plugins(self):
-        plugin_folder = os.path.join(os.path.dirname(__file__), 'commands')
-        for filename in os.listdir(plugin_folder):
+    def load_commands(self):
+        command_folder = os.path.join(os.path.dirname(__file__), 'commands')
+        for filename in os.listdir(command_folder):
             if filename.endswith('.py') and '__init__' not in filename:
                 submod = filename[:-3]
                 module_name = __package__ + '.commands.' + submod
@@ -37,7 +37,7 @@ class GandiCLI(click.Group):
 
 
 cli = GandiCLI()
-cli.load_plugins()
+cli.load_commands()
 
 
 @cli.command()
