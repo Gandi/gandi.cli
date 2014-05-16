@@ -78,7 +78,10 @@ class GandiModule(object):
             msg = 'Gandi API service is unreachable'
             raise UsageError(msg)
         except xmlrpclib.Fault as err:
-            msg = 'Gandi API has returned an error %s' % err
+            msg = 'Gandi API has returned an error: %s' % err
+            raise UsageError(msg)
+        except TypeError as err:
+            msg = 'An unknown error as occured: %s' % err
             raise UsageError(msg)
 
     @classmethod
