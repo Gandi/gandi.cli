@@ -1,4 +1,6 @@
 
+import time
+
 from gandi.conf import GandiModule
 
 
@@ -27,6 +29,128 @@ class Paas(GandiModule):
         """display information about a Paas instance"""
 
         return cls.call('paas.info', cls.usable_id(id))
+
+    @classmethod
+    def delete(cls, id):
+        """delete a Paas instance"""
+
+        return cls.call('paas.delete', cls.usable_id(id))
+
+    @classmethod
+    def create(cls, name, size, type, quantity, duration, datacenter_id, vhosts,
+               password, snapshot_profile, interactive, ssh_key):
+        """create a new PaaS instance.
+
+        you can provide a ssh_key on command line calling this command as:
+
+        >>> cat ~/.ssh/id_rsa.pub | gandi paas -
+
+        """
+
+        # priority to command line parameters
+        # then env var
+        # then local configuration
+        # then global configuration
+        if datacenter_id:
+            datacenter_id_ = datacenter_id
+        else:
+            datacenter_id_ = int(cls.get('datacenter_id'))
+
+        if name:
+            name_ = name
+        else:
+            name_ = cls.get('name')
+
+        if size:
+            size_ = size
+        else:
+            size_ = cls.get('size')
+
+        if type:
+            type_ = type
+        else:
+            type_ = cls.get('type')
+
+        if quantity:
+            quantity_ = quantity
+        else:
+            quantity_ = int(cls.get('quantity', 0))
+
+        if password:
+            password_ = password
+        else:
+            password_ = cls.get('password')
+
+        if duration:
+            duration_ = duration
+        else:
+            duration_ = cls.get('duration')
+
+        paas_params = {
+            'name': name_,
+            'size': size_,
+            'type': type_,
+            'password': password_,
+            'duration': duration_,
+            'datacenter_id': datacenter_id_,
+        }
+        if vhosts:
+            vhosts_ = vhosts
+        else:
+            vhosts_ = cls.get('vhosts')
+        if vhosts_ is not None:
+            paas_params['vhosts'] = vhosts_
+
+        if quantity:
+            quantity_ = quantity
+        else:
+            quantity_ = cls.get('quantity')
+        if quantity_ is not None:
+            paas_params['quantity'] = quantity_
+
+        if ssh_key:
+            ssh_key_ = ssh_key
+        else:
+            ssh_key_ = cls.get('ssh_key')
+        if ssh_key_ is not None:
+            paas_params['ssh_key'] = ssh_key_
+
+        result = cls.call('paas.create', paas_params)
+        if not interactive:
+            return result
+        else:
+            # interactive mode, run a progress bar
+            from datetime import datetime
+            start_crea = datetime.utcnow()
+
+            print "We're creating your first PaaS with default settings."
+            # count number of operations, 3 steps per operation
+            count_operations = len(result) * 3
+            crea_done = False
+            while not crea_done:
+                op_score = 0
+                for oper in result:
+                    op_step = cls.call('operation.info', oper['id'])['step']
+                    if op_step == 'WAIT':
+                        op_score += 1
+                    elif op_step == 'RUN':
+                        op_score += 2
+                    elif op_step == 'DONE':
+                        op_score += 3
+                    else:
+                        msg = 'step %s unknown, exiting creation' % op_step
+                        cls.error(msg)
+
+                cls.update_progress(float(op_score) / count_operations,
+                                    start_crea)
+
+                if op_score == count_operations:
+                    crea_done = True
+
+                time.sleep(.5)
+
+            print
+            print 'Your PaaS %s have been created.' % name_
 
     @classmethod
     def usable_id(cls, id):

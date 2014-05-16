@@ -89,3 +89,65 @@ def deploy(gandi, vhost, git_url):
 
     gandi.shell("ssh %s@%s 'deploy %s.git'" % (paas['user'], git_server,
                                                vhost))
+
+
+@cli.command(name='paas.delete')
+@click.argument('id')
+@pass_gandi
+def delete(gandi, id):
+    """delete a PaaS instance"""
+
+    result = gandi.paas.delete(id)
+    from pprint import pprint
+    pprint(result)
+
+    return result
+
+
+def read_ssh_key(ctx, value):
+    if not value:
+        return
+
+    key = value.read()
+    return key
+
+
+@cli.command(name='paas')
+@click.option('--name', default=None,
+              help='Name of the PaaS instance')
+@click.option('--size', default=None,
+              help='Size of the PaaS instance')
+@click.option('--type', default=None,
+              help='Type of the PaaS instance')
+@click.option('--quantity', default=0,
+              help='Additional disk amount (in GB)')
+@click.option('--duration', default=None,
+              help='number of month, suffixed with m (e.g.: `12m` means one year)')
+@click.option('--datacenter_id', type=click.INT, default=None,
+              help='id of the datacenter where the PaaS will be spawned')
+@click.option('--vhosts', default=0,
+              help='List of virtual hosts to be linked to the instance')
+@click.option('--password', default=None,
+              help='Password of the PaaS instance')
+@click.option('--snapshot_profile', default=None,
+              help='Set a snapshot profile associated to this paas disk')
+@click.option('--interactive', default=False, is_flag=True,
+              help='run creation in interactive mode (default=False)')
+@click.argument('ssh_key', default=None, type=click.File('rb'), required=False,
+                callback=read_ssh_key)
+@pass_gandi
+def create(gandi, name, size, type, quantity, duration, datacenter_id, vhosts,
+           password, snapshot_profile, interactive, ssh_key):
+    """create a new PaaS instance.
+
+    you can provide a ssh_key on command line calling this command as:
+
+    >>> cat ~/.ssh/id_rsa.pub | gandi paas -
+
+    """
+
+    result = gandi.paas.create(name, size, type, quantity, duration,
+                               datacenter_id, vhosts, password,
+                               snapshot_profile, interactive, ssh_key)
+    from pprint import pprint
+    pprint(result)
