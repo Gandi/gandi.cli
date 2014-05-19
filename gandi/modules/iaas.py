@@ -214,3 +214,16 @@ class Iaas(GandiModule):
             cls.error(msg)
 
         return qry_id
+
+
+class Image(GandiModule):
+
+    @classmethod
+    def list(cls, datacenter_id=None):
+        """list available images for vm creation"""
+
+        options = {}
+        if datacenter_id:
+            options = {'datacenter_id': datacenter_id}
+
+        return cls.call('hosting.image.list', options)

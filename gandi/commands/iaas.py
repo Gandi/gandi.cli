@@ -143,3 +143,19 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
     pprint(result)
 
     return result
+
+
+@cli.command(name='image.list')
+@click.option('--datacenter_id', type=click.INT, default=None,
+              help='filter by id of datacenter')
+@pass_gandi
+def image_list(gandi, datacenter_id):
+    """list available images for vm creation"""
+
+    result = gandi.image.list(datacenter_id)
+    for source in result:
+        print '#%d - %s (%s) - %s' % (source['disk_id'], source['label'],
+                                      source['os_arch'],
+                                      source['kernel_version'])
+
+    return result
