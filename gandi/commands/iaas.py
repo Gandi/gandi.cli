@@ -130,6 +130,10 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
 
     >>> cat ~/.ssh/id_rsa.pub | gandi create -
 
+    or specify a configuration entry named 'ssh_key_path' containing
+    path to your ssh_key file
+    >>> gandi config ssh_key_path ~/.ssh/id_rsa.pub
+
     """
 
     result = gandi.iaas.create(datacenter_id, memory, cores, ip_version,

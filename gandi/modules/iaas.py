@@ -123,6 +123,13 @@ class Iaas(GandiModule):
             ssh_key_ = cls.get('ssh_key')
         if ssh_key_ is not None:
             vm_params['ssh_key'] = ssh_key_
+        else:
+            ssh_key_path = cls.get('ssh_key_path')
+            if ssh_key_path:
+                with open(ssh_key_path) as fdesc:
+                    ssh_key_ = fdesc.read()
+                if ssh_key_ is not None:
+                    vm_params['ssh_key'] = ssh_key_
 
         disk_params = {'datacenter_id': int(cls.get('datacenter_id')),
                        'name': 'sysdisktempo'}
