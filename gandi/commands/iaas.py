@@ -128,7 +128,7 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
 
     you can provide a ssh_key on command line calling this command as:
 
-    >>> cat ~/.ssh/id_rsa.pub | gandi vm -
+    >>> cat ~/.ssh/id_rsa.pub | gandi create -
 
     """
 
