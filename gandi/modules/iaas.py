@@ -47,7 +47,8 @@ class Iaas(GandiModule):
 
     @classmethod
     def create(cls, datacenter_id, memory, cores, ip_version, bandwidth,
-               login, password, hostname, run, interactive, ssh_key):
+               login, password, hostname, sys_disk_id, run, interactive,
+               ssh_key):
         """create a new virtual machine.
 
         you can provide a ssh_key on command line calling this command as:
@@ -133,10 +134,14 @@ class Iaas(GandiModule):
 
         disk_params = {'datacenter_id': int(cls.get('datacenter_id')),
                        'name': 'sysdisktempo'}
-        sys_disk_id = int(cls.get('sys_disk_id'))
+
+        if sys_disk_id:
+            sys_disk_id_ = int(sys_disk_id)
+        else:
+            sys_disk_id_ = int(cls.get('sys_disk_id'))
 
         result = cls.call('vm.create_from', vm_params, disk_params,
-                          sys_disk_id)
+                          sys_disk_id_)
         if not interactive:
             return result
         else:
