@@ -152,7 +152,7 @@ class GandiModule(object):
         cls.echo("saving key '%s' with value '%s' to scope %s" %
                  (key, val, scope))
         key = key.split(separator)
-        value = cls._conffiles[scope]
+        value = cls._conffiles.get(scope, {})
         if separator not in orig_key:
             value[orig_key] = val
             return
@@ -170,7 +170,7 @@ class GandiModule(object):
     @classmethod
     def _get(cls, scope, key, default=None, separator='.'):
         key = key.split(separator)
-        value = cls._conffiles[scope]
+        value = cls._conffiles.get(scope, {})
         try:
             for k in key:
                 value = value[k]
