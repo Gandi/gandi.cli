@@ -150,7 +150,7 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
               help='filter by id of datacenter')
 @pass_gandi
 def image_list(gandi, datacenter_id):
-    """list available images for vm creation"""
+    """list available sys_disk_id of images for vm creation"""
 
     result = gandi.image.list(datacenter_id)
     for source in result:
