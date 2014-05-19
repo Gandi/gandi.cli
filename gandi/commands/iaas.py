@@ -154,8 +154,10 @@ def image_list(gandi, datacenter_id):
 
     result = gandi.image.list(datacenter_id)
     for source in result:
-        print '#%d - %s (%s) - %s' % (source['disk_id'], source['label'],
-                                      source['os_arch'],
-                                      source['kernel_version'])
+        print '#%d - %s (%s) - kernel:%s - dc:%d' % (source['disk_id'],
+                                                     source['label'],
+                                                     source['os_arch'],
+                                                     source['kernel_version'],
+                                                     source['datacenter_id'])
 
     return result
