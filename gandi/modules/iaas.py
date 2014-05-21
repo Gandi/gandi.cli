@@ -133,7 +133,7 @@ class Iaas(GandiModule):
                     vm_params['ssh_key'] = ssh_key_
 
         disk_params = {'datacenter_id': int(cls.get('datacenter_id')),
-                       'name': ('sysdisk%s' % hostname_)[:15]}
+                       'name': 'sysdisk%s' % hostname_}
 
         if sys_disk_id:
             sys_disk_id_ = int(sys_disk_id)
