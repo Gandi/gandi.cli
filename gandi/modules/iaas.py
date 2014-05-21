@@ -194,6 +194,9 @@ class Iaas(GandiModule):
 
             print 'Your VM %s have been created.' % hostname_
             print 'Requesting access using: %s ...' % access
+            # XXX: we must remove ssh key entry in case we use the same ip
+            # as it's recyclable
+            cls.shell('ssh-keygen -R -H "%s"' % hostname_)
             time.sleep(5)
             cls.shell(access)
 
