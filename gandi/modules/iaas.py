@@ -5,6 +5,7 @@ from gandi.conf import GandiModule
 
 
 class Iaas(GandiModule):
+    _op_scores = {'WAIT': 1, 'RUN': 2, 'DONE': 3}
 
     @classmethod
     def list(cls, options=None):
@@ -160,12 +161,8 @@ class Iaas(GandiModule):
                 op_score = 0
                 for oper in result:
                     op_step = cls.call('operation.info', oper['id'])['step']
-                    if op_step == 'WAIT':
-                        op_score += 1
-                    elif op_step == 'RUN':
-                        op_score += 2
-                    elif op_step == 'DONE':
-                        op_score += 3
+                    if op_step in cls._op_scores:
+                        op_score += cls._op_scores[op_step]
                     else:
                         msg = 'step %s unknown, exiting creation' % op_step
                         cls.error(msg)
