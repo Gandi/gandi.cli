@@ -105,8 +105,8 @@ def read_ssh_key(ctx, value):
 @click.option('--ip_version', type=click.INT, default=None,
               help='version of the created IP, can be 4 or 6')
 @click.option('--bandwidth', type=click.INT, default=None,
-              help="network bandwidth in bit/s used to create the VM's first \
-network interface")
+              help="network bandwidth in bit/s used to create the VM's first "
+                   "network interface")
 @click.option('--login', default=None,
               help='login to create on the VM')
 @click.option('--password', default=None,
@@ -116,9 +116,10 @@ network interface")
 @click.option('--sys_disk_id', type=click.INT, default=None,
               help='id of disk image used to boot the vm')
 @click.option('--run', default=None,
-              help='shell command that will run at the first startup of a VM.\
-This command will run with root privileges in the ``/`` directory at the end \
-of its boot: network interfaces and disks are mounted')
+              help='shell command that will run at the first startup of a VM.'
+                   'This command will run with root privileges in the ``/`` '
+                   'directory at the end of its boot: network interfaces and '
+                   'disks are mounted')
 @click.option('--interactive', default=True, is_flag=True,
               help='run creation in interactive mode (default=True)')
 @click.argument('ssh_key', default=None, type=click.File('rb'), required=False,
