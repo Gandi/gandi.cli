@@ -132,8 +132,10 @@ class Iaas(GandiModule):
                 if ssh_key_ is not None:
                     vm_params['ssh_key'] = ssh_key_
 
+        # XXX: name of disk is limited to 15 chars in ext2fs, ext3fs
+        # but api allow 255, so we limit to 15 for now
         disk_params = {'datacenter_id': int(cls.get('datacenter_id')),
-                       'name': 'sysdisk%s' % hostname_}
+                       'name': ('sys_%s' % hostname_)[:15]}
 
         if sys_disk_id:
             sys_disk_id_ = int(sys_disk_id)
