@@ -62,45 +62,14 @@ class Iaas(GandiModule):
         # then env var
         # then local configuration
         # then global configuration
-        if datacenter_id:
-            datacenter_id_ = datacenter_id
-        else:
-            datacenter_id_ = int(cls.get('datacenter_id'))
-
-        if memory:
-            memory_ = memory
-        else:
-            memory_ = int(cls.get('memory'))
-
-        if cores:
-            cores_ = cores
-        else:
-            cores_ = int(cls.get('cores'))
-
-        if ip_version:
-            ip_version_ = ip_version
-        else:
-            ip_version_ = int(cls.get('ip_version'))
-
-        if bandwidth:
-            bandwidth_ = bandwidth
-        else:
-            bandwidth_ = int(cls.get('bandwidth'))
-
-        if login:
-            login_ = login
-        else:
-            login_ = cls.get('login')
-
-        if password:
-            password_ = password
-        else:
-            password_ = cls.get('password')
-
-        if hostname:
-            hostname_ = hostname
-        else:
-            hostname_ = cls.get('hostname')
+        datacenter_id_ = datacenter_id or int(cls.get('datacenter_id'))
+        memory_ = memory or int(cls.get('memory'))
+        cores_ = cores or int(cls.get('cores'))
+        ip_version_ = ip_version or int(cls.get('ip_version'))
+        bandwidth_ = bandwidth or int(cls.get('bandwidth'))
+        login_ = login or cls.get('login')
+        password_ = password or cls.get('password')
+        hostname_ = hostname or cls.get('hostname')
 
         vm_params = {
             'hostname': hostname_,
@@ -112,17 +81,12 @@ class Iaas(GandiModule):
             'login': login_,
             'password': password_,
         }
-        if run:
-            run_ = run
-        else:
-            run_ = cls.get('run')
+
+        run_ = run or cls.get('run')
         if run_ is not None:
             vm_params['run'] = run_
 
-        if ssh_key:
-            ssh_key_ = ssh_key
-        else:
-            ssh_key_ = cls.get('ssh_key')
+        ssh_key_ = ssh_key or cls.get('ssh_key')
         if ssh_key_ is not None:
             vm_params['ssh_key'] = ssh_key_
         else:
@@ -138,10 +102,8 @@ class Iaas(GandiModule):
         disk_params = {'datacenter_id': int(cls.get('datacenter_id')),
                        'name': ('sys_%s' % hostname_)[:15]}
 
-        if sys_disk_id:
-            sys_disk_id_ = int(sys_disk_id)
-        else:
-            sys_disk_id_ = int(cls.get('sys_disk_id'))
+        sys_disk_id_ = int(sys_disk_id if sys_disk_id
+                           else cls.get('sys_disk_id'))
 
         result = cls.call('vm.create_from', vm_params, disk_params,
                           sys_disk_id_)
