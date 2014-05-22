@@ -54,7 +54,12 @@ class Iaas(GandiModule):
 
         you can provide a ssh_key on command line calling this command as:
 
-        >>> cat ~/.ssh/id_rsa.pub | gandi vm -
+        >>> cat ~/.ssh/id_rsa.pub | gandi create -
+
+        or specify a configuration entry named 'ssh_key_path' containing
+        path to your ssh_key file
+
+        >>> gandi config ssh_key_path ~/.ssh/id_rsa.pub
 
         """
 

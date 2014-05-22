@@ -45,7 +45,15 @@ class Paas(GandiModule):
 
         >>> cat ~/.ssh/id_rsa.pub | gandi paas -
 
+        or specify a configuration entry named 'ssh_key_path' containing
+        path to your ssh_key file
+
+        >>> gandi config ssh_key_path ~/.ssh/id_rsa.pub
+
         """
+
+        if interactive and not cls.intty():
+            interactive = False
 
         # priority to command line parameters
         # then env var
