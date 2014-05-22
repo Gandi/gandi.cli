@@ -154,8 +154,10 @@ class Iaas(GandiModule):
                 for ip in iface['ips']:
                     if ip['version'] == 4:
                         access = 'ssh %s@%s' % (login_, ip['ip'])
+                        ip_addr = ip['ip']
                     else:
                         access = 'ssh -6 %s@%s' % (login_, ip['ip'])
+                        ip_addr = ip['ip']
                     # stop on first access found
                     break
 
@@ -163,7 +165,7 @@ class Iaas(GandiModule):
             cls.echo('Requesting access using: %s ...' % access)
             # XXX: we must remove ssh key entry in case we use the same ip
             # as it's recyclable
-            cls.shell('ssh-keygen -R -H "%s"' % hostname_)
+            cls.shell('ssh-keygen -R "%s"' % ip_addr)
             time.sleep(5)
             cls.shell(access)
 
