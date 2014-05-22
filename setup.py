@@ -6,20 +6,20 @@ import os
 
 from setuptools import setup, find_packages
 
-name = 'gandi'
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
 
-with open(os.path.join(here, name, '__init__.py')) as v_file:
+with open(os.path.join(here, 'gandi', 'cli', '__init__.py')) as v_file:
     version = re.compile(r".*__version__ = '(.*?)'",
                          re.S).match(v_file.read()).group(1)
 
 requires = ['pyyaml']
 
 
-setup(name=name,
+setup(name='gandi.cli',
+      namespace_packages=['gandi'],
       version=version,
       description='Gandi command line interface',
       long_description=README + '\n\n' + CHANGES,
@@ -37,6 +37,6 @@ setup(name=name,
       install_requires=requires,
       entry_points="""\
 [console_scripts]
-gandi = gandi.cli:main
+gandi = gandi.cli.__main__:main
 """,
       )

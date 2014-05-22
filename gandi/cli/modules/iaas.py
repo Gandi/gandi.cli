@@ -1,7 +1,7 @@
 
 import time
 
-from gandi.conf import GandiModule
+from gandi.cli.core.conf import GandiModule
 
 
 class Iaas(GandiModule):

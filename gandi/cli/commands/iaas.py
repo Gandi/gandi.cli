@@ -1,8 +1,8 @@
 
 import click
 
-from gandi.cli import cli
-from gandi.conf import pass_gandi
+from gandi.cli.__main__ import cli
+from gandi.cli.core.conf import pass_gandi
 
 
 @cli.command()

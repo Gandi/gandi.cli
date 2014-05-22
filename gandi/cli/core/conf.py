@@ -278,11 +278,11 @@ class GandiContextHelper(GandiModule):
 
     @classmethod
     def load_modules(cls):
-        module_folder = os.path.join(os.path.dirname(__file__), 'modules')
+        module_folder = os.path.join(os.path.dirname(__file__), '../modules')
         for filename in os.listdir(module_folder):
             if filename.endswith('.py') and '__init__' not in filename:
                 submod = filename[:-3]
-                module_name = __package__ + '.modules.' + submod
+                module_name = 'gandi.cli.modules.' + submod
                 __import__(module_name, fromlist=[module_name])
 
         # save internal map of loaded module classes

@@ -11,6 +11,6 @@ You can use Gandi cli as a command line
 -----------------
 You can also use Gandi cli modules as a python modules
 
->>> from gandi.modules.iaas import Iaas
+>>> from gandi.cli.modules.iaas import Iaas
 >>> Iaas.list()
 >>> Iaas.info(648)
