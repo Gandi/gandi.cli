@@ -17,7 +17,8 @@ def list(gandi, state):
 
     result = gandi.iaas.list(options)
     for vm in result:
-        print '%s - %s - #%d' % (vm['hostname'], vm['state'], vm['id'])
+        msg = '%s - %s - #%d' % (vm['hostname'], vm['state'], vm['id'])
+        gandi.echo(msg)
 
     return result
 
@@ -29,8 +30,7 @@ def info(gandi, id):
     """display information about a virtual machine"""
 
     result = gandi.iaas.info(id)
-    from pprint import pprint
-    pprint(result)
+    gandi.pretty_echo(result)
 
     return result
 
@@ -42,8 +42,7 @@ def stop(gandi, id):
     """stop a virtual machine"""
 
     result = gandi.iaas.stop(id)
-    from pprint import pprint
-    pprint(result)
+    gandi.pretty_echo(result)
 
     return result
 
@@ -55,8 +54,7 @@ def start(gandi, id):
     """start a virtual machine"""
 
     result = gandi.iaas.start(id)
-    from pprint import pprint
-    pprint(result)
+    gandi.pretty_echo(result)
 
     return result
 
@@ -68,8 +66,7 @@ def reboot(gandi, id):
     """reboot a virtual machine"""
 
     result = gandi.iaas.reboot(id)
-    from pprint import pprint
-    pprint(result)
+    gandi.pretty_echo(result)
 
     return result
 
@@ -81,8 +78,7 @@ def delete(gandi, id):
     """delete a virtual machine"""
 
     result = gandi.iaas.delete(id)
-    from pprint import pprint
-    pprint(result)
+    gandi.pretty_echo(result)
 
     return result
 
@@ -144,8 +140,7 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
                                bandwidth, login, password, hostname,
                                sys_disk_id, run,
                                interactive, ssh_key)
-    from pprint import pprint
-    pprint(result)
+    gandi.pretty_echo(result)
 
     return result
 
@@ -159,10 +154,11 @@ def image_list(gandi, datacenter_id):
 
     result = gandi.image.list(datacenter_id)
     for source in result:
-        print '#%d - %s (%s) - kernel:%s - dc:%d' % (source['disk_id'],
+        msg = '#%d - %s (%s) - kernel:%s - dc:%d' % (source['disk_id'],
                                                      source['label'],
                                                      source['os_arch'],
                                                      source['kernel_version'],
                                                      source['datacenter_id'])
+        gandi.echo(msg)
 
     return result

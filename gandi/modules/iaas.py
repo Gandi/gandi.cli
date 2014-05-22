@@ -58,6 +58,9 @@ class Iaas(GandiModule):
 
         """
 
+        if interactive and not cls.intty():
+            interactive = False
+
         # priority to command line parameters
         # then env var
         # then local configuration
@@ -114,7 +117,7 @@ class Iaas(GandiModule):
             from datetime import datetime
             start_crea = datetime.utcnow()
 
-            print "We're creating your first Virtual Machine with default settings."
+            cls.echo("We're creating your first Virtual Machine with default settings.")
             # count number of operations, 3 steps per operation
             count_operations = len(result) * 3
             crea_done = False
@@ -140,7 +143,7 @@ class Iaas(GandiModule):
 
                 time.sleep(.5)
 
-            print
+            cls.echo()
             vm_info = cls.call('vm.info', vm_id)
             for iface in vm_info['ifaces']:
                 for ip in iface['ips']:
@@ -151,8 +154,8 @@ class Iaas(GandiModule):
                     # stop on first access found
                     break
 
-            print 'Your VM %s have been created.' % hostname_
-            print 'Requesting access using: %s ...' % access
+            cls.echo('Your VM %s have been created.' % hostname_)
+            cls.echo('Requesting access using: %s ...' % access)
             # XXX: we must remove ssh key entry in case we use the same ip
             # as it's recyclable
             cls.shell('ssh-keygen -R -H "%s"' % hostname_)

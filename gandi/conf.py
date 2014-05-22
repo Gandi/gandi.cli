@@ -55,7 +55,7 @@ class GandiModule(object):
         """ initialize an api connector for future use"""
         if cls._api is None:
             cls.load_config()
-            cls.echo('initialize connection to remote server')
+            cls.debug('initialize connection to remote server')
             apihost = cls.get('apihost')
             cls._api = xmlrpclib.ServerProxy(apihost)
 
@@ -68,9 +68,9 @@ class GandiModule(object):
         apikey = cls.get('apikey')
 
         # make the call
-        cls.echo('calling method: %s' % method)
+        cls.debug('calling method: %s' % method)
         for arg in args:
-            cls.echo('with params: %r' % arg)
+            cls.debug('with params: %r' % arg)
         try:
             func = getattr(api, method)
             return func(apikey, *args)
@@ -85,9 +85,28 @@ class GandiModule(object):
             raise UsageError(msg)
 
     @classmethod
+    def intty(cls):
+        if hasattr(sys.stdout, 'isatty') and sys.stdout.isatty():
+            return True
+
+        return False
+
+    @classmethod
     def echo(cls, message):
+        if cls.intty():
+            print message
+
+    @classmethod
+    def pretty_echo(cls, message):
+        if cls.intty():
+            from pprint import pprint
+            pprint(message)
+
+    @classmethod
+    def debug(cls, message):
         if cls.verbose:
-            print >> sys.stdout, '[DEBUG] %s' % message
+            msg = '[DEBUG] %s' % message
+            cls.echo(msg)
 
     @classmethod
     def error(cls, msg):
@@ -100,7 +119,7 @@ class GandiModule(object):
         name = name or filename
 
         if name not in cls._conffiles:
-            cls.echo('loading %s configuration' % name)
+            cls.debug('loading %s configuration' % name)
             with open(filename) as fdesc:
                 cls._conffiles[name] = yaml.load(fdesc, YAMLLoader)
 
@@ -149,7 +168,7 @@ class GandiModule(object):
     def _set(cls, scope, key, val, separator='.'):
         orig_key = key
 
-        cls.echo("saving key '%s' with value '%s' to scope %s" %
+        cls.debug("saving key '%s' with value '%s' to scope %s" %
                  (key, val, scope))
         key = key.split(separator)
         value = cls._conffiles.get(scope, {})
@@ -203,7 +222,7 @@ class GandiModule(object):
 
     @classmethod
     def shell(cls, command):
-        cls.echo(command)
+        cls.debug(command)
         call(command, shell=True)
 
     @classmethod
@@ -223,7 +242,7 @@ class GandiModule(object):
         if not isinstance(progress, float):
             progress = 0
             status = 'error: progress var must be float\r\n'
-            print type(progress)
+            cls.echo(type(progress))
         if progress < 0:
             progress = 0
             status = 'Halt...\r\n'

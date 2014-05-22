@@ -14,8 +14,7 @@ def list(gandi):
     }
 
     result = gandi.oper.list(options)
-    from pprint import pprint
-    pprint(result)
+    gandi.pretty_echo(result)
 
     return result
 
@@ -27,7 +26,6 @@ def info(gandi, id):
     """display information about an operation"""
 
     result = gandi.oper.info(id)
-    from pprint import pprint
-    pprint(result)
+    gandi.pretty_echo(result)
 
     return result

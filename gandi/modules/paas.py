@@ -123,7 +123,7 @@ class Paas(GandiModule):
             from datetime import datetime
             start_crea = datetime.utcnow()
 
-            print "We're creating your first PaaS with default settings."
+            cls.echo("We're creating your first PaaS with default settings.")
             # count number of operations, 3 steps per operation
             count_operations = len(result) * 3
             crea_done = False
@@ -149,8 +149,8 @@ class Paas(GandiModule):
 
                 time.sleep(.5)
 
-            print
-            print 'Your PaaS %s have been created.' % name_
+            cls.echo()
+            cls.echo('Your PaaS %s have been created.' % name_)
 
     @classmethod
     def usable_id(cls, id):

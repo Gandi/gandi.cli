@@ -1,6 +1,5 @@
 
 import click
-from click.exceptions import UsageError
 from gandi.cli import cli
 from gandi.conf import pass_gandi
 
@@ -26,14 +25,14 @@ def list(gandi, state, id, vhosts):
             for host in list_vhost:
                 paas_hosts[paas['id']].append(host['name'])
 
-        print '%s - %s' % (paas['name'], paas['state']),
+        msg = '%s - %s' % (paas['name'], paas['state'])
         if id:
-            print '- #%d' % paas['id'],
+            msg += ' - #%d' % paas['id']
 
         if vhosts:
-            print '-',
-            print ' / '.join(paas_hosts[paas['id']]),
-        print
+            msg += ' - %s' % (' / '.join(paas_hosts[paas['id']]))
+
+        gandi.echo(msg)
 
 
 @cli.command(name='paas.info')
@@ -43,8 +42,7 @@ def info(gandi, id):
     """display information about a Paas instance"""
 
     result = gandi.paas.info(id)
-    from pprint import pprint
-    pprint(result)
+    gandi.pretty_echo(result)
 
     return result
 
@@ -98,8 +96,7 @@ def delete(gandi, id):
     """delete a PaaS instance"""
 
     result = gandi.paas.delete(id)
-    from pprint import pprint
-    pprint(result)
+    gandi.pretty_echo(result)
 
     return result
 
@@ -149,5 +146,4 @@ def create(gandi, name, size, type, quantity, duration, datacenter_id, vhosts,
     result = gandi.paas.create(name, size, type, quantity, duration,
                                datacenter_id, vhosts, password,
                                snapshot_profile, interactive, ssh_key)
-    from pprint import pprint
-    pprint(result)
+    gandi.pretty_echo(result)
