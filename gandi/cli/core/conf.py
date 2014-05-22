@@ -9,6 +9,8 @@ import xmlrpclib
 from datetime import datetime
 from subprocess import call
 
+from .client import XMLRPCClient, APICallFailed
+
 try:
     from yaml import CSafeLoader as YAMLLoader
 except ImportError:
@@ -57,13 +59,13 @@ class GandiModule(object):
             cls.load_config()
             cls.debug('initialize connection to remote server')
             apihost = cls.get('apihost')
-            cls._api = xmlrpclib.ServerProxy(apihost)
+            cls._api = XMLRPCClient(host=apihost, debug=cls.verbose)
 
         return cls._api
 
     @classmethod
     def call(cls, method, *args):
-        """ call a remote api method and returned the result """
+        """ call a remote api method and return the result """
         api = cls.get_api_connector()
         apikey = cls.get('apikey')
 
@@ -72,17 +74,9 @@ class GandiModule(object):
         for arg in args:
             cls.debug('with params: %r' % arg)
         try:
-            func = getattr(api, method)
-            return func(apikey, *args)
-        except socket.error:
-            msg = 'Gandi API service is unreachable'
-            raise UsageError(msg)
-        except xmlrpclib.Fault as err:
-            msg = 'Gandi API has returned an error: %s' % err
-            raise UsageError(msg)
-        except TypeError as err:
-            msg = 'An unknown error as occured: %s' % err
-            raise UsageError(msg)
+            return api.request(apikey, method, *args)
+        except APICallFailed as err:
+            raise UsageError(err.errors)
 
     @classmethod
     def intty(cls):
