@@ -47,6 +47,58 @@ class Iaas(GandiModule):
         return cls.call('vm.delete', cls.usable_id(id))
 
     @classmethod
+    def update(cls, id, memory, cores, console, interactive):
+        """update a virtual machine"""
+
+        if interactive and not cls.intty():
+            interactive = False
+
+        vm_params = {}
+
+        if memory is not None:
+            vm_params['memory'] = memory
+
+        if cores is not None:
+            vm_params['cores'] = cores
+
+        if console is not None:
+            vm_params['console'] = console
+
+        result = cls.call('vm.update', cls.usable_id(id), vm_params)
+        if not interactive:
+            return result
+
+        # interactive mode, run a progress bar
+        from datetime import datetime
+        start_crea = datetime.utcnow()
+
+        cls.echo("We're updating your Virtual Machine.")
+        # count number of operations, 3 steps per operation
+        if not isinstance(result, list):
+            result = [result]
+        count_operations = len(result) * 3
+        updating_done = False
+        while not updating_done:
+            op_score = 0
+            for oper in result:
+                op_step = cls.call('operation.info', oper['id'])['step']
+                if op_step in cls._op_scores:
+                    op_score += cls._op_scores[op_step]
+                else:
+                    msg = 'step %s unknown, exiting creation' % op_step
+                    cls.error(msg)
+
+            cls.update_progress(float(op_score) / count_operations,
+                                start_crea)
+
+            if op_score == count_operations:
+                updating_done = True
+
+            time.sleep(.5)
+
+        cls.echo('')
+
+    @classmethod
     def create(cls, datacenter_id, memory, cores, ip_version, bandwidth,
                login, password, hostname, sys_disk_id, run, interactive,
                ssh_key):
@@ -60,6 +112,10 @@ class Iaas(GandiModule):
         path to your ssh_key file
 
         >>> gandi config ssh_key_path ~/.ssh/id_rsa.pub
+
+        to know which disk image id to use as sys_disk_id
+
+        >>> gandi image.list
 
         """
 
@@ -117,57 +173,57 @@ class Iaas(GandiModule):
                           sys_disk_id_)
         if not interactive:
             return result
-        else:
-            # interactive mode, run a progress bar
-            from datetime import datetime
-            start_crea = datetime.utcnow()
 
-            cls.echo("We're creating your first Virtual Machine with default settings.")
-            # count number of operations, 3 steps per operation
-            count_operations = len(result) * 3
-            crea_done = False
-            vm_id = None
-            while not crea_done:
-                op_score = 0
-                for oper in result:
-                    op_step = cls.call('operation.info', oper['id'])['step']
-                    if op_step in cls._op_scores:
-                        op_score += cls._op_scores[op_step]
-                    else:
-                        msg = 'step %s unknown, exiting creation' % op_step
-                        cls.error(msg)
+        # interactive mode, run a progress bar
+        from datetime import datetime
+        start_crea = datetime.utcnow()
 
-                    if 'vm_id' in oper and oper['vm_id'] is not None:
-                        vm_id = oper['vm_id']
+        cls.echo("We're creating your first Virtual Machine with default settings.")
+        # count number of operations, 3 steps per operation
+        count_operations = len(result) * 3
+        crea_done = False
+        vm_id = None
+        while not crea_done:
+            op_score = 0
+            for oper in result:
+                op_step = cls.call('operation.info', oper['id'])['step']
+                if op_step in cls._op_scores:
+                    op_score += cls._op_scores[op_step]
+                else:
+                    msg = 'step %s unknown, exiting creation' % op_step
+                    cls.error(msg)
 
-                cls.update_progress(float(op_score) / count_operations,
-                                    start_crea)
+                if 'vm_id' in oper and oper['vm_id'] is not None:
+                    vm_id = oper['vm_id']
 
-                if op_score == count_operations:
-                    crea_done = True
+            cls.update_progress(float(op_score) / count_operations,
+                                start_crea)
 
-                time.sleep(.5)
+            if op_score == count_operations:
+                crea_done = True
 
-            cls.echo()
-            vm_info = cls.call('vm.info', vm_id)
-            for iface in vm_info['ifaces']:
-                for ip in iface['ips']:
-                    if ip['version'] == 4:
-                        access = 'ssh %s@%s' % (login_, ip['ip'])
-                        ip_addr = ip['ip']
-                    else:
-                        access = 'ssh -6 %s@%s' % (login_, ip['ip'])
-                        ip_addr = ip['ip']
-                    # stop on first access found
-                    break
+            time.sleep(.5)
 
-            cls.echo('Your VM %s have been created.' % hostname_)
-            cls.echo('Requesting access using: %s ...' % access)
-            # XXX: we must remove ssh key entry in case we use the same ip
-            # as it's recyclable
-            cls.shell('ssh-keygen -R "%s"' % ip_addr)
-            time.sleep(5)
-            cls.shell(access)
+        cls.echo('')
+        vm_info = cls.call('vm.info', vm_id)
+        for iface in vm_info['ifaces']:
+            for ip in iface['ips']:
+                if ip['version'] == 4:
+                    access = 'ssh %s@%s' % (login_, ip['ip'])
+                    ip_addr = ip['ip']
+                else:
+                    access = 'ssh -6 %s@%s' % (login_, ip['ip'])
+                    ip_addr = ip['ip']
+                # stop on first access found
+                break
+
+        cls.echo('Your VM %s have been created.' % hostname_)
+        cls.echo('Requesting access using: %s ...' % access)
+        # XXX: we must remove ssh key entry in case we use the same ip
+        # as it's recyclable
+        cls.shell('ssh-keygen -R "%s"' % ip_addr)
+        time.sleep(5)
+        cls.shell(access)
 
     @classmethod
     def from_hostname(cls, hostname):
@@ -193,6 +249,33 @@ class Iaas(GandiModule):
             cls.error(msg)
 
         return qry_id
+
+    @classmethod
+    def console(cls, id):
+        """open a console to virtual machine"""
+
+        vm_info = cls.info(id)
+        if not vm_info['console']:
+            # first activate console
+            cls.update(id, memory=None, cores=None, console=True,
+                       interactive=True)
+        # now we can connect
+        # retrieve ip of vm
+        vm_info = cls.info(id)
+        for iface in vm_info['ifaces']:
+            for ip in iface['ips']:
+                if ip['version'] == 4:
+                    ip_addr = ip['ip']
+                else:
+                    ip_addr = ip['ip']
+                # stop on first access found
+                break
+
+        # hack for dev
+        # console_url = 'console1-d.dev.gandi.net'
+        console_url = 'console.gandi.net'
+        access = 'ssh %s@%s' % (ip_addr, console_url)
+        cls.shell(access)
 
 
 class Image(GandiModule):

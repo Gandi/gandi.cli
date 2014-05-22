@@ -27,7 +27,7 @@ def list(gandi, state, id, vhosts):
 
         msg = '%s - %s' % (paas['name'], paas['state'])
         if id:
-            msg += ' - #%d' % paas['id']
+            msg += ' - # %d' % paas['id']
 
         if vhosts:
             msg += ' - %s' % (' / '.join(paas_hosts[paas['id']]))

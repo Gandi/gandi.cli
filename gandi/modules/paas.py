@@ -157,7 +157,7 @@ class Paas(GandiModule):
 
                 time.sleep(.5)
 
-            cls.echo()
+            cls.echo('')
             cls.echo('Your PaaS %s have been created.' % name_)
 
     @classmethod

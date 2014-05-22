@@ -17,7 +17,7 @@ def list(gandi, state):
 
     result = gandi.iaas.list(options)
     for vm in result:
-        msg = '%s - %s - #%d' % (vm['hostname'], vm['state'], vm['id'])
+        msg = '%s - %s - # %d' % (vm['hostname'], vm['state'], vm['id'])
         gandi.echo(msg)
 
     return result
@@ -134,15 +134,50 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
 
     >>> gandi config ssh_key_path ~/.ssh/id_rsa.pub
 
+    to know which disk image id to use as sys_disk_id
+
+    >>> gandi image.list
+
     """
 
     result = gandi.iaas.create(datacenter_id, memory, cores, ip_version,
                                bandwidth, login, password, hostname,
                                sys_disk_id, run,
                                interactive, ssh_key)
-    gandi.pretty_echo(result)
+    if not interactive:
+        gandi.pretty_echo(result)
 
     return result
+
+
+@cli.command()
+@click.option('--memory', type=click.INT, default=None,
+              help='quantity of RAM in Megabytes to allocate')
+@click.option('--cores', type=click.INT, default=None,
+              help='number of cpu')
+@click.option('--console', default=None, is_flag=True,
+              help='activate the emergency console')
+@click.option('--interactive', default=True, is_flag=True,
+              help='run creation in interactive mode (default=True)')
+@click.argument('id')
+@pass_gandi
+def update(gandi, id, memory, cores, console, interactive):
+    """update a virtual machine"""
+
+    result = gandi.iaas.update(id, memory, cores, console, interactive)
+    if not interactive:
+        gandi.pretty_echo(result)
+
+    return result
+
+
+@cli.command()
+@click.argument('id')
+@pass_gandi
+def console(gandi, id):
+    """open a console to virtual machine"""
+
+    gandi.iaas.console(id)
 
 
 @cli.command(name='image.list')
@@ -154,11 +189,11 @@ def image_list(gandi, datacenter_id):
 
     result = gandi.image.list(datacenter_id)
     for source in result:
-        msg = '#%d - %s (%s) - kernel:%s - dc:%d' % (source['disk_id'],
-                                                     source['label'],
-                                                     source['os_arch'],
-                                                     source['kernel_version'],
-                                                     source['datacenter_id'])
+        msg = '%s (%s) - kernel:%s - dc:%d - # %d' % (source['label'],
+                                                      source['os_arch'],
+                                                      source['kernel_version'],
+                                                      source['datacenter_id'],
+                                                      source['disk_id'])
         gandi.echo(msg)
 
     return result
