@@ -3,22 +3,24 @@ import click
 
 from gandi.cli.__main__ import cli
 from gandi.cli.core.conf import pass_gandi
+from gandi.cli.core.utils import output_vm, read_ssh_key
 
 
 @cli.command()
 @click.option('--state', default=None, help='filter results by state')
 @pass_gandi
 def list(gandi, state):
-    """list virtual machines"""
+    """List virtual machines."""
 
     options = {}
     if state:
         options['state'] = state
 
+    datacenters = gandi.datacenter.list()
     result = gandi.iaas.list(options)
     for vm in result:
-        msg = '%s - %s - # %d' % (vm['hostname'], vm['state'], vm['id'])
-        gandi.echo(msg)
+        gandi.echo('-' * 10)
+        output_vm(gandi, vm, datacenters)
 
     return result
 
@@ -27,19 +29,20 @@ def list(gandi, state):
 @click.argument('id')
 @pass_gandi
 def info(gandi, id):
-    """display information about a virtual machine"""
+    """Display information about a virtual machine."""
 
-    result = gandi.iaas.info(id)
-    gandi.pretty_echo(result)
+    datacenters = gandi.datacenter.list()
+    vm = gandi.iaas.info(id)
+    output_vm(gandi, vm, datacenters)
 
-    return result
+    return vm
 
 
 @cli.command()
 @click.argument('id')
 @pass_gandi
 def stop(gandi, id):
-    """stop a virtual machine"""
+    """Stop a virtual machine."""
 
     result = gandi.iaas.stop(id)
     gandi.pretty_echo(result)
@@ -51,7 +54,7 @@ def stop(gandi, id):
 @click.argument('id')
 @pass_gandi
 def start(gandi, id):
-    """start a virtual machine"""
+    """Start a virtual machine."""
 
     result = gandi.iaas.start(id)
     gandi.pretty_echo(result)
@@ -63,7 +66,7 @@ def start(gandi, id):
 @click.argument('id')
 @pass_gandi
 def reboot(gandi, id):
-    """reboot a virtual machine"""
+    """Reboot a virtual machine."""
 
     result = gandi.iaas.reboot(id)
     gandi.pretty_echo(result)
@@ -75,20 +78,12 @@ def reboot(gandi, id):
 @click.argument('id')
 @pass_gandi
 def delete(gandi, id):
-    """delete a virtual machine"""
+    """Delete a virtual machine."""
 
     result = gandi.iaas.delete(id)
     gandi.pretty_echo(result)
 
     return result
-
-
-def read_ssh_key(ctx, value):
-    if not value:
-        return
-
-    key = value.read()
-    return key
 
 
 @cli.command()
@@ -123,7 +118,7 @@ def read_ssh_key(ctx, value):
 @pass_gandi
 def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
            password, hostname, sys_disk_id, run, interactive, ssh_key):
-    """create a new virtual machine.
+    """Create a new virtual machine.
 
     you can provide a ssh_key on command line calling this command as:
 
@@ -162,7 +157,7 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
 @click.argument('id')
 @pass_gandi
 def update(gandi, id, memory, cores, console, interactive):
-    """update a virtual machine"""
+    """Update a virtual machine."""
 
     result = gandi.iaas.update(id, memory, cores, console, interactive)
     if not interactive:
@@ -175,7 +170,7 @@ def update(gandi, id, memory, cores, console, interactive):
 @click.argument('id')
 @pass_gandi
 def console(gandi, id):
-    """open a console to virtual machine"""
+    """Open a console to virtual machine."""
 
     gandi.iaas.console(id)
 
@@ -185,7 +180,7 @@ def console(gandi, id):
               help='filter by id of datacenter')
 @pass_gandi
 def image_list(gandi, datacenter_id):
-    """list available sys_disk_id of images for vm creation"""
+    """List available sys_disk_id of images."""
 
     result = gandi.image.list(datacenter_id)
     for source in result:

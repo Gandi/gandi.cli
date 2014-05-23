@@ -3,13 +3,12 @@
 import os
 import sys
 import yaml
-import socket
 import os.path
-import xmlrpclib
 from datetime import datetime
 from subprocess import call
 
 from .client import XMLRPCClient, APICallFailed
+from .utils import MissingConfiguration
 
 try:
     from yaml import CSafeLoader as YAMLLoader
@@ -31,9 +30,9 @@ class GandiModule(object):
     """
 
     _conffiles = {}
-    default_api_host = 'api-v3.dev.gandi.net'
-    home_config = '~/.config/gandi/gandirc'
-    local_config = '.gandirc'
+    default_api_host = 'http://api-v3.dev.gandi.net'
+    home_config = '~/.config/gandi/config.yaml'
+    local_config = '.gandi.config.yaml'
 
     verbose = False
     apikey = None
@@ -45,69 +44,12 @@ class GandiModule(object):
         """ Load global and local configuration files or initialize if needed
         """
         config_file = os.path.expanduser(cls.home_config)
-        config = cls.load(config_file, 'global')
+        cls.load(config_file, 'global')
         cls.load(cls.local_config, 'local')
-        if not config:
-            print ("This is your first time running GandiCLI, let's configure "
-                   "a few things")
-            cls.init_config()
-
-    @classmethod
-    def get_api_connector(cls):
-        """ initialize an api connector for future use"""
-        if cls._api is None:
-            cls.load_config()
-            cls.debug('initialize connection to remote server')
-            apihost = cls.get('apihost')
-            cls._api = XMLRPCClient(host=apihost, debug=cls.verbose)
-
-        return cls._api
-
-    @classmethod
-    def call(cls, method, *args):
-        """ call a remote api method and return the result """
-        api = cls.get_api_connector()
-        apikey = cls.get('apikey')
-
-        # make the call
-        cls.debug('calling method: %s' % method)
-        for arg in args:
-            cls.debug('with params: %r' % arg)
-        try:
-            return api.request(apikey, method, *args)
-        except APICallFailed as err:
-            raise UsageError(err.errors)
-
-    @classmethod
-    def intty(cls):
-        if hasattr(sys.stdout, 'isatty') and sys.stdout.isatty():
-            return True
-
-        return False
-
-    @classmethod
-    def echo(cls, message):
-        if cls.intty():
-            print message
-
-    @classmethod
-    def pretty_echo(cls, message):
-        if cls.intty():
-            from pprint import pprint
-            pprint(message)
-
-    @classmethod
-    def debug(cls, message):
-        if cls.verbose:
-            msg = '[DEBUG] %s' % message
-            cls.echo(msg)
-
-    @classmethod
-    def error(cls, msg):
-        raise UsageError(msg)
 
     @classmethod
     def load(cls, filename, name=None):
+        """ Load yaml configuration from filename """
         if not os.path.exists(filename):
             return
         name = name or filename
@@ -121,6 +63,7 @@ class GandiModule(object):
 
     @classmethod
     def save(cls, filename, config):
+        """ Save configuration to yaml file """
         yaml.safe_dump(config, open(filename, "w"), indent=4,
                        default_flow_style=False)
 
@@ -139,13 +82,18 @@ class GandiModule(object):
 
     @classmethod
     def init_config(cls):
+        """ Initialize Gandi CLI configuration
+
+        Create global configuration directory with API credentials
+
+        """
         apikey = raw_input("Api key: ")
         apihost = (raw_input("Api host[%s]: " % cls.default_api_host)
                    or cls.default_api_host)
 
         config = {
-            'apikey': apikey,
-            'apihost': 'http://%s' % apihost,
+            'api': {'key': apikey,
+                    'host': apihost},
         }
 
         directory = os.path.expanduser("~/.config/gandi")
@@ -153,10 +101,10 @@ class GandiModule(object):
             os.mkdir(directory, 0755)
 
         config_file = os.path.expanduser(cls.home_config)
+        # save to disk
         cls.save(config_file, config)
-        config = cls.load(config_file, 'global')
-
-        return config
+        # load in memory
+        cls.load(config_file, 'global')
 
     @classmethod
     def _set(cls, scope, key, val, separator='.'):
@@ -192,7 +140,7 @@ class GandiModule(object):
             return default
 
     @classmethod
-    def get(cls, key, default=None, separator='.'):
+    def get(cls, key, default=None, separator='.', mandatory=True):
         """ Retrieve a key value from loaded configuration
 
         Order of search :
@@ -212,7 +160,65 @@ class GandiModule(object):
                 return ret
 
         if ret is None:
+            if mandatory:
+                raise UsageError('missing configuration value for %s' % key)
             return default
+
+    @classmethod
+    def get_api_connector(cls):
+        """ initialize an api connector for future use"""
+        if cls._api is None:
+            cls.load_config()
+            cls.debug('initialize connection to remote server')
+            apihost = cls.get('api.host')
+            cls._api = XMLRPCClient(host=apihost, debug=cls.verbose)
+
+        return cls._api
+
+    @classmethod
+    def call(cls, method, *args):
+        """ call a remote api method and return the result """
+        api = cls.get_api_connector()
+        apikey = cls.get('api.key')
+
+        # make the call
+        cls.debug('calling method: %s' % method)
+        for arg in args:
+            cls.debug('with params: %r' % arg)
+        try:
+            return api.request(apikey, method, *args)
+        except APICallFailed as err:
+            raise UsageError(err.errors)
+
+    @classmethod
+    def intty(cls):
+        if hasattr(sys.stdout, 'isatty') and sys.stdout.isatty():
+            return True
+
+        return False
+
+    @classmethod
+    def echo(cls, message):
+        if cls.intty():
+            if message:
+                print message
+
+    @classmethod
+    def pretty_echo(cls, message):
+        if cls.intty():
+            if message:
+                from pprint import pprint
+                pprint(message)
+
+    @classmethod
+    def debug(cls, message):
+        if cls.verbose:
+            msg = '[DEBUG] %s' % message
+            cls.echo(msg)
+
+    @classmethod
+    def error(cls, msg):
+        raise UsageError(msg)
 
     @classmethod
     def shell(cls, command):

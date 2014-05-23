@@ -5,7 +5,7 @@ from gandi.cli.core.conf import GandiModule
 
 
 class Iaas(GandiModule):
-    _op_scores = {'WAIT': 1, 'RUN': 2, 'DONE': 3}
+    _op_scores = {'BILL': 0, 'WAIT': 1, 'RUN': 2, 'DONE': 3}
 
     @classmethod
     def list(cls, options=None):
@@ -126,14 +126,14 @@ class Iaas(GandiModule):
         # then env var
         # then local configuration
         # then global configuration
-        datacenter_id_ = datacenter_id or int(cls.get('datacenter_id'))
-        memory_ = memory or int(cls.get('memory'))
-        cores_ = cores or int(cls.get('cores'))
-        ip_version_ = ip_version or int(cls.get('ip_version'))
-        bandwidth_ = bandwidth or int(cls.get('bandwidth'))
-        login_ = login or cls.get('login')
-        password_ = password or cls.get('password')
-        hostname_ = hostname or cls.get('hostname')
+        datacenter_id_ = datacenter_id or int(cls.get('iaas.datacenter_id'))
+        memory_ = memory or int(cls.get('iaas.memory'))
+        cores_ = cores or int(cls.get('iaas.cores'))
+        ip_version_ = ip_version or int(cls.get('iaas.ip_version'))
+        bandwidth_ = bandwidth or int(cls.get('iaas.bandwidth'))
+        login_ = login or cls.get('iaas.login')
+        password_ = password or cls.get('iaas.password')
+        hostname_ = hostname or cls.get('iaas.hostname')
 
         vm_params = {
             'hostname': hostname_,
@@ -146,15 +146,15 @@ class Iaas(GandiModule):
             'password': password_,
         }
 
-        run_ = run or cls.get('run')
+        run_ = run or cls.get('iaas.run', mandatory=False)
         if run_ is not None:
             vm_params['run'] = run_
 
-        ssh_key_ = ssh_key or cls.get('ssh_key')
+        ssh_key_ = ssh_key or cls.get('iaas.ssh_key', mandatory=False)
         if ssh_key_ is not None:
             vm_params['ssh_key'] = ssh_key_
         else:
-            ssh_key_path = cls.get('ssh_key_path')
+            ssh_key_path = cls.get('iaas.ssh_key_path', mandatory=False)
             if ssh_key_path:
                 with open(ssh_key_path) as fdesc:
                     ssh_key_ = fdesc.read()
@@ -163,11 +163,11 @@ class Iaas(GandiModule):
 
         # XXX: name of disk is limited to 15 chars in ext2fs, ext3fs
         # but api allow 255, so we limit to 15 for now
-        disk_params = {'datacenter_id': int(cls.get('datacenter_id')),
+        disk_params = {'datacenter_id': vm_params['datacenter_id'],
                        'name': ('sys_%s' % hostname_)[:15]}
 
         sys_disk_id_ = int(sys_disk_id if sys_disk_id
-                           else cls.get('sys_disk_id'))
+                           else cls.get('iaas.sys_disk_id'))
 
         result = cls.call('vm.create_from', vm_params, disk_params,
                           sys_disk_id_)
@@ -289,3 +289,14 @@ class Image(GandiModule):
             options = {'datacenter_id': datacenter_id}
 
         return cls.call('hosting.image.list', options)
+
+
+class Datacenter(GandiModule):
+
+    @classmethod
+    def list(cls):
+        """list available datacenters"""
+
+        options = {}
+
+        return cls.call('hosting.datacenter.list', options)

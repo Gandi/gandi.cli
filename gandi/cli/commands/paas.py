@@ -2,6 +2,7 @@
 import click
 from gandi.cli.__main__ import cli
 from gandi.cli.core.conf import pass_gandi
+from gandi.cli.core.utils import read_ssh_key
 
 
 @cli.command(name='paas.list')
@@ -10,7 +11,7 @@ from gandi.cli.core.conf import pass_gandi
 @click.option('--vhosts', help='display vhosts', is_flag=True)
 @pass_gandi
 def list(gandi, state, id, vhosts):
-    """list Paas instances"""
+    """List Paas instances."""
 
     options = {}
     if state:
@@ -39,7 +40,7 @@ def list(gandi, state, id, vhosts):
 @click.argument('id')
 @pass_gandi
 def info(gandi, id):
-    """display information about a Paas instance"""
+    """Display information about a Paas instance."""
 
     result = gandi.paas.info(id)
     gandi.pretty_echo(result)
@@ -51,7 +52,7 @@ def info(gandi, id):
 @click.argument('vhost')
 @pass_gandi
 def clone(gandi, vhost):
-    """clone a remote vhost in a local git repository"""
+    """Clone a remote vhost in a local git repository."""
 
     paas = gandi.paas.info(vhost)
 
@@ -68,7 +69,7 @@ def clone(gandi, vhost):
 @click.argument('git_url', required=False)
 @pass_gandi
 def deploy(gandi, vhost, git_url):
-    """deploy code on a remote vhost"""
+    """Deploy code on a remote vhost."""
 
     paas = gandi.paas.info(vhost)
 
@@ -93,20 +94,12 @@ def deploy(gandi, vhost, git_url):
 @click.argument('id')
 @pass_gandi
 def delete(gandi, id):
-    """delete a PaaS instance"""
+    """Delete a PaaS instance."""
 
     result = gandi.paas.delete(id)
     gandi.pretty_echo(result)
 
     return result
-
-
-def read_ssh_key(ctx, value):
-    if not value:
-        return
-
-    key = value.read()
-    return key
 
 
 @cli.command(name='paas')
@@ -135,7 +128,7 @@ def read_ssh_key(ctx, value):
 @pass_gandi
 def create(gandi, name, size, type, quantity, duration, datacenter_id, vhosts,
            password, snapshot_profile, interactive, ssh_key):
-    """create a new PaaS instance.
+    """Create a new PaaS instance.
 
     you can provide a ssh_key on command line calling this command as:
 
