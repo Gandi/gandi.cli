@@ -24,6 +24,26 @@ def output_vm(gandi, vm, datacenters, output_keys):
         gandi.echo(msg)
 
 
+def output_paas(gandi, paas, datacenters, vhosts, output_keys):
+    """ Helper to output a paas information """
+
+    gandi.debug(output_keys)
+    for key in output_keys:
+        if key in paas:
+            msg = '%-10s: %s' % (key, paas[key])
+            gandi.echo(msg)
+
+    if 'vhost' in output_keys:
+        for entry in vhosts:
+            msg = '%-10s: %s' % ('vhost', entry)
+            gandi.echo(msg)
+
+    if 'dc' in output_keys:
+        dc_name = paas['datacenter']['iso']
+        msg = '%-10s: %s' % ('datacenter', dc_name)
+        gandi.echo(msg)
+
+
 def read_ssh_key(ctx, value):
     """ Helper to read content of a filehandler
 

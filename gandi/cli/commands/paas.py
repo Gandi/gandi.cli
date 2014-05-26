@@ -2,13 +2,13 @@
 import click
 from gandi.cli.__main__ import cli
 from gandi.cli.core.conf import pass_gandi
-from gandi.cli.core.utils import read_ssh_key
+from gandi.cli.core.utils import output_paas, read_ssh_key
 
 
 @cli.command(name='paas.list')
 @click.option('--state', default=None, help='filter results by state')
 @click.option('--id', help='display ids', is_flag=True)
-@click.option('--vhosts', help='display vhosts', is_flag=True)
+@click.option('--vhosts', help='display vhosts', default=True, is_flag=True)
 @pass_gandi
 def list(gandi, state, id, vhosts):
     """List Paas instances."""
@@ -16,6 +16,12 @@ def list(gandi, state, id, vhosts):
     options = {}
     if state:
         options['state'] = state
+
+    output_keys = ['name', 'state']
+    if id:
+        output_keys.append('id')
+    if vhosts:
+        output_keys.append('vhost')
 
     paas_hosts = {}
     result = gandi.paas.list(options)
@@ -26,14 +32,11 @@ def list(gandi, state, id, vhosts):
             for host in list_vhost:
                 paas_hosts[paas['id']].append(host['name'])
 
-        msg = '%s - %s' % (paas['name'], paas['state'])
-        if id:
-            msg += ' - # %d' % paas['id']
+        gandi.echo('-' * 10)
+        output_paas(gandi, paas, [], paas_hosts[paas['id']],
+                    output_keys)
 
-        if vhosts:
-            msg += ' - %s' % (' / '.join(paas_hosts[paas['id']]))
-
-        gandi.echo(msg)
+    return result
 
 
 @cli.command(name='paas.info')
@@ -42,10 +45,18 @@ def list(gandi, state, id, vhosts):
 def info(gandi, id):
     """Display information about a Paas instance."""
 
-    result = gandi.paas.info(id)
-    gandi.pretty_echo(result)
+    output_keys = ['name', 'type', 'size', 'memory', 'console', 'vhost',
+                   'dc', 'ftp_server', 'git_server']
 
-    return result
+    paas = gandi.paas.info(id)
+    paas_hosts = []
+    list_vhost = gandi.vhost.list({'paas_id': paas['id']})
+    for host in list_vhost:
+        paas_hosts.append(host['name'])
+
+    output_paas(gandi, paas, [], paas_hosts, output_keys)
+
+    return paas
 
 
 @cli.command()
