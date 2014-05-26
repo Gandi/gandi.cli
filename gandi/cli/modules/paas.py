@@ -17,6 +17,7 @@ class Vhost(GandiModule):
 
 
 class Paas(GandiModule):
+    _op_scores = {'BILL': 0, 'WAIT': 1, 'RUN': 2, 'DONE': 3}
 
     @classmethod
     def list(cls, options):
@@ -41,14 +42,10 @@ class Paas(GandiModule):
                password, snapshot_profile, interactive, ssh_key):
         """create a new PaaS instance.
 
-        you can provide a ssh_key on command line calling this command as:
-
-        >>> cat ~/.ssh/id_rsa.pub | gandi paas -
-
-        or specify a configuration entry named 'ssh_key_path' containing
+        you can specify a configuration entry named 'ssh_key' containing
         path to your ssh_key file
 
-        >>> gandi config ssh_key_path ~/.ssh/id_rsa.pub
+        >>> gandi config ssh_key ~/.ssh/id_rsa.pub
 
         """
 
@@ -59,40 +56,12 @@ class Paas(GandiModule):
         # then env var
         # then local configuration
         # then global configuration
-        if datacenter_id:
-            datacenter_id_ = datacenter_id
-        else:
-            datacenter_id_ = int(cls.get('datacenter_id'))
-
-        if name:
-            name_ = name
-        else:
-            name_ = cls.get('name')
-
-        if size:
-            size_ = size
-        else:
-            size_ = cls.get('size')
-
-        if type:
-            type_ = type
-        else:
-            type_ = cls.get('type')
-
-        if quantity:
-            quantity_ = quantity
-        else:
-            quantity_ = int(cls.get('quantity', 0))
-
-        if password:
-            password_ = password
-        else:
-            password_ = cls.get('password')
-
-        if duration:
-            duration_ = duration
-        else:
-            duration_ = cls.get('duration')
+        datacenter_id_ = datacenter_id or int(cls.get('paas.datacenter_id'))
+        name_ = name or cls.get('paas.name')
+        size_ = size or cls.get('paas.size')
+        type_ = type or cls.get('paas.type')
+        password_ = password or cls.get('paas.password')
+        duration_ = duration or cls.get('paas.duration')
 
         paas_params = {
             'name': name_,
@@ -102,63 +71,54 @@ class Paas(GandiModule):
             'duration': duration_,
             'datacenter_id': datacenter_id_,
         }
-        if vhosts:
-            vhosts_ = vhosts
-        else:
-            vhosts_ = cls.get('vhosts')
+        vhosts_ = vhosts or cls.get('paas.vhosts', mandatory=False)
         if vhosts_ is not None:
             paas_params['vhosts'] = vhosts_
 
-        if quantity:
-            quantity_ = quantity
-        else:
-            quantity_ = cls.get('quantity')
+        quantity_ = quantity or int(cls.get('paas.quantity', 0,
+                                            mandatory=False))
         if quantity_ is not None:
             paas_params['quantity'] = quantity_
 
-        if ssh_key:
-            ssh_key_ = ssh_key
-        else:
-            ssh_key_ = cls.get('ssh_key')
+        ssh_key_ = ssh_key or cls.get('ssh_key', mandatory=False)
         if ssh_key_ is not None:
-            paas_params['ssh_key'] = ssh_key_
+            with open(ssh_key_) as fdesc:
+                ssh_key_ = fdesc.read()
+            if ssh_key_ is not None:
+                paas_params['ssh_key'] = ssh_key_
 
         result = cls.call('paas.create', paas_params)
         if not interactive:
             return result
-        else:
-            # interactive mode, run a progress bar
-            from datetime import datetime
-            start_crea = datetime.utcnow()
 
-            cls.echo("We're creating your first PaaS with default settings.")
-            # count number of operations, 3 steps per operation
-            count_operations = len(result) * 3
-            crea_done = False
-            while not crea_done:
-                op_score = 0
-                for oper in result:
-                    op_step = cls.call('operation.info', oper['id'])['step']
-                    if op_step == 'WAIT':
-                        op_score += 1
-                    elif op_step == 'RUN':
-                        op_score += 2
-                    elif op_step == 'DONE':
-                        op_score += 3
-                    else:
-                        msg = 'step %s unknown, exiting creation' % op_step
-                        cls.error(msg)
+        # interactive mode, run a progress bar
+        from datetime import datetime
+        start_crea = datetime.utcnow()
 
-                cls.update_progress(float(op_score) / count_operations,
-                                    start_crea)
+        cls.echo("We're creating your first PaaS with default settings.")
+        # count number of operations, 3 steps per operation
+        count_operations = len(result) * 3
+        crea_done = False
+        while not crea_done:
+            op_score = 0
+            for oper in result:
+                op_step = cls.call('operation.info', oper['id'])['step']
+                if op_step in cls._op_scores:
+                    op_score += cls._op_scores[op_step]
+                else:
+                    msg = 'step %s unknown, exiting creation' % op_step
+                    cls.error(msg)
 
-                if op_score == count_operations:
-                    crea_done = True
+            cls.update_progress(float(op_score) / count_operations,
+                                start_crea)
 
-                time.sleep(.5)
+            if op_score == count_operations:
+                crea_done = True
 
-            cls.echo('')
-            cls.echo('Your PaaS %s have been created.' % name_)
+            time.sleep(.5)
+
+        cls.echo('')
+        cls.echo('Your PaaS %s have been created.' % name_)
 
     @classmethod
     def usable_id(cls, id):

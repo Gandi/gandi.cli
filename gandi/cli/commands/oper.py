@@ -6,7 +6,7 @@ from gandi.cli.core.conf import pass_gandi
 from gandi.cli.core.utils import output_oper
 
 
-@cli.command(name='oper.list')
+@cli.command(name='opers')
 @pass_gandi
 def list(gandi):
     """List operations."""
@@ -19,6 +19,7 @@ def list(gandi):
 
     result = gandi.oper.list(options)
     for oper in result:
+        gandi.echo('-' * 10)
         output_oper(gandi, oper, output_keys)
 
     return result

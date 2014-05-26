@@ -127,31 +127,27 @@ def delete(gandi, id):
               help='Additional disk amount (in GB)')
 @click.option('--duration', default=None,
               help='number of month, suffixed with m (e.g.: `12m` means one year)')
-@click.option('--datacenter_id', type=click.INT, default=None,
+@click.option('--datacenter-id', default=None,
               help='id of the datacenter where the PaaS will be spawned')
 @click.option('--vhosts', default=0,
               help='List of virtual hosts to be linked to the instance')
 @click.option('--password', default=None,
               help='Password of the PaaS instance')
-@click.option('--snapshot_profile', default=None,
+@click.option('--snapshot-profile', default=None,
               help='Set a snapshot profile associated to this paas disk')
-@click.option('--interactive', default=False, is_flag=True,
-              help='run creation in interactive mode (default=False)')
-@click.argument('ssh_key', default=None, type=click.File('rb'), required=False,
-                callback=read_ssh_key)
+@click.option('--interactive', default=True, is_flag=True,
+              help='run creation in interactive mode (default=True)')
+@click.option('--ssh-key', default=None,
+              help='Authorize ssh authentication for the given ssh key')
 @pass_gandi
 def create(gandi, name, size, type, quantity, duration, datacenter_id, vhosts,
            password, snapshot_profile, interactive, ssh_key):
     """Create a new PaaS instance.
 
-    you can provide a ssh_key on command line calling this command as:
-
-    >>> cat ~/.ssh/id_rsa.pub | gandi paas -
-
-    or specify a configuration entry named 'ssh_key_path' containing
+    you can specify a configuration entry named 'ssh_key' containing
     path to your ssh_key file
 
-    >>> gandi config ssh_key_path ~/.ssh/id_rsa.pub
+    >>> gandi config ssh_key ~/.ssh/id_rsa.pub
 
     """
 

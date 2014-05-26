@@ -15,7 +15,6 @@ class GandiCLI(click.Group):
 
     >>> gandi <command> --help
 
-    Complete documentation can be found here: http://doc.rpc.gandi.net/
     """
 
     def __init__(self, help=None):

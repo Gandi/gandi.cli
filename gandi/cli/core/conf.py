@@ -161,7 +161,10 @@ class GandiModule(object):
 
         if ret is None:
             if mandatory:
-                raise UsageError('missing configuration value for %s' % key)
+                msg = ('missing configuration value for %s\n'
+                       'please use "gandi config %s <VALUE>" to set a value'
+                       % (key, key))
+                raise UsageError(msg)
             return default
 
     @classmethod

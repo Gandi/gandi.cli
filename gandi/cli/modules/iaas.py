@@ -104,18 +104,14 @@ class Iaas(GandiModule):
                ssh_key):
         """create a new virtual machine.
 
-        you can provide a ssh_key on command line calling this command as:
-
-        >>> cat ~/.ssh/id_rsa.pub | gandi create -
-
-        or specify a configuration entry named 'ssh_key_path' containing
+        you can specify a configuration entry named 'ssh_key' containing
         path to your ssh_key file
 
-        >>> gandi config ssh_key_path ~/.ssh/id_rsa.pub
+        >>> gandi config ssh_key ~/.ssh/id_rsa.pub
 
         to know which disk image label (or id) to use as sys_disk
 
-        >>> gandi image.list
+        >>> gandi images
 
         """
 
@@ -150,16 +146,12 @@ class Iaas(GandiModule):
         if run_ is not None:
             vm_params['run'] = run_
 
-        ssh_key_ = ssh_key or cls.get('iaas.ssh_key', mandatory=False)
+        ssh_key_ = ssh_key or cls.get('ssh_key', mandatory=False)
         if ssh_key_ is not None:
-            vm_params['ssh_key'] = ssh_key_
-        else:
-            ssh_key_path = cls.get('iaas.ssh_key_path', mandatory=False)
-            if ssh_key_path:
-                with open(ssh_key_path) as fdesc:
-                    ssh_key_ = fdesc.read()
-                if ssh_key_ is not None:
-                    vm_params['ssh_key'] = ssh_key_
+            with open(ssh_key_) as fdesc:
+                ssh_key_ = fdesc.read()
+            if ssh_key_ is not None:
+                vm_params['ssh_key'] = ssh_key_
 
         # XXX: name of disk is limited to 15 chars in ext2fs, ext3fs
         # but api allow 255, so we limit to 15 for now

@@ -105,13 +105,13 @@ def delete(gandi, id):
 
 
 @cli.command()
-@click.option('--datacenter_id', type=click.INT, default=None,
+@click.option('--datacenter-id', type=click.INT, default=None,
               help='id of the datacenter where the VM will be spawned')
 @click.option('--memory', type=click.INT, default=None,
               help='quantity of RAM in Megabytes to allocate')
 @click.option('--cores', type=click.INT, default=None,
               help='number of cpu')
-@click.option('--ip_version', type=click.INT, default=None,
+@click.option('--ip-version', type=click.INT, default=None,
               help='version of the created IP, can be 4 or 6')
 @click.option('--bandwidth', type=click.INT, default=None,
               help="network bandwidth in bit/s used to create the VM's first "
@@ -122,7 +122,7 @@ def delete(gandi, id):
               help='password to set to the root account and the created login')
 @click.option('--hostname', default='tempo',
               help='hostname of the VM')
-@click.option('--sys_disk', type=click.INT, default=None,
+@click.option('--sys-disk', default=None,
               help='label (or id) of disk image used to boot the vm')
 @click.option('--run', default=None,
               help='shell command that will run at the first startup of a VM.'
@@ -131,25 +131,21 @@ def delete(gandi, id):
                    'disks are mounted')
 @click.option('--interactive', default=True, is_flag=True,
               help='run creation in interactive mode (default=True)')
-@click.argument('ssh_key', default=None, type=click.File('rb'), required=False,
-                callback=read_ssh_key)
+@click.option('--ssh-key', default=None,
+              help='Authorize ssh authentication for the given ssh key')
 @pass_gandi
 def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
            password, hostname, sys_disk, run, interactive, ssh_key):
     """Create a new virtual machine.
 
-    you can provide a ssh_key on command line calling this command as:
-
-    >>> cat ~/.ssh/id_rsa.pub | gandi create -
-
-    or specify a configuration entry named 'ssh_key_path' containing
+    you can specify a configuration entry named 'ssh_key' containing
     path to your ssh_key file
 
-    >>> gandi config ssh_key_path ~/.ssh/id_rsa.pub
+    >>> gandi config ssh_key ~/.ssh/id_rsa.pub
 
     to know which disk image label (or id) to use as sys_disk
 
-    >>> gandi image.list
+    >>> gandi images
 
     """
 
@@ -193,11 +189,11 @@ def console(gandi, id):
     gandi.iaas.console(id)
 
 
-@cli.command(name='image.list')
+@cli.command()
 @click.option('--datacenter_id', type=click.INT, default=None,
               help='filter by id of datacenter')
 @pass_gandi
-def image_list(gandi, datacenter_id):
+def images(gandi, datacenter_id):
     """List available sys_disk_id of images."""
 
     output_keys = ['label', 'os_arch', 'kernel_version', 'disk_id',
