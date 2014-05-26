@@ -3,7 +3,9 @@ import click
 
 from gandi.cli.__main__ import cli
 from gandi.cli.core.conf import pass_gandi
-from gandi.cli.core.utils import output_vm, output_image, read_ssh_key
+from gandi.cli.core.utils import (
+    output_vm, output_image, output_oper, read_ssh_key,
+)
 
 
 @cli.command()
@@ -52,10 +54,12 @@ def info(gandi, id):
 def stop(gandi, id):
     """Stop a virtual machine."""
 
-    result = gandi.iaas.stop(id)
-    gandi.pretty_echo(result)
+    output_keys = ['id', 'type', 'step']
 
-    return result
+    oper = gandi.iaas.stop(id)
+    output_oper(gandi, oper, output_keys)
+
+    return oper
 
 
 @cli.command()
@@ -64,10 +68,12 @@ def stop(gandi, id):
 def start(gandi, id):
     """Start a virtual machine."""
 
-    result = gandi.iaas.start(id)
-    gandi.pretty_echo(result)
+    output_keys = ['id', 'type', 'step']
 
-    return result
+    oper = gandi.iaas.start(id)
+    output_oper(gandi, oper, output_keys)
+
+    return oper
 
 
 @cli.command()
@@ -76,10 +82,12 @@ def start(gandi, id):
 def reboot(gandi, id):
     """Reboot a virtual machine."""
 
-    result = gandi.iaas.reboot(id)
-    gandi.pretty_echo(result)
+    output_keys = ['id', 'type', 'step']
 
-    return result
+    oper = gandi.iaas.reboot(id)
+    output_oper(gandi, oper, output_keys)
+
+    return oper
 
 
 @cli.command()
@@ -88,10 +96,12 @@ def reboot(gandi, id):
 def delete(gandi, id):
     """Delete a virtual machine."""
 
-    result = gandi.iaas.delete(id)
-    gandi.pretty_echo(result)
+    output_keys = ['id', 'type', 'step']
 
-    return result
+    oper = gandi.iaas.delete(id)
+    output_oper(gandi, oper, output_keys)
+
+    return oper
 
 
 @cli.command()

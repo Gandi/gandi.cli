@@ -165,8 +165,11 @@ class Paas(GandiModule):
         try:
             qry_id = int(id)
         except:
-            # id is maybe a vhost
-            qry_id = cls.from_vhost(id)
+            # id is maybe a hostname
+            qry_id = cls.from_hostname(id)
+            if not qry_id:
+                # id is maybe a vhost
+                qry_id = cls.from_vhost(id)
 
         if not qry_id:
             msg = 'unknown identifier %s' % id
@@ -184,3 +187,14 @@ class Paas(GandiModule):
             paas_hosts[host['name']] = host['paas_id']
 
         return paas_hosts.get(vhost)
+
+    @classmethod
+    def from_hostname(cls, hostname):
+        """retrieve paas instance id associated to a host"""
+
+        result = cls.list({})
+        paas_hosts = {}
+        for host in result:
+            paas_hosts[host['name']] = host['id']
+
+        return paas_hosts.get(hostname)

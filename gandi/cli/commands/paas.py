@@ -2,7 +2,7 @@
 import click
 from gandi.cli.__main__ import cli
 from gandi.cli.core.conf import pass_gandi
-from gandi.cli.core.utils import output_paas, read_ssh_key
+from gandi.cli.core.utils import output_paas, output_oper, read_ssh_key
 
 
 @cli.command(name='paas.list')
@@ -107,10 +107,12 @@ def deploy(gandi, vhost, git_url):
 def delete(gandi, id):
     """Delete a PaaS instance."""
 
-    result = gandi.paas.delete(id)
-    gandi.pretty_echo(result)
+    output_keys = ['id', 'type', 'step']
 
-    return result
+    oper = gandi.paas.delete(id)
+    output_oper(gandi, oper, output_keys)
+
+    return oper
 
 
 @cli.command(name='paas')

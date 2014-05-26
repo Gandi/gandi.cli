@@ -2,6 +2,7 @@
 import click
 from gandi.cli.__main__ import cli
 from gandi.cli.core.conf import pass_gandi
+from gandi.cli.core.utils import output_oper
 
 
 @cli.command(name='oper.list')
@@ -9,12 +10,15 @@ from gandi.cli.core.conf import pass_gandi
 def list(gandi):
     """List operations."""
 
+    output_keys = ['id', 'type', 'step']
+
     options = {
         'step': ['BILL', 'WAIT', 'RUN'],
     }
 
     result = gandi.oper.list(options)
-    gandi.pretty_echo(result)
+    for oper in result:
+        output_oper(gandi, oper, output_keys)
 
     return result
 
@@ -25,7 +29,9 @@ def list(gandi):
 def info(gandi, id):
     """Display information about an operation."""
 
-    result = gandi.oper.info(id)
-    gandi.pretty_echo(result)
+    output_keys = ['id', 'type', 'step']
 
-    return result
+    oper = gandi.oper.info(id)
+    output_oper(gandi, oper, output_keys)
+
+    return oper

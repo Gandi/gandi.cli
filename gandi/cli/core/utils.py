@@ -53,6 +53,15 @@ def output_image(gandi, image, output_keys):
             gandi.echo(msg)
 
 
+def output_oper(gandi, oper, output_keys):
+    """ Helper to output an operation """
+
+    for key in output_keys:
+        if key in oper:
+            msg = '%-10s: %s' % (key, oper[key])
+            gandi.echo(msg)
+
+
 def read_ssh_key(ctx, value):
     """ Helper to read content of a filehandler
 

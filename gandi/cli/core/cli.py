@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import os.path
+import inspect
 
 import click
 
@@ -8,12 +9,22 @@ from .conf import GandiContextHelper
 
 
 class GandiCLI(click.Group):
-    """ Gandi command line utility."""
+    """ Gandi command line utility.
+
+    All CLI commands have a documented help
+
+    >>> gandi <command> --help
+
+    Complete documentation can be found here: http://doc.rpc.gandi.net/
+    """
 
     def __init__(self, help=None):
 
         def set_debug(ctx, value):
             ctx.obj['verbose'] = value
+
+        if help is None:
+            help = inspect.getdoc(self)
 
         click.Group.__init__(self, help=help, params=[
             click.Option(['-v', '--verbose'],
@@ -23,7 +34,7 @@ class GandiCLI(click.Group):
         ])
 
     def load_commands(self):
-        """ Load cli commands from submodule """
+        """ Load cli commands from submodules """
         command_folder = os.path.join(os.path.dirname(__file__), '../commands')
         # print command_folder
         for filename in os.listdir(command_folder):
