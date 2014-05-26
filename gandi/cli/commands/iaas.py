@@ -3,7 +3,7 @@ import click
 
 from gandi.cli.__main__ import cli
 from gandi.cli.core.conf import pass_gandi
-from gandi.cli.core.utils import output_vm, read_ssh_key
+from gandi.cli.core.utils import output_vm, output_image, read_ssh_key
 
 
 @cli.command()
@@ -190,13 +190,12 @@ def console(gandi, id):
 def image_list(gandi, datacenter_id):
     """List available sys_disk_id of images."""
 
+    output_keys = ['label', 'os_arch', 'kernel_version', 'disk_id',
+                   'datacenter_id']
+
     result = gandi.image.list(datacenter_id)
-    for source in result:
-        msg = '%s (%s) - kernel:%s - dc:%d - # %d' % (source['label'],
-                                                      source['os_arch'],
-                                                      source['kernel_version'],
-                                                      source['datacenter_id'],
-                                                      source['disk_id'])
-        gandi.echo(msg)
+    for image in result:
+        gandi.echo('-' * 10)
+        output_image(gandi, image, output_keys)
 
     return result

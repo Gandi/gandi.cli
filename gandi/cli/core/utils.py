@@ -44,6 +44,15 @@ def output_paas(gandi, paas, datacenters, vhosts, output_keys):
         gandi.echo(msg)
 
 
+def output_image(gandi, image, output_keys):
+    """ Helper to output a disk image """
+
+    for key in output_keys:
+        if key in image:
+            msg = '%-14s: %s' % (key, image[key])
+            gandi.echo(msg)
+
+
 def read_ssh_key(ctx, value):
     """ Helper to read content of a filehandler
 
