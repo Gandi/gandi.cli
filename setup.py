@@ -27,7 +27,9 @@ setup(name='gandi.cli',
       author_email='feedback@gandi.net',
       classifiers=[
           'Programming Language :: Python',
-          'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
+          'Topic :: Terminals'
+          'Intended Audience :: Developers',
+          'Intended Audience :: System Administrators',
           'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
       ],
       url='http://www.gandi.net',
