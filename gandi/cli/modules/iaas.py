@@ -100,7 +100,7 @@ class Iaas(GandiModule):
 
     @classmethod
     def create(cls, datacenter_id, memory, cores, ip_version, bandwidth,
-               login, password, hostname, sys_disk_id, run, interactive,
+               login, password, hostname, sys_disk, run, interactive,
                ssh_key):
         """create a new virtual machine.
 
@@ -113,7 +113,7 @@ class Iaas(GandiModule):
 
         >>> gandi config ssh_key_path ~/.ssh/id_rsa.pub
 
-        to know which disk image id to use as sys_disk_id
+        to know which disk image label (or id) to use as sys_disk
 
         >>> gandi image.list
 
@@ -166,8 +166,10 @@ class Iaas(GandiModule):
         disk_params = {'datacenter_id': vm_params['datacenter_id'],
                        'name': ('sys_%s' % hostname_)[:15]}
 
-        sys_disk_id_ = int(sys_disk_id if sys_disk_id
-                           else cls.get('iaas.sys_disk_id'))
+        if sys_disk:
+            sys_disk_id_ = int(Image.usable_id(sys_disk))
+        else:
+            sys_disk_id_ = int(Image.usable_id(cls.get('iaas.sys_disk')))
 
         result = cls.call('vm.create_from', vm_params, disk_params,
                           sys_disk_id_)
@@ -289,6 +291,31 @@ class Image(GandiModule):
             options = {'datacenter_id': datacenter_id}
 
         return cls.call('hosting.image.list', options)
+
+    @classmethod
+    def from_label(cls, label):
+        """retrieve disk image id associated to a label"""
+
+        result = cls.list()
+        image_labels = {}
+        for image in result:
+            image_labels[image['label']] = image['disk_id']
+
+        return image_labels.get(label)
+
+    @classmethod
+    def usable_id(cls, id):
+        try:
+            qry_id = int(id)
+        except:
+            # id is maybe a label
+            qry_id = cls.from_label(id)
+
+        if not qry_id:
+            msg = 'unknown identifier %s' % id
+            cls.error(msg)
+
+        return qry_id
 
 
 class Datacenter(GandiModule):

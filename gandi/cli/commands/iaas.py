@@ -112,8 +112,8 @@ def delete(gandi, id):
               help='password to set to the root account and the created login')
 @click.option('--hostname', default='tempo',
               help='hostname of the VM')
-@click.option('--sys_disk_id', type=click.INT, default=None,
-              help='id of disk image used to boot the vm')
+@click.option('--sys_disk', type=click.INT, default=None,
+              help='label (or id) of disk image used to boot the vm')
 @click.option('--run', default=None,
               help='shell command that will run at the first startup of a VM.'
                    'This command will run with root privileges in the ``/`` '
@@ -125,7 +125,7 @@ def delete(gandi, id):
                 callback=read_ssh_key)
 @pass_gandi
 def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
-           password, hostname, sys_disk_id, run, interactive, ssh_key):
+           password, hostname, sys_disk, run, interactive, ssh_key):
     """Create a new virtual machine.
 
     you can provide a ssh_key on command line calling this command as:
@@ -137,7 +137,7 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
 
     >>> gandi config ssh_key_path ~/.ssh/id_rsa.pub
 
-    to know which disk image id to use as sys_disk_id
+    to know which disk image label (or id) to use as sys_disk
 
     >>> gandi image.list
 
@@ -145,7 +145,7 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
 
     result = gandi.iaas.create(datacenter_id, memory, cores, ip_version,
                                bandwidth, login, password, hostname,
-                               sys_disk_id, run,
+                               sys_disk, run,
                                interactive, ssh_key)
     if not interactive:
         gandi.pretty_echo(result)
