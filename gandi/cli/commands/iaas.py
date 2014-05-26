@@ -8,19 +8,24 @@ from gandi.cli.core.utils import output_vm, read_ssh_key
 
 @cli.command()
 @click.option('--state', default=None, help='filter results by state')
+@click.option('--id', help='display ids', is_flag=True)
 @pass_gandi
-def list(gandi, state):
+def list(gandi, state, id):
     """List virtual machines."""
 
     options = {}
     if state:
         options['state'] = state
 
+    output_keys = ['hostname', 'state']
+    if id:
+        output_keys.append('id')
+
     datacenters = gandi.datacenter.list()
     result = gandi.iaas.list(options)
     for vm in result:
         gandi.echo('-' * 10)
-        output_vm(gandi, vm, datacenters)
+        output_vm(gandi, vm, datacenters, output_keys)
 
     return result
 
@@ -31,9 +36,12 @@ def list(gandi, state):
 def info(gandi, id):
     """Display information about a virtual machine."""
 
+    output_keys = ['hostname', 'state', 'cores', 'memory', 'console',
+                   'datacenter']
+
     datacenters = gandi.datacenter.list()
     vm = gandi.iaas.info(id)
-    output_vm(gandi, vm, datacenters)
+    output_vm(gandi, vm, datacenters, output_keys)
 
     return vm
 
