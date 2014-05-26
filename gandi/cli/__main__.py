@@ -1,10 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from .core.cli import GandiCLI
-
-cli = GandiCLI()
-cli.load_commands()
+from gandi.cli.core.cli import cli
 
 
 def main():

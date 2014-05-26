@@ -35,15 +35,18 @@ class GandiCLI(click.Group):
 
     def load_commands(self):
         """ Load cli commands from submodules """
-        command_folder = os.path.join(os.path.dirname(__file__), '../commands')
-        # print command_folder
-        for filename in os.listdir(command_folder):
+        command_folder = os.path.join(os.path.dirname(__file__),
+                                      '..', 'commands')
+        for filename in sorted(os.listdir(command_folder)):
             if filename.endswith('.py') and '__init__' not in filename:
                 submod = filename[:-3]
                 module_name = 'gandi.cli.commands.' + submod
-                # print module_name
                 __import__(module_name, fromlist=[module_name])
 
     def invoke(self, ctx):
         ctx.obj = GandiContextHelper(verbose=ctx.obj['verbose'])
         click.Group.invoke(self, ctx)
+
+
+cli = GandiCLI()
+cli.load_commands()

@@ -1,6 +1,7 @@
 
 import click
-from gandi.cli.__main__ import cli
+
+from gandi.cli.core.cli import cli
 from gandi.cli.core.conf import pass_gandi
 from gandi.cli.core.utils import output_paas, output_oper, read_ssh_key
 
