@@ -26,9 +26,9 @@ class GandiCLI(click.Group):
             help = inspect.getdoc(self)
 
         click.Group.__init__(self, help=help, params=[
-            click.Option(['-v', '--verbose'],
+            click.Option(['-v'],
                          help='Enable or disable verbose mode.',
-                         is_flag=True,
+                         count=True,
                          default=False, callback=set_debug)
         ])
 
