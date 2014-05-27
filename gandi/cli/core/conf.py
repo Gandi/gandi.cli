@@ -195,6 +195,9 @@ class GandiModule(object):
 
     @classmethod
     def intty(cls):
+        # XXX: temporary hack until we can detect if we are in a pipe or not
+        return True
+
         if hasattr(sys.stdout, 'isatty') and sys.stdout.isatty():
             return True
 
