@@ -101,7 +101,7 @@ class Iaas(GandiModule):
 
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
-               login, password, hostname, sys_disk, run, interactive,
+               login, password, hostname, image, run, interactive,
                ssh_key):
         """create a new virtual machine.
 
@@ -110,9 +110,13 @@ class Iaas(GandiModule):
 
         >>> gandi config ssh_key ~/.ssh/id_rsa.pub
 
-        to know which disk image label (or id) to use as sys_disk
+        to know which disk image label (or id) to use as image
 
         >>> gandi images
+
+        to know which datacenter name|iso|country|id to use as datacenter
+
+        >>> gandi datacenters
 
         """
 
@@ -163,10 +167,10 @@ class Iaas(GandiModule):
         disk_params = {'datacenter_id': vm_params['datacenter_id'],
                        'name': ('sys_%s' % hostname_)[:15]}
 
-        if sys_disk:
-            sys_disk_id_ = int(Image.usable_id(sys_disk))
+        if image:
+            sys_disk_id_ = int(Image.usable_id(image))
         else:
-            sys_disk_id_ = int(Image.usable_id(cls.get('iaas.sys_disk')))
+            sys_disk_id_ = int(Image.usable_id(cls.get('iaas.image')))
 
         result = cls.call('vm.create_from', vm_params, disk_params,
                           sys_disk_id_)
