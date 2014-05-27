@@ -91,7 +91,7 @@ def reboot(gandi, id):
 
 
 @cli.command()
-@click.option('--force', '-f', multiple=True, is_flag=True,
+@click.option('--force', '-f', is_flag=True,
               help='force the vm to stop')
 @click.argument('id')
 @pass_gandi
@@ -99,6 +99,7 @@ def delete(gandi, id, force):
     """Delete a virtual machine."""
 
     output_keys = ['id', 'type', 'step']
+    interactive = False
 
     vm = gandi.iaas.info(id)
     if vm['state'] == 'running':
@@ -109,7 +110,7 @@ def delete(gandi, id, force):
             interactive = True
             gandi.iaas.stop(id, interactive=interactive)
 
-    oper = gandi.iaas.delete(id)
+    oper = gandi.iaas.delete(id, interactive=interactive)
     output_oper(gandi, oper, output_keys)
 
     return oper
