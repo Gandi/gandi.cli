@@ -129,7 +129,7 @@ def delete(gandi, id):
               help='number of month, suffixed with m (e.g.: `12m` means one year)')
 @click.option('--datacenter', default=None,
               help='name|iso|country|id of the datacenter where the PaaS will be spawned')
-@click.option('--vhosts', default=0,
+@click.option('--vhosts', default=None,
               help='List of virtual hosts to be linked to the instance')
 @click.option('--password', default=None,
               help='Password of the PaaS instance')
