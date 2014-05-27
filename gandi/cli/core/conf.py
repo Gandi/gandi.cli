@@ -3,12 +3,12 @@
 import os
 import sys
 import yaml
+import time
 import os.path
 from datetime import datetime
 from subprocess import call
 
 from .client import XMLRPCClient, APICallFailed
-from .utils import MissingConfiguration
 
 try:
     from yaml import CSafeLoader as YAMLLoader
@@ -33,6 +33,8 @@ class GandiModule(object):
     default_api_host = 'http://api-v3.dev.gandi.net'
     home_config = '~/.config/gandi/config.yaml'
     local_config = '.gandi.config.yaml'
+
+    _op_scores = {'BILL': 0, 'WAIT': 1, 'RUN': 2, 'DONE': 3}
 
     verbose = False
     apikey = None
@@ -261,6 +263,40 @@ class GandiModule(object):
                           status, hours, minutes, seconds))
         sys.stdout.write(text)
         sys.stdout.flush()
+
+    @classmethod
+    def display_progress(cls, operations):
+        """ Display progress of Gandi operations
+
+        polls API every 1 seconds to retrieve status
+        """
+
+        start_crea = datetime.utcnow()
+
+        # count number of operations, 3 steps per operation
+        if not isinstance(operations, list):
+            operations = [operations]
+        count_operations = len(operations) * 3
+        updating_done = False
+        while not updating_done:
+            op_score = 0
+            for oper in operations:
+                op_step = cls.call('operation.info', oper['id'])['step']
+                if op_step in cls._op_scores:
+                    op_score += cls._op_scores[op_step]
+                else:
+                    msg = 'step %s unknown, exiting creation' % op_step
+                    cls.error(msg)
+
+            cls.update_progress(float(op_score) / count_operations,
+                                start_crea)
+
+            if op_score == count_operations:
+                updating_done = True
+
+            time.sleep(1)
+
+        cls.echo('\r\n')
 
 
 class GandiContextHelper(GandiModule):

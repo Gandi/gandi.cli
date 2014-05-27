@@ -6,7 +6,6 @@ from gandi.cli.modules.datacenter import Datacenter
 
 
 class Iaas(GandiModule):
-    _op_scores = {'BILL': 0, 'WAIT': 1, 'RUN': 2, 'DONE': 3}
 
     @classmethod
     def list(cls, options=None):
@@ -24,28 +23,52 @@ class Iaas(GandiModule):
         return cls.call('vm.info', cls.usable_id(id))
 
     @classmethod
-    def stop(cls, id):
+    def stop(cls, id, interactive=False):
         """stop a virtual machine"""
 
-        return cls.call('vm.stop', cls.usable_id(id))
+        result = cls.call('vm.stop', cls.usable_id(id))
+        if not interactive:
+            return result
+
+        # interactive mode, run a progress bar
+        cls.echo("Stop your Virtual Machine.")
+        cls.display_progress(result)
 
     @classmethod
-    def start(cls, id):
+    def start(cls, id, interactive=False):
         """start a virtual machine"""
 
-        return cls.call('vm.start', cls.usable_id(id))
+        result = cls.call('vm.start', cls.usable_id(id))
+        if not interactive:
+            return result
+
+        # interactive mode, run a progress bar
+        cls.echo("Start your Virtual Machine.")
+        cls.display_progress(result)
 
     @classmethod
-    def reboot(cls, id):
+    def reboot(cls, id, interactive=False):
         """reboot a virtual machine"""
 
-        return cls.call('vm.reboot', cls.usable_id(id))
+        result = cls.call('vm.reboot', cls.usable_id(id))
+        if not interactive:
+            return result
+
+        # interactive mode, run a progress bar
+        cls.echo("Reboot your Virtual Machine.")
+        cls.display_progress(result)
 
     @classmethod
-    def delete(cls, id):
+    def delete(cls, id, interactive=False):
         """delete a virtual machine"""
 
-        return cls.call('vm.delete', cls.usable_id(id))
+        result = cls.call('vm.delete', cls.usable_id(id))
+        if not interactive:
+            return result
+
+        # interactive mode, run a progress bar
+        cls.echo("Delete your Virtual Machine.")
+        cls.display_progress(result)
 
     @classmethod
     def update(cls, id, memory, cores, console, interactive):
@@ -70,34 +93,8 @@ class Iaas(GandiModule):
             return result
 
         # interactive mode, run a progress bar
-        from datetime import datetime
-        start_crea = datetime.utcnow()
-
-        cls.echo("We're updating your Virtual Machine.")
-        # count number of operations, 3 steps per operation
-        if not isinstance(result, list):
-            result = [result]
-        count_operations = len(result) * 3
-        updating_done = False
-        while not updating_done:
-            op_score = 0
-            for oper in result:
-                op_step = cls.call('operation.info', oper['id'])['step']
-                if op_step in cls._op_scores:
-                    op_score += cls._op_scores[op_step]
-                else:
-                    msg = 'step %s unknown, exiting creation' % op_step
-                    cls.error(msg)
-
-            cls.update_progress(float(op_score) / count_operations,
-                                start_crea)
-
-            if op_score == count_operations:
-                updating_done = True
-
-            time.sleep(.5)
-
-        cls.echo('')
+        cls.echo("Updating your Virtual Machine.")
+        cls.display_progress(result)
 
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
@@ -178,36 +175,14 @@ class Iaas(GandiModule):
             return result
 
         # interactive mode, run a progress bar
-        from datetime import datetime
-        start_crea = datetime.utcnow()
+        cls.echo("Creating your Virtual Machine with default settings.")
+        cls.display_progress(result)
 
-        cls.echo("We're creating your first Virtual Machine with default settings.")
-        # count number of operations, 3 steps per operation
-        count_operations = len(result) * 3
-        crea_done = False
         vm_id = None
-        while not crea_done:
-            op_score = 0
-            for oper in result:
-                op_step = cls.call('operation.info', oper['id'])['step']
-                if op_step in cls._op_scores:
-                    op_score += cls._op_scores[op_step]
-                else:
-                    msg = 'step %s unknown, exiting creation' % op_step
-                    cls.error(msg)
+        for oper in result:
+            if 'vm_id' in oper and oper['vm_id'] is not None:
+                vm_id = oper['vm_id']
 
-                if 'vm_id' in oper and oper['vm_id'] is not None:
-                    vm_id = oper['vm_id']
-
-            cls.update_progress(float(op_score) / count_operations,
-                                start_crea)
-
-            if op_score == count_operations:
-                crea_done = True
-
-            time.sleep(.5)
-
-        cls.echo('')
         vm_info = cls.call('vm.info', vm_id)
         for iface in vm_info['ifaces']:
             for ip in iface['ips']:
@@ -275,8 +250,8 @@ class Iaas(GandiModule):
                 break
 
         # hack for dev
-        # console_url = 'console1-d.dev.gandi.net'
-        console_url = 'console.gandi.net'
+        console_url = 'console1-d.dev.gandi.net'
+        # console_url = 'console.gandi.net'
         access = 'ssh %s@%s' % (ip_addr, console_url)
         cls.shell(access)
 

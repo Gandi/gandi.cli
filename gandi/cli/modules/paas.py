@@ -1,6 +1,4 @@
 
-import time
-
 from gandi.cli.core.conf import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
 
@@ -18,7 +16,6 @@ class Vhost(GandiModule):
 
 
 class Paas(GandiModule):
-    _op_scores = {'BILL': 0, 'WAIT': 1, 'RUN': 2, 'DONE': 3}
 
     @classmethod
     def list(cls, options):
@@ -97,32 +94,8 @@ class Paas(GandiModule):
             return result
 
         # interactive mode, run a progress bar
-        from datetime import datetime
-        start_crea = datetime.utcnow()
-
         cls.echo("We're creating your first PaaS with default settings.")
-        # count number of operations, 3 steps per operation
-        count_operations = len(result) * 3
-        crea_done = False
-        while not crea_done:
-            op_score = 0
-            for oper in result:
-                op_step = cls.call('operation.info', oper['id'])['step']
-                if op_step in cls._op_scores:
-                    op_score += cls._op_scores[op_step]
-                else:
-                    msg = 'step %s unknown, exiting creation' % op_step
-                    cls.error(msg)
-
-            cls.update_progress(float(op_score) / count_operations,
-                                start_crea)
-
-            if op_score == count_operations:
-                crea_done = True
-
-            time.sleep(.5)
-
-        cls.echo('')
+        cls.display_progress(result)
         cls.echo('Your PaaS %s have been created.' % name_)
 
     @classmethod
