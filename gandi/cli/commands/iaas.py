@@ -4,7 +4,7 @@ import click
 from gandi.cli.core.cli import cli
 from gandi.cli.core.conf import pass_gandi
 from gandi.cli.core.utils import (
-    output_vm, output_image, output_oper, read_ssh_key,
+    output_vm, output_image, output_oper, output_datacenter,
 )
 
 
@@ -105,8 +105,8 @@ def delete(gandi, id):
 
 
 @cli.command()
-@click.option('--datacenter-id', type=click.INT, default=None,
-              help='id of the datacenter where the VM will be spawned')
+@click.option('--datacenter', default=None,
+              help='name|iso|country|id of the datacenter where the VM will be spawned')
 @click.option('--memory', type=click.INT, default=None,
               help='quantity of RAM in Megabytes to allocate')
 @click.option('--cores', type=click.INT, default=None,
@@ -134,7 +134,7 @@ def delete(gandi, id):
 @click.option('--ssh-key', default=None,
               help='Authorize ssh authentication for the given ssh key')
 @pass_gandi
-def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
+def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
            password, hostname, sys_disk, run, interactive, ssh_key):
     """Create a new virtual machine.
 
@@ -147,9 +147,13 @@ def create(gandi, datacenter_id, memory, cores, ip_version, bandwidth, login,
 
     >>> gandi images
 
+    to know which datacenter name|iso|country|id to use as datacenter
+
+    >>> gandi datacenters
+
     """
 
-    result = gandi.iaas.create(datacenter_id, memory, cores, ip_version,
+    result = gandi.iaas.create(datacenter, memory, cores, ip_version,
                                bandwidth, login, password, hostname,
                                sys_disk, run,
                                interactive, ssh_key)
@@ -194,7 +198,7 @@ def console(gandi, id):
               help='filter by id of datacenter')
 @pass_gandi
 def images(gandi, datacenter_id):
-    """List available sys_disk_id of images."""
+    """List available images."""
 
     output_keys = ['label', 'os_arch', 'kernel_version', 'disk_id',
                    'datacenter_id']
@@ -203,5 +207,23 @@ def images(gandi, datacenter_id):
     for image in result:
         gandi.echo('-' * 10)
         output_image(gandi, image, output_keys)
+
+    return result
+
+
+@cli.command()
+@click.option('--id', help='display ids', is_flag=True)
+@pass_gandi
+def datacenters(gandi, id):
+    """List available datacenters."""
+
+    output_keys = ['iso', 'name', 'country']
+    if id:
+        output_keys.append('id')
+
+    result = gandi.datacenter.list()
+    for dc in result:
+        gandi.echo('-' * 10)
+        output_datacenter(gandi, dc, output_keys)
 
     return result

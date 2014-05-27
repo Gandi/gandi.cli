@@ -3,7 +3,7 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.conf import pass_gandi
-from gandi.cli.core.utils import output_paas, output_oper, read_ssh_key
+from gandi.cli.core.utils import output_paas, output_oper
 
 
 @cli.command(name='paas.list')
@@ -127,8 +127,8 @@ def delete(gandi, id):
               help='Additional disk amount (in GB)')
 @click.option('--duration', default=None,
               help='number of month, suffixed with m (e.g.: `12m` means one year)')
-@click.option('--datacenter-id', default=None,
-              help='id of the datacenter where the PaaS will be spawned')
+@click.option('--datacenter', default=None,
+              help='name|iso|country|id of the datacenter where the PaaS will be spawned')
 @click.option('--vhosts', default=0,
               help='List of virtual hosts to be linked to the instance')
 @click.option('--password', default=None,
@@ -140,7 +140,7 @@ def delete(gandi, id):
 @click.option('--ssh-key', default=None,
               help='Authorize ssh authentication for the given ssh key')
 @pass_gandi
-def create(gandi, name, size, type, quantity, duration, datacenter_id, vhosts,
+def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
            password, snapshot_profile, interactive, ssh_key):
     """Create a new PaaS instance.
 
@@ -149,9 +149,13 @@ def create(gandi, name, size, type, quantity, duration, datacenter_id, vhosts,
 
     >>> gandi config ssh_key ~/.ssh/id_rsa.pub
 
+    to know which datacenter name|iso|country|id to use as datacenter
+
+    >>> gandi datacenters
+
     """
 
     result = gandi.paas.create(name, size, type, quantity, duration,
-                               datacenter_id, vhosts, password,
+                               datacenter, vhosts, password,
                                snapshot_profile, interactive, ssh_key)
     gandi.pretty_echo(result)

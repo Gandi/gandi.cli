@@ -2,6 +2,7 @@
 import time
 
 from gandi.cli.core.conf import GandiModule
+from gandi.cli.modules.datacenter import Datacenter
 
 
 class Vhost(GandiModule):
@@ -38,7 +39,7 @@ class Paas(GandiModule):
         return cls.call('paas.delete', cls.usable_id(id))
 
     @classmethod
-    def create(cls, name, size, type, quantity, duration, datacenter_id, vhosts,
+    def create(cls, name, size, type, quantity, duration, datacenter, vhosts,
                password, snapshot_profile, interactive, ssh_key):
         """create a new PaaS instance.
 
@@ -56,12 +57,16 @@ class Paas(GandiModule):
         # then env var
         # then local configuration
         # then global configuration
-        datacenter_id_ = datacenter_id or int(cls.get('paas.datacenter_id'))
         name_ = name or cls.get('paas.name')
         size_ = size or cls.get('paas.size')
         type_ = type or cls.get('paas.type')
         password_ = password or cls.get('paas.password')
         duration_ = duration or cls.get('paas.duration')
+
+        if datacenter:
+            datacenter_id_ = int(Datacenter.usable_id(datacenter))
+        else:
+            datacenter_id_ = int(Datacenter.usable_id(cls.get('paas.datacenter')))
 
         paas_params = {
             'name': name_,

@@ -2,6 +2,7 @@
 import time
 
 from gandi.cli.core.conf import GandiModule
+from gandi.cli.modules.datacenter import Datacenter
 
 
 class Iaas(GandiModule):
@@ -99,7 +100,7 @@ class Iaas(GandiModule):
         cls.echo('')
 
     @classmethod
-    def create(cls, datacenter_id, memory, cores, ip_version, bandwidth,
+    def create(cls, datacenter, memory, cores, ip_version, bandwidth,
                login, password, hostname, sys_disk, run, interactive,
                ssh_key):
         """create a new virtual machine.
@@ -122,7 +123,6 @@ class Iaas(GandiModule):
         # then env var
         # then local configuration
         # then global configuration
-        datacenter_id_ = datacenter_id or int(cls.get('iaas.datacenter_id'))
         memory_ = memory or int(cls.get('iaas.memory'))
         cores_ = cores or int(cls.get('iaas.cores'))
         ip_version_ = ip_version or int(cls.get('iaas.ip_version'))
@@ -130,6 +130,11 @@ class Iaas(GandiModule):
         login_ = login or cls.get('iaas.login')
         password_ = password or cls.get('iaas.password')
         hostname_ = hostname or cls.get('iaas.hostname')
+
+        if datacenter:
+            datacenter_id_ = int(Datacenter.usable_id(datacenter))
+        else:
+            datacenter_id_ = int(Datacenter.usable_id(cls.get('iaas.datacenter')))
 
         vm_params = {
             'hostname': hostname_,
@@ -308,14 +313,3 @@ class Image(GandiModule):
             cls.error(msg)
 
         return qry_id
-
-
-class Datacenter(GandiModule):
-
-    @classmethod
-    def list(cls):
-        """list available datacenters"""
-
-        options = {}
-
-        return cls.call('hosting.datacenter.list', options)

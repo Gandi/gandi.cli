@@ -53,6 +53,15 @@ def output_image(gandi, image, output_keys):
             gandi.echo(msg)
 
 
+def output_datacenter(gandi, datacenter, output_keys):
+    """ Helper to output a datacenter """
+
+    for key in output_keys:
+        if key in datacenter:
+            msg = '%-10s: %s' % (key, datacenter[key])
+            gandi.echo(msg)
+
+
 def output_oper(gandi, oper, output_keys):
     """ Helper to output an operation """
 
