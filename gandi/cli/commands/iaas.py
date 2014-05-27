@@ -33,19 +33,25 @@ def list(gandi, state, id):
 
 
 @cli.command()
-@click.argument('id')
+@click.argument('resource', nargs=-1)
 @pass_gandi
-def info(gandi, id):
-    """Display information about a virtual machine."""
+def info(gandi, resource):
+    """Display information about a virtual machine.
+
+    Resource can be a Hostname or an ID
+    """
 
     output_keys = ['hostname', 'state', 'cores', 'memory', 'console',
                    'datacenter', 'ip']
 
     datacenters = gandi.datacenter.list()
-    vm = gandi.iaas.info(id)
-    output_vm(gandi, vm, datacenters, output_keys)
+    ret = []
+    for item in resource:
+        vm = gandi.iaas.info(item)
+        output_vm(gandi, vm, datacenters, output_keys)
+        ret.append(vm)
 
-    return vm
+    return ret
 
 
 @cli.command()
