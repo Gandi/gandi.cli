@@ -14,19 +14,19 @@ class Iaas(GandiModule):
         if not options:
             options = {}
 
-        return cls.call('vm.list', options)
+        return cls.call('hosting.vm.list', options)
 
     @classmethod
     def info(cls, id):
         """display information about a virtual machine"""
 
-        return cls.call('vm.info', cls.usable_id(id))
+        return cls.call('hosting.vm.info', cls.usable_id(id))
 
     @classmethod
     def stop(cls, id, interactive=False):
         """stop a virtual machine"""
 
-        result = cls.call('vm.stop', cls.usable_id(id))
+        result = cls.call('hosting.vm.stop', cls.usable_id(id))
         if not interactive:
             return result
 
@@ -38,7 +38,7 @@ class Iaas(GandiModule):
     def start(cls, id, interactive=False):
         """start a virtual machine"""
 
-        result = cls.call('vm.start', cls.usable_id(id))
+        result = cls.call('hosting.vm.start', cls.usable_id(id))
         if not interactive:
             return result
 
@@ -50,7 +50,7 @@ class Iaas(GandiModule):
     def reboot(cls, id, interactive=False):
         """reboot a virtual machine"""
 
-        result = cls.call('vm.reboot', cls.usable_id(id))
+        result = cls.call('hosting.vm.reboot', cls.usable_id(id))
         if not interactive:
             return result
 
@@ -62,7 +62,7 @@ class Iaas(GandiModule):
     def delete(cls, id, interactive=False):
         """delete a virtual machine"""
 
-        result = cls.call('vm.delete', cls.usable_id(id))
+        result = cls.call('hosting.vm.delete', cls.usable_id(id))
         if not interactive:
             return result
 
@@ -88,7 +88,7 @@ class Iaas(GandiModule):
         if console is not None:
             vm_params['console'] = console
 
-        result = cls.call('vm.update', cls.usable_id(id), vm_params)
+        result = cls.call('hosting.vm.update', cls.usable_id(id), vm_params)
         if not interactive:
             return result
 
@@ -169,7 +169,7 @@ class Iaas(GandiModule):
         else:
             sys_disk_id_ = int(Image.usable_id(cls.get('iaas.image')))
 
-        result = cls.call('vm.create_from', vm_params, disk_params,
+        result = cls.call('hosting.vm.create_from', vm_params, disk_params,
                           sys_disk_id_)
         if not interactive:
             return result
@@ -183,7 +183,7 @@ class Iaas(GandiModule):
             if 'vm_id' in oper and oper['vm_id'] is not None:
                 vm_id = oper['vm_id']
 
-        vm_info = cls.call('vm.info', vm_id)
+        vm_info = cls.call('hosting.vm.info', vm_id)
         for iface in vm_info['ifaces']:
             for ip in iface['ips']:
                 if ip['version'] == 4:
