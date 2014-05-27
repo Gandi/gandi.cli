@@ -39,7 +39,7 @@ def info(gandi, id):
     """Display information about a virtual machine."""
 
     output_keys = ['hostname', 'state', 'cores', 'memory', 'console',
-                   'datacenter']
+                   'datacenter', 'ip']
 
     datacenters = gandi.datacenter.list()
     vm = gandi.iaas.info(id)

@@ -23,6 +23,16 @@ def output_vm(gandi, vm, datacenters, output_keys):
         msg = '%-10s: %s' % ('datacenter', dc_name)
         gandi.echo(msg)
 
+    if 'ip' in output_keys:
+        for iface in vm['ifaces']:
+            msg = '%-10s: %s' % ('bandwidth', iface['bandwidth'])
+            gandi.echo(msg)
+            for ip in iface['ips']:
+                ip_addr = ip['ip']
+
+                msg = '%-10s: %s' % ('ip', ip_addr)
+                gandi.echo(msg)
+
 
 def output_paas(gandi, paas, datacenters, vhosts, output_keys):
     """ Helper to output a paas information """
