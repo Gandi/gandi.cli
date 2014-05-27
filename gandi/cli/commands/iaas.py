@@ -55,45 +55,63 @@ def info(gandi, resource):
 
 
 @cli.command()
-@click.argument('id')
+@click.argument('resource', nargs=-1)
 @pass_gandi
-def stop(gandi, id):
-    """Stop a virtual machine."""
+def stop(gandi, resource):
+    """Stop a virtual machine.
+
+    Resource can be a Hostname or an ID
+    """
 
     output_keys = ['id', 'type', 'step']
 
-    oper = gandi.iaas.stop(id)
-    output_oper(gandi, oper, output_keys)
+    ret = []
+    for item in resource:
+        oper = gandi.iaas.stop(item)
+        output_oper(gandi, oper, output_keys)
+        ret.append(oper)
 
-    return oper
+    return ret
 
 
 @cli.command()
-@click.argument('id')
+@click.argument('resource', nargs=-1)
 @pass_gandi
-def start(gandi, id):
-    """Start a virtual machine."""
+def start(gandi, resource):
+    """Start a virtual machine.
+
+    Resource can be a Hostname or an ID
+    """
 
     output_keys = ['id', 'type', 'step']
 
-    oper = gandi.iaas.start(id)
-    output_oper(gandi, oper, output_keys)
+    ret = []
+    for item in resource:
+        oper = gandi.iaas.start(item)
+        output_oper(gandi, oper, output_keys)
+        ret.append(oper)
 
-    return oper
+    return ret
 
 
 @cli.command()
-@click.argument('id')
+@click.argument('resource', nargs=-1)
 @pass_gandi
-def reboot(gandi, id):
-    """Reboot a virtual machine."""
+def reboot(gandi, resource):
+    """Reboot a virtual machine.
+
+    Resource can be a Hostname or an ID
+    """
 
     output_keys = ['id', 'type', 'step']
 
-    oper = gandi.iaas.reboot(id)
-    output_oper(gandi, oper, output_keys)
+    ret = []
+    for item in resource:
+        oper = gandi.iaas.reboot(item)
+        output_oper(gandi, oper, output_keys)
+        ret.append(oper)
 
-    return oper
+    return ret
 
 
 @cli.command()
@@ -203,10 +221,13 @@ def update(gandi, id, memory, cores, console, interactive):
 
 
 @cli.command()
-@click.argument('id')
+@click.argument('resource')
 @pass_gandi
-def console(gandi, id):
-    """Open a console to virtual machine."""
+def console(gandi, resource):
+    """Open a console to virtual machine.
+
+    Resource can be a Hostname or an ID
+    """
 
     gandi.iaas.console(id)
 
