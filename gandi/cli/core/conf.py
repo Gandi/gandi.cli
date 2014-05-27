@@ -164,7 +164,8 @@ class GandiModule(object):
         if ret is None:
             if mandatory:
                 msg = ('missing configuration value for %s\n'
-                       'please use "gandi config %s <VALUE>" to set a value'
+                       'please use "gandi config [-g] %s <VALUE>" to set a value\n\n'
+                       '-g globally\n'
                        % (key, key))
                 raise UsageError(msg)
             return default

@@ -30,7 +30,7 @@ def output_vm(gandi, vm, datacenters, output_keys):
             for ip in iface['ips']:
                 ip_addr = ip['ip']
 
-                msg = '%-10s: %s' % ('ip', ip_addr)
+                msg = '%-10s: %s' % ('ip%s' % ip['version'], ip_addr)
                 gandi.echo(msg)
 
 
