@@ -96,7 +96,7 @@ def deploy(gandi, vhost):
     paas_access = gandi.get('paas.access')
     deploy_git_host = gandi.get('paas.deploy_git_host')
 
-    gandi.shell("ssh %s@%s 'deploy %s'" % (paas_access, deploy_git_host))
+    gandi.shell("ssh %s 'deploy %s'" % (paas_access, deploy_git_host))
 
 
 @cli.command(name='paas.delete')
@@ -143,7 +143,7 @@ def delete(gandi, resource):
 @pass_gandi
 def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
            password, snapshot_profile, interactive, ssh_key):
-    """Create a new PaaS instance.
+    """Create a new PaaS instance and initialize associated git repository.
 
     you can specify a configuration entry named 'ssh_key' containing
     path to your ssh_key file
