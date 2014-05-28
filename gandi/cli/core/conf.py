@@ -53,13 +53,17 @@ class GandiModule(object):
     def load(cls, filename, name=None):
         """ Load yaml configuration from filename """
         if not os.path.exists(filename):
-            return
+            return {}
         name = name or filename
 
         if name not in cls._conffiles:
             cls.debug('loading %s configuration' % name)
             with open(filename) as fdesc:
-                cls._conffiles[name] = yaml.load(fdesc, YAMLLoader)
+                content = yaml.load(fdesc, YAMLLoader)
+                # in case the file is empty
+                if content is None:
+                    content = {}
+                cls._conffiles[name] = content
 
         return cls._conffiles[name]
 
