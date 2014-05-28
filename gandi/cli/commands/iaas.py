@@ -117,24 +117,28 @@ def reboot(gandi, resource):
 @cli.command()
 @click.option('--force', '-f', is_flag=True,
               help='force the vm to stop')
-@click.argument('id')
+@click.argument('resource')
 @pass_gandi
-def delete(gandi, id, force):
-    """Delete a virtual machine."""
+def delete(gandi, resource, force):
+    """Delete a virtual machine.
+
+    Resource can be a Hostname or an ID
+    """
 
     output_keys = ['id', 'type', 'step']
     interactive = False
 
-    vm = gandi.iaas.info(id)
+    vm = gandi.iaas.info(resource)
     if vm['state'] == 'running':
         if not force:
-            force_stop = click.confirm('VM %s is running, stop it ?' % id)
+            force_stop = click.confirm('VM %s is running, stop it ?' %
+                                       resource)
 
         if force or force_stop:
             interactive = True
-            gandi.iaas.stop(id, interactive=interactive)
+            gandi.iaas.stop(resource, interactive=interactive)
 
-    oper = gandi.iaas.delete(id, interactive=interactive)
+    oper = gandi.iaas.delete(resource, interactive=interactive)
     output_oper(gandi, oper, output_keys)
 
     return oper
@@ -208,12 +212,15 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
               help='activate the emergency console')
 @click.option('--interactive', default=True, is_flag=True,
               help='run creation in interactive mode (default=True)')
-@click.argument('id')
+@click.argument('resource')
 @pass_gandi
-def update(gandi, id, memory, cores, console, interactive):
-    """Update a virtual machine."""
+def update(gandi, resource, memory, cores, console, interactive):
+    """Update a virtual machine.
 
-    result = gandi.iaas.update(id, memory, cores, console, interactive)
+    Resource can be a Hostname or an ID
+    """
+
+    result = gandi.iaas.update(resource, memory, cores, console, interactive)
     if not interactive:
         gandi.pretty_echo(result)
 
