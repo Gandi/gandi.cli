@@ -26,3 +26,15 @@ def setup(gandi):
 def config(gandi, g, key, value):
     """Configure default values"""
     gandi.configure(global_=g, key=key, val=value)
+
+
+@cli.command()
+@click.argument('command', required=False)
+@click.pass_context
+def help(ctx, command):
+    """Display help for a command"""
+    if not command:
+        click.echo(ctx.get_help())
+    else:
+        click.echo(cli.get_command(ctx, command).get_help(ctx))
+    ctx.exit()
