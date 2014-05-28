@@ -134,6 +134,9 @@ class GandiModule(object):
     def _get(cls, scope, key, default=None, separator='.'):
         key = key.split(separator)
         value = cls._conffiles.get(scope, {})
+        if not value:
+            return default
+
         try:
             for k in key:
                 value = value[k]
@@ -164,8 +167,7 @@ class GandiModule(object):
         if ret is None:
             if mandatory:
                 msg = ('missing configuration value for %s\n'
-                       'please use "gandi config [-g] %s <VALUE>" to set a value\n\n'
-                       '-g globally\n'
+                       'please use "gandi config [-g] %s <VALUE>" to set a value\n'
                        % (key, key))
                 raise UsageError(msg)
             return default
