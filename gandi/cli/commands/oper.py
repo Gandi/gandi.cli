@@ -25,7 +25,7 @@ def list(gandi):
     return result
 
 
-@cli.command(name='oper.info')
+@cli.command(name='oper')
 @click.argument('id', type=click.INT)
 @pass_gandi
 def info(gandi, id):
