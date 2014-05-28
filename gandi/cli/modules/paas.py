@@ -36,6 +36,55 @@ class Paas(GandiModule):
         return cls.call('paas.delete', cls.usable_id(id))
 
     @classmethod
+    def update(cls, id, name, size, quantity, password, ssh_key, upgrade,
+               console, snapshot_profile, reset_mysql_password, interactive):
+        """update a Paas instance"""
+
+        if interactive and not cls.intty():
+            interactive = False
+
+        paas_params = {}
+
+        if name is not None:
+            paas_params['name'] = name
+
+        if size is not None:
+            paas_params['size'] = size
+
+        if quantity is not None:
+            paas_params['quantity'] = quantity
+
+        if password is not None:
+            paas_params['password'] = password
+
+        ssh_key_ = ssh_key or cls.get('ssh_key', mandatory=False)
+        if ssh_key_ is not None:
+            with open(ssh_key_) as fdesc:
+                ssh_key_ = fdesc.read()
+            if ssh_key_ is not None:
+                paas_params['ssh_key'] = ssh_key_
+
+        if upgrade is not None:
+            paas_params['upgrade'] = upgrade
+
+        if console is not None:
+            paas_params['console'] = console
+
+        if snapshot_profile is not None:
+            paas_params['snapshot_profile'] = snapshot_profile
+
+        if reset_mysql_password is not None:
+            paas_params['reset_mysql_password'] = reset_mysql_password
+
+        result = cls.call('paas.update', cls.usable_id(id), paas_params)
+        if not interactive:
+            return result
+
+        # interactive mode, run a progress bar
+        cls.echo("Updating your Paas instance.")
+        cls.display_progress(result)
+
+    @classmethod
     def create(cls, name, size, type, quantity, duration, datacenter, vhosts,
                password, snapshot_profile, interactive, ssh_key):
         """create a new PaaS instance.
@@ -88,6 +137,9 @@ class Paas(GandiModule):
                 ssh_key_ = fdesc.read()
             if ssh_key_ is not None:
                 paas_params['ssh_key'] = ssh_key_
+
+        if snapshot_profile is not None:
+            paas_params['snapshot_profile'] = snapshot_profile
 
         result = cls.call('paas.create', paas_params)
         if not interactive:

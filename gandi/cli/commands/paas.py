@@ -158,4 +158,47 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     result = gandi.paas.create(name, size, type, quantity, duration,
                                datacenter, vhosts, password,
                                snapshot_profile, interactive, ssh_key)
-    gandi.pretty_echo(result)
+    if not interactive:
+        gandi.pretty_echo(result)
+
+    return result
+
+
+@cli.command(name='paas.update')
+@click.option('--name', type=click.STRING, default=None,
+              help='Name of the PaaS instance')
+@click.option('--size', default=None,
+              help='Size of the PaaS instance')
+@click.option('--quantity', type=click.INT, default=0,
+              help='Additional disk amount (in GB)')
+@click.option('--password', default=None,
+              help='Password of the PaaS instance')
+@click.option('--ssh-key', default=None,
+              help='Authorize ssh authentication for the given ssh key')
+@click.option('--upgrade', default=None,
+              help='Upgrade the instance to the last system image if needed')
+@click.option('--console', default=None,
+              help='Activate or deactivate the Console')
+@click.option('--snapshot-profile', default=None,
+              help='Set a snapshot profile associated to this paas disk')
+@click.option('--reset-mysql-password', default=None,
+              help='Reset mysql password for root')
+@click.option('--interactive', default=True, is_flag=True,
+              help='run creation in interactive mode (default=True)')
+@pass_gandi
+@click.argument('resource')
+def update(gandi, resource, name, size, quantity, password, ssh_key,
+           upgrade, console, snapshot_profile, reset_mysql_password,
+           interactive):
+    """Update a PaaS instance.
+
+    Resource can be a Hostname or an ID
+    """
+
+    result = gandi.paas.update(resource, name, size, quantity, password,
+                               ssh_key, upgrade, console, snapshot_profile,
+                               reset_mysql_password, interactive)
+    if not interactive:
+        gandi.pretty_echo(result)
+
+    return result
