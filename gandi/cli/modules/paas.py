@@ -166,10 +166,11 @@ class Paas(GandiModule):
 
         cls.debug('save PaaS instance information to local configuration')
 
-        paas_access = '%s@%s' % (paas['user'], paas['git_server'])
+        git_server = paas['git_server']
+        paas_access = '%s@%s' % (paas['user'], git_server)
         cls.shell('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
         # go into directory to save configuration file in this directory
-        os.chdir(os.getcwd() + ('/%s.git' % vhost))
+        os.chdir(os.getcwd() + ('/%s' % vhost))
         cls.configure(False, 'paas.user', paas['user'])
         cls.configure(False, 'paas.name', paas['name'])
         cls.configure(False, 'paas.deploy_git_host', '%s.git' % vhost)
