@@ -1,4 +1,5 @@
 
+import os
 from gandi.cli.core.conf import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
 
@@ -146,9 +147,33 @@ class Paas(GandiModule):
             return result
 
         # interactive mode, run a progress bar
-        cls.echo("We're creating your first PaaS with default settings.")
+        cls.echo("We're creating your PaaS instance.")
         cls.display_progress(result)
         cls.echo('Your PaaS %s have been created.' % name_)
+
+    @classmethod
+    def init_conf(cls, id):
+        """ Initialize local configuration with PaaS information. """
+
+        paas = Paas.info(cls.usable_id(id))
+        if paas['vhosts']:
+            vhost = paas['vhosts'][0]['name']
+        else:
+            vhost = 'default'
+
+        if 'php' not in paas['type']:
+            vhost = 'default'
+
+        cls.debug('save PaaS instance information to local configuration')
+
+        paas_access = '%s@%s' % (paas['user'], paas['git_server'])
+        cls.shell('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
+        # go into directory to save configuration file in this directory
+        os.chdir(os.getcwd() + ('/%s.git' % vhost))
+        cls.configure(False, 'paas.user', paas['user'])
+        cls.configure(False, 'paas.name', paas['name'])
+        cls.configure(False, 'paas.deploy_git_host', '%s.git' % vhost)
+        cls.configure(False, 'paas.access', paas_access)
 
     @classmethod
     def usable_id(cls, id):

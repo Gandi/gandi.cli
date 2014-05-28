@@ -41,15 +41,18 @@ def list(gandi, state, id, vhosts):
 
 
 @cli.command(name='paas.info')
-@click.argument('id')
+@click.argument('resource')
 @pass_gandi
-def info(gandi, id):
-    """Display information about a Paas instance."""
+def info(gandi, resource):
+    """Display information about a Paas instance.
+
+    Resource can be a vhost, a hostname, or an ID
+    """
 
     output_keys = ['name', 'type', 'size', 'memory', 'console', 'vhost',
                    'dc', 'ftp_server', 'git_server']
 
-    paas = gandi.paas.info(id)
+    paas = gandi.paas.info(resource)
     paas_hosts = []
     list_vhost = gandi.vhost.list({'paas_id': paas['id']})
     for host in list_vhost:
@@ -61,59 +64,57 @@ def info(gandi, id):
 
 
 @cli.command()
-@click.argument('vhost')
+@click.argument('vhost', required=False)
 @pass_gandi
 def clone(gandi, vhost):
     """Clone a remote vhost in a local git repository."""
 
-    paas = gandi.paas.info(vhost)
+    paas_access = gandi.get('paas.access', mandatory=False)
+    if not vhost and not paas_access:
+        gandi.error('missing VHOST parameter')
 
-    git_server = paas['git_server']
-    # dev hack
-    git_server = '10.55.32.107'
+    if vhost and not paas_access:
+        gandi.paas.init_conf(vhost)
 
-    gandi.shell('git clone ssh+git://%s@%s/%s.git' % (paas['user'], git_server,
-                                                      vhost))
+    paas_access = gandi.get('paas.access')
+    gandi.shell('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
 
 
 @cli.command()
-@click.argument('vhost')
-@click.argument('git_url', required=False)
+@click.argument('vhost', required=False)
 @pass_gandi
-def deploy(gandi, vhost, git_url):
+def deploy(gandi, vhost):
     """Deploy code on a remote vhost."""
 
-    paas = gandi.paas.info(vhost)
+    paas_access = gandi.get('paas.access', mandatory=False)
+    if not vhost and not paas_access:
+        gandi.error('missing VHOST parameter')
 
-    git_server = paas['git_server']
-    # dev hack
-    git_server = '10.55.32.107'
+    if vhost and not paas_access:
+        gandi.paas.init_conf(vhost)
 
-    if git_url:
-        # clone locally
-        gandi.shell('git clone %s .' % git_url)
-        gandi.shell('git remote add gandi ssh+git://%s@%s/%s.git' %
-                    (paas['user'], git_server, vhost))
-        gandi.shell('git push gandi')
-    else:
-        gandi.shell('git push origin')
+    paas_access = gandi.get('paas.access')
+    deploy_git_host = gandi.get('paas.deploy_git_host')
 
-    gandi.shell("ssh %s@%s 'deploy %s.git'" % (paas['user'], git_server,
-                                               vhost))
+    gandi.shell("ssh %s@%s 'deploy %s'" % (paas_access, deploy_git_host))
 
 
 @cli.command(name='paas.delete')
-@click.argument('id')
+@click.argument('resource')
 @pass_gandi
-def delete(gandi, id):
-    """Delete a PaaS instance."""
+def delete(gandi, resource):
+    """Delete a PaaS instance.
+
+    Resource can be a vhost, a hostname, or an ID
+    """
 
     output_keys = ['id', 'type', 'step']
 
-    oper = gandi.paas.delete(id)
-    output_oper(gandi, oper, output_keys)
+    opers = gandi.paas.delete(resource)
+    for oper in opers:
+        output_oper(gandi, oper, output_keys)
 
-    return oper
+    return opers
 
 
 @cli.command(name='paas')
@@ -129,7 +130,7 @@ def delete(gandi, id):
               help='number of month, suffixed with m (e.g.: `12m` means one year)')
 @click.option('--datacenter', default=None,
               help='name|iso|country|id of the datacenter where the PaaS will be spawned')
-@click.option('--vhosts', default=None,
+@click.option('--vhosts', default=None, multiple=True,
               help='List of virtual hosts to be linked to the instance')
 @click.option('--password', default=None,
               help='Password of the PaaS instance')
@@ -160,6 +161,9 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
                                snapshot_profile, interactive, ssh_key)
     if not interactive:
         gandi.pretty_echo(result)
+
+    name_ = name or gandi.get('paas.name')
+    gandi.paas.init_conf(name_)
 
     return result
 
