@@ -34,7 +34,7 @@ def config(gandi, g, key, value):
 def help(ctx, command):
     """Display help for a command"""
     if not command:
-        click.echo(ctx.get_help())
+        click.echo(cli.get_help(ctx))
     else:
         click.echo(cli.get_command(ctx, command).get_help(ctx))
     ctx.exit()
