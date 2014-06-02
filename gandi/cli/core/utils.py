@@ -81,6 +81,15 @@ def output_oper(gandi, oper, output_keys):
             gandi.echo(msg)
 
 
+def output_generic(gandi, data, output_keys):
+    """ Generic helper to output info from a data dict """
+
+    for key in output_keys:
+        if key in data:
+            msg = '%-10s: %s' % (key, data[key])
+            gandi.echo(msg)
+
+
 def read_ssh_key(ctx, value):
     """ Helper to read content of a filehandler
 

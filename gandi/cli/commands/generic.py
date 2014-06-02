@@ -3,6 +3,7 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.conf import pass_gandi
+from gandi.cli.core.utils import output_generic
 
 
 @cli.command()
@@ -38,3 +39,16 @@ def help(ctx, command):
     else:
         click.echo(cli.get_command(ctx, command).get_help(ctx))
     ctx.exit()
+
+
+@cli.command()
+@pass_gandi
+def api(gandi):
+    """Display information about API used."""
+
+    output_keys = ['api_version']
+
+    result = gandi.api.info()
+    output_generic(gandi, result, output_keys)
+
+    return result
