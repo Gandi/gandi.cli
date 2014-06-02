@@ -140,7 +140,8 @@ def delete(gandi, resource, force):
             gandi.iaas.stop(resource, interactive=interactive)
 
     oper = gandi.iaas.delete(resource, interactive=interactive)
-    output_oper(gandi, oper, output_keys)
+    if not interactive:
+        output_oper(gandi, oper, output_keys)
 
     return oper
 
