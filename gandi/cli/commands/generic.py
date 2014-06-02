@@ -37,7 +37,11 @@ def help(ctx, command):
     if not command:
         click.echo(cli.get_help(ctx))
     else:
-        click.echo(cli.get_command(ctx, command).get_help(ctx))
+        cmd = cli.get_command(ctx, command)
+        if cmd:
+            click.echo(cmd.get_help(ctx))
+        else:
+            click.echo(cli.get_help(ctx))
     ctx.exit()
 
 
