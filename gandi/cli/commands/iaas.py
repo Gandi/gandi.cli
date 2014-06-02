@@ -6,6 +6,7 @@ from gandi.cli.core.conf import pass_gandi
 from gandi.cli.core.utils import (
     output_vm, output_image, output_oper, output_datacenter,
 )
+from gandi.cli.core.params import DATACENTER
 
 
 @cli.command()
@@ -146,12 +147,14 @@ def delete(gandi, resource, force):
 
 @cli.command()
 @click.option('--datacenter', default=None,
-              help='name|iso|country|id of the datacenter where the VM will be spawned')
+              type=DATACENTER,
+              help='iso of the datacenter where the VM will be spawned')
 @click.option('--memory', type=click.INT, default=None,
               help='quantity of RAM in Megabytes to allocate')
 @click.option('--cores', type=click.INT, default=None,
               help='number of cpu')
-@click.option('--ip-version', type=click.INT, default=None,
+@click.option('--ip-version', default=None,
+              type=click.Choice(['4', '6']),
               help='version of the created IP, can be 4 or 6')
 @click.option('--bandwidth', type=click.INT, default=None,
               help="network bandwidth in bit/s used to create the VM's first "

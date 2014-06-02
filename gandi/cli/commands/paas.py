@@ -4,6 +4,7 @@ import click
 from gandi.cli.core.cli import cli
 from gandi.cli.core.conf import pass_gandi
 from gandi.cli.core.utils import output_paas, output_oper
+from gandi.cli.core.params import DATACENTER, PAAS_TYPE
 
 
 @cli.command(name='paas.list')
@@ -121,15 +122,18 @@ def delete(gandi, resource):
 @click.option('--name', default=None,
               help='Name of the PaaS instance')
 @click.option('--size', default=None,
+              type=click.Choice(['s', 'x', 'xl', 'xxl']),
               help='Size of the PaaS instance')
 @click.option('--type', default=None,
+              type=PAAS_TYPE,
               help='Type of the PaaS instance')
 @click.option('--quantity', default=0,
               help='Additional disk amount (in GB)')
 @click.option('--duration', default=None,
               help='number of month, suffixed with m (e.g.: `12m` means one year)')
 @click.option('--datacenter', default=None,
-              help='name|iso|country|id of the datacenter where the PaaS will be spawned')
+              type=DATACENTER,
+              help='iso of the datacenter where the PaaS will be spawned')
 @click.option('--vhosts', default=None, multiple=True,
               help='List of virtual hosts to be linked to the instance')
 @click.option('--password', default=None,

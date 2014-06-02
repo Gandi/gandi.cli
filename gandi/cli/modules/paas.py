@@ -19,6 +19,12 @@ class Vhost(GandiModule):
 class Paas(GandiModule):
 
     @classmethod
+    def type_list(cls, options={}):
+        """list type of Paas instances"""
+
+        return cls.call('paas.type.list', options)
+
+    @classmethod
     def list(cls, options):
         """list Paas instances"""
 
