@@ -8,6 +8,14 @@ import click
 from .conf import GandiContextHelper
 
 
+# XXX: dirty hack of click help command to allow short help -h
+def add_help_option(self):
+    """Adds a help option to the command."""
+    click.help_option(*('--help', '-h'))(self)
+
+click.Command.add_help_option = add_help_option
+
+
 class GandiCLI(click.Group):
     """ Gandi command line utility.
 
