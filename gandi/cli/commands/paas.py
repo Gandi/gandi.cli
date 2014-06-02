@@ -154,10 +154,6 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
 
     >>> gandi config ssh_key ~/.ssh/id_rsa.pub
 
-    to know which datacenter name|iso|country|id to use as datacenter
-
-    >>> gandi datacenters
-
     """
 
     result = gandi.paas.create(name, size, type, quantity, duration,

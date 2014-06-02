@@ -111,10 +111,6 @@ class Iaas(GandiModule):
 
         >>> gandi images
 
-        to know which datacenter name|iso|country|id to use as datacenter
-
-        >>> gandi datacenters
-
         """
 
         if interactive and not cls.intty():

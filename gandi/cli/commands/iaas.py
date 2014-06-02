@@ -190,10 +190,6 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
 
     >>> gandi images
 
-    to know which datacenter name|iso|country|id to use as datacenter
-
-    >>> gandi datacenters
-
     """
 
     result = gandi.iaas.create(datacenter, memory, cores, ip_version,
