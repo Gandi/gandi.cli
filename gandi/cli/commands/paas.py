@@ -154,6 +154,10 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
 
     >>> gandi config ssh_key ~/.ssh/id_rsa.pub
 
+    to know which PaaS instance type to use as type
+
+    >>> gandi types
+
     """
 
     result = gandi.paas.create(name, size, type, quantity, duration,
@@ -172,6 +176,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
 @click.option('--name', type=click.STRING, default=None,
               help='Name of the PaaS instance')
 @click.option('--size', default=None,
+              type=click.Choice(['s', 'x', 'xl', 'xxl']),
               help='Size of the PaaS instance')
 @click.option('--quantity', type=click.INT, default=0,
               help='Additional disk amount (in GB)')
@@ -206,3 +211,16 @@ def update(gandi, resource, name, size, quantity, password, ssh_key,
         gandi.pretty_echo(result)
 
     return result
+
+
+@cli.command()
+@pass_gandi
+def types(gandi):
+    """List types Paas instances."""
+
+    options = {}
+    types = gandi.paas.type_list(options)
+    for type_ in types:
+        gandi.echo(type_['name'])
+
+    return types
