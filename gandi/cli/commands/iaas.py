@@ -236,7 +236,7 @@ def console(gandi, resource):
     Resource can be a Hostname or an ID
     """
 
-    gandi.iaas.console(id)
+    gandi.iaas.console(resource)
 
 
 @cli.command()
