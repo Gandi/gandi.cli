@@ -21,7 +21,7 @@ class GandiCLI(click.Group):
 
     All CLI commands have a documented help
 
-    >>> gandi <command> --help
+    >>> gandi help <command>
 
     """
 
