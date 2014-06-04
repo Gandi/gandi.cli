@@ -194,7 +194,6 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     >>> gandi images
 
     """
-    return
 
     result = gandi.iaas.create(datacenter, memory, cores, ip_version,
                                bandwidth, login, password, hostname,
