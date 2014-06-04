@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import socket
 import xmlrpclib
+from gandi.cli import __version__
 
 
 class APICallFailed(Exception):
@@ -10,12 +11,24 @@ class APICallFailed(Exception):
         self.errors = errors
 
 
+class GandiTransport(xmlrpclib.Transport):
+
+    _user_agent = None
+
+    def send_user_agent(self, connection):
+        if not self._user_agent:
+            self._user_agent = '%s %s' % (xmlrpclib.Transport.user_agent,
+                                          'gandi.cli/%s' % __version__)
+        connection.putheader('User-Agent', self._user_agent)
+
+
 class XMLRPCClient(object):
     """ Class wrapper for xmlrpc calls to Gandi public API """
 
     def __init__(self, host, debug=False):
         self.debug = debug
-        self.endpoint = xmlrpclib.ServerProxy(host)
+        self.endpoint = xmlrpclib.ServerProxy(host,
+                                              transport=GandiTransport())
 
     def request(self, apikey, method, *args):
         try:
