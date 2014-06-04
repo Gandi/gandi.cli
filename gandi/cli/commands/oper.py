@@ -31,7 +31,7 @@ def list(gandi):
 def info(gandi, id):
     """Display information about an operation."""
 
-    output_keys = ['id', 'type', 'step']
+    output_keys = ['id', 'type', 'step', 'last_error']
 
     oper = gandi.oper.info(id)
     output_oper(gandi, oper, output_keys)
