@@ -98,7 +98,7 @@ class GandiModule(object):
                    or cls.default_api_host)
 
         ssh_key = (raw_input("SSH keyfile[%s]: " % '~/.ssh/id_rsa.pub')
-                   or None)
+                   or '~/.ssh/id_rsa.pub')
 
         config = {
             'api': {'key': apikey,
@@ -183,6 +183,12 @@ class GandiModule(object):
             cls.load_config()
             cls.debug('initialize connection to remote server')
             apihost = cls.get('api.host')
+            if not apihost:
+                cls.echo("Welcome to GandiCLI, let's configure a few things "
+                         "before we start")
+                cls.init_config()
+                apihost = cls.get('api.host')
+
             cls._api = XMLRPCClient(host=apihost, debug=cls.verbose)
 
         return cls._api
