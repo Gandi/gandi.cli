@@ -105,7 +105,7 @@ class Iaas(GandiModule):
         you can specify a configuration entry named 'ssh_key' containing
         path to your ssh_key file
 
-        >>> gandi config ssh_key ~/.ssh/id_rsa.pub
+        >>> gandi config -g ssh_key ~/.ssh/id_rsa.pub
 
         to know which disk image label (or id) to use as image
 
@@ -116,39 +116,24 @@ class Iaas(GandiModule):
         if interactive and not cls.intty():
             interactive = False
 
-        # priority to command line parameters
-        # then env var
-        # then local configuration
-        # then global configuration
-        memory_ = memory or int(cls.get('iaas.memory'))
-        cores_ = cores or int(cls.get('iaas.cores'))
-        ip_version_ = ip_version or int(cls.get('iaas.ip_version'))
-        bandwidth_ = bandwidth or int(cls.get('iaas.bandwidth'))
-        login_ = login or cls.get('iaas.login')
-        password_ = password or cls.get('iaas.password')
-        hostname_ = hostname or cls.get('iaas.hostname')
-
-        if datacenter:
-            datacenter_id_ = int(Datacenter.usable_id(datacenter))
-        else:
-            datacenter_id_ = int(Datacenter.usable_id(cls.get('iaas.datacenter')))
+        datacenter_id_ = int(Datacenter.usable_id(datacenter))
 
         vm_params = {
-            'hostname': hostname_,
+            'hostname': hostname,
             'datacenter_id': datacenter_id_,
-            'memory': memory_,
-            'cores': cores_,
-            'ip_version': ip_version_,
-            'bandwidth': bandwidth_,
-            'login': login_,
-            'password': password_,
+            'memory': memory,
+            'cores': cores,
+            'ip_version': ip_version,
+            'bandwidth': bandwidth,
+            'login': login,
+            'password': password,
         }
 
-        run_ = run or cls.get('iaas.run', mandatory=False)
+        run_ = run or cls.get('run')
         if run_ is not None:
             vm_params['run'] = run_
 
-        ssh_key_ = ssh_key or cls.get('ssh_key', mandatory=False)
+        ssh_key_ = ssh_key or cls.get('ssh_key')
         if ssh_key_ is not None:
             with open(ssh_key_) as fdesc:
                 ssh_key_ = fdesc.read()
@@ -158,12 +143,9 @@ class Iaas(GandiModule):
         # XXX: name of disk is limited to 15 chars in ext2fs, ext3fs
         # but api allow 255, so we limit to 15 for now
         disk_params = {'datacenter_id': vm_params['datacenter_id'],
-                       'name': ('sys_%s' % hostname_)[:15]}
+                       'name': ('sys_%s' % hostname)[:15]}
 
-        if image:
-            sys_disk_id_ = int(Image.usable_id(image))
-        else:
-            sys_disk_id_ = int(Image.usable_id(cls.get('iaas.image')))
+        sys_disk_id_ = int(Image.usable_id(image))
 
         result = cls.call('hosting.vm.create_from', vm_params, disk_params,
                           sys_disk_id_)
@@ -183,15 +165,15 @@ class Iaas(GandiModule):
         for iface in vm_info['ifaces']:
             for ip in iface['ips']:
                 if ip['version'] == 4:
-                    access = 'ssh %s@%s' % (login_, ip['ip'])
+                    access = 'ssh %s@%s' % (login, ip['ip'])
                     ip_addr = ip['ip']
                 else:
-                    access = 'ssh -6 %s@%s' % (login_, ip['ip'])
+                    access = 'ssh -6 %s@%s' % (login, ip['ip'])
                     ip_addr = ip['ip']
                 # stop on first access found
                 break
 
-        cls.echo('Your VM %s have been created.' % hostname_)
+        cls.echo('Your VM %s have been created.' % hostname)
         cls.echo('Requesting access using: %s ...' % access)
         # XXX: we must remove ssh key entry in case we use the same ip
         # as it's recyclable

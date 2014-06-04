@@ -6,7 +6,7 @@ from gandi.cli.core.conf import pass_gandi
 from gandi.cli.core.utils import (
     output_vm, output_image, output_oper, output_datacenter,
 )
-from gandi.cli.core.params import DATACENTER
+from gandi.cli.core.params import IntChoice, DATACENTER, DISK_IMAGE, option
 
 
 @cli.command()
@@ -133,7 +133,7 @@ def delete(gandi, resource, force):
     if vm['state'] == 'running':
         if not force:
             force_stop = click.confirm('VM %s is running, stop it ?' %
-                                       resource)
+                                       resource, default='Yn')
 
         if force or force_stop:
             interactive = True
@@ -147,27 +147,29 @@ def delete(gandi, resource, force):
 
 
 @cli.command()
-@click.option('--datacenter', default=None,
-              type=DATACENTER,
-              help='iso of the datacenter where the VM will be spawned')
-@click.option('--memory', type=click.INT, default=None,
-              help='quantity of RAM in Megabytes to allocate')
-@click.option('--cores', type=click.INT, default=None,
-              help='number of cpu')
-@click.option('--ip-version', default=None,
-              type=click.Choice(['4', '6']),
-              help='version of the created IP, can be 4 or 6')
-@click.option('--bandwidth', type=click.INT, default=None,
-              help="network bandwidth in bit/s used to create the VM's first "
-                   "network interface")
-@click.option('--login', default=None,
-              help='login to create on the VM')
-@click.option('--password', default=None,
-              help='password to set to the root account and the created login')
-@click.option('--hostname', default='tempo',
-              help='hostname of the VM')
-@click.option('--image', default=None,
-              help='label (or id) of disk image used to boot the vm')
+@option('--datacenter', default='FR', type=DATACENTER, prompt=True,
+        help='datacenter where the VM will be spawned')
+@option('--memory', type=click.INT, default=256, prompt=True,
+        help='quantity of RAM in Megabytes to allocate')
+@option('--cores', type=click.INT, default=1, prompt=True,
+        help='number of cpu')
+@option('--ip-version', default=4, prompt=True,
+        type=IntChoice([4, 6]),
+        help='version of the created IP')
+@option('--bandwidth', type=click.INT, default=102400, prompt=True,
+        help="network bandwidth in bit/s used to create the VM's first "
+             "network interface")
+@option('--login', default='admin', prompt=True,
+        help='login to create on the VM')
+@option('--password', default=None, prompt=True,
+        hide_input=True,
+        confirmation_prompt=True,
+        help='password to set to the root account and the created login')
+@option('--hostname', default='tempo', prompt=True,
+        help='hostname of the VM')
+@option('--image', default='Debian 7', prompt=True,
+        type=DISK_IMAGE,
+        help='disk image used to boot the vm')
 @click.option('--run', default=None,
               help='shell command that will run at the first startup of a VM.'
                    'This command will run with root privileges in the ``/`` '
@@ -185,13 +187,14 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     you can specify a configuration entry named 'ssh_key' containing
     path to your ssh_key file
 
-    >>> gandi config ssh_key ~/.ssh/id_rsa.pub
+    >>> gandi config -g ssh_key ~/.ssh/id_rsa.pub
 
     to know which disk image label (or id) to use as image
 
     >>> gandi images
 
     """
+    return
 
     result = gandi.iaas.create(datacenter, memory, cores, ip_version,
                                bandwidth, login, password, hostname,

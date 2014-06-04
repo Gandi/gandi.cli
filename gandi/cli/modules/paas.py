@@ -1,5 +1,6 @@
 
 import os
+import uuid
 from gandi.cli.core.conf import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
 
@@ -37,10 +38,16 @@ class Paas(GandiModule):
         return cls.call('paas.info', cls.usable_id(id))
 
     @classmethod
-    def delete(cls, id):
+    def delete(cls, id, interactive=False):
         """delete a Paas instance"""
 
-        return cls.call('paas.delete', cls.usable_id(id))
+        result = cls.call('paas.delete', cls.usable_id(id))
+        if not interactive:
+            return result
+
+        # interactive mode, run a progress bar
+        cls.echo("Delete your Paas instance.")
+        cls.display_progress(result)
 
     @classmethod
     def update(cls, id, name, size, quantity, password, ssh_key, upgrade,
@@ -64,7 +71,7 @@ class Paas(GandiModule):
         if password is not None:
             paas_params['password'] = password
 
-        ssh_key_ = ssh_key or cls.get('ssh_key', mandatory=False)
+        ssh_key_ = ssh_key or cls.get('ssh_key')
         if ssh_key_ is not None:
             with open(ssh_key_) as fdesc:
                 ssh_key_ = fdesc.read()
@@ -99,46 +106,33 @@ class Paas(GandiModule):
         you can specify a configuration entry named 'ssh_key' containing
         path to your ssh_key file
 
-        >>> gandi config ssh_key ~/.ssh/id_rsa.pub
+        >>> gandi config -g ssh_key ~/.ssh/id_rsa.pub
 
         """
 
         if interactive and not cls.intty():
             interactive = False
 
-        # priority to command line parameters
-        # then env var
-        # then local configuration
-        # then global configuration
-        name_ = name or cls.get('paas.name')
-        size_ = size or cls.get('paas.size')
-        type_ = type or cls.get('paas.type')
-        password_ = password or cls.get('paas.password')
-        duration_ = duration or cls.get('paas.duration')
-
-        if datacenter:
-            datacenter_id_ = int(Datacenter.usable_id(datacenter))
-        else:
-            datacenter_id_ = int(Datacenter.usable_id(cls.get('paas.datacenter')))
+        datacenter_id_ = int(Datacenter.usable_id(datacenter))
 
         paas_params = {
-            'name': name_,
-            'size': size_,
-            'type': type_,
-            'password': password_,
-            'duration': duration_,
+            'name': name,
+            'size': size,
+            'type': type,
+            'password': password,
+            'duration': duration,
             'datacenter_id': datacenter_id_,
         }
-        vhosts_ = vhosts or cls.get('paas.vhosts', mandatory=False)
-        if vhosts_ is not None:
-            paas_params['vhosts'] = vhosts_
+        # generate a default vhost value
+        if not vhosts:
+            digest = uuid.uuid4().hex[:10]
+            vhosts = ['%s.url-de-test.ws' % digest]
+        paas_params['vhosts'] = vhosts
 
-        quantity_ = quantity or int(cls.get('paas.quantity', 0,
-                                            mandatory=False))
-        if quantity_ is not None:
-            paas_params['quantity'] = quantity_
+        if quantity is not None:
+            paas_params['quantity'] = quantity
 
-        ssh_key_ = ssh_key or cls.get('ssh_key', mandatory=False)
+        ssh_key_ = ssh_key or cls.get('ssh_key')
         if ssh_key_ is not None:
             with open(ssh_key_) as fdesc:
                 ssh_key_ = fdesc.read()
@@ -155,7 +149,7 @@ class Paas(GandiModule):
         # interactive mode, run a progress bar
         cls.echo("We're creating your PaaS instance.")
         cls.display_progress(result)
-        cls.echo('Your PaaS %s have been created.' % name_)
+        cls.echo('Your PaaS %s have been created.' % name)
 
     @classmethod
     def init_conf(cls, id):

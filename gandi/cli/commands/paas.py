@@ -4,7 +4,7 @@ import click
 from gandi.cli.core.cli import cli
 from gandi.cli.core.conf import pass_gandi
 from gandi.cli.core.utils import output_paas, output_oper
-from gandi.cli.core.params import DATACENTER, PAAS_TYPE
+from gandi.cli.core.params import DATACENTER, PAAS_TYPE, option
 
 
 @cli.command(name='paas.list')
@@ -70,7 +70,7 @@ def info(gandi, resource):
 def clone(gandi, vhost):
     """Clone a remote vhost in a local git repository."""
 
-    paas_access = gandi.get('paas.access', mandatory=False)
+    paas_access = gandi.get('paas.access')
     if not vhost and not paas_access:
         gandi.error('missing VHOST parameter')
 
@@ -87,7 +87,7 @@ def clone(gandi, vhost):
 def deploy(gandi, vhost):
     """Deploy code on a remote vhost."""
 
-    paas_access = gandi.get('paas.access', mandatory=False)
+    paas_access = gandi.get('paas.access')
     if not vhost and not paas_access:
         gandi.error('missing VHOST parameter')
 
@@ -101,9 +101,11 @@ def deploy(gandi, vhost):
 
 
 @cli.command(name='paas.delete')
+@click.option('--interactive', default=True, is_flag=True,
+              help='run in interactive mode (default=True)')
 @click.argument('resource')
 @pass_gandi
-def delete(gandi, resource):
+def delete(gandi, interactive, resource):
     """Delete a PaaS instance.
 
     Resource can be a vhost, a hostname, or an ID
@@ -111,33 +113,35 @@ def delete(gandi, resource):
 
     output_keys = ['id', 'type', 'step']
 
-    opers = gandi.paas.delete(resource)
-    for oper in opers:
-        output_oper(gandi, oper, output_keys)
+    opers = gandi.paas.delete(resource, interactive=interactive)
+    if not interactive:
+        for oper in opers:
+            output_oper(gandi, oper, output_keys)
 
     return opers
 
 
 @cli.command(name='paas')
-@click.option('--name', default=None,
-              help='Name of the PaaS instance')
-@click.option('--size', default=None,
-              type=click.Choice(['s', 'x', 'xl', 'xxl']),
-              help='Size of the PaaS instance')
-@click.option('--type', default=None,
-              type=PAAS_TYPE,
-              help='Type of the PaaS instance')
-@click.option('--quantity', default=0,
-              help='Additional disk amount (in GB)')
-@click.option('--duration', default=None,
-              help='number of month, suffixed with m (e.g.: `12m` means one year)')
-@click.option('--datacenter', default=None,
-              type=DATACENTER,
-              help='iso of the datacenter where the PaaS will be spawned')
+@option('--name', default='paastempo', prompt=True,
+        help='Name of the PaaS instance')
+@option('--size', default='s', prompt=True,
+        type=click.Choice(['s', 'x', 'xl', 'xxl']),
+        help='Size of the PaaS instance')
+@option('--type', default=None, prompt=True,
+        type=PAAS_TYPE,
+        help='Type of the PaaS instance')
+@option('--quantity', default=0, prompt=True,
+        help='Additional disk amount (in GB)')
+@option('--duration', default='1m', prompt=True,
+        help='number of month, suffixed with m (e.g.: `12m` means one year)')
+@option('--datacenter', default='FR', type=DATACENTER, prompt=True,
+        help='datacenter where the PaaS will be spawned')
 @click.option('--vhosts', default=None, multiple=True,
               help='List of virtual hosts to be linked to the instance')
-@click.option('--password', default=None,
-              help='Password of the PaaS instance')
+@option('--password', default=None, prompt=True,
+        hide_input=True,
+        confirmation_prompt=True,
+        help='Password of the PaaS instance')
 @click.option('--snapshot-profile', default=None,
               help='Set a snapshot profile associated to this paas disk')
 @click.option('--interactive', default=True, is_flag=True,
@@ -152,7 +156,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     you can specify a configuration entry named 'ssh_key' containing
     path to your ssh_key file
 
-    >>> gandi config ssh_key ~/.ssh/id_rsa.pub
+    >>> gandi config -g ssh_key ~/.ssh/id_rsa.pub
 
     to know which PaaS instance type to use as type
 
@@ -166,8 +170,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     if not interactive:
         gandi.pretty_echo(result)
 
-    name_ = name or gandi.get('paas.name')
-    gandi.paas.init_conf(name_)
+    gandi.paas.init_conf(name)
 
     return result
 
