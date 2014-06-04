@@ -1,3 +1,5 @@
+import time
+
 
 class MissingConfiguration(Exception):
     """ Raise when configuration if missing"""
@@ -100,3 +102,18 @@ def read_ssh_key(ctx, value):
 
     key = value.read()
     return key
+
+
+def check_domain_available(ctx, domain):
+    """ Helper to check if a domain is available """
+    gandi = ctx.obj
+    result = gandi.call('domain.available', [domain])
+    while result[domain] == 'pending':
+        time.sleep(1)
+        result = gandi.call('domain.available', [domain])
+
+    if result[domain] == 'unavailable':
+        gandi.echo('%s is not available' % domain)
+        return
+
+    return domain

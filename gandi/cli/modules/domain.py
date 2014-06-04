@@ -17,6 +17,39 @@ class Domain(GandiModule):
         return cls.call('domain.info', fqdn)
 
     @classmethod
+    def create(cls, fqdn, duration, owner, admin, tech, bill, interactive):
+        """Buy a domain."""
+
+        if interactive and not cls.intty():
+            interactive = False
+
+        # retrieve handle of user and save it to configuration
+        user_handle = cls.call('contact.info')['handle']
+        cls.configure(True, 'api.handle', user_handle)
+
+        owner_ = owner or user_handle
+        admin_ = admin or user_handle
+        tech_ = tech or user_handle
+        bill_ = bill or user_handle
+
+        domain_params = {
+            'duration': duration,
+            'owner': owner_,
+            'admin': admin_,
+            'tech': tech_,
+            'bill': bill_,
+        }
+
+        result = cls.call('domain.create', fqdn, domain_params)
+        if not interactive:
+            return result
+
+        # interactive mode, run a progress bar
+        cls.echo("We're creating your domain.")
+        cls.display_progress(result)
+        cls.echo('Your domain %s have been created.' % fqdn)
+
+    @classmethod
     def from_fqdn(cls, fqdn):
         """retrieve domain id associated to a fqdn"""
 
