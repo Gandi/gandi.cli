@@ -6,6 +6,7 @@ import inspect
 import click
 
 from .conf import GandiContextHelper
+from gandi.cli import __version__
 
 
 # XXX: dirty hack of click help command to allow short help -h
@@ -30,6 +31,11 @@ class GandiCLI(click.Group):
         def set_debug(ctx, value):
             ctx.obj['verbose'] = value
 
+        def get_version(ctx, value):
+            if value:
+                print 'Gandi CLI %s' % __version__
+                ctx.exit()
+
         if help is None:
             help = inspect.getdoc(self)
 
@@ -37,7 +43,12 @@ class GandiCLI(click.Group):
             click.Option(['-v'],
                          help='Enable or disable verbose mode.',
                          count=True,
-                         default=False, callback=set_debug)
+                         default=False, callback=set_debug),
+            click.Option(['--version'],
+                         help='Display version.',
+                         is_flag=True,
+                         default=False, callback=get_version)
+
         ])
 
     def load_commands(self):
