@@ -97,10 +97,15 @@ class GandiModule(object):
         apihost = (raw_input("Api host[%s]: " % cls.default_api_host)
                    or cls.default_api_host)
 
+        ssh_key = (raw_input("SSH keyfile[%s]: " % '~/.ssh/id_rsa.pub')
+                   or None)
+
         config = {
             'api': {'key': apikey,
                     'host': apihost},
         }
+        if ssh_key is not None:
+            config['ssh_key'] = os.path.expanduser(ssh_key)
 
         directory = os.path.expanduser("~/.config/gandi")
         if not os.path.exists(directory):
@@ -149,7 +154,7 @@ class GandiModule(object):
             return default
 
     @classmethod
-    def get(cls, key, default=None, separator='.', mandatory=True):
+    def get(cls, key, default=None, separator='.'):
         """ Retrieve a key value from loaded configuration
 
         Order of search :
@@ -169,11 +174,6 @@ class GandiModule(object):
                 return ret
 
         if ret is None:
-            if mandatory:
-                msg = ('missing configuration value for %s\n'
-                       'please use "gandi config -g %s <VALUE>" to set a value\n'
-                       % (key, key))
-                raise UsageError(msg)
             return default
 
     @classmethod
@@ -303,7 +303,7 @@ class GandiModule(object):
 
             time.sleep(1)
 
-        cls.echo('\r\n')
+        cls.echo('\r')
 
 
 class GandiContextHelper(GandiModule):
