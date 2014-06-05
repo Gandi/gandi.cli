@@ -13,7 +13,7 @@ from gandi.cli.core.params import DATACENTER, PAAS_TYPE, option
 @click.option('--vhosts', help='display vhosts', default=True, is_flag=True)
 @pass_gandi
 def list(gandi, state, id, vhosts):
-    """List Paas instances."""
+    """List PaaS instances."""
 
     options = {}
     if state:
@@ -45,7 +45,7 @@ def list(gandi, state, id, vhosts):
 @click.argument('resource')
 @pass_gandi
 def info(gandi, resource):
-    """Display information about a Paas instance.
+    """Display information about a PaaS instance.
 
     Resource can be a vhost, a hostname, or an ID
     """

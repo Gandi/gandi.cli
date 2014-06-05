@@ -246,7 +246,7 @@ def console(gandi, resource):
               help='filter by id of datacenter')
 @pass_gandi
 def images(gandi, datacenter_id):
-    """List available images."""
+    """List available system images for virtual machines."""
 
     output_keys = ['label', 'os_arch', 'kernel_version', 'disk_id',
                    'datacenter_id']
