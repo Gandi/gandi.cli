@@ -11,7 +11,7 @@ class APICallFailed(Exception):
         self.errors = errors
 
 
-class GandiTransport(xmlrpclib.Transport):
+class GandiTransport(xmlrpclib.SafeTransport):
 
     _user_agent = None
 
