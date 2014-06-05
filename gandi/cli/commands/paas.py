@@ -7,7 +7,7 @@ from gandi.cli.core.utils import output_paas, output_oper
 from gandi.cli.core.params import DATACENTER, PAAS_TYPE, option
 
 
-@cli.command(name='paas.list')
+@cli.command()
 @click.option('--state', default=None, help='filter results by state')
 @click.option('--id', help='display ids', is_flag=True)
 @click.option('--vhosts', help='display vhosts', default=True, is_flag=True)
@@ -41,7 +41,7 @@ def list(gandi, state, id, vhosts):
     return result
 
 
-@cli.command(name='paas.info')
+@cli.command()
 @click.argument('resource')
 @pass_gandi
 def info(gandi, resource):
@@ -81,7 +81,7 @@ def clone(gandi, vhost):
     gandi.shell('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
 
 
-@cli.command()
+@cli.command(root=True)
 @click.argument('vhost', required=False)
 @pass_gandi
 def deploy(gandi, vhost):
@@ -100,7 +100,7 @@ def deploy(gandi, vhost):
     gandi.shell("ssh %s 'deploy %s'" % (paas_access, deploy_git_host))
 
 
-@cli.command(name='paas.delete')
+@cli.command()
 @click.option('--interactive', default=True, is_flag=True,
               help='run in interactive mode (default=True)')
 @click.argument('resource')
@@ -121,7 +121,7 @@ def delete(gandi, interactive, resource):
     return opers
 
 
-@cli.command(name='paas')
+@cli.command()
 @option('--name', default='paastempo', prompt=True,
         help='Name of the PaaS instance')
 @option('--size', default='s', prompt=True,
@@ -175,7 +175,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     return result
 
 
-@cli.command(name='paas.update')
+@cli.command()
 @click.option('--name', type=click.STRING, default=None,
               help='Name of the PaaS instance')
 @click.option('--size', default=None,

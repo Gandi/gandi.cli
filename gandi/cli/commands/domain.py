@@ -6,7 +6,7 @@ from gandi.cli.core.conf import pass_gandi
 from gandi.cli.core.utils import output_image, check_domain_available
 
 
-@cli.command(name='domains')
+@cli.command()
 @pass_gandi
 def list(gandi):
     """List domains."""
@@ -19,7 +19,7 @@ def list(gandi):
     return domains
 
 
-@cli.command(name='domain')
+@cli.command()
 @click.argument('resource')
 @pass_gandi
 def info(gandi, resource):
@@ -33,7 +33,7 @@ def info(gandi, resource):
     return result
 
 
-@cli.command(name='buy')
+@cli.command()
 @click.option('--domain', default=None, prompt=True,
               callback=check_domain_available,
               help='Name of the domain')

@@ -6,7 +6,7 @@ from gandi.cli.core.conf import pass_gandi
 from gandi.cli.core.utils import output_oper
 
 
-@cli.command(name='opers')
+@cli.command()
 @pass_gandi
 def list(gandi):
     """List operations."""
@@ -25,7 +25,7 @@ def list(gandi):
     return result
 
 
-@cli.command(name='oper')
+@cli.command()
 @click.argument('id', type=click.INT)
 @pass_gandi
 def info(gandi, id):

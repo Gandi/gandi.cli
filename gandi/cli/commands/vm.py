@@ -259,7 +259,7 @@ def images(gandi, datacenter_id):
     return result
 
 
-@cli.command()
+@cli.command(root=True)
 @click.option('--id', help='display ids', is_flag=True)
 @pass_gandi
 def datacenters(gandi, id):
