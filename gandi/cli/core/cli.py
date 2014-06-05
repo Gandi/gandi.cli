@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import types
 import os
 import os.path
 import inspect
