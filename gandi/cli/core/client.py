@@ -27,8 +27,7 @@ class XMLRPCClient(object):
 
     def __init__(self, host, debug=False):
         self.debug = debug
-        self.endpoint = xmlrpclib.ServerProxy(host,
-                                              transport=GandiTransport())
+        self.endpoint = xmlrpclib.ServerProxy(host)
 
     def request(self, apikey, method, *args):
         try:
