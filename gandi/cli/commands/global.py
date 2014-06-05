@@ -30,22 +30,6 @@ def config(gandi, g, key, value):
 
 
 @cli.command()
-@click.argument('command', required=False)
-@click.pass_context
-def help(ctx, command):
-    """Display help for a command"""
-    if not command:
-        click.echo(cli.get_help(ctx))
-    else:
-        cmd = cli.get_command(ctx, command)
-        if cmd:
-            click.echo(cmd.get_help(ctx))
-        else:
-            click.echo(cli.get_help(ctx))
-    ctx.exit()
-
-
-@cli.command()
 @pass_gandi
 def api(gandi):
     """Display information about API used."""
