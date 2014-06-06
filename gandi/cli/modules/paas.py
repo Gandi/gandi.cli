@@ -38,16 +38,26 @@ class Paas(GandiModule):
         return cls.call('paas.info', cls.usable_id(id))
 
     @classmethod
-    def delete(cls, id, interactive=False):
+    def delete(cls, resources, interactive=False):
         """delete a Paas instance"""
 
-        result = cls.call('paas.delete', cls.usable_id(id))
+        if not isinstance(resources, (list, tuple)):
+            resources = [resources]
+
+        opers = []
+        for item in resources:
+            oper = cls.call('paas.delete', cls.usable_id(item))
+            if isinstance(resources, list):
+                opers.extend(oper)
+            else:
+                opers.append(oper)
+
         if not interactive:
-            return result
+            return opers
 
         # interactive mode, run a progress bar
         cls.echo("Delete your Paas instance.")
-        cls.display_progress(result)
+        cls.display_progress(opers)
 
     @classmethod
     def update(cls, id, name, size, quantity, password, ssh_key, upgrade,

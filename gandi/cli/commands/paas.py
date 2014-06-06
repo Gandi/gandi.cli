@@ -113,11 +113,10 @@ def delete(gandi, interactive, resource):
 
     output_keys = ['id', 'type', 'step']
 
-    for item in resource:
-        opers = gandi.paas.delete(item, interactive=interactive)
-        if not interactive:
-            for oper in opers:
-                output_oper(gandi, oper, output_keys)
+    opers = gandi.paas.delete(resource, interactive=interactive)
+    if not interactive:
+        for oper in opers:
+            output_oper(gandi, oper, output_keys)
 
     return opers
 
