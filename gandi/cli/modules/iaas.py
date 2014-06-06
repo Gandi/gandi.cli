@@ -23,52 +23,89 @@ class Iaas(GandiModule):
         return cls.call('hosting.vm.info', cls.usable_id(id))
 
     @classmethod
-    def stop(cls, id, interactive=False):
+    def stop(cls, resources, interactive=False):
         """stop a virtual machine"""
 
-        result = cls.call('hosting.vm.stop', cls.usable_id(id))
-        if not interactive:
-            return result
+        if not isinstance(resources, (list, tuple)):
+            resources = [resources]
+
+        opers = []
+        for item in resources:
+            oper = cls.call('hosting.vm.stop', cls.usable_id(item))
+            if isinstance(oper, list):
+                opers.extend(oper)
+            else:
+                opers.append(oper)
 
         # interactive mode, run a progress bar
         cls.echo("Stop your Virtual Machine.")
-        cls.display_progress(result)
+        cls.display_progress(opers)
 
     @classmethod
-    def start(cls, id, interactive=False):
+    def start(cls, resources, interactive=False):
         """start a virtual machine"""
 
-        result = cls.call('hosting.vm.start', cls.usable_id(id))
+        if not isinstance(resources, (list, tuple)):
+            resources = [resources]
+
+        opers = []
+        for item in resources:
+            oper = cls.call('hosting.vm.start', cls.usable_id(item))
+            if isinstance(oper, list):
+                opers.extend(oper)
+            else:
+                opers.append(oper)
+
         if not interactive:
-            return result
+            return opers
 
         # interactive mode, run a progress bar
         cls.echo("Start your Virtual Machine.")
-        cls.display_progress(result)
+        cls.display_progress(opers)
 
     @classmethod
-    def reboot(cls, id, interactive=False):
+    def reboot(cls, resources, interactive=False):
         """reboot a virtual machine"""
 
-        result = cls.call('hosting.vm.reboot', cls.usable_id(id))
+        if not isinstance(resources, (list, tuple)):
+            resources = [resources]
+
+        opers = []
+        for item in resources:
+            oper = cls.call('hosting.vm.reboot', cls.usable_id(item))
+            if isinstance(oper, list):
+                opers.extend(oper)
+            else:
+                opers.append(oper)
+
         if not interactive:
-            return result
+            return opers
 
         # interactive mode, run a progress bar
         cls.echo("Reboot your Virtual Machine.")
-        cls.display_progress(result)
+        cls.display_progress(opers)
 
     @classmethod
-    def delete(cls, id, interactive=False):
+    def delete(cls, resources, interactive=False):
         """delete a virtual machine"""
 
-        result = cls.call('hosting.vm.delete', cls.usable_id(id))
+        if not isinstance(resources, (list, tuple)):
+            resources = [resources]
+
+        opers = []
+        for item in resources:
+            oper = cls.call('hosting.vm.delete', cls.usable_id(item))
+            if isinstance(oper, list):
+                opers.extend(oper)
+            else:
+                opers.append(oper)
+
         if not interactive:
-            return result
+            return opers
 
         # interactive mode, run a progress bar
         cls.echo("Delete your Virtual Machine.")
-        cls.display_progress(result)
+        cls.display_progress(opers)
 
     @classmethod
     def update(cls, id, memory, cores, console, interactive):
