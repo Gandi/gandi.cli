@@ -47,7 +47,7 @@ class Paas(GandiModule):
         opers = []
         for item in resources:
             oper = cls.call('paas.delete', cls.usable_id(item))
-            if isinstance(resources, list):
+            if isinstance(oper, list):
                 opers.extend(oper)
             else:
                 opers.append(oper)
