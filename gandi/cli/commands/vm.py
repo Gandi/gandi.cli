@@ -57,8 +57,10 @@ def info(gandi, resource):
 
 @cli.command()
 @click.argument('resource', nargs=-1)
+@click.option('--interactive', default=True, is_flag=True,
+              help='run in interactive mode (default=True)')
 @pass_gandi
-def stop(gandi, resource):
+def stop(gandi, interactive, resource):
     """Stop a virtual machine.
 
     Resource can be a Hostname or an ID
@@ -66,19 +68,20 @@ def stop(gandi, resource):
 
     output_keys = ['id', 'type', 'step']
 
-    ret = []
-    for item in resource:
-        oper = gandi.iaas.stop(item)
-        output_oper(gandi, oper, output_keys)
-        ret.append(oper)
+    opers = gandi.iaas.stop(resource, interactive=interactive)
+    if not interactive:
+        for oper in opers:
+            output_oper(gandi, oper, output_keys)
 
-    return ret
+    return opers
 
 
 @cli.command()
 @click.argument('resource', nargs=-1)
+@click.option('--interactive', default=True, is_flag=True,
+              help='run in interactive mode (default=True)')
 @pass_gandi
-def start(gandi, resource):
+def start(gandi, interactive, resource):
     """Start a virtual machine.
 
     Resource can be a Hostname or an ID
@@ -86,19 +89,20 @@ def start(gandi, resource):
 
     output_keys = ['id', 'type', 'step']
 
-    ret = []
-    for item in resource:
-        oper = gandi.iaas.start(item)
-        output_oper(gandi, oper, output_keys)
-        ret.append(oper)
+    opers = gandi.iaas.start(resource, interactive=interactive)
+    if not interactive:
+        for oper in opers:
+            output_oper(gandi, oper, output_keys)
 
-    return ret
+    return opers
 
 
 @cli.command()
 @click.argument('resource', nargs=-1)
+@click.option('--interactive', default=True, is_flag=True,
+              help='run in interactive mode (default=True)')
 @pass_gandi
-def reboot(gandi, resource):
+def reboot(gandi, interactive, resource):
     """Reboot a virtual machine.
 
     Resource can be a Hostname or an ID
@@ -106,13 +110,12 @@ def reboot(gandi, resource):
 
     output_keys = ['id', 'type', 'step']
 
-    ret = []
-    for item in resource:
-        oper = gandi.iaas.reboot(item)
-        output_oper(gandi, oper, output_keys)
-        ret.append(oper)
+    opers = gandi.iaas.reboot(resource, interactive=interactive)
+    if not interactive:
+        for oper in opers:
+            output_oper(gandi, oper, output_keys)
 
-    return ret
+    return opers
 
 
 @cli.command()
