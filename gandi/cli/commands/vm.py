@@ -132,21 +132,23 @@ def delete(gandi, resource, force):
     output_keys = ['id', 'type', 'step']
     interactive = False
 
-    vm = gandi.iaas.info(resource)
-    if vm['state'] == 'running':
-        if not force:
-            force_stop = click.confirm('VM %s is running, stop it ?' %
-                                       resource, default='Yn')
+    for item in resource:
+        vm = gandi.iaas.info(resource)
+        if vm['state'] == 'running':
+            if not force:
+                force_stop = click.confirm('VM %s is running, stop it ?' %
+                                           resource, default='Yn')
 
-        if force or force_stop:
-            interactive = True
-            gandi.iaas.stop(resource, interactive=interactive)
+            if force or force_stop:
+                interactive = True
+                gandi.iaas.stop(resource, interactive=interactive)
 
-    oper = gandi.iaas.delete(resource, interactive=interactive)
+    opers = gandi.iaas.delete(resource, interactive=interactive)
     if not interactive:
-        output_oper(gandi, oper, output_keys)
+        for oper in opers:
+            output_oper(gandi, oper, output_keys)
 
-    return oper
+    return opers
 
 
 @cli.command()
