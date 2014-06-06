@@ -103,7 +103,7 @@ def deploy(gandi, vhost):
 @cli.command()
 @click.option('--interactive', default=True, is_flag=True,
               help='run in interactive mode (default=True)')
-@click.argument('resource')
+@click.argument('resource', nargs=-1)
 @pass_gandi
 def delete(gandi, interactive, resource):
     """Delete a PaaS instance.
@@ -113,10 +113,11 @@ def delete(gandi, interactive, resource):
 
     output_keys = ['id', 'type', 'step']
 
-    opers = gandi.paas.delete(resource, interactive=interactive)
-    if not interactive:
-        for oper in opers:
-            output_oper(gandi, oper, output_keys)
+    for item in resource:
+        opers = gandi.paas.delete(item, interactive=interactive)
+        if not interactive:
+            for oper in opers:
+                output_oper(gandi, oper, output_keys)
 
     return opers
 
