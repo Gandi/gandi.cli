@@ -93,29 +93,33 @@ class GandiModule(object):
         Create global configuration directory with API credentials
 
         """
-        apikey = raw_input("Api key: ")
-        apihost = (raw_input("Api host[%s]: " % cls.default_api_host)
-                   or cls.default_api_host)
+        try:
+            apikey = raw_input("Api key: ")
+            apihost = (raw_input("Api host[%s]: " % cls.default_api_host)
+                       or cls.default_api_host)
 
-        ssh_key = (raw_input("SSH keyfile[%s]: " % '~/.ssh/id_rsa.pub')
-                   or '~/.ssh/id_rsa.pub')
+            ssh_key = (raw_input("SSH keyfile[%s]: " % '~/.ssh/id_rsa.pub')
+                       or '~/.ssh/id_rsa.pub')
 
-        config = {
-            'api': {'key': apikey,
-                    'host': apihost},
-        }
-        if ssh_key is not None:
-            config['ssh_key'] = os.path.expanduser(ssh_key)
+            config = {
+                'api': {'key': apikey,
+                        'host': apihost},
+            }
+            if ssh_key is not None:
+                config['ssh_key'] = os.path.expanduser(ssh_key)
 
-        directory = os.path.expanduser("~/.config/gandi")
-        if not os.path.exists(directory):
-            os.mkdir(directory, 0755)
+            directory = os.path.expanduser("~/.config/gandi")
+            if not os.path.exists(directory):
+                os.mkdir(directory, 0755)
 
-        config_file = os.path.expanduser(cls.home_config)
-        # save to disk
-        cls.save(config_file, config)
-        # load in memory
-        cls.load(config_file, 'global')
+            config_file = os.path.expanduser(cls.home_config)
+            # save to disk
+            cls.save(config_file, config)
+            # load in memory
+            cls.load(config_file, 'global')
+        except KeyboardInterrupt:
+            cls.echo('Aborted.')
+            sys.exit(1)
 
     @classmethod
     def _set(cls, scope, key, val, separator='.'):
