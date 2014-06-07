@@ -265,7 +265,7 @@ class Iaas(GandiModule):
                 break
 
         # hack for dev
-        console_url = 'console.hosting.dev.gandi.net'
+        console_url = 'console.gandi.net'
         # console_url = 'console.gandi.net'
         access = 'ssh %s@%s' % (ip_addr, console_url)
         cls.shell(access)
