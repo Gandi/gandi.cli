@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import types
 import os
 import os.path
 import inspect
@@ -23,7 +22,7 @@ class GandiCLI(click.Group):
 
     All CLI commands have a documented help
 
-    >>> gandi help <command>
+    >>> gandi <command> --help
 
     """
 
