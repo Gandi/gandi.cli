@@ -17,11 +17,11 @@ class Domain(GandiModule):
         return cls.call('domain.info', fqdn)
 
     @classmethod
-    def create(cls, fqdn, duration, owner, admin, tech, bill, interactive):
+    def create(cls, fqdn, duration, owner, admin, tech, bill, background):
         """Buy a domain."""
 
-        if interactive and not cls.intty():
-            interactive = False
+        if not background and not cls.intty():
+            background = True
 
         # retrieve handle of user and save it to configuration
         user_handle = cls.call('contact.info')['handle']
@@ -41,7 +41,7 @@ class Domain(GandiModule):
         }
 
         result = cls.call('domain.create', fqdn, domain_params)
-        if not interactive:
+        if background:
             return result
 
         # interactive mode, run a progress bar

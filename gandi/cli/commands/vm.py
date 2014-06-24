@@ -57,10 +57,10 @@ def info(gandi, resource):
 
 @cli.command()
 @click.argument('resource', nargs=-1)
-@click.option('--interactive', default=True, is_flag=True,
-              help='run in interactive mode (default=True)')
+@click.option('--background', default=False, is_flag=True,
+              help='run in background mode (default=False)')
 @pass_gandi
-def stop(gandi, interactive, resource):
+def stop(gandi, background, resource):
     """Stop a virtual machine.
 
     Resource can be a Hostname or an ID
@@ -68,8 +68,8 @@ def stop(gandi, interactive, resource):
 
     output_keys = ['id', 'type', 'step']
 
-    opers = gandi.iaas.stop(resource, interactive=interactive)
-    if not interactive:
+    opers = gandi.iaas.stop(resource, background)
+    if background:
         for oper in opers:
             output_oper(gandi, oper, output_keys)
 
@@ -78,10 +78,10 @@ def stop(gandi, interactive, resource):
 
 @cli.command()
 @click.argument('resource', nargs=-1)
-@click.option('--interactive', default=True, is_flag=True,
-              help='run in interactive mode (default=True)')
+@click.option('--background', default=False, is_flag=True,
+              help='run in background mode (default=False)')
 @pass_gandi
-def start(gandi, interactive, resource):
+def start(gandi, background, resource):
     """Start a virtual machine.
 
     Resource can be a Hostname or an ID
@@ -89,8 +89,8 @@ def start(gandi, interactive, resource):
 
     output_keys = ['id', 'type', 'step']
 
-    opers = gandi.iaas.start(resource, interactive=interactive)
-    if not interactive:
+    opers = gandi.iaas.start(resource, background)
+    if background:
         for oper in opers:
             output_oper(gandi, oper, output_keys)
 
@@ -99,10 +99,10 @@ def start(gandi, interactive, resource):
 
 @cli.command()
 @click.argument('resource', nargs=-1)
-@click.option('--interactive', default=True, is_flag=True,
-              help='run in interactive mode (default=True)')
+@click.option('--background', default=False, is_flag=True,
+              help='run in background mode (default=False)')
 @pass_gandi
-def reboot(gandi, interactive, resource):
+def reboot(gandi, background, resource):
     """Reboot a virtual machine.
 
     Resource can be a Hostname or an ID
@@ -110,8 +110,8 @@ def reboot(gandi, interactive, resource):
 
     output_keys = ['id', 'type', 'step']
 
-    opers = gandi.iaas.reboot(resource, interactive=interactive)
-    if not interactive:
+    opers = gandi.iaas.reboot(resource, background)
+    if background:
         for oper in opers:
             output_oper(gandi, oper, output_keys)
 
@@ -119,33 +119,28 @@ def reboot(gandi, interactive, resource):
 
 
 @cli.command()
-@click.option('--force', '-f', is_flag=True,
-              help='force the vm to stop')
+@click.option('--background', default=False, is_flag=True,
+              help='run in background mode (default=False)')
 @click.argument('resource', nargs=-1)
 @pass_gandi
-def delete(gandi, resource, force):
+def delete(gandi, resource, force, background):
     """Delete a virtual machine.
 
     Resource can be a Hostname or an ID
     """
 
     output_keys = ['id', 'type', 'step']
-    interactive = False
 
+    stop_opers = []
     for item in resource:
         vm = gandi.iaas.info(item)
         if vm['state'] == 'running':
-            if not force:
-                force_stop = click.confirm('VM %s is running, stop it ?' %
-                                           item, default='Yn')
+            oper = gandi.iaas.stop(item, background)
+            stop_opers.append(oper)
 
-            if force or force_stop:
-                interactive = True
-                gandi.iaas.stop(item, interactive=interactive)
-
-    opers = gandi.iaas.delete(resource, interactive=interactive)
-    if not interactive:
-        for oper in opers:
+    opers = gandi.iaas.delete(resource, background)
+    if background:
+        for oper in stop_opers + opers:
             output_oper(gandi, oper, output_keys)
 
     return opers
@@ -180,13 +175,13 @@ def delete(gandi, resource, force):
                    'This command will run with root privileges in the ``/`` '
                    'directory at the end of its boot: network interfaces and '
                    'disks are mounted')
-@click.option('--interactive', default=True, is_flag=True,
-              help='run creation in interactive mode (default=True)')
+@click.option('--background', default=False, is_flag=True,
+              help='run creation in background mode (default=False)')
 @click.option('--ssh-key', default=None,
               help='Authorize ssh authentication for the given ssh key')
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
-           password, hostname, image, run, interactive, ssh_key):
+           password, hostname, image, run, background, ssh_key):
     """Create a new virtual machine.
 
     you can specify a configuration entry named 'ssh_key' containing
@@ -203,8 +198,8 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     result = gandi.iaas.create(datacenter, memory, cores, ip_version,
                                bandwidth, login, password, hostname,
                                image, run,
-                               interactive, ssh_key)
-    if not interactive:
+                               background, ssh_key)
+    if background:
         gandi.pretty_echo(result)
 
     return result
@@ -217,18 +212,18 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
               help='number of cpu')
 @click.option('--console', default=None, is_flag=True,
               help='activate the emergency console')
-@click.option('--interactive', default=True, is_flag=True,
-              help='run creation in interactive mode (default=True)')
+@click.option('--background', default=False, is_flag=True,
+              help='run creation in background mode (default=False)')
 @click.argument('resource')
 @pass_gandi
-def update(gandi, resource, memory, cores, console, interactive):
+def update(gandi, resource, memory, cores, console, background):
     """Update a virtual machine.
 
     Resource can be a Hostname or an ID
     """
 
-    result = gandi.iaas.update(resource, memory, cores, console, interactive)
-    if not interactive:
+    result = gandi.iaas.update(resource, memory, cores, console, background)
+    if background:
         gandi.pretty_echo(result)
 
     return result

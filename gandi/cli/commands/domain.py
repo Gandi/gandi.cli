@@ -48,15 +48,15 @@ def info(gandi, resource):
               help='Technical contact handle')
 @click.option('--bill', default=None,
               help='Billing contact handle')
-@click.option('--interactive', default=True, is_flag=True,
-              help='run creation in interactive mode (default=True)')
+@click.option('--background', default=False, is_flag=True,
+              help='run creation in background mode (default=False)')
 @pass_gandi
-def create(gandi, domain, duration, owner, admin, tech, bill, interactive):
+def create(gandi, domain, duration, owner, admin, tech, bill, background):
     """Buy a domain."""
 
     result = gandi.domain.create(domain, duration, owner, admin, tech, bill,
-                                 interactive)
-    if not interactive:
+                                 background)
+    if background:
         gandi.pretty_echo(result)
 
     return result

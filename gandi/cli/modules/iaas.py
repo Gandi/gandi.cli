@@ -23,7 +23,7 @@ class Iaas(GandiModule):
         return cls.call('hosting.vm.info', cls.usable_id(id))
 
     @classmethod
-    def stop(cls, resources, interactive=False):
+    def stop(cls, resources, background=False):
         """stop a virtual machine"""
 
         if not isinstance(resources, (list, tuple)):
@@ -37,12 +37,15 @@ class Iaas(GandiModule):
             else:
                 opers.append(oper)
 
+        if background:
+            return opers
+
         # interactive mode, run a progress bar
         cls.echo("Stop your Virtual Machine.")
         cls.display_progress(opers)
 
     @classmethod
-    def start(cls, resources, interactive=False):
+    def start(cls, resources, background=False):
         """start a virtual machine"""
 
         if not isinstance(resources, (list, tuple)):
@@ -56,7 +59,7 @@ class Iaas(GandiModule):
             else:
                 opers.append(oper)
 
-        if not interactive:
+        if background:
             return opers
 
         # interactive mode, run a progress bar
@@ -64,7 +67,7 @@ class Iaas(GandiModule):
         cls.display_progress(opers)
 
     @classmethod
-    def reboot(cls, resources, interactive=False):
+    def reboot(cls, resources, background=False):
         """reboot a virtual machine"""
 
         if not isinstance(resources, (list, tuple)):
@@ -78,7 +81,7 @@ class Iaas(GandiModule):
             else:
                 opers.append(oper)
 
-        if not interactive:
+        if background:
             return opers
 
         # interactive mode, run a progress bar
@@ -86,7 +89,7 @@ class Iaas(GandiModule):
         cls.display_progress(opers)
 
     @classmethod
-    def delete(cls, resources, interactive=False):
+    def delete(cls, resources, background=False):
         """delete a virtual machine"""
 
         if not isinstance(resources, (list, tuple)):
@@ -100,7 +103,7 @@ class Iaas(GandiModule):
             else:
                 opers.append(oper)
 
-        if not interactive:
+        if background:
             return opers
 
         # interactive mode, run a progress bar
@@ -108,11 +111,11 @@ class Iaas(GandiModule):
         cls.display_progress(opers)
 
     @classmethod
-    def update(cls, id, memory, cores, console, interactive):
+    def update(cls, id, memory, cores, console, background):
         """update a virtual machine"""
 
-        if interactive and not cls.intty():
-            interactive = False
+        if not background and not cls.intty():
+            background = True
 
         vm_params = {}
 
@@ -126,7 +129,7 @@ class Iaas(GandiModule):
             vm_params['console'] = console
 
         result = cls.call('hosting.vm.update', cls.usable_id(id), vm_params)
-        if not interactive:
+        if background:
             return result
 
         # interactive mode, run a progress bar
@@ -135,7 +138,7 @@ class Iaas(GandiModule):
 
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
-               login, password, hostname, image, run, interactive,
+               login, password, hostname, image, run, background,
                ssh_key):
         """create a new virtual machine.
 
@@ -150,8 +153,8 @@ class Iaas(GandiModule):
 
         """
 
-        if interactive and not cls.intty():
-            interactive = False
+        if not background and not cls.intty():
+            background = True
 
         datacenter_id_ = int(Datacenter.usable_id(datacenter))
 
@@ -186,7 +189,7 @@ class Iaas(GandiModule):
 
         result = cls.call('hosting.vm.create_from', vm_params, disk_params,
                           sys_disk_id_)
-        if not interactive:
+        if background:
             return result
 
         # interactive mode, run a progress bar
@@ -251,7 +254,7 @@ class Iaas(GandiModule):
         if not vm_info['console']:
             # first activate console
             cls.update(id, memory=None, cores=None, console=True,
-                       interactive=True)
+                       background=False)
         # now we can connect
         # retrieve ip of vm
         vm_info = cls.info(id)
