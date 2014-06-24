@@ -38,7 +38,7 @@ class Paas(GandiModule):
         return cls.call('paas.info', cls.usable_id(id))
 
     @classmethod
-    def delete(cls, resources, interactive=False):
+    def delete(cls, resources, background=False):
         """delete a Paas instance"""
 
         if not isinstance(resources, (list, tuple)):
@@ -52,7 +52,7 @@ class Paas(GandiModule):
             else:
                 opers.append(oper)
 
-        if not interactive:
+        if background:
             return opers
 
         # interactive mode, run a progress bar
@@ -61,11 +61,11 @@ class Paas(GandiModule):
 
     @classmethod
     def update(cls, id, name, size, quantity, password, ssh_key, upgrade,
-               console, snapshot_profile, reset_mysql_password, interactive):
+               console, snapshot_profile, reset_mysql_password, background):
         """update a Paas instance"""
 
-        if interactive and not cls.intty():
-            interactive = False
+        if not background and not cls.intty():
+            background = True
 
         paas_params = {}
 
@@ -101,7 +101,7 @@ class Paas(GandiModule):
             paas_params['reset_mysql_password'] = reset_mysql_password
 
         result = cls.call('paas.update', cls.usable_id(id), paas_params)
-        if not interactive:
+        if background:
             return result
 
         # interactive mode, run a progress bar
@@ -110,7 +110,7 @@ class Paas(GandiModule):
 
     @classmethod
     def create(cls, name, size, type, quantity, duration, datacenter, vhosts,
-               password, snapshot_profile, interactive, ssh_key):
+               password, snapshot_profile, background, ssh_key):
         """create a new PaaS instance.
 
         you can specify a configuration entry named 'ssh_key' containing
@@ -120,8 +120,8 @@ class Paas(GandiModule):
 
         """
 
-        if interactive and not cls.intty():
-            interactive = False
+        if not background and not cls.intty():
+            background = True
 
         datacenter_id_ = int(Datacenter.usable_id(datacenter))
 
@@ -153,7 +153,7 @@ class Paas(GandiModule):
             paas_params['snapshot_profile'] = snapshot_profile
 
         result = cls.call('paas.create', paas_params)
-        if not interactive:
+        if background:
             return result
 
         # interactive mode, run a progress bar

@@ -101,11 +101,11 @@ def deploy(gandi, vhost):
 
 
 @cli.command()
-@click.option('--interactive', default=True, is_flag=True,
-              help='run in interactive mode (default=True)')
+@click.option('--background', default=False, is_flag=True,
+              help='run in background mode (default=False)')
 @click.argument('resource', nargs=-1)
 @pass_gandi
-def delete(gandi, interactive, resource):
+def delete(gandi, background, resource):
     """Delete a PaaS instance.
 
     Resource can be a vhost, a hostname, or an ID
@@ -113,8 +113,8 @@ def delete(gandi, interactive, resource):
 
     output_keys = ['id', 'type', 'step']
 
-    opers = gandi.paas.delete(resource, interactive=interactive)
-    if not interactive:
+    opers = gandi.paas.delete(resource, background)
+    if background:
         for oper in opers:
             output_oper(gandi, oper, output_keys)
 
@@ -144,13 +144,13 @@ def delete(gandi, interactive, resource):
         help='Password of the PaaS instance')
 @click.option('--snapshot-profile', default=None,
               help='Set a snapshot profile associated to this paas disk')
-@click.option('--interactive', default=True, is_flag=True,
-              help='run creation in interactive mode (default=True)')
+@click.option('--background', default=False, is_flag=True,
+              help='run creation in background mode (default=False)')
 @click.option('--ssh-key', default=None,
               help='Authorize ssh authentication for the given ssh key')
 @pass_gandi
 def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
-           password, snapshot_profile, interactive, ssh_key):
+           password, snapshot_profile, background, ssh_key):
     """Create a new PaaS instance and initialize associated git repository.
 
     you can specify a configuration entry named 'ssh_key' containing
@@ -166,8 +166,8 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
 
     result = gandi.paas.create(name, size, type, quantity, duration,
                                datacenter, vhosts, password,
-                               snapshot_profile, interactive, ssh_key)
-    if not interactive:
+                               snapshot_profile, background, ssh_key)
+    if background:
         gandi.pretty_echo(result)
 
     gandi.paas.init_conf(name)
@@ -195,13 +195,13 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
               help='Set a snapshot profile associated to this paas disk')
 @click.option('--reset-mysql-password', default=None,
               help='Reset mysql password for root')
-@click.option('--interactive', default=True, is_flag=True,
-              help='run creation in interactive mode (default=True)')
+@click.option('--background', default=False, is_flag=True,
+              help='run update in background mode (default=False)')
 @pass_gandi
 @click.argument('resource')
 def update(gandi, resource, name, size, quantity, password, ssh_key,
            upgrade, console, snapshot_profile, reset_mysql_password,
-           interactive):
+           background):
     """Update a PaaS instance.
 
     Resource can be a Hostname or an ID
@@ -209,8 +209,8 @@ def update(gandi, resource, name, size, quantity, password, ssh_key,
 
     result = gandi.paas.update(resource, name, size, quantity, password,
                                ssh_key, upgrade, console, snapshot_profile,
-                               reset_mysql_password, interactive)
-    if not interactive:
+                               reset_mysql_password, background)
+    if background:
         gandi.pretty_echo(result)
 
     return result
