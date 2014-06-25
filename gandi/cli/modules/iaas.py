@@ -166,12 +166,14 @@ class Iaas(GandiModule):
             'ip_version': ip_version,
             'bandwidth': bandwidth,
             'login': login,
-            'password': password,
         }
 
         run_ = run or cls.get('run')
         if run_ is not None:
             vm_params['run'] = run_
+
+        if password is not None:
+            vm_params['password'] = password
 
         ssh_key_ = ssh_key or cls.get('ssh_key')
         if ssh_key_ is not None:

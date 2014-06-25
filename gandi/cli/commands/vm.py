@@ -161,10 +161,8 @@ def delete(gandi, resource, force, background):
              "network interface")
 @option('--login', default='admin', prompt=True,
         help='login to create on the VM')
-@option('--password', default=None, prompt=True,
-        hide_input=True,
-        confirmation_prompt=True,
-        help='password to set to the root account and the created login')
+@click.option('--password', default=False, is_flag=True,
+              help='password to set to the root account and the created login')
 @option('--hostname', default='tempo', prompt=True,
         help='hostname of the VM')
 @option('--image', default='Debian 7', prompt=True,
@@ -194,9 +192,13 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     >>> gandi images
 
     """
+    pwd = None
+    if password:
+        pwd = click.prompt('Password', hide_input=True,
+                           confirmation_prompt=True)
 
     result = gandi.iaas.create(datacenter, memory, cores, ip_version,
-                               bandwidth, login, password, hostname,
+                               bandwidth, login, pwd, hostname,
                                image, run,
                                background, ssh_key)
     if background:
