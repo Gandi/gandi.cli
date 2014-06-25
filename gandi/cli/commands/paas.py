@@ -122,23 +122,23 @@ def delete(gandi, background, resource):
 
 
 @cli.command()
-@option('--name', default='paastempo', prompt=True,
+@option('--name', default='paastempo',
         help='Name of the PaaS instance')
-@option('--size', default='s', prompt=True,
+@option('--size', default='s',
         type=click.Choice(['s', 'x', 'xl', 'xxl']),
         help='Size of the PaaS instance')
-@option('--type', default=None, prompt=True,
+@option('--type', default='pythonpgsql',
         type=PAAS_TYPE,
         help='Type of the PaaS instance')
-@option('--quantity', default=0, prompt=True,
+@option('--quantity', default=0,
         help='Additional disk amount (in GB)')
-@option('--duration', default='1m', prompt=True,
-        help='number of month, suffixed with m (e.g.: `12m` means one year)')
+@option('--duration', default='1m',
+        help='number of month, suffixed with m')
 @option('--datacenter', default='FR', type=DATACENTER, prompt=True,
         help='datacenter where the PaaS will be spawned')
 @click.option('--vhosts', default=None, multiple=True,
               help='List of virtual hosts to be linked to the instance')
-@click.option('--password', default=False, is_flag=True,
+@click.option('--password', default=True, is_flag=True,
               help='Password of the PaaS instance')
 @click.option('--snapshot-profile', default=None,
               help='Set a snapshot profile associated to this paas disk')
@@ -163,7 +163,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     """
     pwd = None
     if password:
-        pwd = click.prompt('Password', hide_input=True,
+        pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
     result = gandi.paas.create(name, size, type, quantity, duration,
@@ -210,7 +210,7 @@ def update(gandi, resource, name, size, quantity, password, ssh_key,
     """
     pwd = None
     if password:
-        pwd = click.prompt('Password', hide_input=True,
+        pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
     result = gandi.paas.update(resource, name, size, quantity, pwd,
