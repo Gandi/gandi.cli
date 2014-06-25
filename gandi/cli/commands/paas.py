@@ -125,7 +125,7 @@ def delete(gandi, background, resource):
 @option('--name', default='paastempo',
         help='Name of the PaaS instance')
 @option('--size', default='s',
-        type=click.Choice(['s', 'x', 'xl', 'xxl']),
+        type=click.Choice(['s', 'm', 'x', 'xl', 'xxl']),
         help='Size of the PaaS instance')
 @option('--type', default='pythonpgsql',
         type=PAAS_TYPE,
@@ -181,7 +181,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
 @click.option('--name', type=click.STRING, default=None,
               help='Name of the PaaS instance')
 @click.option('--size', default=None,
-              type=click.Choice(['s', 'x', 'xl', 'xxl']),
+              type=click.Choice(['s', 'm', 'x', 'xl', 'xxl']),
               help='Size of the PaaS instance')
 @click.option('--quantity', type=click.INT, default=0,
               help='Additional disk amount (in GB)')
