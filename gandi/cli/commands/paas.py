@@ -138,10 +138,8 @@ def delete(gandi, background, resource):
         help='datacenter where the PaaS will be spawned')
 @click.option('--vhosts', default=None, multiple=True,
               help='List of virtual hosts to be linked to the instance')
-@option('--password', default=None, prompt=True,
-        hide_input=True,
-        confirmation_prompt=True,
-        help='Password of the PaaS instance')
+@click.option('--password', default=False, is_flag=True,
+              help='Password of the PaaS instance')
 @click.option('--snapshot-profile', default=None,
               help='Set a snapshot profile associated to this paas disk')
 @click.option('--background', default=False, is_flag=True,
@@ -163,9 +161,13 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     >>> gandi types
 
     """
+    pwd = None
+    if password:
+        pwd = click.prompt('Password', hide_input=True,
+                           confirmation_prompt=True)
 
     result = gandi.paas.create(name, size, type, quantity, duration,
-                               datacenter, vhosts, password,
+                               datacenter, vhosts, pwd,
                                snapshot_profile, background, ssh_key)
     if background:
         gandi.pretty_echo(result)
@@ -183,7 +185,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
               help='Size of the PaaS instance')
 @click.option('--quantity', type=click.INT, default=0,
               help='Additional disk amount (in GB)')
-@click.option('--password', default=None,
+@click.option('--password', default=False, is_flag=True,
               help='Password of the PaaS instance')
 @click.option('--ssh-key', default=None,
               help='Authorize ssh authentication for the given ssh key')
@@ -206,8 +208,12 @@ def update(gandi, resource, name, size, quantity, password, ssh_key,
 
     Resource can be a Hostname or an ID
     """
+    pwd = None
+    if password:
+        pwd = click.prompt('Password', hide_input=True,
+                           confirmation_prompt=True)
 
-    result = gandi.paas.update(resource, name, size, quantity, password,
+    result = gandi.paas.update(resource, name, size, quantity, pwd,
                                ssh_key, upgrade, console, snapshot_profile,
                                reset_mysql_password, background)
     if background:

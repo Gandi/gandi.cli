@@ -129,7 +129,6 @@ class Paas(GandiModule):
             'name': name,
             'size': size,
             'type': type,
-            'password': password,
             'duration': duration,
             'datacenter_id': datacenter_id_,
         }
@@ -138,6 +137,9 @@ class Paas(GandiModule):
             digest = uuid.uuid4().hex[:10]
             vhosts = ['%s.url-de-test.ws' % digest]
         paas_params['vhosts'] = vhosts
+
+        if password is not None:
+            paas_params['password'] = password
 
         if quantity is not None:
             paas_params['quantity'] = quantity
