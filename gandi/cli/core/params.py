@@ -44,6 +44,13 @@ DISK_IMAGE = DiskImageParamType()
 
 class GandiOption(click.Option):
 
+    def get_default(self, ctx):
+        value = click.Option.get_default(self, ctx)
+        # value found in default display it
+        gandi = ctx.obj
+        gandi.echo('%s: %s' % (self.name, value))
+        return value
+
     def consume_value(self, ctx, opts):
         value = click.Option.consume_value(self, ctx, opts)
         if not value:
@@ -54,10 +61,15 @@ class GandiOption(click.Option):
             gandi = ctx.obj
             value = gandi.get(self.name)
             if value is None:
-                metavar = ''
-                if self.type.name not in ['integer', 'text']:
-                    metavar = self.make_metavar()
-                prompt = '%s %s' % (self.help, metavar)
+                if self.default is None:
+                    metavar = ''
+                    if self.type.name not in ['integer', 'text']:
+                        metavar = self.make_metavar()
+                    prompt = '%s %s' % (self.help, metavar)
+                    gandi.echo(prompt)
+            else:
+                # value found in configuration display it
+                prompt = '%s: %s' % (self.name, value)
                 gandi.echo(prompt)
 
         return value
