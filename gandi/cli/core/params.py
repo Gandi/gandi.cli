@@ -12,6 +12,10 @@ class DatacenterParamType(click.Choice):
         choices = [item['iso'] for item in gandi.datacenter.list()]
         self.choices = choices
 
+    def convert(self, value, param, ctx):
+        value = value.upper()
+        return click.Choice.convert(self, value, param, ctx)
+
 
 class PaasTypeParamType(click.Choice):
     name = 'paas type'
