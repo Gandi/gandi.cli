@@ -123,7 +123,7 @@ def reboot(gandi, background, resource):
               help='run in background mode (default=False)')
 @click.argument('resource', nargs=-1)
 @pass_gandi
-def delete(gandi, resource, force, background):
+def delete(gandi, resource, background):
     """Delete a virtual machine.
 
     Resource can be a Hostname or an ID
@@ -136,7 +136,8 @@ def delete(gandi, resource, force, background):
         vm = gandi.iaas.info(item)
         if vm['state'] == 'running':
             oper = gandi.iaas.stop(item, background)
-            stop_opers.append(oper)
+            if not background:
+                stop_opers.append(oper)
 
     opers = gandi.iaas.delete(resource, background)
     if background:
@@ -147,26 +148,24 @@ def delete(gandi, resource, force, background):
 
 
 @cli.command()
-@option('--datacenter', default='FR', type=DATACENTER, prompt=True,
+@option('--datacenter', type=DATACENTER, default='FR',
         help='datacenter where the VM will be spawned')
-@option('--memory', type=click.INT, default=256, prompt=True,
+@option('--memory', type=click.INT, default=256,
         help='quantity of RAM in Megabytes to allocate')
-@option('--cores', type=click.INT, default=1, prompt=True,
+@option('--cores', type=click.INT, default=1,
         help='number of cpu')
-@option('--ip-version', default=4, prompt=True,
-        type=IntChoice([4, 6]),
+@option('--ip-version', type=IntChoice([4, 6]), default=4,
         help='version of the created IP')
-@option('--bandwidth', type=click.INT, default=102400, prompt=True,
+@option('--bandwidth', type=click.INT, default=102400,
         help="network bandwidth in bit/s used to create the VM's first "
              "network interface")
-@option('--login', default='admin', prompt=True,
+@option('--login', default='admin',
         help='login to create on the VM')
 @click.option('--password', default=False, is_flag=True,
               help='password to set to the root account and the created login')
-@option('--hostname', default='tempo', prompt=True,
+@option('--hostname', default='tempo',
         help='hostname of the VM')
-@option('--image', default='Debian 7', prompt=True,
-        type=DISK_IMAGE,
+@option('--image', type=DISK_IMAGE, default='Debian 7',
         help='disk image used to boot the vm')
 @click.option('--run', default=None,
               help='shell command that will run at the first startup of a VM.'
@@ -194,7 +193,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     """
     pwd = None
     if password:
-        pwd = click.prompt('Password', hide_input=True,
+        pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
     result = gandi.iaas.create(datacenter, memory, cores, ip_version,
