@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import types
 import os
 import os.path
 import inspect
@@ -45,7 +44,7 @@ class GandiCLI(click.Group):
         click.Group.__init__(self, help=help, params=[
             click.Option(['-v'],
                          help='Enable or disable verbose mode.',
-                         count=True,
+                         count=True, metavar='',
                          default=False, callback=set_debug),
             click.Option(['--version'],
                          help='Display version.',
