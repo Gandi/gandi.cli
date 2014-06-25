@@ -243,19 +243,31 @@ def console(gandi, resource):
 
 
 @cli.command()
-@click.option('--datacenter_id', type=click.INT, default=None,
-              help='filter by id of datacenter')
+@click.option('--datacenter', type=DATACENTER, default=None,
+              help='filter by datacenter')
+@click.argument('label', required=False)
 @pass_gandi
-def images(gandi, datacenter_id):
-    """List available system images for virtual machines."""
+def images(gandi, label, datacenter):
+    """List available system images for virtual machines.
+
+    You can also filter results using label, by example:
+
+    >>> gandi vm images Ubuntu --datacenter FR
+
+    or
+
+    >>> gandi vm images 'Ubuntu 10.04' --datacenter FR
+
+    """
 
     output_keys = ['label', 'os_arch', 'kernel_version', 'disk_id',
-                   'datacenter_id']
+                   'dc']
 
-    result = gandi.image.list(datacenter_id)
+    datacenters = gandi.datacenter.list()
+    result = gandi.image.list(datacenter, label)
     for image in result:
         gandi.echo('-' * 10)
-        output_image(gandi, image, output_keys)
+        output_image(gandi, image, datacenters, output_keys)
 
     return result
 

@@ -279,14 +279,20 @@ class Iaas(GandiModule):
 class Image(GandiModule):
 
     @classmethod
-    def list(cls, datacenter_id=None):
+    def list(cls, datacenter=None, label=None):
         """list available images for vm creation"""
 
         options = {}
-        if datacenter_id:
-            options = {'datacenter_id': datacenter_id}
+        if datacenter:
+            datacenter_id = int(Datacenter.usable_id(datacenter))
+            options['datacenter_id'] = datacenter_id
 
-        return cls.call('hosting.image.list', options)
+        # implement a filter by label as API doesn't handle it
+        images = cls.call('hosting.image.list', options)
+        if not label:
+            return images
+        return [img for img in images
+                if label.lower() in img['label'].lower()]
 
     @classmethod
     def from_label(cls, label):

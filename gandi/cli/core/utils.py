@@ -56,13 +56,22 @@ def output_paas(gandi, paas, datacenters, vhosts, output_keys):
         gandi.echo(msg)
 
 
-def output_image(gandi, image, output_keys):
+def output_image(gandi, image, datacenters, output_keys):
     """ Helper to output a disk image """
 
     for key in output_keys:
         if key in image:
             msg = '%-14s: %s' % (key, image[key])
             gandi.echo(msg)
+
+    if 'dc' in output_keys:
+        for dc in datacenters:
+            if dc['id'] == image['datacenter_id']:
+                dc_name = dc['iso']
+                break
+
+        msg = '%-14s: %s' % ('datacenter', dc_name)
+        gandi.echo(msg)
 
 
 def output_datacenter(gandi, datacenter, output_keys):
