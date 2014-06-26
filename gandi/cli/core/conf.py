@@ -30,7 +30,12 @@ class GandiModule(object):
     """
 
     _conffiles = {}
-    default_api_host = 'http://api-v3.dev.gandi.net'
+    apienvs = {
+        'dev': 'http://api-v3.dev.gandi.net/',
+        'ote': 'https://rpc.ote.gandi.net/xmlrpc/',
+        'production': 'https://rpc.gandi.net/xmlrpc/',
+    }
+    default_apienv = 'production'
     home_config = '~/.config/gandi/config.yaml'
     local_config = '.gandi.config.yaml'
 
@@ -94,16 +99,18 @@ class GandiModule(object):
 
         """
         try:
-            apikey = raw_input("Api key: ")
-            apihost = (raw_input("Api host[%s]: " % cls.default_api_host)
-                       or cls.default_api_host)
-
-            ssh_key = (raw_input("SSH keyfile[%s]: " % '~/.ssh/id_rsa.pub')
-                       or '~/.ssh/id_rsa.pub')
+            apikey = click.prompt('Api key')
+            env_choice = click.Choice(cls.apienvs.keys())
+            apienv = click.prompt('Environnment',
+                                  default=cls.default_apienv,
+                                  type=env_choice)
+            ssh_key = click.prompt('SSH keyfile',
+                                   default='~/.ssh/id_rsa.pub')
 
             config = {
                 'api': {'key': apikey,
-                        'host': apihost},
+                        'env': apienv,
+                        'host': cls.apienvs[apienv]},
             }
             if ssh_key is not None:
                 config['ssh_key'] = os.path.expanduser(ssh_key)
