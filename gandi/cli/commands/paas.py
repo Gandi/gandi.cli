@@ -2,9 +2,8 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.conf import pass_gandi
 from gandi.cli.core.utils import output_paas, output_generic
-from gandi.cli.core.params import DATACENTER, PAAS_TYPE, option
+from gandi.cli.core.params import pass_gandi, DATACENTER, PAAS_TYPE, option
 
 
 @cli.command()

@@ -1,7 +1,7 @@
 
 import os
 import uuid
-from gandi.cli.core.conf import GandiModule
+from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
 
 

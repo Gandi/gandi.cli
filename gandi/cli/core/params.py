@@ -1,7 +1,7 @@
 import click
 from click.decorators import _param_memo
 
-from gandi.cli.core.conf import GandiContextHelper
+from gandi.cli.core.base import GandiContextHelper
 
 
 class DatacenterParamType(click.Choice):
@@ -102,3 +102,6 @@ def option(*param_decls, **attrs):
         _param_memo(f, GandiOption(param_decls, **attrs))
         return f
     return decorator
+
+# create a decorator to pass the Gandi object as context to click calls
+pass_gandi = click.make_pass_decorator(GandiContextHelper)

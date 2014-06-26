@@ -2,7 +2,7 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.conf import pass_gandi
+from gandi.cli.core.params import pass_gandi
 from gandi.cli.core.utils import output_generic
 
 

@@ -5,7 +5,7 @@ import inspect
 
 import click
 
-from .conf import GandiContextHelper
+from .base import GandiContextHelper
 from gandi.cli import __version__
 
 

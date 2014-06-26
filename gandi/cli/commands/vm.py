@@ -2,11 +2,12 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.conf import pass_gandi
 from gandi.cli.core.utils import (
     output_vm, output_image, output_generic,
 )
-from gandi.cli.core.params import IntChoice, DATACENTER, DISK_IMAGE, option
+from gandi.cli.core.params import (
+    pass_gandi, option, IntChoice, DATACENTER, DISK_IMAGE,
+)
 
 
 @cli.command()
