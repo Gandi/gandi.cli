@@ -19,32 +19,25 @@ import click
 from click.exceptions import UsageError
 
 
-class GandiModule(object):
-    """ Base class for modules
+class GandiConfig(object):
+    """ Base class for yaml configuration
 
     Manage
-    - reading configuration files
-    - initializing xmlrpc connection
-    - execute remote api calls
+    - read/write configuration files/values
+    - handle two scopes : global/local
 
     """
 
     _conffiles = {}
+    home_config = '~/.config/gandi/config.yaml'
+    local_config = '.gandi.config.yaml'
+
     apienvs = {
         'dev': 'http://api-v3.dev.gandi.net/',
         'ote': 'https://rpc.ote.gandi.net/xmlrpc/',
         'production': 'https://rpc.gandi.net/xmlrpc/',
     }
     default_apienv = 'production'
-    home_config = '~/.config/gandi/config.yaml'
-    local_config = '.gandi.config.yaml'
-
-    _op_scores = {'BILL': 0, 'WAIT': 1, 'RUN': 2, 'DONE': 3}
-
-    verbose = False
-    apikey = None
-    apihost = None
-    _api = None
 
     @classmethod
     def load_config(cls):
@@ -62,7 +55,6 @@ class GandiModule(object):
         name = name or filename
 
         if name not in cls._conffiles:
-            cls.debug('loading %s configuration' % name)
             with open(filename) as fdesc:
                 content = yaml.load(fdesc, YAMLLoader)
                 # in case the file is empty
@@ -79,61 +71,9 @@ class GandiModule(object):
                        default_flow_style=False)
 
     @classmethod
-    def configure(cls, global_, key, val):
-        # first retrieve current configuration
-        scope = 'global' if global_ else 'local'
-        if scope not in cls._conffiles:
-            cls._conffiles[scope] = {}
-        config = cls._conffiles.get(scope, {})
-        # apply modification to fields
-        cls._set(scope, key, val)
-        conf_file = cls.home_config if global_ else cls.local_config
-        # save configuration to file
-        cls.save(os.path.expanduser(conf_file), config)
-
-    @classmethod
-    def init_config(cls):
-        """ Initialize Gandi CLI configuration
-
-        Create global configuration directory with API credentials
-
-        """
-        try:
-            apikey = click.prompt('Api key')
-            env_choice = click.Choice(cls.apienvs.keys())
-            apienv = click.prompt('Environnment',
-                                  default=cls.default_apienv,
-                                  type=env_choice)
-            ssh_key = click.prompt('SSH keyfile',
-                                   default='~/.ssh/id_rsa.pub')
-
-            config = {
-                'api': {'key': apikey,
-                        'env': apienv,
-                        'host': cls.apienvs[apienv]},
-            }
-            if ssh_key is not None:
-                config['ssh_key'] = os.path.expanduser(ssh_key)
-
-            directory = os.path.expanduser("~/.config/gandi")
-            if not os.path.exists(directory):
-                os.mkdir(directory, 0755)
-
-            config_file = os.path.expanduser(cls.home_config)
-            # save to disk
-            cls.save(config_file, config)
-            # load in memory
-            cls.load(config_file, 'global')
-        except KeyboardInterrupt:
-            cls.echo('Aborted.')
-            sys.exit(1)
-
-    @classmethod
     def _set(cls, scope, key, val, separator='.'):
         orig_key = key
 
-        cls.debug("saving key '%s' with value '%s' to scope %s" %
-                 (key, val, scope))
         key = key.split(separator)
         value = cls._conffiles.get(scope, {})
         if separator not in orig_key:
@@ -186,6 +126,70 @@ class GandiModule(object):
 
         if ret is None:
             return default
+
+    @classmethod
+    def configure(cls, global_, key, val):
+        # first retrieve current configuration
+        scope = 'global' if global_ else 'local'
+        if scope not in cls._conffiles:
+            cls._conffiles[scope] = {}
+        config = cls._conffiles.get(scope, {})
+        # apply modification to fields
+        cls._set(scope, key, val)
+        conf_file = cls.home_config if global_ else cls.local_config
+        # save configuration to file
+        cls.save(os.path.expanduser(conf_file), config)
+
+    @classmethod
+    def init_config(cls):
+        """ Initialize Gandi CLI configuration
+
+        Create global configuration directory with API credentials
+
+        """
+        try:
+            apikey = click.prompt('Api key')
+            env_choice = click.Choice(cls.apienvs.keys())
+            apienv = click.prompt('Environnment',
+                                  default=cls.default_apienv,
+                                  type=env_choice)
+            ssh_key = click.prompt('SSH keyfile',
+                                   default='~/.ssh/id_rsa.pub')
+
+            config = {
+                'api': {'key': apikey,
+                        'env': apienv,
+                        'host': cls.apienvs[apienv]},
+            }
+            if ssh_key is not None:
+                config['ssh_key'] = os.path.expanduser(ssh_key)
+
+            directory = os.path.expanduser("~/.config/gandi")
+            if not os.path.exists(directory):
+                os.mkdir(directory, 0755)
+
+            config_file = os.path.expanduser(cls.home_config)
+            # save to disk
+            cls.save(config_file, config)
+            # load in memory
+            cls.load(config_file, 'global')
+        except KeyboardInterrupt:
+            cls.echo('Aborted.')
+            sys.exit(1)
+
+
+class GandiModule(GandiConfig):
+    """ Base class for modules
+
+    Manage
+    - initializing xmlrpc connection
+    - execute remote api calls
+
+    """
+    _op_scores = {'BILL': 0, 'WAIT': 1, 'RUN': 2, 'DONE': 3}
+
+    verbose = False
+    _api = None
 
     @classmethod
     def get_api_connector(cls):
