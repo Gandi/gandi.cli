@@ -13,9 +13,19 @@ def setup(gandi):
 
     Create global configuration directory with API credentials
     """
-    gandi.echo("Welcome to GandiCLI, let's configure a few things "
-               "before we start")
+    intro = """Welcome to GandiCLI, let's configure a few things before we \
+start
+"""
+
+    outro = """
+Setup completed. You can now:
+* use 'gandi' to see all commands
+* use 'gandi vm' to create and access a VM
+* Go to https://wiki.gandi.net/cli for more info
+"""
+    gandi.echo(intro)
     gandi.init_config()
+    gandi.echo(outro)
 
 
 @cli.command()
