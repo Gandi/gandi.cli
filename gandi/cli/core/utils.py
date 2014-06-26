@@ -8,13 +8,24 @@ class MissingConfiguration(Exception):
         self.errors = errors
 
 
-def output_vm(gandi, vm, datacenters, output_keys):
-    """ Helper to output a vm information """
+def output_line(gandi, key, val, justify):
+    """ Base helper to output a key value using left justify"""
+    msg = ('%%-%ds: %%s' % justify) % (key, val)
+    gandi.echo(msg)
+
+
+def output_generic(gandi, data, output_keys, justify=10):
+    """ Generic helper to output info from a data dict """
 
     for key in output_keys:
-        if key in vm:
-            msg = '%-10s: %s' % (key, vm[key])
-            gandi.echo(msg)
+        if key in data:
+            output_line(gandi, key, data[key], justify)
+
+
+def output_vm(gandi, vm, datacenters, output_keys, justify=10):
+    """ Helper to output a vm information """
+
+    output_generic(gandi, vm, output_keys, justify)
 
     if 'datacenter' in output_keys:
         for dc in datacenters:
@@ -22,47 +33,36 @@ def output_vm(gandi, vm, datacenters, output_keys):
                 dc_name = dc['iso']
                 break
 
-        msg = '%-10s: %s' % ('datacenter', dc_name)
-        gandi.echo(msg)
+        output_line(gandi, 'datacenter', dc_name, justify)
 
     if 'ip' in output_keys:
         for iface in vm['ifaces']:
-            msg = '%-10s: %s' % ('bandwidth', iface['bandwidth'])
-            gandi.echo(msg)
+            output_line(gandi, 'bandwidth', iface['bandwidth'], justify)
+
             for ip in iface['ips']:
                 ip_addr = ip['ip']
 
-                msg = '%-10s: %s' % ('ip%s' % ip['version'], ip_addr)
-                gandi.echo(msg)
+                output_line(gandi, 'ip%s' % ip['version'], ip_addr, justify)
 
 
-def output_paas(gandi, paas, datacenters, vhosts, output_keys):
+def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=10):
     """ Helper to output a paas information """
 
-    gandi.debug(output_keys)
-    for key in output_keys:
-        if key in paas:
-            msg = '%-10s: %s' % (key, paas[key])
-            gandi.echo(msg)
+    output_generic(gandi, paas, output_keys, justify)
 
     if 'vhost' in output_keys:
         for entry in vhosts:
-            msg = '%-10s: %s' % ('vhost', entry)
-            gandi.echo(msg)
+            output_line(gandi, 'vhost', entry, justify)
 
     if 'dc' in output_keys:
         dc_name = paas['datacenter']['iso']
-        msg = '%-10s: %s' % ('datacenter', dc_name)
-        gandi.echo(msg)
+        output_line(gandi, 'datacenter', dc_name, justify)
 
 
-def output_image(gandi, image, datacenters, output_keys):
+def output_image(gandi, image, datacenters, output_keys, justify=14):
     """ Helper to output a disk image """
 
-    for key in output_keys:
-        if key in image:
-            msg = '%-14s: %s' % (key, image[key])
-            gandi.echo(msg)
+    output_generic(gandi, image, output_keys, justify)
 
     if 'dc' in output_keys:
         for dc in datacenters:
@@ -70,47 +70,7 @@ def output_image(gandi, image, datacenters, output_keys):
                 dc_name = dc['iso']
                 break
 
-        msg = '%-14s: %s' % ('datacenter', dc_name)
-        gandi.echo(msg)
-
-
-def output_datacenter(gandi, datacenter, output_keys):
-    """ Helper to output a datacenter """
-
-    for key in output_keys:
-        if key in datacenter:
-            msg = '%-10s: %s' % (key, datacenter[key])
-            gandi.echo(msg)
-
-
-def output_oper(gandi, oper, output_keys):
-    """ Helper to output an operation """
-
-    for key in output_keys:
-        if key in oper:
-            msg = '%-10s: %s' % (key, oper[key])
-            gandi.echo(msg)
-
-
-def output_generic(gandi, data, output_keys):
-    """ Generic helper to output info from a data dict """
-
-    for key in output_keys:
-        if key in data:
-            msg = '%-10s: %s' % (key, data[key])
-            gandi.echo(msg)
-
-
-def read_ssh_key(ctx, value):
-    """ Helper to read content of a filehandler
-
-    Use to read ssh_key when provided on command line using pipe.
-    """
-    if not value:
-        return
-
-    key = value.read()
-    return key
+        output_line(gandi, 'datacenter', dc_name, justify)
 
 
 def check_domain_available(ctx, domain):

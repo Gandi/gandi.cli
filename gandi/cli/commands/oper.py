@@ -3,7 +3,7 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.conf import pass_gandi
-from gandi.cli.core.utils import output_oper
+from gandi.cli.core.utils import output_generic
 
 
 @cli.command()
@@ -20,7 +20,7 @@ def list(gandi):
     result = gandi.oper.list(options)
     for oper in result:
         gandi.echo('-' * 10)
-        output_oper(gandi, oper, output_keys)
+        output_generic(gandi, oper, output_keys)
 
     return result
 
@@ -34,6 +34,6 @@ def info(gandi, id):
     output_keys = ['id', 'type', 'step', 'last_error']
 
     oper = gandi.oper.info(id)
-    output_oper(gandi, oper, output_keys)
+    output_generic(gandi, oper, output_keys)
 
     return oper

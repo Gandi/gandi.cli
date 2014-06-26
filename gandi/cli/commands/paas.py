@@ -3,7 +3,7 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.conf import pass_gandi
-from gandi.cli.core.utils import output_paas, output_oper
+from gandi.cli.core.utils import output_paas, output_generic
 from gandi.cli.core.params import DATACENTER, PAAS_TYPE, option
 
 
@@ -116,7 +116,7 @@ def delete(gandi, background, resource):
     opers = gandi.paas.delete(resource, background)
     if background:
         for oper in opers:
-            output_oper(gandi, oper, output_keys)
+            output_generic(gandi, oper, output_keys)
 
     return opers
 

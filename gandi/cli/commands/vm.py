@@ -4,7 +4,7 @@ import click
 from gandi.cli.core.cli import cli
 from gandi.cli.core.conf import pass_gandi
 from gandi.cli.core.utils import (
-    output_vm, output_image, output_oper, output_datacenter,
+    output_vm, output_image, output_generic,
 )
 from gandi.cli.core.params import IntChoice, DATACENTER, DISK_IMAGE, option
 
@@ -49,8 +49,11 @@ def info(gandi, resource):
     ret = []
     for item in resource:
         vm = gandi.iaas.info(item)
-        output_vm(gandi, vm, datacenters, output_keys)
+        output_vm(gandi, vm, datacenters, output_keys, 14)
         ret.append(vm)
+        for disk in vm['disks']:
+            disk_out_keys = ['label', 'kernel_version', 'name', 'size']
+            output_image(gandi, disk, datacenters, disk_out_keys, 14)
 
     return ret
 
@@ -71,7 +74,7 @@ def stop(gandi, background, resource):
     opers = gandi.iaas.stop(resource, background)
     if background:
         for oper in opers:
-            output_oper(gandi, oper, output_keys)
+            output_generic(gandi, oper, output_keys)
 
     return opers
 
@@ -92,7 +95,7 @@ def start(gandi, background, resource):
     opers = gandi.iaas.start(resource, background)
     if background:
         for oper in opers:
-            output_oper(gandi, oper, output_keys)
+            output_generic(gandi, oper, output_keys)
 
     return opers
 
@@ -113,7 +116,7 @@ def reboot(gandi, background, resource):
     opers = gandi.iaas.reboot(resource, background)
     if background:
         for oper in opers:
-            output_oper(gandi, oper, output_keys)
+            output_generic(gandi, oper, output_keys)
 
     return opers
 
@@ -142,7 +145,7 @@ def delete(gandi, resource, background):
     opers = gandi.iaas.delete(resource, background)
     if background:
         for oper in stop_opers + opers:
-            output_oper(gandi, oper, output_keys)
+            output_generic(gandi, oper, output_keys)
 
     return opers
 
@@ -285,6 +288,6 @@ def datacenters(gandi, id):
     result = gandi.datacenter.list()
     for dc in result:
         gandi.echo('-' * 10)
-        output_datacenter(gandi, dc, output_keys)
+        output_generic(gandi, dc, output_keys)
 
     return result
