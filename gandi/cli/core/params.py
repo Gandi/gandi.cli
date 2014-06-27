@@ -72,16 +72,18 @@ class GandiOption(click.Option):
             if value is not None:
                 # value found in configuration display it
                 self.display_value(ctx, value)
-
+            else:
+                if self.default is None:
+                    metavar = ''
+                    if self.type.name not in ['integer', 'text']:
+                        metavar = self.make_metavar()
+                    prompt = '%s %s' % (self.help, metavar)
+                    gandi.echo(prompt)
         return value
 
     def handle_parse_result(self, ctx, opts, args):
-        value = self.consume_value(ctx, opts)
-        value = self.full_process_value(ctx, value)
-        if self.callback is not None:
-            value = self.callback(ctx, value)
-        if self.expose_value:
-            ctx.params[self.name] = value
+        value, args = click.Option.handle_parse_result(self, ctx, opts, args)
+
         if value is not None:
             # save to gandi configuration
             gandi = ctx.obj
