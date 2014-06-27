@@ -178,8 +178,8 @@ def delete(gandi, resource, background):
                    'disks are mounted')
 @click.option('--background', default=False, is_flag=True,
               help='run creation in background mode (default=False)')
-@click.option('--ssh-key', default=None,
-              help='Authorize ssh authentication for the given ssh key')
+@option('--ssh-key',
+        help='Authorize ssh authentication for the given ssh key')
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
            password, hostname, image, run, background, ssh_key):
@@ -196,7 +196,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
 
     """
     pwd = None
-    if password:
+    if not ssh_key or password:
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
