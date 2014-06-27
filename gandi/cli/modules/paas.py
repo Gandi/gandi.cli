@@ -81,9 +81,8 @@ class Paas(GandiModule):
         if password is not None:
             paas_params['password'] = password
 
-        ssh_key_ = ssh_key or cls.get('ssh_key')
-        if ssh_key_ is not None:
-            with open(ssh_key_) as fdesc:
+        if ssh_key is not None:
+            with open(ssh_key) as fdesc:
                 ssh_key_ = fdesc.read()
             if ssh_key_ is not None:
                 paas_params['ssh_key'] = ssh_key_
@@ -144,9 +143,8 @@ class Paas(GandiModule):
         if quantity is not None:
             paas_params['quantity'] = quantity
 
-        ssh_key_ = ssh_key or cls.get('ssh_key')
-        if ssh_key_ is not None:
-            with open(ssh_key_) as fdesc:
+        if ssh_key is not None:
+            with open(ssh_key) as fdesc:
                 ssh_key_ = fdesc.read()
             if ssh_key_ is not None:
                 paas_params['ssh_key'] = ssh_key_
