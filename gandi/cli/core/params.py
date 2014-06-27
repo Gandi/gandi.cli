@@ -48,11 +48,16 @@ DISK_IMAGE = DiskImageParamType()
 
 class GandiOption(click.Option):
 
+    def display_value(self, ctx, value):
+        gandi = ctx.obj
+        gandi.echo('%s: %s' % (self.name, (value if value is not None
+                                           else 'Not found')))
+
     def get_default(self, ctx):
         value = click.Option.get_default(self, ctx)
-        # value found in default display it
-        gandi = ctx.obj
-        gandi.echo('%s: %s' % (self.name, value))
+        if not self.prompt:
+            # value found in default display it
+            self.display_value(ctx, value)
         return value
 
     def consume_value(self, ctx, opts):
@@ -64,17 +69,9 @@ class GandiOption(click.Option):
             # global configuration
             gandi = ctx.obj
             value = gandi.get(self.name)
-            if value is None:
-                if self.default is None:
-                    metavar = ''
-                    if self.type.name not in ['integer', 'text']:
-                        metavar = self.make_metavar()
-                    prompt = '%s %s' % (self.help, metavar)
-                    gandi.echo(prompt)
-            else:
+            if value is not None:
                 # value found in configuration display it
-                prompt = '%s: %s' % (self.name, value)
-                gandi.echo(prompt)
+                self.display_value(ctx, value)
 
         return value
 
@@ -85,9 +82,10 @@ class GandiOption(click.Option):
             value = self.callback(ctx, value)
         if self.expose_value:
             ctx.params[self.name] = value
-        # save to gandi configuration
-        gandi = ctx.obj
-        gandi.configure(True, self.name, value)
+        if value is not None:
+            # save to gandi configuration
+            gandi = ctx.obj
+            gandi.configure(True, self.name, value)
         return value, args
 
 
