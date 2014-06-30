@@ -56,6 +56,8 @@ class GandiCLI(click.Group):
     def get_command(self, ctx, cmd_name):
         sub_cmd = False
         if len(ctx.args) > 1:
+            # XXX: dirty hack to handle namespaces by merging the first 2 args
+            # i.e : paas + list = 'paas list'
             new_cmd_name = ' '.join(ctx.args[0:2])
             rv = click.Group.get_command(self, ctx, new_cmd_name)
             if rv is not None:
@@ -84,6 +86,7 @@ class GandiCLI(click.Group):
         """
         def decorator(f):
             namespace = f.__module__.rsplit('.', 1)[1]
+            # XXX: hack for handling commands without namespaces (root)
             if namespace == 'global' or 'root' in kwargs:
                 new_name = '%s' % f.__name__.lower()
                 kwargs.pop('root', None)
