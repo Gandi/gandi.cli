@@ -5,6 +5,7 @@ from gandi.cli.core.base import GandiContextHelper
 
 
 class DatacenterParamType(click.Choice):
+    """ Choice parameter to select a datacenter between available ones. """
     name = 'datacenter'
 
     def __init__(self):
@@ -18,6 +19,7 @@ class DatacenterParamType(click.Choice):
 
 
 class PaasTypeParamType(click.Choice):
+    """ Choice parameter to select a PaaS type between available ones. """
     name = 'paas type'
 
     def __init__(self):
@@ -27,6 +29,7 @@ class PaasTypeParamType(click.Choice):
 
 
 class IntChoice(click.Choice):
+    """ Choice parameter to select an integer value in a set of int values"""
     name = 'integer choice'
 
     def get_metavar(self, param):
@@ -34,6 +37,7 @@ class IntChoice(click.Choice):
 
 
 class DiskImageParamType(click.Choice):
+    """ Choice parameter to select a disk image between available ones. """
     name = 'images'
 
     def __init__(self):
@@ -47,13 +51,20 @@ DISK_IMAGE = DiskImageParamType()
 
 
 class GandiOption(click.Option):
+    """ Custom command option class for handling configuration files
+
+    When no value was found on command line, try to pull it from configuration
+    Display default or configuration value when needed
+    """
 
     def display_value(self, ctx, value):
+        """ Display value to be sued for this parameter """
         gandi = ctx.obj
         gandi.echo('%s: %s' % (self.name, (value if value is not None
                                            else 'Not found')))
 
     def get_default(self, ctx):
+        """ Retrieve default value and display it when prompt disabled """
         value = click.Option.get_default(self, ctx)
         if not self.prompt:
             # value found in default display it
@@ -61,6 +72,7 @@ class GandiOption(click.Option):
         return value
 
     def consume_value(self, ctx, opts):
+        """ Retrieve default value and display it when prompt is disabled """
         value = click.Option.consume_value(self, ctx, opts)
         if not value:
             # value not found by click on command line
@@ -82,6 +94,7 @@ class GandiOption(click.Option):
         return value
 
     def handle_parse_result(self, ctx, opts, args):
+        """ Save value for this option in configuration """
         value, args = click.Option.handle_parse_result(self, ctx, opts, args)
 
         if value is not None:

@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import os
 import sys
@@ -7,11 +6,11 @@ import os.path
 from datetime import datetime
 from subprocess import call
 
-from .client import XMLRPCClient, APICallFailed
-from .conf import GandiConfig
-
 import click
 from click.exceptions import UsageError
+
+from .client import XMLRPCClient, APICallFailed
+from .conf import GandiConfig
 
 
 class GandiModule(GandiConfig):
@@ -194,4 +193,3 @@ class GandiContextHelper(GandiModule):
         # save internal map of loaded module classes
         for subclass in GandiModule.__subclasses__():
             cls._modules[subclass.__name__.lower()] = subclass
-

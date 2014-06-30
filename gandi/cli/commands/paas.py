@@ -224,7 +224,7 @@ def update(gandi, resource, name, size, quantity, password, ssh_key,
 @cli.command()
 @pass_gandi
 def types(gandi):
-    """List types Paas instances."""
+    """List types PaaS instances."""
 
     options = {}
     types = gandi.paas.type_list(options)

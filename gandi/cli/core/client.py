@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import socket
 import xmlrpclib
+
 from gandi.cli import __version__
 
 
