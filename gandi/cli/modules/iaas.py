@@ -213,7 +213,7 @@ class Iaas(GandiModule):
                 # stop on first access found
                 break
 
-        cls.echo('Your VM %s have been created.' % hostname)
+        cls.echo('Your Virtual Machine %s have been created.' % hostname)
         cls.echo('Requesting access using: %s ...' % access)
         # XXX: we must remove ssh key entry in case we use the same ip
         # as it's recyclable
@@ -267,9 +267,7 @@ class Iaas(GandiModule):
                 # stop on first access found
                 break
 
-        # hack for dev
         console_url = 'console.gandi.net'
-        # console_url = 'console.gandi.net'
         access = 'ssh %s@%s' % (ip_addr, console_url)
         cls.shell(access)
 

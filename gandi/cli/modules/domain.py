@@ -51,7 +51,7 @@ class Domain(GandiModule):
 
     @classmethod
     def from_fqdn(cls, fqdn):
-        """retrieve domain id associated to a fqdn"""
+        """retrieve domain id associated to a FQDN"""
 
         result = cls.list({})
         domains = {}

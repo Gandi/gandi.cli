@@ -21,25 +21,25 @@ class Paas(GandiModule):
 
     @classmethod
     def type_list(cls, options={}):
-        """list type of Paas instances"""
+        """list type of PaaS instances"""
 
         return cls.call('paas.type.list', options)
 
     @classmethod
     def list(cls, options):
-        """list Paas instances"""
+        """list PaaS instances"""
 
         return cls.call('paas.list', options)
 
     @classmethod
     def info(cls, id):
-        """display information about a Paas instance"""
+        """display information about a PaaS instance"""
 
         return cls.call('paas.info', cls.usable_id(id))
 
     @classmethod
     def delete(cls, resources, background=False):
-        """delete a Paas instance"""
+        """delete a PaaS instance"""
 
         if not isinstance(resources, (list, tuple)):
             resources = [resources]
@@ -56,13 +56,13 @@ class Paas(GandiModule):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo("Delete your Paas instance.")
+        cls.echo("Delete your PaaS instance.")
         cls.display_progress(opers)
 
     @classmethod
     def update(cls, id, name, size, quantity, password, ssh_key, upgrade,
                console, snapshot_profile, reset_mysql_password, background):
-        """update a Paas instance"""
+        """update a PaaS instance"""
 
         if not background and not cls.intty():
             background = True
@@ -104,7 +104,7 @@ class Paas(GandiModule):
             return result
 
         # interactive mode, run a progress bar
-        cls.echo("Updating your Paas instance.")
+        cls.echo("Updating your PaaS instance.")
         cls.display_progress(result)
 
     @classmethod
