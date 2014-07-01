@@ -1,7 +1,7 @@
 Source: gandicli
 Section: python
 Priority: optional
-Maintainer: Nicolas Chipaux <aegiap@gandi.net>
+Maintainer: Gandi <feedback@gandi.net>
 Build-Depends: debhelper (>= 8), python (>= 2.6)
 Build-Depends-Indep: python-setuptools
 Standards-Version: 3.9.4
