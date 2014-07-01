@@ -68,34 +68,34 @@ class Paas(GandiModule):
 
         paas_params = {}
 
-        if name is not None:
+        if name:
             paas_params['name'] = name
 
-        if size is not None:
+        if size:
             paas_params['size'] = size
 
-        if quantity is not None:
+        if quantity:
             paas_params['quantity'] = quantity
 
-        if password is not None:
+        if password:
             paas_params['password'] = password
 
-        if ssh_key is not None:
+        if ssh_key:
             with open(ssh_key) as fdesc:
                 ssh_key_ = fdesc.read()
-            if ssh_key_ is not None:
+            if ssh_key_:
                 paas_params['ssh_key'] = ssh_key_
 
-        if upgrade is not None:
+        if upgrade:
             paas_params['upgrade'] = upgrade
 
-        if console is not None:
+        if console:
             paas_params['console'] = console
 
-        if snapshot_profile is not None:
+        if snapshot_profile:
             paas_params['snapshot_profile'] = snapshot_profile
 
-        if reset_mysql_password is not None:
+        if reset_mysql_password:
             paas_params['reset_mysql_password'] = reset_mysql_password
 
         result = cls.call('paas.update', cls.usable_id(id), paas_params)
@@ -136,19 +136,19 @@ class Paas(GandiModule):
             vhosts = ['%s.url-de-test.ws' % digest]
         paas_params['vhosts'] = vhosts
 
-        if password is not None:
+        if password:
             paas_params['password'] = password
 
-        if quantity is not None:
+        if quantity:
             paas_params['quantity'] = quantity
 
-        if ssh_key is not None:
+        if ssh_key:
             with open(ssh_key) as fdesc:
                 ssh_key_ = fdesc.read()
-            if ssh_key_ is not None:
+            if ssh_key_:
                 paas_params['ssh_key'] = ssh_key_
 
-        if snapshot_profile is not None:
+        if snapshot_profile:
             paas_params['snapshot_profile'] = snapshot_profile
 
         result = cls.call('paas.create', paas_params)

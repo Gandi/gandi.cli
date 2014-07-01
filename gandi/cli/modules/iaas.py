@@ -118,13 +118,13 @@ class Iaas(GandiModule):
 
         vm_params = {}
 
-        if memory is not None:
+        if memory:
             vm_params['memory'] = memory
 
-        if cores is not None:
+        if cores:
             vm_params['cores'] = cores
 
-        if console is not None:
+        if console:
             vm_params['console'] = console
 
         result = cls.call('hosting.vm.update', cls.usable_id(id), vm_params)
@@ -167,16 +167,16 @@ class Iaas(GandiModule):
             'login': login,
         }
 
-        if run is not None:
+        if run:
             vm_params['run'] = run
 
-        if password is not None:
+        if password:
             vm_params['password'] = password
 
-        if ssh_key is not None:
+        if ssh_key:
             with open(ssh_key) as fdesc:
                 ssh_key_ = fdesc.read()
-            if ssh_key_ is not None:
+            if ssh_key_:
                 vm_params['ssh_key'] = ssh_key_
 
         # XXX: name of disk is limited to 15 chars in ext2fs, ext3fs
@@ -197,8 +197,9 @@ class Iaas(GandiModule):
 
         vm_id = None
         for oper in result:
-            if 'vm_id' in oper and oper['vm_id'] is not None:
-                vm_id = oper['vm_id']
+            if oper.get('vm_id'):
+                vm_id = oper.get('vm_id')
+                break
 
         vm_info = cls.call('hosting.vm.info', vm_id)
         for iface in vm_info['ifaces']:
@@ -294,9 +295,8 @@ class Image(GandiModule):
         """retrieve disk image id associated to a label"""
 
         result = cls.list()
-        image_labels = {}
-        for image in result:
-            image_labels[image['label']] = image['disk_id']
+        image_labels = dict([(image['label'], image['disk_id'])
+                            for image in result])
 
         return image_labels.get(label)
 
