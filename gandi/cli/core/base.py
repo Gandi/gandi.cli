@@ -142,7 +142,7 @@ class GandiModule(GandiConfig):
         start_crea = datetime.utcnow()
 
         # count number of operations, 3 steps per operation
-        if not isinstance(operations, list):
+        if not isinstance(operations, (list, tuple)):
             operations = [operations]
         count_operations = len(operations) * 3
         updating_done = False
