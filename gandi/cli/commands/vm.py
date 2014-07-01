@@ -1,4 +1,3 @@
-
 import click
 
 from gandi.cli.core.cli import cli
@@ -28,7 +27,7 @@ def list(gandi, state, id):
     datacenters = gandi.datacenter.list()
     result = gandi.iaas.list(options)
     for vm in result:
-        gandi.echo('-' * 10)
+        gandi.separator_line()
         output_vm(gandi, vm, datacenters, output_keys)
 
     return result
@@ -270,7 +269,7 @@ def images(gandi, label, datacenter):
     datacenters = gandi.datacenter.list()
     result = gandi.image.list(datacenter, label)
     for image in result:
-        gandi.echo('-' * 10)
+        gandi.separator_line()
         output_image(gandi, image, datacenters, output_keys)
 
     return result
@@ -288,7 +287,7 @@ def datacenters(gandi, id):
 
     result = gandi.datacenter.list()
     for dc in result:
-        gandi.echo('-' * 10)
+        gandi.separator_line()
         output_generic(gandi, dc, output_keys)
 
     return result

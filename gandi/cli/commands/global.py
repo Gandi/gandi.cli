@@ -1,4 +1,3 @@
-
 import click
 
 from gandi.cli.core.cli import cli

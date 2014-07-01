@@ -1,4 +1,3 @@
-
 import click
 
 from gandi.cli.core.cli import cli
@@ -19,7 +18,7 @@ def list(gandi):
 
     result = gandi.oper.list(options)
     for oper in result:
-        gandi.echo('-' * 10)
+        gandi.separator_line()
         output_generic(gandi, oper, output_keys)
 
     return result

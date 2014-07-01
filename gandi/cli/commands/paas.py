@@ -1,4 +1,3 @@
-
 import click
 
 from gandi.cli.core.cli import cli
@@ -33,7 +32,7 @@ def list(gandi, state, id, vhosts):
             for host in list_vhost:
                 paas_hosts[paas['id']].append(host['name'])
 
-        gandi.echo('-' * 10)
+        gandi.separator_line()
         output_paas(gandi, paas, [], paas_hosts[paas['id']],
                     output_keys)
 

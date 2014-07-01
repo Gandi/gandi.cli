@@ -82,6 +82,11 @@ class GandiModule(GandiConfig):
                 pprint(message)
 
     @classmethod
+    def separator_line(cls, sep='-', size=10):
+        if cls.intty():
+            cls.echo(sep * size)
+
+    @classmethod
     def debug(cls, message):
         if cls.verbose:
             msg = '[DEBUG] %s' % message
@@ -112,14 +117,14 @@ class GandiModule(GandiConfig):
             progress = float(progress)
         if not isinstance(progress, float):
             progress = 0
-            status = 'error: progress var must be float\r\n'
+            status = 'error: progress var must be float\n'
             cls.echo(type(progress))
         if progress < 0:
             progress = 0
-            status = 'Halt...\r\n'
+            status = 'Halt...\n'
         if progress >= 1:
             progress = 1
-            # status = 'Done...\r\n'
+            # status = 'Done...\n'
         block = int(round(size * progress))
         text = ('\rProgress: [{0}] {1:.2%}  {2}  {3:0>2}:{4:0>2}:{5:0>2}  '
                 ''.format('#' * block + '-' * (size - block), progress,

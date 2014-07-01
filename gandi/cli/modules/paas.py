@@ -1,4 +1,3 @@
-
 import os
 import uuid
 from gandi.cli.core.base import GandiModule
