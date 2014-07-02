@@ -3,6 +3,7 @@ import os
 import sys
 import yaml
 import os.path
+from distutils.dir_util import mkpath
 
 try:
     from yaml import CSafeLoader as YAMLLoader
@@ -159,7 +160,7 @@ class GandiConfig(object):
 
             directory = os.path.expanduser("~/.config/gandi")
             if not os.path.exists(directory):
-                os.mkdir(directory, 0755)
+                mkpath(directory, 0755)
 
             config_file = os.path.expanduser(cls.home_config)
             # save to disk
