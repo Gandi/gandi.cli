@@ -186,8 +186,7 @@ class GandiContextHelper(GandiModule):
             return object.__getattribute__(self, '_modules')[item]
         return object.__getattribute__(self, item)
 
-    @classmethod
-    def load_modules(cls):
+    def load_modules(self):
         module_folder = os.path.join(os.path.dirname(__file__), '../modules')
         for filename in os.listdir(module_folder):
             if filename.endswith('.py') and '__init__' not in filename:
@@ -197,4 +196,4 @@ class GandiContextHelper(GandiModule):
 
         # save internal map of loaded module classes
         for subclass in GandiModule.__subclasses__():
-            cls._modules[subclass.__name__.lower()] = subclass
+            self._modules[subclass.__name__.lower()] = subclass
