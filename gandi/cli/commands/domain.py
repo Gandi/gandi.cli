@@ -6,11 +6,13 @@ from gandi.cli.core.params import pass_gandi
 
 
 @cli.command()
+@click.option('--limit', help='limit number of results', default=100,
+              show_default=True)
 @pass_gandi
-def list(gandi):
+def list(gandi, limit):
     """List domains."""
 
-    options = {}
+    options = {'items_per_page': limit}
     domains = gandi.domain.list(options)
     for domain in domains:
         gandi.echo(domain['fqdn'])

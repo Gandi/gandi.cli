@@ -9,11 +9,15 @@ from gandi.cli.core.params import pass_gandi, DATACENTER, PAAS_TYPE, option
 @click.option('--state', default=None, help='filter results by state')
 @click.option('--id', help='display ids', is_flag=True)
 @click.option('--vhosts', help='display vhosts', default=True, is_flag=True)
+@click.option('--limit', help='limit number of results', default=100,
+              show_default=True)
 @pass_gandi
-def list(gandi, state, id, vhosts):
+def list(gandi, state, id, vhosts, limit):
     """List PaaS instances."""
 
-    options = {}
+    options = {
+        'items_per_page': limit,
+    }
     if state:
         options['state'] = state
 

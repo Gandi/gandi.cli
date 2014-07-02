@@ -12,11 +12,15 @@ from gandi.cli.core.params import (
 @cli.command()
 @click.option('--state', default=None, help='filter results by state')
 @click.option('--id', help='display ids', is_flag=True)
+@click.option('--limit', help='limit number of results', default=100,
+              show_default=True)
 @pass_gandi
-def list(gandi, state, id):
+def list(gandi, state, id, limit):
     """List virtual machines."""
 
-    options = {}
+    options = {
+        'items_per_page': limit,
+    }
     if state:
         options['state'] = state
 

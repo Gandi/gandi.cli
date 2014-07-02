@@ -6,14 +6,17 @@ from gandi.cli.core.params import pass_gandi
 
 
 @cli.command()
+@click.option('--limit', help='limit number of results', default=100,
+              show_default=True)
 @pass_gandi
-def list(gandi):
+def list(gandi, limit):
     """List operations."""
 
     output_keys = ['id', 'type', 'step']
 
     options = {
         'step': ['BILL', 'WAIT', 'RUN'],
+        'items_per_page': limit,
     }
 
     result = gandi.oper.list(options)
