@@ -184,7 +184,7 @@ class Iaas(GandiModule):
         disk_params = {'datacenter_id': vm_params['datacenter_id'],
                        'name': ('sys_%s' % hostname)[:15]}
 
-        sys_disk_id_ = int(Image.usable_id(image))
+        sys_disk_id_ = int(Image.usable_id(image, datacenter_id_))
 
         result = cls.call('hosting.vm.create_from', vm_params, disk_params,
                           sys_disk_id_)
@@ -291,22 +291,22 @@ class Image(GandiModule):
                 if label.lower() in img['label'].lower()]
 
     @classmethod
-    def from_label(cls, label):
+    def from_label(cls, label, datacenter=None):
         """retrieve disk image id associated to a label"""
 
-        result = cls.list()
+        result = cls.list(datacenter=datacenter)
         image_labels = dict([(image['label'], image['disk_id'])
                             for image in result])
 
         return image_labels.get(label)
 
     @classmethod
-    def usable_id(cls, id):
+    def usable_id(cls, id, datacenter=None):
         try:
             qry_id = int(id)
         except:
             # id is maybe a label
-            qry_id = cls.from_label(id)
+            qry_id = cls.from_label(id, datacenter)
 
         if not qry_id:
             msg = 'unknown identifier %s' % id
