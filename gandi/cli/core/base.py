@@ -111,7 +111,7 @@ class GandiModule(GandiConfig):
         hours, remainder = divmod(duration.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
 
-        size = int(width * .7)
+        size = int(width * .6)
         status = ""
         if isinstance(progress, int):
             progress = float(progress)
@@ -126,7 +126,7 @@ class GandiModule(GandiConfig):
             progress = 1
             # status = 'Done...\n'
         block = int(round(size * progress))
-        text = ('\rProgress: [{0}] {1:.2%}  {2}  {3:0>2}:{4:0>2}:{5:0>2}  '
+        text = ('\rProgress: [{0}] {1:.2%} {2} {3:0>2}:{4:0>2}:{5:0>2}  '
                 ''.format('#' * block + '-' * (size - block), progress,
                           status, hours, minutes, seconds))
         sys.stdout.write(text)
