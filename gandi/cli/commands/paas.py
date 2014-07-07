@@ -140,7 +140,8 @@ def delete(gandi, background, resource):
         help='datacenter where the PaaS will be spawned')
 @click.option('--vhosts', default=None, multiple=True,
               help='List of virtual hosts to be linked to the instance')
-@click.option('--password', default=True, is_flag=True,
+@click.option('--password', prompt=True, hide_input=True,
+              confirmation_prompt=True, required=True,
               help='Password of the PaaS instance')
 @click.option('--snapshot-profile', default=None,
               help='Set a snapshot profile associated to this paas disk')
@@ -163,13 +164,8 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     >>> gandi types
 
     """
-    pwd = None
-    if not ssh_key or password:
-        pwd = click.prompt('password', hide_input=True,
-                           confirmation_prompt=True)
-
     result = gandi.paas.create(name, size, type, quantity, duration,
-                               datacenter, vhosts, pwd,
+                               datacenter, vhosts, password,
                                snapshot_profile, background, ssh_key)
     if background:
         gandi.pretty_echo(result)
