@@ -128,15 +128,25 @@ def reboot(gandi, background, resource):
 @cli.command()
 @click.option('--background', default=False, is_flag=True,
               help='run in background mode (default=False)')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue without prompting. (default=False)')
 @click.argument('resource', nargs=-1)
 @pass_gandi
-def delete(gandi, resource, background):
+def delete(gandi, background, force, resource):
     """Delete a virtual machine.
 
     Resource can be a Hostname or an ID
     """
 
     output_keys = ['id', 'type', 'step']
+
+    if not force:
+        instance_info = "'%s'" % ', '.join(resource)
+        proceed = click.confirm("Are you sure to delete Virtual Machine %s ?" %
+                                instance_info)
+
+        if not proceed:
+            return
 
     stop_opers = []
     for item in resource:

@@ -105,15 +105,25 @@ def deploy(gandi, vhost):
 @cli.command()
 @click.option('--background', default=False, is_flag=True,
               help='run in background mode (default=False)')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue without prompting. (default=False)')
 @click.argument('resource', nargs=-1)
 @pass_gandi
-def delete(gandi, background, resource):
+def delete(gandi, background, force, resource):
     """Delete a PaaS instance.
 
     Resource can be a vhost, a hostname, or an ID
     """
 
     output_keys = ['id', 'type', 'step']
+
+    if not force:
+        instance_info = "'%s'" % ', '.join(resource)
+        proceed = click.confirm("Are you sure to delete PaaS instance %s ?" %
+                                instance_info)
+
+        if not proceed:
+            return
 
     opers = gandi.paas.delete(resource, background)
     if background:
