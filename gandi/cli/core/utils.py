@@ -73,6 +73,11 @@ def output_image(gandi, image, datacenters, output_keys, justify=14):
         output_line(gandi, 'datacenter', dc_name, justify)
 
 
+def output_sshkey(gandi, sshkey, output_keys, justify=12):
+    '''Helper to output an ssh key information '''
+    output_generic(gandi, sshkey, output_keys, justify)
+
+
 def check_domain_available(ctx, domain):
     """ Helper to check if a domain is available """
     gandi = ctx.obj
