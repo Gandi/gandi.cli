@@ -59,7 +59,7 @@ def info(gandi, resource, id, value):
 @cli.command()
 @click.option('--name', help='the ssh key name')
 @click.option('--sshkey', help='the content of the ssh key')
-@click.option('--sshkey_file', type=click.File('r'), help='the ssh key file')
+@click.option('--sshkey-file', type=click.File('r'), help='the ssh key file')
 @pass_gandi
 def create(gandi, name, sshkey=None, sshkey_file=None):
     '''Create a new ssh key.'''
