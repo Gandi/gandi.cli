@@ -58,21 +58,21 @@ def info(gandi, resource, id, value):
 
 @cli.command()
 @click.option('--name', help='the ssh key name')
-@click.option('--sshkey', help='the content of the ssh key')
-@click.option('--sshkey-file', type=click.File('r'), help='the ssh key file')
+@click.option('--value', help='the content of the ssh key')
+@click.option('--sshkey', type=click.File('r'), help='the ssh key file')
 @pass_gandi
-def create(gandi, name, sshkey=None, sshkey_file=None):
+def create(gandi, name, value=None, sshkey=None):
     '''Create a new ssh key.'''
-    if not sshkey and not sshkey_file:
-        raise UsageError('You must set sshkey OR sshkey_file.')
+    if not value and not sshkey:
+        raise UsageError('You must set value OR sshkey.')
 
-    if sshkey and sshkey_file:
-        raise UsageError('You must not set sshkey AND sshkey_file.')
+    if value and sshkey:
+        raise UsageError('You must not set value AND sshkey.')
 
-    if sshkey_file:
-        sshkey = sshkey_file.read()
+    if sshkey:
+        value = sshkey.read()
 
-    ret = gandi.sshkey.create(name, sshkey)
+    ret = gandi.sshkey.create(name, value)
     if not ret:
         return
 
