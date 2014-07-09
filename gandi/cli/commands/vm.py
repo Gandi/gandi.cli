@@ -209,7 +209,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
 
     """
     pwd = None
-    if not ssh_key or password:
+    if not (ssh_key or password):
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
