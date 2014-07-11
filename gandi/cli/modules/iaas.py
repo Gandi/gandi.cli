@@ -2,6 +2,7 @@ import time
 
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
+from gandi.cli.modules.sshkey import Sshkey
 
 
 class Iaas(GandiModule):
@@ -138,7 +139,7 @@ class Iaas(GandiModule):
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
                login, password, hostname, image, run, background,
-               ssh_key):
+               ssh_key, ssh_key_id):
         """create a new virtual machine.
 
         you can specify a configuration entry named 'ssh_key' containing
@@ -172,6 +173,9 @@ class Iaas(GandiModule):
 
         if password:
             vm_params['password'] = password
+
+        if ssh_key_id:
+            vm_params['keys'] = [Sshkey.usable_id(key) for key in ssh_key_id]
 
         if ssh_key:
             with open(ssh_key) as fdesc:

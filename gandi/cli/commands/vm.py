@@ -193,9 +193,11 @@ def delete(gandi, background, force, resource):
               help='run creation in background mode (default=False)')
 @option('--ssh-key',
         help='Authorize ssh authentication for the given ssh key')
+@option('--ssh-key-id', help='Add an ssh key id OR name from the portfolio.',
+        multiple=True)
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
-           password, hostname, image, run, background, ssh_key):
+           password, hostname, image, run, background, ssh_key, ssh_key_id):
     """Create a new virtual machine.
 
     you can specify a configuration entry named 'ssh_key' containing
@@ -209,14 +211,15 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
 
     """
     pwd = None
-    if not (ssh_key or password):
+    if not (ssh_key or password or ssh_key_id):
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
     result = gandi.iaas.create(datacenter, memory, cores, ip_version,
                                bandwidth, login, pwd, hostname,
                                image, run,
-                               background, ssh_key)
+                               background,
+                               ssh_key, ssh_key_id)
     if background:
         gandi.pretty_echo(result)
 
