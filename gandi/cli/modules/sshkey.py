@@ -12,6 +12,9 @@ class Sshkey(GandiModule):
         if len(sshkeys) == 1:
             return sshkeys[0]['id']
 
+        if not sshkeys:
+            cls.error('unable to find sshkey named %r' % name)
+
         cls.error('sshkey name %s is ambiguous.' % name)
 
     @classmethod
