@@ -57,7 +57,7 @@ def info(gandi, resource, id, value):
 
 
 @cli.command()
-@click.option('--name', help='the ssh key name')
+@click.option('--name', help='the ssh key name', required=True)
 @click.option('--value', help='the content of the ssh key')
 @click.option('--sshkey', type=click.File('r'), help='the ssh key file')
 @pass_gandi
