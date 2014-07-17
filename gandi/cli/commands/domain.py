@@ -1,7 +1,7 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_image, check_domain_available
+from gandi.cli.core.utils import output_generic, check_domain_available
 from gandi.cli.core.params import pass_gandi
 
 
@@ -29,7 +29,7 @@ def info(gandi, resource):
     output_keys = ['fqdn', 'nameservers', 'services', 'zone_id', 'tags']
 
     result = gandi.domain.info(resource)
-    output_image(gandi, result, output_keys)
+    output_generic(gandi, result, output_keys)
 
     return result
 
