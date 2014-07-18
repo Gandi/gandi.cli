@@ -129,7 +129,8 @@ def reboot(gandi, background, resource):
 @click.option('--background', default=False, is_flag=True,
               help='run in background mode (default=False)')
 @click.option('--force', '-f', is_flag=True,
-              help='This is a dangerous option that will cause CLI to continue without prompting. (default=False)')
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False)')
 @click.argument('resource', nargs=-1)
 @pass_gandi
 def delete(gandi, background, force, resource):

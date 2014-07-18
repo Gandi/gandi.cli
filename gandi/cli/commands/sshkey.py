@@ -1,10 +1,9 @@
-import os
 import click
 from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_sshkey
-from gandi.cli.core.params import pass_gandi, option
+from gandi.cli.core.params import pass_gandi
 
 
 @cli.command()
@@ -89,4 +88,4 @@ def delete(gandi, resource):
     Ressource can be a name or an ID
     '''
     for item in resource:
-        sshkey = gandi.sshkey.delete(item)
+        gandi.sshkey.delete(item)
