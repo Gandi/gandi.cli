@@ -29,7 +29,7 @@ def info(gandi, resource):
     output_keys = ['fqdn', 'nameservers', 'services', 'zone_id', 'tags']
 
     result = gandi.domain.info(resource)
-    output_generic(gandi, result, output_keys)
+    output_generic(gandi, result, output_keys, justify=12)
 
     return result
 
