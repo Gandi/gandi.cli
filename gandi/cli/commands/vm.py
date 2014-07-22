@@ -141,11 +141,12 @@ def delete(gandi, background, force, resource):
 
     output_keys = ['id', 'type', 'step']
 
-    iaas_list = [ vm['hostname'] for vm in gandi.iaas.list() ]
+    iaas_list = gandi.iaas.list()
+    iaas_namelist = [ vm['hostname'] for vm in iaas_list ]
     for item in resource:
-        if item not in iaas_list:
+        if item not in iaas_namelist:
             print 'Sorry virtual machine %s does not exist' % item
-            print 'Please use one of the following: %s', iaas_list
+            print 'Please use one of the following: %s', iaas_namelist
             return
 
     if not force:
@@ -158,7 +159,8 @@ def delete(gandi, background, force, resource):
 
     stop_opers = []
     for item in resource:
-        vm = gandi.iaas.info(item)
+        vm = next((vm for (index, vm) in enumerate(iaas_list)
+                if vm['hostname'] == item), None)
         if vm['state'] == 'running':
             oper = gandi.iaas.stop(item, background)
             if not background:
