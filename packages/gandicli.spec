@@ -11,7 +11,7 @@ Requires: python
 BuildRoot: %{mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 %description
-Vous permet d'administrer, déployer vos instances Gandi
+administrate and deploy your gandi resources
 
 %prep
 tar xpzf %{sources}
