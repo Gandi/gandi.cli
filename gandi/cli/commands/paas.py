@@ -122,8 +122,7 @@ def delete(gandi, background, force, resource):
     for item in resource:
         if item not in paas_list:
             print 'Sorry PaaS instance %s does not exist' % item
-            print 'Please use one of the following:',
-            print paas_list
+            print 'Please use one of the following: %s' % paas_list
             return
 
     if not force:

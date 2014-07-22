@@ -145,8 +145,7 @@ def delete(gandi, background, force, resource):
     for item in resource:
         if item not in iaas_list:
             print 'Sorry virtual machine %s does not exist' % item
-            print 'Please use one of the following:',
-            print iaas_list
+            print 'Please use one of the following: %s', iaas_list
             return
 
     if not force:
