@@ -25,7 +25,7 @@ class Paas(GandiModule):
         return cls.call('paas.type.list', options)
 
     @classmethod
-    def list(cls, options):
+    def list(cls, options=None):
         """list PaaS instances"""
 
         return cls.call('paas.list', options)
