@@ -6,7 +6,7 @@ Gandi command line interface project
 -----------------
 You can use Gandi cli as a command line
 >>> gandi
->>> gandi list --help
+>>> gandi vm list --help
 
 -----------------
 You can also use Gandi cli modules as a python modules
