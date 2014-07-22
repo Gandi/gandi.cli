@@ -120,7 +120,7 @@ def delete(gandi, background, force, resource):
 
     if not force:
         instance_info = "'%s'" % ', '.join(resource)
-        proceed = click.confirm("Are you sure to delete PaaS instance %s ?" %
+        proceed = click.confirm("Are you sure to delete PaaS instance %s?" %
                                 instance_info)
 
         if not proceed:
