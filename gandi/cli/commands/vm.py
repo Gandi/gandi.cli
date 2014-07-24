@@ -189,7 +189,8 @@ def delete(gandi, background, force, resource):
 @option('--login', default='admin',
         help='login to create on the VM')
 @click.option('--password', default=False, is_flag=True,
-              help='password to set to the root account and the created login')
+              help='will ask for a password to be set for the root account '
+                   'and the created login')
 @option('--hostname', default='tempo',
         help='hostname of the VM')
 @option('--image', type=DISK_IMAGE, default='Debian 7',
@@ -221,7 +222,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
 
     """
     pwd = None
-    if not (ssh_key or password or ssh_key_id):
+    if password or not (ssh_key or ssh_key_id):
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
