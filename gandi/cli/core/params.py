@@ -35,6 +35,10 @@ class IntChoice(click.Choice):
     def get_metavar(self, param):
         return '[%s]' % '|'.join(str(x) for x in self.choices)
 
+    def convert(self, value, param, ctx):
+        value = click.Choice.convert(self, value, param, ctx)
+        return int(value)
+
 
 class DiskImageParamType(click.Choice):
     """ Choice parameter to select a disk image between available ones. """

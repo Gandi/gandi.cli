@@ -181,7 +181,7 @@ def delete(gandi, background, force, resource):
         help='quantity of RAM in Megabytes to allocate')
 @option('--cores', type=click.INT, default=1,
         help='number of cpu')
-@option('--ip-version', type=IntChoice([4, 6]), default=4,
+@option('--ip-version', type=IntChoice(['4', '6']), default='4',
         help='version of the created IP')
 @option('--bandwidth', type=click.INT, default=102400,
         help="network bandwidth in bit/s used to create the VM's first "
