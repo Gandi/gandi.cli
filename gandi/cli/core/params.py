@@ -32,9 +32,6 @@ class IntChoice(click.Choice):
     """ Choice parameter to select an integer value in a set of int values"""
     name = 'integer choice'
 
-    def get_metavar(self, param):
-        return '[%s]' % '|'.join(str(x) for x in self.choices)
-
     def convert(self, value, param, ctx):
         value = click.Choice.convert(self, value, param, ctx)
         return int(value)
