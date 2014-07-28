@@ -105,7 +105,7 @@ def start(gandi, background, resource):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1, required)
+@click.argument('resource', nargs=-1, required=True)
 @click.option('--background', default=False, is_flag=True,
               help='run in background mode (default=False)')
 @pass_gandi
