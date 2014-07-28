@@ -38,7 +38,7 @@ def list(gandi, state, id, limit):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1)
+@click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def info(gandi, resource):
     """Display information about a virtual machine.
@@ -63,7 +63,7 @@ def info(gandi, resource):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1)
+@click.argument('resource', nargs=-1, required=True)
 @click.option('--background', default=False, is_flag=True,
               help='run in background mode (default=False)')
 @pass_gandi
@@ -84,7 +84,7 @@ def stop(gandi, background, resource):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1)
+@click.argument('resource', nargs=-1, required=True)
 @click.option('--background', default=False, is_flag=True,
               help='run in background mode (default=False)')
 @pass_gandi
@@ -105,7 +105,7 @@ def start(gandi, background, resource):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1)
+@click.argument('resource', nargs=-1, required)
 @click.option('--background', default=False, is_flag=True,
               help='run in background mode (default=False)')
 @pass_gandi
