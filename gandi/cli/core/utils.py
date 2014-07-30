@@ -8,6 +8,13 @@ class MissingConfiguration(Exception):
         self.errors = errors
 
 
+class DuplicateResults(Exception):
+    """ Raise when multiple results are found"""
+
+    def __init__(self, errors):
+        self.errors = errors
+
+
 def output_line(gandi, key, val, justify):
     """ Base helper to output a key value using left justify"""
     msg = ('%%-%ds: %%s' % justify) % (key, val)

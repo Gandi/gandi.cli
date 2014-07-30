@@ -1,4 +1,5 @@
 from gandi.cli.core.base import GandiModule
+from gandi.cli.core.utils import DuplicateResults
 
 
 class Sshkey(GandiModule):
@@ -9,11 +10,10 @@ class Sshkey(GandiModule):
         sshkeys = cls.list({'name': name})
         if len(sshkeys) == 1:
             return sshkeys[0]['id']
+        elif not sshkeys:
+            return
 
-        if not sshkeys:
-            cls.error('unable to find sshkey named %r' % name)
-
-        cls.error('sshkey name %s is ambiguous.' % name)
+        raise DuplicateResults('sshkey name %s is ambiguous.' % name)
 
     @classmethod
     def usable_id(cls, id):
@@ -22,6 +22,8 @@ class Sshkey(GandiModule):
             qry_id = cls.from_name(id)
             if not qry_id:
                 qry_id = int(id)
+        except DuplicateResults as exc:
+            cls.error(exc.errors)
         except Exception:
             qry_id = None
 
