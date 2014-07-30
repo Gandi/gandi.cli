@@ -47,8 +47,6 @@ class Datacenter(GandiModule):
     @classmethod
     def usable_id(cls, id):
         try:
-            qry_id = int(id)
-        except:
             # id is maybe a ISO
             qry_id = cls.from_iso(id)
             if not qry_id:
@@ -57,6 +55,10 @@ class Datacenter(GandiModule):
             if not qry_id:
                 # id is maybe a country
                 qry_id = cls.from_country(id)
+            if not qry_id:
+                qry_id = int(id)
+        except Exception:
+            qry_id = None
 
         if not qry_id:
             msg = 'unknown identifier %s' % id
