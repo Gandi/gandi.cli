@@ -33,6 +33,10 @@ class IntChoice(click.Choice):
     name = 'integer choice'
 
     def convert(self, value, param, ctx):
+        try:
+            value = str(value)
+        except Exception:
+            pass
         value = click.Choice.convert(self, value, param, ctx)
         return int(value)
 
