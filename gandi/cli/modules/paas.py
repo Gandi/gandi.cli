@@ -161,14 +161,15 @@ class Paas(GandiModule):
         cls.echo('Your PaaS %s have been created.' % name)
 
     @classmethod
-    def init_conf(cls, id):
+    def init_conf(cls, id, vhost=None):
         """ Initialize local configuration with PaaS information. """
 
         paas = Paas.info(cls.usable_id(id))
-        if paas['vhosts']:
-            vhost = paas['vhosts'][0]['name']
-        else:
-            vhost = 'default'
+        if not vhost:
+            if paas['vhosts']:
+                vhost = paas['vhosts'][0]['name']
+            else:
+                vhost = 'default'
 
         if 'php' not in paas['type']:
             vhost = 'default'

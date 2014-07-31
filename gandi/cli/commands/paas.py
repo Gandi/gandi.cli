@@ -77,10 +77,10 @@ def clone(gandi, vhost):
         gandi.error('missing VHOST parameter')
 
     if vhost and not paas_access:
-        gandi.paas.init_conf(vhost)
-
-    paas_access = gandi.get('paas.access')
-    gandi.shell('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
+        gandi.paas.init_conf(vhost, vhost=vhost)
+    else:
+        paas_access = gandi.get('paas.access')
+        gandi.shell('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
 
 
 @cli.command(root=True)
@@ -94,7 +94,7 @@ def deploy(gandi, vhost):
         gandi.error('missing VHOST parameter')
 
     if vhost and not paas_access:
-        gandi.paas.init_conf(vhost)
+        gandi.paas.init_conf(vhost, vhost=vhost)
 
     paas_access = gandi.get('paas.access')
     deploy_git_host = gandi.get('paas.deploy_git_host')
