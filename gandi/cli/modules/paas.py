@@ -162,6 +162,18 @@ class Paas(GandiModule):
         cls.echo('Your PaaS %s have been created.' % name)
 
     @classmethod
+    def resource_list(cls):
+        """ Get the possible list of resources (name, id and vhosts). """
+        items = cls.list()
+        ret = [paas['name'] for paas in items]
+        ret.extend([str(paas['id']) for paas in items])
+        for paas in items:
+            paas = cls.info(paas['id'])
+            ret.extend([vhost['name'] for vhost in paas['vhosts']])
+
+        return ret
+
+    @classmethod
     def init_conf(cls, id, vhost=None, created=True):
         """ Initialize local configuration with PaaS information. """
 
