@@ -108,7 +108,8 @@ class Iaas(GandiModule):
 
         # interactive mode, run a progress bar
         cls.echo("Delete your Virtual Machine.")
-        cls.display_progress(opers)
+        if opers:
+            cls.display_progress(opers)
 
     @classmethod
     def update(cls, id, memory, cores, console, background):
