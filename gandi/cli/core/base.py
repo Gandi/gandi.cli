@@ -56,7 +56,9 @@ class GandiModule(GandiConfig):
         try:
             return api.request(apikey, method, *args)
         except APICallFailed as err:
-            raise UsageError(err.errors)
+            error = UsageError(err.errors)
+            setattr(error, 'code', err.code)
+            raise error
 
     @classmethod
     def intty(cls):

@@ -8,8 +8,9 @@ from gandi.cli import __version__
 class APICallFailed(Exception):
     """ Raise when an error occured during an api call"""
 
-    def __init__(self, errors):
+    def __init__(self, errors, code=None):
         self.errors = errors
+        self.code = code
 
 
 class GandiTransport(xmlrpclib.SafeTransport):
@@ -40,7 +41,7 @@ class XMLRPCClient(object):
             raise APICallFailed(msg)
         except xmlrpclib.Fault as err:
             msg = 'Gandi API has returned an error: %s' % err
-            raise APICallFailed(msg)
+            raise APICallFailed(msg, err.faultCode)
         except TypeError as err:
             msg = 'An unknown error as occured: %s' % err
             raise APICallFailed(msg)
