@@ -98,3 +98,8 @@ def check_domain_available(ctx, domain):
         return
 
     return domain
+
+
+def randomstring():
+    """ Helper to generate a random string, used for temporary hostnames """
+    return 'temp%s' % str(int(time.time()))

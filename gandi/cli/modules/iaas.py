@@ -186,7 +186,7 @@ class Iaas(GandiModule):
         # XXX: name of disk is limited to 15 chars in ext2fs, ext3fs
         # but api allow 255, so we limit to 15 for now
         disk_params = {'datacenter_id': vm_params['datacenter_id'],
-                       'name': ('sys_%s' % hostname)[:15]}
+                       'name': ('sys_%s' % hostname[4:])[:15]}
 
         sys_disk_id_ = int(Image.usable_id(image, datacenter_id_))
 
