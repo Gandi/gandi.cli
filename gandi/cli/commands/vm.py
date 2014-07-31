@@ -162,6 +162,9 @@ def delete(gandi, background, force, resource):
         vm = next((vm for (index, vm) in enumerate(iaas_list)
                 if vm['hostname'] == item), None)
         if vm['state'] == 'running':
+            if background:
+                gandi.echo('virtual machine not stopped, background option disabled')
+                background = False
             oper = gandi.iaas.stop(item, background)
             if not background:
                 stop_opers.append(oper)
