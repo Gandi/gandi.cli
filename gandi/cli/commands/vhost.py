@@ -25,5 +25,63 @@ def list(gandi, limit):
 
     return result
 
+@cli.command()
+@click.argument('resource', nargs=-1)
+@pass_gandi
+def info(gandi, resource):
+    """ Display information about a vhost.
 
+    Ressource must be the vhost fqdn.
+    """
+    output_keys = ['name', 'paas_id', 'state', 'date_creation']
 
+    ret = []
+    for item in resource:
+        vhost = gandi.vhost.info(item)
+        ret.append(output_generic(gandi, vhost, output_keys))
+
+    return ret
+
+@cli.command()
+@click.option('--vhost', help='the vhost fqdn', required=True)
+@click.option('--paas', help='the paas on which we create it', required=True)
+@click.option('--background', default=False, is_flag=True,
+              help='run creation in background mode (default=False)')
+@pass_gandi
+def create(gandi, vhost, paas, background):
+    """ Create a new vhost. """
+    result = gandi.vhost.create(paas, vhost, background)
+
+    if background:
+        gandi.pretty_echo(result)
+
+    paas = gandi.paas.info(paas)
+    gandi.paas.init_conf(paas['name'])
+
+    return result
+
+@cli.command()
+@click.argument('resource', nargs=-1, required=True)
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False)')
+@click.option('--background', default=False, is_flag=True,
+              help='run in background mode (default=False)')
+@pass_gandi
+def delete(gandi, resource, force, background):
+    """ Delete a vhost. """
+    output_keys = ['name', 'paas_id', 'state', 'date_creation']
+    if not force:
+        instance_info = "'%s'" % ', '.join(resource)
+        proceed = click.confirm("Are you sure to delete PaaS instance %s?" %
+                               instance_info)
+
+        if not proceed:
+            return
+
+    opers = gandi.vhost.delete(resource, background)
+    if background:
+        for oper in opers:
+            output_generic(gandi, oper, output_keys)
+
+    return opers
