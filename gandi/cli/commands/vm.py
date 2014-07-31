@@ -145,8 +145,8 @@ def delete(gandi, background, force, resource):
     iaas_namelist = [ vm['hostname'] for vm in iaas_list ]
     for item in resource:
         if item not in iaas_namelist:
-            print 'Sorry virtual machine %s does not exist' % item
-            print 'Please use one of the following: %s', iaas_namelist
+            gandi.echo('Sorry virtual machine %s does not exist' % item)
+            gandi.echo('Please use one of the following: %s' % iaas_namelist)
             return
 
     if not force:

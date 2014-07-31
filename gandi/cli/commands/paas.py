@@ -121,8 +121,8 @@ def delete(gandi, background, force, resource):
     paas_list = [ vm['name'] for vm in gandi.paas.list() ]
     for item in resource:
         if item not in paas_list:
-            print 'Sorry PaaS instance %s does not exist' % item
-            print 'Please use one of the following: %s' % paas_list
+            gandi.echo('Sorry PaaS instance %s does not exist' % item)
+            gandi.echo('Please use one of the following: %s' % paas_list)
             return
 
     if not force:
