@@ -243,6 +243,45 @@ def update(gandi, resource, name, size, quantity, password, ssh_key,
 
 
 @cli.command()
+@click.argument('resource', nargs=-1, required=True)
+@click.option('--background', default=False, is_flag=True,
+              help='run in background mode (default=False)')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False)')
+@pass_gandi
+def restart(gandi, resource, background, force):
+    """Restart a PaaS instance.
+
+    Resource can be a vhost, a hostname, or an ID
+    """
+
+    output_keys = ['id', 'type', 'step']
+
+    possible_resources = gandi.paas.resource_list()
+    for item in resource:
+        if item not in possible_resources:
+            gandi.echo('Sorry PaaS instance %s does not exist' % item)
+            gandi.echo('Please use one of the following: %s' % paas_list)
+            return
+
+    if not force:
+        instance_info = "'%s'" % ', '.join(resource)
+        proceed = click.confirm("Are you sure to restart PaaS instance %s?" %
+                                instance_info)
+
+        if not proceed:
+            return
+
+    opers = gandi.paas.restart(resource, background)
+    if background:
+        for oper in opers:
+            output_generic(gandi, oper, output_keys)
+
+    return opers
+
+
+@cli.command()
 @pass_gandi
 def types(gandi):
     """List types PaaS instances."""

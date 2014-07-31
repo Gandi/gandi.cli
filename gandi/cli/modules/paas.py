@@ -162,6 +162,28 @@ class Paas(GandiModule):
         cls.echo('Your PaaS %s have been created.' % name)
 
     @classmethod
+    def restart(cls, resources, background=False):
+        """restart a PaaS instance"""
+
+        if not isinstance(resources, (list, tuple)):
+            resources = [resources]
+
+        opers = []
+        for item in resources:
+            oper = cls.call('paas.restart', cls.usable_id(item))
+            if isinstance(oper, list):
+                opers.extend(oper)
+            else:
+                opers.append(oper)
+
+        if background:
+            return opers
+
+        # interactive mode, run a progress bar
+        cls.echo("Restart your PaaS instance.")
+        cls.display_progress(opers)
+
+    @classmethod
     def resource_list(cls):
         """ Get the possible list of resources (name, id and vhosts). """
         items = cls.list()
