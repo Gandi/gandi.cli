@@ -1,5 +1,6 @@
 import os
 import uuid
+from distutils.dir_util import mkpath
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
 
@@ -161,7 +162,7 @@ class Paas(GandiModule):
         cls.echo('Your PaaS %s have been created.' % name)
 
     @classmethod
-    def init_conf(cls, id, vhost=None):
+    def init_conf(cls, id, vhost=None, created=True):
         """ Initialize local configuration with PaaS information. """
 
         paas = Paas.info(cls.usable_id(id))
@@ -181,9 +182,12 @@ class Paas(GandiModule):
         if 'dev' in paas['console']:
             git_server = 'git.hosting.dev.gandi.net'
         paas_access = '%s@%s' % (paas['user'], git_server)
-        cls.shell('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
+        if created:
+            cls.shell('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
+        else:
+            mkpath(os.path.join(os.getcwd(), vhost))
         # go into directory to save configuration file in this directory
-        os.chdir(os.getcwd() + ('/%s' % vhost))
+        os.chdir(os.path.join(os.getcwd(), vhost))
         cls.configure(False, 'paas.user', paas['user'])
         cls.configure(False, 'paas.name', paas['name'])
         cls.configure(False, 'paas.deploy_git_host', '%s.git' % vhost)

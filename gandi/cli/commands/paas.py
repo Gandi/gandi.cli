@@ -192,7 +192,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     if background:
         gandi.pretty_echo(result)
 
-    gandi.paas.init_conf(name)
+    gandi.paas.init_conf(name, created=not background)
 
     return result
 
