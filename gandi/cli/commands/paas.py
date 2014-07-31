@@ -1,7 +1,7 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_paas, output_generic
+from gandi.cli.core.utils import output_paas, output_generic, randomstring
 from gandi.cli.core.params import pass_gandi, DATACENTER, PAAS_TYPE, option
 
 
@@ -142,8 +142,9 @@ def delete(gandi, background, force, resource):
 
 
 @cli.command()
-@option('--name', default='paastempo',
-        help='Name of the PaaS instance')
+@click.option('--name', default=None,
+              help='Name of the PaaS instance, will be generated if not '
+                   'provided')
 @option('--size', default='s',
         type=click.Choice(['s', 'm', 'x', 'xl', 'xxl']),
         help='Size of the PaaS instance')
@@ -182,6 +183,9 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     >>> gandi types
 
     """
+    if not name:
+        name = randomstring()
+
     result = gandi.paas.create(name, size, type, quantity, duration,
                                datacenter, vhosts, password,
                                snapshot_profile, background, ssh_key)
