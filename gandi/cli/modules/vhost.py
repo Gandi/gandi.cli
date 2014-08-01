@@ -34,8 +34,8 @@ class Vhost(GandiModule):
                 result = cls.call('paas.vhost.create', params)
                 for msg in result:
                     # TODO use trads with %s
-                    logger.info(msg['reason'])
-                    logger.info('\t' + '  '.join(msg['attr']))
+                    cls.echo(msg['reason'])
+                    cls.echo('\t' + '  '.join(msg['attr']))
                 return
             raise
 
