@@ -2,43 +2,82 @@ import click
 from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_generic
+from gandi.cli.core.utils import output_generic, output_vhost
 from gandi.cli.core.params import pass_gandi
 
 
 @cli.command()
 @click.option('--limit', help='limit number of results', default=100,
               show_default=True)
+@click.option('--paas-id', help='display paas ids', is_flag=True)
+@click.option('--paas-name', help='display paas namess', is_flag=True)
 @pass_gandi
-def list(gandi, limit):
+def list(gandi, limit, paas_id, paas_name):
     """ List vhosts. """
     options = {
         'items_per_page': limit,
     }
 
-    output_keys = ['name', 'paas_id', 'state']
+    output_keys = ['name', 'state', 'date_creation']
+    if paas_id:
+        output_keys.append('paas_id')
+
+    if paas_name:
+        output_keys.append('paas_name')
+
+    retrieve_paas = paas_name
+    retrieved_paas = {}
 
     result = gandi.vhost.list(options)
     for vhost in result:
+        if vhost['paas_id'] in retrieved_paas:
+            paas = retrieved_paas[vhost['paas_id']]
+        else:
+            paas = {'id': vhost['paas_id']}
+            if retrieve_paas:
+                paas = gandi.paas.info(vhost['paas_id'])
+
+        retrieved_paas[vhost['paas_id']] = paas
         gandi.separator_line()
-        output_generic(gandi, vhost, output_keys)
+        output_vhost(gandi, vhost, paas, output_keys)
 
     return result
 
 @cli.command()
 @click.argument('resource', nargs=-1)
+@click.option('--paas-id', help='display paas ids', is_flag=True)
+@click.option('--paas-name', help='display paas namess', is_flag=True)
 @pass_gandi
-def info(gandi, resource):
+def info(gandi, resource, paas_id, paas_name):
     """ Display information about a vhost.
 
     Ressource must be the vhost fqdn.
     """
-    output_keys = ['name', 'paas_id', 'state', 'date_creation']
+    output_keys = ['name', 'state', 'date_creation']
+
+    if paas_id:
+        output_keys.append('paas_id')
+
+    if paas_name:
+        output_keys.append('paas_name')
+
+    retrieve_paas = paas_name
+    retrieved_paas = {}
 
     ret = []
+    paas = None
     for item in resource:
         vhost = gandi.vhost.info(item)
-        ret.append(output_generic(gandi, vhost, output_keys))
+
+        if vhost['paas_id'] in retrieved_paas:
+            paas = retrieved_paas[vhost['paas_id']]
+        else:
+            paas = {'id': vhost['paas_id']}
+            if retrieve_paas:
+                paas = gandi.paas.info(vhost['paas_id'])
+
+        gandi.separator_line()
+        ret.append(output_vhost(gandi, vhost, paas, output_keys))
 
     return ret
 

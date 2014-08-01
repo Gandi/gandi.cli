@@ -52,6 +52,15 @@ def output_vm(gandi, vm, datacenters, output_keys, justify=10):
                 output_line(gandi, 'ip%s' % ip['version'], ip_addr, justify)
 
 
+def output_vhost(gandi, vhost, paas, output_keys, justify=14):
+    """ Helper to output a vhost information """
+
+    output_generic(gandi, vhost, output_keys, justify)
+
+    if 'paas_name' in output_keys:
+        output_line(gandi, 'paas_name', paas['name'], justify)
+
+
 def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=10):
     """ Helper to output a paas information """
 
