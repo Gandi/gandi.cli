@@ -98,6 +98,9 @@ class Iaas(GandiModule):
         opers = []
         for item in resources:
             oper = cls.call('hosting.vm.delete', cls.usable_id(item))
+            if not oper:
+                continue
+
             if isinstance(oper, list):
                 opers.extend(oper)
             else:
