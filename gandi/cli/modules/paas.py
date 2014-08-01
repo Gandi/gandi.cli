@@ -267,3 +267,11 @@ class Paas(GandiModule):
             paas_hosts[host['name']] = host['id']
 
         return paas_hosts.get(hostname)
+
+    @classmethod
+    def list_names(cls):
+        """ retrieve paas id and names """
+
+        ret = dict([(item['id'], item['name'])
+                    for item in cls.list({})])
+        return ret

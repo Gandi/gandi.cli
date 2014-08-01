@@ -58,7 +58,7 @@ def output_vhost(gandi, vhost, paas, output_keys, justify=14):
     output_generic(gandi, vhost, output_keys, justify)
 
     if 'paas_name' in output_keys:
-        output_line(gandi, 'paas_name', paas['name'], justify)
+        output_line(gandi, 'paas_name', paas, justify)
 
 
 def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=10):

@@ -21,22 +21,14 @@ def list(gandi, limit, ids, names):
     if ids:
         output_keys.append('paas_id')
 
+    paas_names = {}
     if names:
         output_keys.append('paas_name')
-
-    retrieve_paas = names
-    retrieved_paas = {}
+        paas_names = gandi.paas.list_names()
 
     result = gandi.vhost.list(options)
     for vhost in result:
-        if vhost['paas_id'] in retrieved_paas:
-            paas = retrieved_paas[vhost['paas_id']]
-        else:
-            paas = {'id': vhost['paas_id']}
-            if retrieve_paas:
-                paas = gandi.paas.info(vhost['paas_id'])
-
-        retrieved_paas[vhost['paas_id']] = paas
+        paas = paas_names.get(vhost['paas_id'])
         gandi.separator_line()
         output_vhost(gandi, vhost, paas, output_keys)
 
@@ -44,7 +36,7 @@ def list(gandi, limit, ids, names):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1)
+@click.argument('resource', nargs=-1, required=True)
 @click.option('--ids', help='display ids', is_flag=True)
 @pass_gandi
 def info(gandi, resource, ids):
@@ -58,18 +50,13 @@ def info(gandi, resource, ids):
         # When we will have more than paas vhost, we will append rproxy_id
         output_keys.append('paas_id')
 
-    retrieved_paas = {}
+    paas_names = gandi.paas.list_names()
 
     ret = []
     paas = None
     for item in resource:
         vhost = gandi.vhost.info(item)
-
-        if vhost['paas_id'] in retrieved_paas:
-            paas = retrieved_paas[vhost['paas_id']]
-        else:
-            paas = gandi.paas.info(vhost['paas_id'])
-
+        paas = paas_names.get(vhost['paas_id'])
         gandi.separator_line()
         ret.append(output_vhost(gandi, vhost, paas, output_keys))
 
