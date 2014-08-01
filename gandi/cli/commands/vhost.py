@@ -46,7 +46,7 @@ def list(gandi, limit, paas_id, paas_name):
 @cli.command()
 @click.argument('resource', nargs=-1)
 @click.option('--paas-id', help='display paas ids', is_flag=True)
-@click.option('--paas-name', help='display paas namess', is_flag=True)
+@click.option('--paas-name', help='display paas names', is_flag=True)
 @pass_gandi
 def info(gandi, resource, paas_id, paas_name):
     """ Display information about a vhost.
