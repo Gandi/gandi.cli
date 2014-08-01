@@ -52,6 +52,9 @@ def create(gandi, vhost, paas, background):
     """ Create a new vhost. """
     result = gandi.vhost.create(paas, vhost, background)
 
+    if not result:
+        return
+
     if background:
         gandi.pretty_echo(result)
 
