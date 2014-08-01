@@ -49,7 +49,7 @@ def info(gandi, resource):
               help='Technical contact handle')
 @click.option('--bill', default=None,
               help='Billing contact handle')
-@click.option('--background', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='run creation in background mode (default=False)')
 @pass_gandi
 def create(gandi, domain, duration, owner, admin, tech, bill, background):
