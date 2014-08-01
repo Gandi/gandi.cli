@@ -232,6 +232,10 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     if not hostname:
         hostname = randomstring()
 
+    if not password:
+        gandi.echo('/!\ Please be aware that you did not provide a password, '
+                   'some services like console will not be able to work.')
+
     result = gandi.iaas.create(datacenter, memory, cores, ip_version,
                                bandwidth, login, pwd, hostname,
                                image, run,
