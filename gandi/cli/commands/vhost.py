@@ -86,7 +86,7 @@ def create(gandi, vhost, paas, background):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1, required=True)
+@click.argument('resource', required=True)
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False)')
@@ -97,9 +97,8 @@ def delete(gandi, resource, force, background):
     """ Delete a vhost. """
     output_keys = ['name', 'paas_id', 'state', 'date_creation']
     if not force:
-        instance_info = "'%s'" % ', '.join(resource)
         proceed = click.confirm('Are you sure to delete vhost %s?' %
-                                instance_info)
+                                resource)
 
         if not proceed:
             return
