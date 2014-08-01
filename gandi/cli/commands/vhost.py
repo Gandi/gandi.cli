@@ -73,7 +73,7 @@ def delete(gandi, resource, force, background):
     output_keys = ['name', 'paas_id', 'state', 'date_creation']
     if not force:
         instance_info = "'%s'" % ', '.join(resource)
-        proceed = click.confirm("Are you sure to delete PaaS instance %s?" %
+        proceed = click.confirm("Are you sure to delete vhost %s?" %
                                instance_info)
 
         if not proceed:
