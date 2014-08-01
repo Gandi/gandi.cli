@@ -45,6 +45,7 @@ class Vhost(GandiModule):
         cls.echo("We're creating a new vhost.")
         cls.display_progress(result)
         cls.echo('Your vhost %s have been created.' % vhost)
+        return result
 
     @classmethod
     def delete(cls, resources, background=False):
