@@ -62,5 +62,5 @@ class Vhost(GandiModule):
         if background:
             return opers
 
-        cls.echo('Delete your vhost.')
+        cls.echo('Deleting your vhost.')
         cls.display_progress(opers)
