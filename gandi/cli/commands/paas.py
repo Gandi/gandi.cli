@@ -122,7 +122,8 @@ def delete(gandi, background, force, resource):
     for item in resource:
         if item not in possible_resources:
             gandi.echo('Sorry PaaS instance %s does not exist' % item)
-            gandi.echo('Please use one of the following: %s' % paas_list)
+            gandi.echo('Please use one of the following: %s' %
+                       possible_resources)
             return
 
     if not force:
@@ -262,7 +263,8 @@ def restart(gandi, resource, background, force):
     for item in resource:
         if item not in possible_resources:
             gandi.echo('Sorry PaaS instance %s does not exist' % item)
-            gandi.echo('Please use one of the following: %s' % paas_list)
+            gandi.echo('Please use one of the following: %s' %
+                       possible_resources)
             return
 
     if not force:
