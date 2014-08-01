@@ -1,5 +1,4 @@
 import click
-from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_generic, output_vhost
@@ -43,6 +42,7 @@ def list(gandi, limit, ids, names):
 
     return result
 
+
 @cli.command()
 @click.argument('resource', nargs=-1)
 @click.option('--ids', help='display ids', is_flag=True)
@@ -75,6 +75,7 @@ def info(gandi, resource, ids):
 
     return ret
 
+
 @cli.command()
 @click.option('--vhost', help='the vhost fqdn', required=True)
 @click.option('--paas', help='the paas on which we create it', required=True)
@@ -96,6 +97,7 @@ def create(gandi, vhost, paas, background):
 
     return result
 
+
 @cli.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('--force', '-f', is_flag=True,
@@ -109,8 +111,8 @@ def delete(gandi, resource, force, background):
     output_keys = ['name', 'paas_id', 'state', 'date_creation']
     if not force:
         instance_info = "'%s'" % ', '.join(resource)
-        proceed = click.confirm("Are you sure to delete vhost %s?" %
-                               instance_info)
+        proceed = click.confirm('Are you sure to delete vhost %s?' %
+                                instance_info)
 
         if not proceed:
             return
