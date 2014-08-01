@@ -56,7 +56,7 @@ class Paas(GandiModule):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo("Delete your PaaS instance.")
+        cls.echo("Deleting your PaaS instance.")
         cls.display_progress(opers)
 
     @classmethod

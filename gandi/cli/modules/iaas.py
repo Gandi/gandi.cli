@@ -110,7 +110,7 @@ class Iaas(GandiModule):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo("Delete your Virtual Machine.")
+        cls.echo("Deleting your Virtual Machine.")
         if opers:
             cls.display_progress(opers)
 
