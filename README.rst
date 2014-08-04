@@ -26,6 +26,18 @@ then to read the manpage:
   man ./gandi.1.man
 
 
+How to install
+--------------
+
+Use pypy installation:
+  virtualenv /some/directory/gandicli
+  source /some/directory/gandicli/bin/enable
+  pip install python-yaml python-click gandicli
+
+and you will be able to start:
+  gandi --help
+
+
 Distribution packages
 ----------------------
 
