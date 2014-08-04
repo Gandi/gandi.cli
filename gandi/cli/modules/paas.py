@@ -224,10 +224,10 @@ class Paas(GandiModule):
                 cls.echo('An error has occured during git clone of instance.')
                 return
         else:
-            mkpath(os.path.join(os.getcwd(), vhost))
             cls.echo('You should init your git repo when the paas is created, '
                      'type : ')
             cls.echo('gandi paas clone %s' % vhost)
+            return
 
         # go into directory to save configuration file in this directory
         current_path = os.getcwd()
