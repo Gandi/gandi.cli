@@ -193,9 +193,6 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     result = gandi.paas.create(name, size, type, quantity, duration,
                                datacenter, vhosts, password,
                                snapshot_profile, background, ssh_key)
-    if background:
-        gandi.pretty_echo(result)
-
     return result
 
 
