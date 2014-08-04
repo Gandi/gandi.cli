@@ -22,13 +22,13 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-gandi is a command line client to manage, create and delete product for a specific account
+`gandi` is a command line client to manage, create and delete product for a specific account
 on Gandi.net platform.
 
 GETTING STARTED
 ===============
 
-  Run gandi setup or create $HOME/.config/gandi/config.yaml file.
+  Run `gandi setup` or create $HOME/.config/gandi/config.yaml file.
 
 COMMAND-LINE OPTIONS
 =====================
@@ -66,6 +66,13 @@ Namespaces:
 *  vm stop        Stop a virtual machine.
 *  vm update      Update a virtual machine.
 
+Details:
+
+* `gandi api` display information about the Gandi.net API.
+
+* `gandi config key value` configure value in the configuration file. Possible option is `-g` which mean the global configuration file will be change.
+
+* `gandi datacenters` list all the datacenters of the Gandi.net platform. Possible option is `--id` to obtain the id of the datacenter. Most of the time you will be able to use the datacenter name as parameter to the methods.
 
 FILES
 =====
@@ -89,9 +96,14 @@ CONTRIBUTORS
 VERSION
 =======
 
-This is version 0.1. It is currently a proof of concept.
+This is version 0.1. 
+
+CHANGELOG
+=========
+
+See CHANGES.rst in the project directory or in the documentation directory of your system. For Debian, the CHANGES file will be in /usr/share/doc/gandicli/.
 
 BUGS
 ====
 
-None known at the moment.
+Please report any bugs or issue on https://github.com/Gandi/gandicli by opening an issue using thi form https://github.com/Gandi/gandicli/issues/new.
