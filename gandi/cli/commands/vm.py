@@ -252,17 +252,25 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
               help='number of cpu')
 @click.option('--console', default=None, is_flag=True,
               help='activate the emergency console')
+@click.option('--password', default=False, is_flag=True,
+              help='will ask for a password to be set for the root account '
+                   'and the created login')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='run creation in background mode (default=False)')
 @click.argument('resource')
 @pass_gandi
-def update(gandi, resource, memory, cores, console, background):
+def update(gandi, resource, memory, cores, console, password, background):
     """Update a virtual machine.
 
     Resource can be a Hostname or an ID
     """
+    pwd = None
+    if password:
+        pwd = click.prompt('password', hide_input=True,
+                           confirmation_prompt=True)
 
-    result = gandi.iaas.update(resource, memory, cores, console, background)
+    result = gandi.iaas.update(resource, memory, cores, console, pwd,
+                               background)
     if background:
         gandi.pretty_echo(result)
 
@@ -277,6 +285,9 @@ def console(gandi, resource):
 
     Resource can be a Hostname or an ID
     """
+    gandi.echo('/!\ Please be aware that if you didn\'t provide a password '
+               'during creation, console service will be unavailable.')
+    gandi.echo('/!\ You can use "gandi vm update" command to set a password.')
 
     gandi.iaas.console(resource)
 

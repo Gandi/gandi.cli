@@ -116,7 +116,7 @@ class Iaas(GandiModule):
             cls.display_progress(opers)
 
     @classmethod
-    def update(cls, id, memory, cores, console, background):
+    def update(cls, id, memory, cores, console, password, background):
         """update a virtual machine"""
 
         if not background and not cls.intty():
@@ -132,6 +132,9 @@ class Iaas(GandiModule):
 
         if console:
             vm_params['console'] = console
+
+        if password:
+            vm_params['password'] = password
 
         result = cls.call('hosting.vm.update', cls.usable_id(id), vm_params)
         if background:
