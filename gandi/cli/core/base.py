@@ -4,7 +4,7 @@ import sys
 import time
 import os.path
 from datetime import datetime
-from subprocess import call
+from subprocess import check_call, CalledProcessError
 
 import click
 from click.exceptions import UsageError
@@ -101,7 +101,11 @@ class GandiModule(GandiConfig):
     @classmethod
     def shell(cls, command):
         cls.debug(command)
-        call(command, shell=True)
+        try:
+            check_call(command, shell=True)
+            return True
+        except CalledProcessError:
+            return False
 
     @classmethod
     def update_progress(cls, progress, starttime):

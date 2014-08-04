@@ -217,7 +217,11 @@ class Paas(GandiModule):
             git_server = 'git.hosting.dev.gandi.net'
         paas_access = '%s@%s' % (paas['user'], git_server)
         if created:
-            cls.shell('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
+            init_git = cls.shell('git clone ssh+git://%s/%s.git' %
+                                 (paas_access, vhost))
+            if not init_git:
+                cls.echo('An error has occured during git clone of instance.')
+                return
         else:
             mkpath(os.path.join(os.getcwd(), vhost))
         # go into directory to save configuration file in this directory
