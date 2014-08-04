@@ -24,3 +24,9 @@ install python-docutils and run:
 
 then to read the manpage:
   man ./gandi.1.man
+
+
+Distribution packages
+----------------------
+
+See packages/README.rst

@@ -18,26 +18,32 @@ tar xpzf %{sources}
 
 %build
 mkdir -p %{buildroot}
+rst2man --no-generator gandicli.man.rst | gzip -9 > gandi.1.gz
+install -d -m 0755 %{buildroot}/usr/share/man/man1
+install -m 0644 gandi.1.gz %{buildroot}/usr/share/man/man1
 
 %clean
 rm -r %{buildroot}
 
-%pre
-echo nothing
-
-%post
-echo nooo
-
-%postun
-rm /etc/gandi/cli.yaml
+#%pre
+#echo ''
+#
+#%post
+#echo ''
+#
+#%postun
+#if [ -f /etc/gandi/cli.yaml ]; then
+#    mv /etc/gandi/cli.yaml /etc/gandi/cli.yaml.disabled
+#fi
 
 %files
-%defattr(0640,root,adm)
-/etc/gandi/cli.yaml
+#%defattr(0640,root,adm)
+#/etc/gandi/cli.yaml
 %defattr(0644,root,root)
 /usr/bin/gandicli
+/usr/share/man/man1/gandi.1.gz
 
 %changelog
-* Fri Jul 18 2014 name surname <email> 0.1
+* Fri Jul 18 2014 Gandi <feedback@gandi.net> 0.1
 - first rpm structure
 
