@@ -198,20 +198,13 @@ class Paas(GandiModule):
         return ret
 
     @classmethod
-    def init_conf(cls, id, vhost=None, created=True):
-        """ Initialize local configuration with PaaS information. """
-
-        paas = Paas.info(cls.usable_id(id))
-        if not vhost:
-            if paas['vhosts']:
-                vhost = paas['vhosts'][0]['name']
-            else:
-                vhost = 'default'
+    def init_vhost(cls, vhost, created=True, id=None, paas=None):
+        assert id or paas
+        if not paas:
+            paas = Paas.info(cls.usable_id(id))
 
         if 'php' not in paas['type']:
             vhost = 'default'
-
-        cls.debug('save PaaS instance information to local configuration')
 
         git_server = paas['git_server']
         # hack for dev
@@ -219,6 +212,12 @@ class Paas(GandiModule):
             git_server = 'git.hosting.dev.gandi.net'
         paas_access = '%s@%s' % (paas['user'], git_server)
         if created:
+            repo_path = os.path.join(os.getcwd(), vhost)
+            if os.path.exists(repo_path):
+                cls.echo('%s already exists, please remove it before cloning' %
+                         repo_path)
+                return
+
             init_git = cls.shell('git clone ssh+git://%s/%s.git' %
                                  (paas_access, vhost))
             if not init_git:
@@ -226,12 +225,36 @@ class Paas(GandiModule):
                 return
         else:
             mkpath(os.path.join(os.getcwd(), vhost))
+            cls.echo('You should init your git repo when the paas is created, '
+                     'type : ')
+            cls.echo('gandi paas clone %s' % vhost)
+
         # go into directory to save configuration file in this directory
-        os.chdir(os.path.join(os.getcwd(), vhost))
+        current_path = os.getcwd()
+        os.chdir(os.path.join(current_path, vhost))
         cls.configure(False, 'paas.user', paas['user'])
         cls.configure(False, 'paas.name', paas['name'])
         cls.configure(False, 'paas.deploy_git_host', '%s.git' % vhost)
         cls.configure(False, 'paas.access', paas_access)
+        os.chdir(current_path)
+
+    @classmethod
+    def init_conf(cls, id, vhost=None, created=True, vhosts=None):
+        """ Initialize local configuration with PaaS information. """
+        paas = Paas.info(cls.usable_id(id))
+        cls.debug('save PaaS instance information to local configuration')
+
+        vhosts = vhosts or [vhost]
+        if not vhosts:
+            if 'php' not in paas['type']:
+                vhost = 'default'
+            elif paas['vhosts']:
+                vhosts = [vht['name'] for vht in paas['vhosts']]
+            else:
+                return
+
+        for vhost in vhosts:
+            cls.init_vhost(vhost, created, paas=paas)
 
     @classmethod
     def usable_id(cls, id):
