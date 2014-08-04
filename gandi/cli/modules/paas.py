@@ -238,7 +238,8 @@ class Paas(GandiModule):
         paas = Paas.info(cls.usable_id(id))
         cls.debug('save PaaS instance information to local configuration')
 
-        vhosts = vhosts or [vhost]
+        if vhost and not vhosts:
+            vhosts = [vhost]
         if not vhosts:
             if 'php' not in paas['type']:
                 vhost = 'default'
