@@ -2,6 +2,7 @@ import os
 import uuid
 from distutils.dir_util import mkpath
 from gandi.cli.core.base import GandiModule
+from gandi.cli.core.utils import randomstring
 from gandi.cli.modules.datacenter import Datacenter
 
 
@@ -121,6 +122,9 @@ class Paas(GandiModule):
 
         if not background and not cls.intty():
             background = True
+
+        if not name:
+            name = randomstring()
 
         datacenter_id_ = int(Datacenter.usable_id(datacenter))
 

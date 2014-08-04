@@ -2,7 +2,7 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (
-    output_vm, output_image, output_generic, randomstring,
+    output_vm, output_image, output_generic,
 )
 from gandi.cli.core.params import (
     pass_gandi, option, IntChoice, DATACENTER, DISK_IMAGE,
@@ -229,9 +229,6 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     if password or not (ssh_key or ssh_key_id):
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
-
-    if not hostname:
-        hostname = randomstring()
 
     if not password:
         gandi.echo('/!\ Please be aware that you did not provide a password, '

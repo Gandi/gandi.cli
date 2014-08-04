@@ -1,7 +1,7 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_paas, output_generic, randomstring
+from gandi.cli.core.utils import output_paas, output_generic
 from gandi.cli.core.params import pass_gandi, DATACENTER, PAAS_TYPE, option
 
 
@@ -187,9 +187,6 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     >>> gandi types
 
     """
-    if not name:
-        name = randomstring()
-
     result = gandi.paas.create(name, size, type, quantity, duration,
                                datacenter, vhosts, password,
                                snapshot_profile, background, ssh_key)

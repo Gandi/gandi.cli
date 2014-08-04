@@ -1,6 +1,7 @@
 import time
 
 from gandi.cli.core.base import GandiModule
+from gandi.cli.core.utils import randomstring
 from gandi.cli.modules.datacenter import Datacenter
 from gandi.cli.modules.sshkey import Sshkey
 
@@ -162,6 +163,12 @@ class Iaas(GandiModule):
 
         datacenter_id_ = int(Datacenter.usable_id(datacenter))
 
+        if not hostname:
+            hostname = randomstring()
+            disk_name = 'sys_%s' % hostname[4:]
+        else:
+            disk_name = 'sys_%s' % hostname
+
         vm_params = {
             'hostname': hostname,
             'datacenter_id': datacenter_id_,
@@ -190,7 +197,7 @@ class Iaas(GandiModule):
         # XXX: name of disk is limited to 15 chars in ext2fs, ext3fs
         # but api allow 255, so we limit to 15 for now
         disk_params = {'datacenter_id': vm_params['datacenter_id'],
-                       'name': ('sys_%s' % hostname[4:])[:15]}
+                       'name': disk_name[:15]}
 
         sys_disk_id_ = int(Image.usable_id(image, datacenter_id_))
 
