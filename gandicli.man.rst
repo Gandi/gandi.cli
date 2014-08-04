@@ -74,6 +74,35 @@ Details:
 
 * `gandi datacenters` list all the datacenters of the Gandi.net platform. Possible option is `--id` to obtain the id of the datacenter. Most of the time you will be able to use the datacenter name as parameter to the methods.
 
+* `gandi deploy virtualhost.domain.tld1` push the content of the virtualhost to Gandi Simple Hosting instance.
+
+#XXX TODO 
+
+* `gandi oper list` show all the running operation on your product at Gandi (for example Simple Hosting, domain, hosting). Possible option is `--limit INTEGER` which list only a subset of running operation
+
+* `gandi oper info id` show information about the operation `id`.
+
+#XXX TODO
+
+* `gandi vm console resource` open a console on the virtual machine and give you a shell access.
+
+* `gandi vm delete resource` destroy a virtual machine, its main disk and its virtual network interfaces. This operation can be done as background progress using the option `--background` (or `--bg`). Another possible parameter is `--force` to bypass the validation question; usefull in non-interactive mode when scripting.
+
+* `gandi vm images pattern` list all the available images of system whose name contains the pattern. Possible option is `--datacenter FR|US|LU` which filter by geograhical datacenter.
+
+* `gandi vm list` show all the virtual machine created in Gandi hosting for the account. Possible options are `--state` which filter the output according to define virtual machine state, `--id` to obtain the id of each virtual machine, `--limit INTEGER` which list only a subset of virtual machines.
+
+* `gandi vm info resource` show details of a specific operation.
+
+* `gandi vm start resource` allow to start a virtual machine (a resource can either be a hostname as defined in the creation process or the id of the virtual machine). This operation can be done as background progress using the option `--background` (or `--bg`).
+
+* `gandi vm stop resource`, same parameter as start but allow to stop the virtual machine. Obviously.
+
+* `gandi vm reboot resource`, same parameter as start but allow to reboot a virtual machine.
+
+* `gandi vm update resource` allow to change the quantity of memory (using `--memory INTEGER`), the number of virtual CPU (using `--cores INTEGER`), enable the virtual console which allow to get a shell to the virtual machine even without network interfaces on the virtual machine (using `--console`) or change the root password (using `--password`). All these modification can be done as background progress using the option `--background` (or `--bg`).
+
+
 FILES
 =====
 
