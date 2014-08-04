@@ -7,7 +7,8 @@ License: unknown
 URL: http://github.com/gandi/
 Source0: gandicli-%{version}.tgz
 Provides: gandicli
-Requires: python
+BuildRequires: python-docutils
+Requires: python >= 2.8, python-click, python-yaml
 BuildRoot: %{mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 %description
