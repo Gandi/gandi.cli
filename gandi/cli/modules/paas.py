@@ -153,15 +153,15 @@ class Paas(GandiModule):
             paas_params['snapshot_profile'] = snapshot_profile
 
         result = cls.call('paas.create', paas_params)
-        if background:
-            return result
 
-        # interactive mode, run a progress bar
-        cls.echo("We're creating your PaaS instance.")
-        cls.display_progress(result)
-        cls.echo('Your PaaS %s have been created.' % name)
+        if not background:
+            # interactive mode, run a progress bar
+            cls.echo("We're creating your PaaS instance.")
+            cls.display_progress(result)
+            cls.echo('Your PaaS %s have been created.' % name)
 
-        cls.init_conf(name, created=not background)
+        cls.init_conf(name, created=not background, vhosts=vhosts)
+        return result
 
     @classmethod
     def restart(cls, resources, background=False):
