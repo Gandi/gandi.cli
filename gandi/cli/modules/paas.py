@@ -1,5 +1,4 @@
 import os
-import uuid
 from distutils.dir_util import mkpath
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
@@ -131,11 +130,6 @@ class Paas(GandiModule):
             'duration': duration,
             'datacenter_id': datacenter_id_,
         }
-        # generate a default vhost value
-        if not vhosts:
-            digest = uuid.uuid4().hex[:10]
-            vhosts = ['%s.url-de-test.ws' % digest]
-        paas_params['vhosts'] = vhosts
 
         if password:
             paas_params['password'] = password
