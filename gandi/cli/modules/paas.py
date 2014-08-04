@@ -161,6 +161,8 @@ class Paas(GandiModule):
         cls.display_progress(result)
         cls.echo('Your PaaS %s have been created.' % name)
 
+        cls.init_conf(name, created=not background)
+
     @classmethod
     def restart(cls, resources, background=False):
         """restart a PaaS instance"""
