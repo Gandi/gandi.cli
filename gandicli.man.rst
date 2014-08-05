@@ -84,9 +84,13 @@ Details:
 
 #XXX TODO
 
+* ''gandi sshkey create --name label'' add a SSH key identified by ''label'' which could be used for authentification. Possible option are ''--value TEXT'' for XXX TODO
+
+#XXX TODO
+
 * `gandi vm console resource` open a console on the virtual machine and give you a shell access.
 
-* `gandi vm delete resource` destroy a virtual machine, its main disk and its virtual network interfaces. This operation can be done as background progress using the option `--background` (or `--bg`). Another possible parameter is `--force` to bypass the validation question; usefull in non-interactive mode when scripting.
+* `gandi vm delete resource` destroy a virtual machine, its main disk and its first virtual network interface. This operation can be done as background progress using the option `--background` (or `--bg`). Another possible parameter is `--force` to bypass the validation question; usefull in non-interactive mode when scripting.
 
 * `gandi vm images pattern` list all the available images of system whose name contains the pattern. Possible option is `--datacenter FR|US|LU` which filter by geograhical datacenter.
 
