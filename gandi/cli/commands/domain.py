@@ -1,7 +1,9 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_generic, check_domain_available, output_contact_info
+from gandi.cli.core.utils import (
+    output_generic, check_domain_available, output_contact_info,
+)
 from gandi.cli.core.params import pass_gandi
 
 
@@ -27,7 +29,7 @@ def info(gandi, resource):
     """Display information about a domain."""
 
     output_keys = ['fqdn', 'nameservers', 'services', 'zone_id', 'tags']
-    contact_field = ['owner','admin','bill','tech','reseller']
+    contact_field = ['owner', 'admin', 'bill', 'tech', 'reseller']
 
     result = gandi.domain.info(resource)
     output_contact_info(gandi, result['contacts'], contact_field, justify=12)
@@ -52,7 +54,7 @@ def info(gandi, resource):
 @click.option('--bill', default=None,
               help='Billing contact handle')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run creation in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @pass_gandi
 def create(gandi, domain, duration, owner, admin, tech, bill, background):
     """Buy a domain."""

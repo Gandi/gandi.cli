@@ -67,7 +67,7 @@ def info(gandi, resource, ids):
 @click.option('--vhost', help='the vhost fqdn', required=True)
 @click.option('--paas', help='the paas on which we create it', required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run creation in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @pass_gandi
 def create(gandi, vhost, paas, background):
     """ Create a new vhost. """
@@ -91,7 +91,7 @@ def create(gandi, vhost, paas, background):
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False)')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @pass_gandi
 def delete(gandi, resource, force, background):
     """ Delete a vhost. """

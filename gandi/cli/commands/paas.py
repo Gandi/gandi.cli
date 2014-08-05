@@ -107,7 +107,7 @@ def deploy(gandi, vhost):
 
 @cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False)')
@@ -169,7 +169,7 @@ def delete(gandi, background, force, resource):
 @click.option('--snapshot-profile', default=None,
               help='Set a snapshot profile associated to this paas disk')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run creation in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @option('--ssh-key',
         help='Authorize ssh authentication for the given ssh key')
 @pass_gandi
@@ -222,7 +222,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
 @click.option('--reset-mysql-password', default=None,
               help='Reset mysql password for root')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run update in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @pass_gandi
 @click.argument('resource')
 def update(gandi, resource, name, size, quantity, password, ssh_key,
@@ -249,7 +249,7 @@ def update(gandi, resource, name, size, quantity, password, ssh_key,
 @cli.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False)')

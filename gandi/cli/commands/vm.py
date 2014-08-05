@@ -65,7 +65,7 @@ def info(gandi, resource):
 @cli.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @pass_gandi
 def stop(gandi, background, resource):
     """Stop a virtual machine.
@@ -86,7 +86,7 @@ def stop(gandi, background, resource):
 @cli.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @pass_gandi
 def start(gandi, background, resource):
     """Start a virtual machine.
@@ -107,7 +107,7 @@ def start(gandi, background, resource):
 @cli.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @pass_gandi
 def reboot(gandi, background, resource):
     """Reboot a virtual machine.
@@ -127,7 +127,7 @@ def reboot(gandi, background, resource):
 
 @cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False)')
@@ -205,7 +205,7 @@ def delete(gandi, background, force, resource):
                    'directory at the end of its boot: network interfaces and '
                    'disks are mounted')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run creation in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @option('--ssh-key',
         help='Authorize ssh authentication for the given ssh key')
 @option('--ssh-key-id', help='Add an ssh key id OR name from the portfolio.',
@@ -256,7 +256,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
               help='will ask for a password to be set for the root account '
                    'and the created login')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run creation in background mode (default=False)')
+              help='run command in background mode (default=False)')
 @click.argument('resource')
 @pass_gandi
 def update(gandi, resource, memory, cores, console, password, background):
