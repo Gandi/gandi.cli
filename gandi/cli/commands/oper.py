@@ -27,7 +27,7 @@ def list(gandi, limit):
     return result
 
 
-@cli.command()
+@cli.command(options_metavar='')
 @click.argument('id', type=click.INT)
 @pass_gandi
 def info(gandi, id):

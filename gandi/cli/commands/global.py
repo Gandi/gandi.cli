@@ -5,7 +5,7 @@ from gandi.cli.core.utils import output_generic
 from gandi.cli.core.params import pass_gandi
 
 
-@cli.command()
+@cli.command(options_metavar='')
 @pass_gandi
 def setup(gandi):
     """ Initialize Gandi CLI configuration.
@@ -38,7 +38,7 @@ def config(gandi, g, key, value):
     gandi.configure(global_=g, key=key, val=value)
 
 
-@cli.command()
+@cli.command(options_metavar='')
 @pass_gandi
 def api(gandi):
     """Display information about API used."""

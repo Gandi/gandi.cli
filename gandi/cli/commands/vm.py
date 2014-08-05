@@ -37,7 +37,7 @@ def list(gandi, state, id, limit):
     return result
 
 
-@cli.command()
+@cli.command(options_metavar='')
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def info(gandi, resource):
@@ -63,9 +63,9 @@ def info(gandi, resource):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='run command in background mode (default=False)')
+@click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def stop(gandi, background, resource):
     """Stop a virtual machine.
@@ -84,9 +84,9 @@ def stop(gandi, background, resource):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='run command in background mode (default=False)')
+@click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def start(gandi, background, resource):
     """Start a virtual machine.
@@ -105,9 +105,9 @@ def start(gandi, background, resource):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='run command in background mode (default=False)')
+@click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def reboot(gandi, background, resource):
     """Reboot a virtual machine.
@@ -277,7 +277,7 @@ def update(gandi, resource, memory, cores, console, password, background):
     return result
 
 
-@cli.command()
+@cli.command(options_metavar='')
 @click.argument('resource')
 @pass_gandi
 def console(gandi, resource):

@@ -36,8 +36,8 @@ def list(gandi, limit, ids, names):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1, required=True)
 @click.option('--ids', help='display ids', is_flag=True)
+@click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def info(gandi, resource, ids):
     """ Display information about a vhost.
@@ -86,12 +86,12 @@ def create(gandi, vhost, paas, background):
 
 
 @cli.command()
-@click.argument('resource', required=True)
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False)')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='run command in background mode (default=False)')
+@click.argument('resource', required=True)
 @pass_gandi
 def delete(gandi, resource, force, background):
     """ Delete a vhost. """

@@ -79,7 +79,7 @@ def create(gandi, name, value=None, sshkey=None):
     return output_sshkey(gandi, ret, output_keys)
 
 
-@cli.command()
+@cli.command(options_metavar='')
 @click.argument('resource', nargs=-1)
 @pass_gandi
 def delete(gandi, resource):
