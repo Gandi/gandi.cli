@@ -78,9 +78,6 @@ def create(gandi, vhost, paas, background):
 
     if background:
         gandi.pretty_echo(result)
-    else:
-        paas = gandi.paas.info(paas)
-        gandi.paas.init_conf(paas['name'], vhost)
 
     return result
 

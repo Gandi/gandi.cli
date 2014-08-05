@@ -1,5 +1,4 @@
 import os
-import uuid
 from distutils.dir_util import mkpath
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
@@ -131,11 +130,6 @@ class Paas(GandiModule):
             'duration': duration,
             'datacenter_id': datacenter_id_,
         }
-        # generate a default vhost value
-        if not vhosts:
-            digest = uuid.uuid4().hex[:10]
-            vhosts = ['%s.url-de-test.ws' % digest]
-        paas_params['vhosts'] = vhosts
 
         if password:
             paas_params['password'] = password
@@ -153,13 +147,15 @@ class Paas(GandiModule):
             paas_params['snapshot_profile'] = snapshot_profile
 
         result = cls.call('paas.create', paas_params)
-        if background:
-            return result
 
-        # interactive mode, run a progress bar
-        cls.echo("We're creating your PaaS instance.")
-        cls.display_progress(result)
-        cls.echo('Your PaaS %s have been created.' % name)
+        if not background:
+            # interactive mode, run a progress bar
+            cls.echo("We're creating your PaaS instance.")
+            cls.display_progress(result)
+            cls.echo('Your PaaS %s have been created.' % name)
+
+        cls.init_conf(name, created=not background, vhosts=vhosts)
+        return result
 
     @classmethod
     def restart(cls, resources, background=False):
@@ -196,20 +192,13 @@ class Paas(GandiModule):
         return ret
 
     @classmethod
-    def init_conf(cls, id, vhost=None, created=True):
-        """ Initialize local configuration with PaaS information. """
-
-        paas = Paas.info(cls.usable_id(id))
-        if not vhost:
-            if paas['vhosts']:
-                vhost = paas['vhosts'][0]['name']
-            else:
-                vhost = 'default'
+    def init_vhost(cls, vhost, created=True, id=None, paas=None):
+        assert id or paas
+        if not paas:
+            paas = Paas.info(cls.usable_id(id))
 
         if 'php' not in paas['type']:
             vhost = 'default'
-
-        cls.debug('save PaaS instance information to local configuration')
 
         git_server = paas['git_server']
         # hack for dev
@@ -217,19 +206,50 @@ class Paas(GandiModule):
             git_server = 'git.hosting.dev.gandi.net'
         paas_access = '%s@%s' % (paas['user'], git_server)
         if created:
+            repo_path = os.path.join(os.getcwd(), vhost)
+            if os.path.exists(repo_path):
+                cls.echo('%s already exists, please remove it before cloning' %
+                         repo_path)
+                return
+
             init_git = cls.shell('git clone ssh+git://%s/%s.git' %
                                  (paas_access, vhost))
             if not init_git:
                 cls.echo('An error has occured during git clone of instance.')
                 return
         else:
-            mkpath(os.path.join(os.getcwd(), vhost))
+            cls.echo('You should init your git repo when the paas is created, '
+                     'type : ')
+            cls.echo('gandi paas clone %s' % vhost)
+            return
+
         # go into directory to save configuration file in this directory
-        os.chdir(os.path.join(os.getcwd(), vhost))
+        current_path = os.getcwd()
+        os.chdir(os.path.join(current_path, vhost))
         cls.configure(False, 'paas.user', paas['user'])
         cls.configure(False, 'paas.name', paas['name'])
         cls.configure(False, 'paas.deploy_git_host', '%s.git' % vhost)
         cls.configure(False, 'paas.access', paas_access)
+        os.chdir(current_path)
+
+    @classmethod
+    def init_conf(cls, id, vhost=None, created=True, vhosts=None):
+        """ Initialize local configuration with PaaS information. """
+        paas = Paas.info(cls.usable_id(id))
+        cls.debug('save PaaS instance information to local configuration')
+
+        if vhost and not vhosts:
+            vhosts = [vhost]
+        if not vhosts:
+            if 'php' not in paas['type']:
+                vhost = 'default'
+            elif paas['vhosts']:
+                vhosts = [vht['name'] for vht in paas['vhosts']]
+            else:
+                return
+
+        for vhost in vhosts:
+            cls.init_vhost(vhost, created, paas=paas)
 
     @classmethod
     def usable_id(cls, id):
