@@ -222,7 +222,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
 
     to know which disk image label (or id) to use as image
 
-    >>> gandi images
+    >>> gandi vm images
 
     """
     pwd = None
