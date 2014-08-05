@@ -274,7 +274,7 @@ class Iaas(GandiModule):
         if not vm_info['console']:
             # first activate console
             cls.update(id, memory=None, cores=None, console=True,
-                       background=False)
+                       password=None, background=False)
         # now we can connect
         # retrieve ip of vm
         vm_info = cls.info(id)
