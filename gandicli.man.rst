@@ -47,18 +47,27 @@ Namespaces:
 *  domain list    List domains.
 *  oper info      Display information about an operation.
 *  oper list      List operations.
-*  paas clone     Clone a remote vhost in a local git...
-*  paas create    Create a new PaaS instance and initialize...
+*  paas clone     Clone a remote vhost in a local git repository.
+*  paas create    Create a new PaaS instance and initialize associated git repository.
 *  paas delete    Delete a PaaS instance.
 *  paas info      Display information about a PaaS instance.
 *  paas list      List PaaS instances.
-*  paas types     List types Paas instances.
+*  paas restart   Restart a PaaS instance.
+*  paas types     List types PaaS instances.
 *  paas update    Update a PaaS instance.
 *  setup          Initialize Gandi CLI configuration.
+*  sshkey create  Create a new ssh key.
+*  sshkey delete  Delete thoses ssh keys.
+*  sshkey info    Display information about an ssh key.
+*  sshkey list    List ssh keys.
+*  vhost create   Create a new vhost.
+*  vhost delete   Delete a vhost.
+*  vhost info     Display information about a vhost.
+*  vhost list     List vhosts.
 *  vm console     Open a console to virtual machine.
 *  vm create      Create a new virtual machine.
 *  vm delete      Delete a virtual machine.
-*  vm images      List available system images for virtual...
+*  vm images      List available system images for virtual machines.
 *  vm info        Display information about a virtual machine.
 *  vm list        List virtual machines.
 *  vm reboot      Reboot a virtual machine.
@@ -66,45 +75,66 @@ Namespaces:
 *  vm stop        Stop a virtual machine.
 *  vm update      Update a virtual machine.
 
+
 Details:
 
-* `gandi api` display information about the Gandi.net API.
+* ``gandi api`` display information about the Gandi.net API.
 
-* `gandi config key value` configure value in the configuration file. Possible option is `-g` which mean the global configuration file will be change.
+* ``gandi config key value`` configure value in the configuration file. Possible option is ``-g`` which mean the global configuration file will be change.
 
-* `gandi datacenters` list all the datacenters of the Gandi.net platform. Possible option is `--id` to obtain the id of the datacenter. Most of the time you will be able to use the datacenter name as parameter to the methods.
+* ``gandi datacenters`` list all the datacenters of the Gandi.net platform. Possible option is ``--id`` to obtain the id of the datacenter. Most of the time you will be able to use the datacenter name as parameter to the methods.
 
-* `gandi deploy virtualhost.domain.tld1` push the content of the virtualhost to Gandi Simple Hosting instance.
+* ``gandi deploy virtualhost.domain.tld1`` push the files in the current directory to the virtualhost setup on a Gandi Simple Hosting instance.
 
-#XXX TODO 
+* ``gandi domain create`` helps register a domain. Options are ``--domain domain.tld`` for the domain you want to get, ``--duration INTEGER RANGE`` for the registration period, ``--owner TEXT``, ``--admin TEXT``, ``--tech TEXTE``, ``--bill TEXT`` for the four contacts to pass to the creation process. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
-* `gandi oper list` show all the running operation on your product at Gandi (for example Simple Hosting, domain, hosting). Possible option is `--limit INTEGER` which list only a subset of running operation
+* ``gandi domain info domain.tld`` show information about the specific domain ``domain.tld`` : owner, admin, billing and technical contacts, fully qualified domain name, nameservers, associated zone, associated tags and more.  
 
-* `gandi oper info id` show information about the operation `id`.
+* ``gandi domain list`` show all the domains in the Gandi account. Possible option is ``--limit INTEGER`` which will show a subset of the list.
+
+* ``gandi oper list`` show all the running operation on your product at Gandi (for example Simple Hosting, domain, hosting). Possible option is ``--limit INTEGER`` which list only a subset of the full list of running operations.
+
+* ``gandi oper info id`` show information about the operation ``id``.
 
 #XXX TODO
 
-* ''gandi sshkey create --name label'' add a SSH key identified by ''label'' which could be used for authentification. Possible option are ''--value TEXT'' for XXX TODO
+* ``gandi paas list`` show all the Simple Hosting instances. Possible options are ``--state TEXT`` for filtering the output by a specific state, ``--id`` which display the integer identificator, ``--vhosts`` which show all the virtual hosts associated with each instances, ``--type`` which display the type of Simple Hosting and ``--limit INTEGER`` which show only a subset of the full Simple Hosting list (default is 100). 
 
 #XXX TODO
 
-* `gandi vm console resource` open a console on the virtual machine and give you a shell access.
+* ``gandi sshkey create --name label`` add a SSH key identified by ``label`` which could be used for authentification. Possible option are ``--value TEXT``  with the content of the SSH public key or ``--sshkey FILENAME`` with the path to a file containing the SSH public key.
 
-* `gandi vm delete resource` destroy a virtual machine, its main disk and its first virtual network interface. This operation can be done as background progress using the option `--background` (or `--bg`). Another possible parameter is `--force` to bypass the validation question; usefull in non-interactive mode when scripting.
+* ``gandi sshkey delete resource`` remove a SSH key. Resource can be a name or the specific id.
 
-* `gandi vm images pattern` list all the available images of system whose name contains the pattern. Possible option is `--datacenter FR|US|LU` which filter by geograhical datacenter.
+* ``gandi sshkey info resource`` show details of an SSH key: name and fingeprint. Possible option are ``--id`` which also show the id of theSSH key and ``--value`` which show the content of the SSH key.
 
-* `gandi vm list` show all the virtual machine created in Gandi hosting for the account. Possible options are `--state` which filter the output according to define virtual machine state, `--id` to obtain the id of each virtual machine, `--limit INTEGER` which list only a subset of virtual machines.
+* ``gandi sshkey list`` show all the SSH keys registered. Possible option are ``--id`` which add numeric identificator and ``--limit INTEGER`` which show only a subset of the SSH keys.
 
-* `gandi vm info resource` show details of a specific operation.
+* ``gandi vhost create`` add a virtual host. Mandatory options are ``--vhost TEXT`` for the fully qualified domain name (FQDN like host.domain.tld) and ``--paas TEXT`` for the Simple Hosting instance on which it will create the virtual host. Creation can be done as background process using the option ``--background`` (or ``--bg``).
 
-* `gandi vm start resource` allow to start a virtual machine (a resource can either be a hostname as defined in the creation process or the id of the virtual machine). This operation can be done as background progress using the option `--background` (or `--bg`).
+* ``gandi vhost delete host.domain.tld`` delete a virtual host after asking for user validation. Possible option is ``--force`` to bypass the validation question; usefull in non-interactive mode when scripting. Deletion can be done as background process using the option ``--background`` (or ``--bg``).
 
-* `gandi vm stop resource`, same parameter as start but allow to stop the virtual machine. Obviously.
+* ``gandi vhost info host.domain.tld`` show details about a specific virtual host. Possible option is ``--ids`` which show the integer identificator.
 
-* `gandi vm reboot resource`, same parameter as start but allow to reboot a virtual machine.
+* ``gandi vhost list`` show all the virtual host defined in Simple Hosting. Possible option are ``--names`` which add the name of the Simple Hosting instance on which the virtual host is setup, ``--ids`` which show the integer identificator and ``--limit INTEGER`` which show a subset of the full list of virtual host.  
 
-* `gandi vm update resource` allow to change the quantity of memory (using `--memory INTEGER`), the number of virtual CPU (using `--cores INTEGER`), enable the virtual console which allow to get a shell to the virtual machine even without network interfaces on the virtual machine (using `--console`) or change the root password (using `--password`). All these modification can be done as background progress using the option `--background` (or `--bg`).
+* ``gandi vm console resource`` open a console on the virtual machine and give you a shell access.
+
+* ``gandi vm delete resource`` destroy a virtual machine, its main disk and its first virtual network interface. This operation can be done as background process using the option ``--background`` (or ``--bg``). Another possible parameter is ``--force`` to bypass the validation question; usefull in non-interactive mode when scripting.
+
+* ``gandi vm images pattern`` list all the available images of system whose name contains the pattern. Possible option is ``--datacenter FR|US|LU`` which filter by geograhical datacenter.
+
+* ``gandi vm list`` show all the virtual machine created in Gandi hosting for the account. Possible options are ``--state`` which filter the output according to define virtual machine state, ``--id`` to obtain the id of each virtual machine, ``--limit INTEGER`` which list only a subset of the full list of virtual machines.
+
+* ``gandi vm info resource`` show details of a specific operation.
+
+* ``gandi vm start resource`` allow to start a virtual machine (a resource can either be a hostname as defined in the creation process or the id of the virtual machine). This operation can be done as background process using the option ``--background`` (or ``--bg``).
+
+* ``gandi vm stop resource``, same parameter as start but allow to stop the virtual machine. Obviously.
+
+* ``gandi vm reboot resource``, same parameter as start but allow to reboot a virtual machine.
+
+* ``gandi vm update resource`` allow to change the quantity of memory (using ``--memory INTEGER``), the number of virtual CPU (using ``--cores INTEGER``), enable the virtual console which allow to get a shell to the virtual machine even without network interfaces on the virtual machine (using ``--console``) or change the root password (using ``--password``). All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
 
 FILES
@@ -135,6 +165,11 @@ CHANGELOG
 =========
 
 See CHANGES.rst in the project directory or in the documentation directory of your system. For Debian, the CHANGES file will be in /usr/share/doc/gandicli/.
+
+TODO
+====
+
+Add missing Gandi product like ``virtual disk`` or ``virtual network interface`` or ``private vlan`` or ``certificate``.
 
 BUGS
 ====
