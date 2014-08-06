@@ -4,8 +4,8 @@
 %:
 	dh $@ --with python2
 
-dh_auto_build:
+override_dh_auto_build:
 	dh_auto_build
 	rst2man --no-generator gandicli.man.rst > gandi.1
 
-.PHONY: dh_auto_build
+.PHONY: override_dh_auto_build

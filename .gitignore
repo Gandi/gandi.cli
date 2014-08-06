@@ -53,3 +53,4 @@ celerybeat-schedule
 # gandi
 .gandirc
 gandi.1.man
+gandi.1
