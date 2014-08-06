@@ -64,8 +64,9 @@ def info(gandi, resource, ids):
 
 
 @cli.command()
-@click.option('--vhost', help='the vhost fqdn', required=True)
-@click.option('--paas', help='the paas on which we create it', required=True)
+@click.option('--vhost', help='vhost fqdn', required=True)
+@click.option('--paas', required=True,
+              help='PaaS instance on which to create it')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='run command in background mode (default=False)')
 @pass_gandi
