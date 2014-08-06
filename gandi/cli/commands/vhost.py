@@ -8,17 +8,18 @@ from gandi.cli.core.params import pass_gandi
 @cli.command()
 @click.option('--limit', help='limit number of results', default=100,
               show_default=True)
-@click.option('--ids', help='display ids', is_flag=True)
-@click.option('--names', help='display namess', is_flag=True)
+@click.option('--id', help='display ids', is_flag=True)
+@click.option('--names', help='display names', is_flag=True)
 @pass_gandi
-def list(gandi, limit, ids, names):
+def list(gandi, limit, id, names):
     """ List vhosts. """
     options = {
         'items_per_page': limit,
     }
 
     output_keys = ['name', 'state', 'date_creation']
-    if ids:
+    if id:
+        # When we will have more than paas vhost, we will append rproxy_id
         output_keys.append('paas_id')
 
     paas_names = {}
@@ -36,17 +37,17 @@ def list(gandi, limit, ids, names):
 
 
 @cli.command()
-@click.option('--ids', help='display ids', is_flag=True)
+@click.option('--id', help='display ids', is_flag=True)
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
-def info(gandi, resource, ids):
+def info(gandi, resource, id):
     """ Display information about a vhost.
 
     Ressource must be the vhost fqdn.
     """
     output_keys = ['name', 'state', 'date_creation', 'paas_name']
 
-    if ids:
+    if id:
         # When we will have more than paas vhost, we will append rproxy_id
         output_keys.append('paas_id')
 
