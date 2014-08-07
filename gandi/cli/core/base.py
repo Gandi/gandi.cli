@@ -13,6 +13,10 @@ from .client import XMLRPCClient, APICallFailed
 from .conf import GandiConfig
 
 
+class MissingConfiguration(Exception):
+    """ Raise when no configuration was found """
+
+
 class GandiModule(GandiConfig):
     """ Base class for modules
 
@@ -33,15 +37,26 @@ class GandiModule(GandiConfig):
             cls.load_config()
             cls.debug('initialize connection to remote server')
             apihost = cls.get('api.host')
+            if not apihost:
+                raise MissingConfiguration()
+
             cls._api = XMLRPCClient(host=apihost, debug=cls.verbose)
 
         return cls._api
 
     @classmethod
-    def call(cls, method, *args):
+    def call(cls, method, *args, **kwargs):
         """ call a remote api method and return the result """
-        api = cls.get_api_connector()
-        apikey = cls.get('api.key')
+        try:
+            api = cls.get_api_connector()
+            apikey = cls.get('api.key')
+        except MissingConfiguration:
+            if not kwargs.get('safe'):
+                cls.echo("No configuration found, please use 'gandi setup' "
+                         "command")
+                sys.exit(1)
+            else:
+                return []
 
         # make the call
         cls.debug('calling method: %s' % method)
@@ -57,10 +72,7 @@ class GandiModule(GandiConfig):
     @classmethod
     def safe_call(cls, method, *args):
         """ call a remote api method but don't raise if an error occured """
-        try:
-            return cls.call(method, *args)
-        except Exception:
-            return []
+        return cls.call(method, *args, safe=True)
 
     @classmethod
     def intty(cls):
