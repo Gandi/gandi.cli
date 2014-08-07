@@ -287,7 +287,7 @@ class Iaas(GandiModule):
                 # stop on first access found
                 break
 
-        console_url = 'console.gandi.net'
+        console_url = vm_info.get('console_url', 'console.gandi.net')
         access = 'ssh %s@%s' % (ip_addr, console_url)
         cls.shell(access)
 
