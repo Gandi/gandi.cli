@@ -304,7 +304,7 @@ class Image(GandiModule):
             options['datacenter_id'] = datacenter_id
 
         # implement a filter by label as API doesn't handle it
-        images = cls.call('hosting.image.list', options)
+        images = cls.safe_call('hosting.image.list', options)
         if not label:
             return images
         return [img for img in images

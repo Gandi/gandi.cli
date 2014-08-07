@@ -1,5 +1,4 @@
 import os
-from distutils.dir_util import mkpath
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
 
@@ -22,7 +21,7 @@ class Paas(GandiModule):
     def type_list(cls, options={}):
         """list type of PaaS instances"""
 
-        return cls.call('paas.type.list', options)
+        return cls.safe_call('paas.type.list', options)
 
     @classmethod
     def list(cls, options=None):

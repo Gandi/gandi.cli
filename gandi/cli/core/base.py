@@ -33,12 +33,6 @@ class GandiModule(GandiConfig):
             cls.load_config()
             cls.debug('initialize connection to remote server')
             apihost = cls.get('api.host')
-            if not apihost:
-                cls.echo("Welcome to GandiCLI, let's configure a few things "
-                         "before we start")
-                cls.init_config()
-                apihost = cls.get('api.host')
-
             cls._api = XMLRPCClient(host=apihost, debug=cls.verbose)
 
         return cls._api
@@ -59,6 +53,14 @@ class GandiModule(GandiConfig):
             error = UsageError(err.errors)
             setattr(error, 'code', err.code)
             raise error
+
+    @classmethod
+    def safe_call(cls, method, *args):
+        """ call a remote api method but don't raise if an error occured """
+        try:
+            return cls.call(method, *args)
+        except Exception:
+            return []
 
     @classmethod
     def intty(cls):

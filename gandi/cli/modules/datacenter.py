@@ -9,7 +9,7 @@ class Datacenter(GandiModule):
 
         options = {}
 
-        return cls.call('hosting.datacenter.list', options)
+        return cls.safe_call('hosting.datacenter.list', options)
 
     @classmethod
     def from_iso(cls, iso):

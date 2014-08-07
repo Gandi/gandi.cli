@@ -142,6 +142,11 @@ class GandiConfig(object):
 
         """
         try:
+            # load conf before and only overwrite some params not reset
+            # everything
+            config_file = os.path.expanduser(cls.home_config)
+            config = cls.load(config_file, 'global')
+
             apikey = click.prompt('Api key')
             env_choice = click.Choice(cls.apienvs.keys())
             apienv = click.prompt('Environnment',
@@ -150,11 +155,11 @@ class GandiConfig(object):
             ssh_key = click.prompt('SSH keyfile',
                                    default='~/.ssh/id_rsa.pub')
 
-            config = {
+            config.update({
                 'api': {'key': apikey,
                         'env': apienv,
                         'host': cls.apienvs[apienv]},
-            }
+            })
             if ssh_key is not None:
                 config['ssh_key'] = os.path.expanduser(ssh_key)
 
@@ -162,11 +167,10 @@ class GandiConfig(object):
             if not os.path.exists(directory):
                 mkpath(directory, 0750)
 
-            config_file = os.path.expanduser(cls.home_config)
             # save to disk
             cls.save(config_file, config)
             # load in memory
             cls.load(config_file, 'global')
-        except KeyboardInterrupt:
+        except (KeyboardInterrupt, click.exceptions.Abort):
             cls.echo('Aborted.')
             sys.exit(1)
