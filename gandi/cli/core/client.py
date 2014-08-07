@@ -6,7 +6,7 @@ from gandi.cli import __version__
 
 
 class APICallFailed(Exception):
-    """ Raise when an error occured during an api call"""
+    """ Raise when an error occured during an API call"""
 
     def __init__(self, errors, code=None):
         self.errors = errors
