@@ -19,13 +19,15 @@ class Vhost(GandiModule):
         return cls.call('paas.vhost.info', name)
 
     @classmethod
-    def create(cls, paas, vhost, background):
+    def create(cls, paas, vhost, alter_zone, background):
         """ create a new vhost """
         if not background and not cls.intty():
             background = True
 
         paas_id = Paas.usable_id(paas)
-        params = {'paas_id': paas_id, 'vhost': vhost}
+        params = {'paas_id': paas_id,
+                  'vhost': vhost,
+                  'alter_zone': alter_zone}
         try:
             result = cls.call('paas.vhost.create', params)
         except UsageError as err:
