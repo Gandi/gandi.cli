@@ -93,6 +93,20 @@ def output_sshkey(gandi, sshkey, output_keys, justify=12):
     output_generic(gandi, sshkey, output_keys, justify)
 
 
+def output_snapshot_profile(gandi, profile, output_keys, justify=13):
+    """ Helper to output a snapshot_profile """
+    schedules = 'schedules' in output_keys
+    if schedules:
+        output_keys.remove('schedules')
+    output_generic(gandi, profile, output_keys, justify)
+
+    if schedules:
+        schedule_keys = ['name', 'kept_version']
+        for schedule in profile['schedules']:
+            gandi.separator_line()
+            output_generic(gandi, schedule, schedule_keys, justify)
+
+
 def check_domain_available(ctx, domain):
     """ Helper to check if a domain is available """
     gandi = ctx.obj
