@@ -21,12 +21,16 @@ def list(gandi, domain, limit):
   return mailboxes
 
 @cli.command()
-@click.argument('domain')
-@click.argument('login')
+@click.argument('email')
 @pass_gandi
-def info(gandi, domain, login):
+def info(gandi, email):
   """Display information about a mailbox"""
   
+  email = email.split("@")
+  
+  login = email[0]
+  domain = email[1] 
+
   output_keys = ['login', 'aliases', 'fallback_email', 'quota', 'responder']  
   mailbox = gandi.mailbox.info(domain, login)
   
@@ -35,12 +39,16 @@ def info(gandi, domain, login):
   return mailbox
 
 @cli.command()
-@click.argument('domain')
-@click.argument('login')
+@click.argument('email')
 @click.argument('alias')
 @pass_gandi
-def add_alias(gandi, domain, login, alias):
+def add_alias(gandi, email, alias):
   """Add an alias on a mailbox"""
+
+  email = email.split("@")
+  
+  login = email[0]
+  domain = email[1] 
 
   aliases = gandi.mailbox.info(domain, login)['aliases']
   aliases.append(alias)
@@ -50,12 +58,16 @@ def add_alias(gandi, domain, login, alias):
   return aliases
 
 @cli.command()
-@click.argument('domain')
-@click.argument('login')
+@click.argument('email')
 @click.argument('alias')
 @pass_gandi
-def delete_alias(gandi, domain, login, alias):
+def delete_alias(gandi, email, alias):
   """Remove an alias on a mailbox"""
+
+  email = email.split("@")
+  
+  login = email[0]
+  domain = email[1] 
 
   aliases = gandi.mailbox.info(domain, login)['aliases']
   aliases.remove(alias)
