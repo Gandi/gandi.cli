@@ -45,7 +45,7 @@ class Certificate(GandiModule):
     def package_list(cls, options=None):
         """ list possible certificate packages """
         options = options or {}
-        return cls.call('cert.package.list', options)
+        return cls.safe_call('cert.package.list', options)
 
     @classmethod
     def list(cls, options=None):

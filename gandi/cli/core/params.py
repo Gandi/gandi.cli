@@ -50,9 +50,23 @@ class DiskImageParamType(click.Choice):
         choices = [item['label'] for item in gandi.image.list()]
         self.choices = choices
 
+
+class CertificatePackage(click.Choice):
+    """ Choice parameter to select a certificate package between available
+    ones.
+    """
+    name = 'certificate package'
+
+    def __init__(self):
+        gandi = GandiContextHelper()
+        choices = [item['name'] for item in gandi.certificate.package_list()]
+        self.choices = choices
+
+
 DATACENTER = DatacenterParamType()
 PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
+CERTIFICATE_PACKAGE = CertificatePackage()
 
 
 class GandiOption(click.Option):
