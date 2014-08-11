@@ -107,11 +107,28 @@ def check_domain_available(ctx, domain):
 
     return domain
 
+
 def output_contact_info(gandi, data, output_keys, justify=10):
     """Helper to output chosen contacts info"""
     for key in output_keys:
         if data[key]:
             output_line(gandi, key, data[key]['handle'], justify)
+
+
+def output_cert(gandi, cert, output_keys, justify=13):
+    output = list(output_keys)
+
+    display_altnames = False
+    if 'altnames' in output:
+        display_altnames = True
+        output.remove('altnames')
+
+    output_generic(gandi, cert, output, justify)
+
+    if display_altnames:
+        for altname in cert['altnames']:
+            output_line(gandi, 'altname', altname, justify)
+
 
 def randomstring(prefix=None):
     """ Helper to generate a random string, used for temporary hostnames """
