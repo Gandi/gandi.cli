@@ -6,6 +6,24 @@ from gandi.cli.core.utils import output_cert
 from gandi.cli.core.params import pass_gandi
 
 
+@cli.command(options_metavar='')
+@pass_gandi
+def packages(gandi):
+    """ List certificate packages. """
+    packages = gandi.certificate.package_list()
+
+    for package in sorted(packages,
+                          lambda a, b: cmp("%02d%03d%s" % (a['category']['id'],
+                                                           a['max_domains'],
+                                                           a['name']),
+                                           "%02d%03d%s" % (b['category']['id'],
+                                                           b['max_domains'],
+                                                           b['name']))):
+        gandi.echo(package['name'])
+
+    return packages
+
+
 @cli.command()
 @click.option('--id', help='display ids', is_flag=True)
 @click.option('--altnames', help='display altnames', is_flag=True)
