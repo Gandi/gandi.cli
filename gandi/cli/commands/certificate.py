@@ -31,23 +31,27 @@ def packages(gandi):
 @click.option('--cert', help='display CRT', is_flag=True)
 @click.option('--all-status', help='show all certificates', is_flag=True)
 @click.option('--status', help='display status', is_flag=True)
+@click.option('--dates', help='display dates', is_flag=True)
 @click.option('--limit', help='limit number of results', default=100,
               show_default=True)
 @pass_gandi
-def list(gandi, id, altnames, csr, cert, all_status, status, limit):
+def list(gandi, id, altnames, csr, cert, all_status, status, dates, limit):
     """ List certificates. """
     options = {'items_per_page': limit}
 
     if not all_status:
         options['status'] = ['valid', 'pending']
 
-    output_keys = ['cn', 'date_created', 'date_end', 'package']
+    output_keys = ['cn', 'package']
 
     if id:
         output_keys.append('id')
 
     if status:
         output_keys.append('status')
+
+    if dates:
+        output_keys.extend(['date_created', 'date_end'])
 
     if altnames:
         output_keys.append('altnames')
