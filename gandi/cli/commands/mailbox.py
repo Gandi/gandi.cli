@@ -120,7 +120,7 @@ def purge(gandi, email):
 
     login, domain = email.split("@")
     proceed = click.confirm("Are you sure to purge the mailbox %s?" % email)
-    
+
     if not proceed:
         return
 
