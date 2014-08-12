@@ -292,3 +292,14 @@ def types(gandi):
         gandi.echo(type_['name'])
 
     return types
+
+@cli.command()
+@click.argument('resource')
+@pass_gandi
+def console(gandi, resource):
+    """Open a console on a PaaS
+
+    Resource can be a hostname or an ID
+    """
+    result = gandi.paas.console(resource)
+    return result
