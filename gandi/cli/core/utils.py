@@ -119,7 +119,7 @@ def randomstring(prefix=None):
         prefix = 'temp'
     return '%s%s' % (prefix, str(int(time.time())))
 
-def output_list(gandi, datas):
+def output_list(gandi, val):
     """Helper to generate a beautiful list"""
-    for element in datas:
+    for element in val:
         gandi.echo(element)
