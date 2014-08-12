@@ -191,6 +191,15 @@ class Paas(GandiModule):
         return ret
 
     @classmethod
+    def console(cls, id):
+        """open a console to PaaS"""
+
+        cls.call('paas.update', cls.usable_id(id), {'console': 1})
+        paas = Paas.info(cls.usable_id(id))
+        access = 'ssh %s@console.dc%d.gpaas.net' % (paas['user'], paas['datacenter']['id'] - 1)
+        cls.shell(access)
+
+    @classmethod
     def init_vhost(cls, vhost, created=True, id=None, paas=None):
         assert id or paas
         if not paas:
