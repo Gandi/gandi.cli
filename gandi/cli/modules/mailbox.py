@@ -1,5 +1,6 @@
 from gandi.cli.core.base import GandiModule
 
+
 class Mailbox(GandiModule):
 
     @classmethod
@@ -13,7 +14,7 @@ class Mailbox(GandiModule):
         """Display information about a mailbox"""
 
         return cls.call('domain.mailbox.info', domain, login)
-    
+
     @classmethod
     def create(cls, domain, login, options):
         """Create a mailbox"""
@@ -32,11 +33,8 @@ class Mailbox(GandiModule):
 
         return cls.call('domain.mailbox.update', domain, login, options)
 
-
     @classmethod
     def set_alias(cls, domain, login, aliases):
         """Update aliases on a mailbox"""
 
         return cls.call('domain.mailbox.alias.set', domain, login, aliases)
-
-        
