@@ -170,7 +170,7 @@ class Iaas(GandiModule):
             hostname = randomstring()
             disk_name = 'sys_%s' % hostname[4:]
         else:
-            disk_name = 'sys_%s' % hostname
+            disk_name = 'sys_%s' % hostname.replace('.', '')
 
         vm_params = {
             'hostname': hostname,
