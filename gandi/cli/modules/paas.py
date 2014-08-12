@@ -195,8 +195,8 @@ class Paas(GandiModule):
         """open a console to PaaS"""
 
         cls.call('paas.update', cls.usable_id(id), {'console': 1})
-        paas = Paas.info(cls.usable_id(id))
-        access = 'ssh %s@console.dc%d.gpaas.net' % (paas['user'], paas['datacenter']['id'] - 1)
+        paas = Paas.list({'id': cls.usable_id(id)})
+        access = 'ssh %s' % (paas[0]['console'])
         cls.shell(access)
 
     @classmethod
