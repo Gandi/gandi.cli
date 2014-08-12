@@ -301,5 +301,6 @@ def console(gandi, resource):
 
     Resource can be a hostname or an ID
     """
+
     result = gandi.paas.console(resource)
     return result
