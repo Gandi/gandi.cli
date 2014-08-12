@@ -73,6 +73,9 @@ def delete(gandi, email):
     login, domain = email.split("@")
     proceed = click.confirm("Are you sure to delete the mailbox %s?" % email)
 
+    if not proceed:
+        result
+
     result = gandi.mailbox.delete(domain, login)
 
     return result
@@ -109,6 +112,22 @@ def update(gandi, email, password, quota, fallback):
 
     return result
 
+@cli.command()
+@click.argument('email')
+@pass_gandi
+def purge(gandi, email):
+    """Purge a mailbox"""
+
+    login, domain = email.split("@")
+    proceed = click.confirm("Are you sure to purge the mailbox %s?" % email)
+    
+    if not proceed:
+        return
+
+    result = gandi.mailbox.purge(domain, login)
+
+    return result
+
 
 @cli.command()
 @click.option('--add', '-a', help='add an alias on a mailbox', multiple=True)
@@ -131,8 +150,9 @@ def alias(gandi, email, add, delete, purge):
             aliases.remove(alias)
 
     if purge:
-        click.confirm("Are you sure to delete all aliases for the mailbox %s?" % email)
-        aliases = []
+        proceed = click.confirm("Are you sure to delete all aliases for the mailbox %s?" % email)
+        if proceed:
+            aliases = []
 
     result = gandi.mailbox.set_alias(domain, login, aliases)
     output_list(gandi, result['aliases'])
