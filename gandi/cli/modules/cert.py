@@ -57,3 +57,13 @@ class Certificate(GandiModule):
     def info(cls, id):
         """display information about a certificate"""
         return cls.call('cert.info', cls.usable_id(id))
+
+    @classmethod
+    def pretty_format_cert(cls, cert):
+        crt = cert['cert']
+        if crt:
+            crt = ('-----BEGIN CERTIFICATE-----\n' +
+                   '\n'.join([crt[index * 64:(index + 1) * 64]
+                              for index in range(len(crt) / 64 + 1)]) +
+                   '\n-----END CERTIFICATE-----')
+        return crt

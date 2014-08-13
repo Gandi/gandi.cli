@@ -123,7 +123,17 @@ def output_cert(gandi, cert, output_keys, justify=13):
         display_altnames = True
         output.remove('altnames')
 
+    display_output = False
+    if 'cert' in output:
+        display_output = True
+        output.remove('cert')
+
     output_generic(gandi, cert, output, justify)
+
+    if display_output:
+        crt = gandi.certificate.pretty_format_cert(cert)
+        if crt:
+            output_line(gandi, 'cert', '\n' + crt, justify)
 
     if display_altnames:
         for altname in cert['altnames']:
