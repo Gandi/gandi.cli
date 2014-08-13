@@ -173,6 +173,7 @@ def export(gandi, resource, output):
 @option('--package', default='cert_std_1_0_0', type=CERTIFICATE_PACKAGE,
         help='Certificate package')
 # dcv method (email, dns, file, auto)
+# altnames
 @pass_gandi
 def create(gandi, csr, private_key, common_name, country, state, city,
            organisation, branch, duration, package):
@@ -182,7 +183,10 @@ def create(gandi, csr, private_key, common_name, country, state, city,
         gandi.echo('You need a CSR or a CN to create a certificate.')
         return
 
-    if not csr:
+    if csr:
+        if branch or organisation or city or state or country:
+            gandi.echo('Following options are only used to generate the CSR.')
+    else:
         params = (('CN', common_name),
                   ('OU', branch),
                   ('O', organisation),

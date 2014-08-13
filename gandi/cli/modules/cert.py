@@ -1,5 +1,6 @@
 import os
 import re
+from click import UsageError
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import DuplicateResults
 
@@ -10,7 +11,7 @@ class Certificate(GandiModule):
     def from_cn(cls, common_name):
         """ retrieve a certificate by it's common name """
         result = [(cert['id'], [cert['cn']] + cert['altnames'])
-                  for cert in cls.list()]
+                  for cert in cls.list({'status': ['pending', 'valid']})]
 
         ret = {}
         for id_, fqdns in result:
