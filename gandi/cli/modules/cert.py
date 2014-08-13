@@ -56,7 +56,7 @@ class Certificate(GandiModule):
 
     @classmethod
     def info(cls, id):
-        """display information about a certificate"""
+        """ display information about a certificate """
         return cls.call('cert.info', cls.usable_id(id))
 
     @classmethod
