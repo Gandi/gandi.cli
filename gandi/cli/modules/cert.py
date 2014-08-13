@@ -110,7 +110,7 @@ class Certificate(GandiModule):
         if private_key and os.path.exists(private_key):
             cmd = 'openssl req -new -key %(key)s -out %(csr)s -subj "%(subj)s"'
         else:
-            private_key = common_name + '.key'
+            private_key = common_name.replace('*.', 'wildcard.') + '.key'
             # TODO check if it exists
             cmd = ('openssl req -new -newkey rsa:2048 -nodes -out %(csr)s '
                    '-keyout %(key)s -subj "%(subj)s"')
