@@ -2,7 +2,7 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_generic, output_list
-from gandi.cli.core.params import pass_gandi
+from gandi.cli.core.params import pass_gandi, EMAIL_TYPE
 
 
 @cli.command()
@@ -22,14 +22,12 @@ def list(gandi, domain, limit):
 
 
 @cli.command()
-@click.argument('email')
+@click.argument('email', type=EMAIL_TYPE)
 @pass_gandi
 def info(gandi, email):
     """Display information about a mailbox"""
 
-    email = email.split("@")
-    login = email[0]
-    domain = email[1]
+    login, domain = email
 
     output_keys = ['login', 'aliases', 'fallback_email', 'quota', 'responder']
     mailbox = gandi.mailbox.info(domain, login)

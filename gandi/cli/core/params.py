@@ -54,6 +54,19 @@ DATACENTER = DatacenterParamType()
 PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
 
+class EmailParamType(click.STRING):
+    """Check the email value"""
+    name = 'email'
+
+    def convert(self, value, param, ctx):
+        try:
+            value = value.split("@")
+        except Exception:
+            pass
+
+        return value
+
+EMAIL_TYPE = EmailParamType
 
 class GandiOption(click.Option):
     """ Custom command option class for handling configuration files
