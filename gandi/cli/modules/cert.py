@@ -109,3 +109,17 @@ class Certificate(GandiModule):
                               for index in range(len(crt) / 64 + 1)]) +
                    '\n-----END CERTIFICATE-----')
         return crt
+
+    @classmethod
+    def delete(cls, cert_id, background=False):
+        """ delete a certificate """
+        result = cls.call('cert.delete', cert_id)
+
+        if background:
+            return result
+
+        cls.echo("We're deleting the certificate.")
+        cls.display_progress(result)
+        cls.echo('Your certificate %s have been deleted.' % cert_id)
+
+        return result

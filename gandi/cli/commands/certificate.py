@@ -201,3 +201,34 @@ def create(gandi, csr, private_key, common_name, country, state, city,
     result = gandi.certificate.create(csr, duration, package)
 
     return result
+
+
+@cli.command()
+@click.argument('resource', nargs=1, required=True)
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='run command in background mode (default=False)')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False)')
+@pass_gandi
+def delete(gandi, resource, background, force):
+    """ Write the certificate to <output> or <fqdn>.crt
+
+    Ressource can be a CN or an ID
+    """
+    ids = gandi.certificate.usable_ids(resource)
+
+    if len(ids) > 1:
+        gandi.echo('Will not delete, %s is not precise enough.' % resource)
+        gandi.echo('  * cert : ' +
+                   '\n  * cert : '.join([str(id_) for id_ in ids]))
+        return
+
+    if not force:
+        proceed = click.confirm("Are you sure to delete the certificate %s?" %
+                                resource)
+        if not proceed:
+            return
+
+    result = gandi.certificate.delete(ids[0], background)
+    return result
