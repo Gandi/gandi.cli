@@ -1,4 +1,5 @@
 import os
+import re
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import DuplicateResults
 
@@ -57,6 +58,47 @@ class Certificate(GandiModule):
     def info(cls, id):
         """display information about a certificate"""
         return cls.call('cert.info', cls.usable_id(id))
+
+    @classmethod
+    def create(cls, csr, duration, package):
+        """ create a new certificate """
+        params = {'csr': csr, 'package': package, 'duration': duration}
+
+        try:
+            result = cls.call('cert.create', params)
+        except UsageError as err:
+            raise
+
+        return result
+
+    @classmethod
+    def create_csr(cls, common_name, private_key=None, params=None):
+        params = params or []
+
+        params = [(key, val) for key, val in params if val]
+        subj = '/' + '/'.join(['='.join(value) for value in params])
+
+        if private_key and os.path.exists(private_key):
+            cmd = 'openssl req -new -key %(key)s -out %(csr)s -subj %(subj)s'
+        else:
+            private_key = common_name + '.key'
+            # TODO check if it exists
+            cmd = ('openssl req -new -newkey rsa:2048 -nodes -out %(csr)s '
+                   '-keyout %(key)s -subj %(subj)s')
+
+        if private_key.endswith('.crt') or private_key.endswith('.key'):
+            csr_file = re.sub('\.(crt|key)$', '.csr', private_key)
+        else:
+            csr_file = private_key + '.csr'
+
+        cmd = cmd % {'csr': csr_file, 'key': private_key, 'subj': subj}
+        result = cls.shell(cmd)
+        if not result:
+            cls.echo('CSR creation failed')
+            cls.echo(cmd)
+            return
+
+        return csr_file
 
     @classmethod
     def pretty_format_cert(cls, cert):
