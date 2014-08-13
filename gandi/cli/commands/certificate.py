@@ -209,6 +209,43 @@ def create(gandi, csr, private_key, common_name, country, state, city,
 
 @cli.command()
 @click.argument('resource', nargs=1, required=True)
+@click.option('--csr', help='New csr for the certificate', required=False)
+@click.option('--pk', '--private-key', required=False,
+              help='Private key to use to generate the CSR')
+@click.option('--c', '--country', required=False,
+              help='The generated CSR country (C)')
+@click.option('--st', '--state', required=False,
+              help='The generated CSR state (ST)')
+@click.option('--l', '--city', required=False,
+              help='The generated CSR location (L)')
+@click.option('--o', '--organisation', required=False,
+              help='The generated CSR organisation (O)')
+@click.option('--ou', '--branch', required=False,
+              help='The generated CSR branch (OU)')
+# dcv method (email, dns, file, auto)
+# altnames
+@pass_gandi
+def update(gandi, resource, csr, private_key, country, state, city,
+           organisation, branch):
+    """ Update a certificate CSR """
+    ids = gandi.certificate.usable_ids(resource)
+
+    if len(ids) > 1:
+        gandi.echo('Will not update, %s is not precise enough.' % resource)
+        gandi.echo('  * cert : ' +
+                   '\n  * cert : '.join([str(id_) for id_ in ids]))
+        return
+
+    id_ = ids[0]
+
+    result = gandi.certificate.update(id_, csr, private_key, country, state,
+                                      city, organisation, branch)
+
+    return result
+
+
+@cli.command()
+@click.argument('resource', nargs=1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='run command in background mode (default=False)')
 @click.option('--force', '-f', is_flag=True,

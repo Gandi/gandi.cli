@@ -68,6 +68,34 @@ class Certificate(GandiModule):
         try:
             result = cls.call('cert.create', params)
         except UsageError as err:
+            params['--dry-run'] = True
+            msg = str(cls.call('cert.create', params))
+            cls.error(msg)
+            raise
+
+        return result
+
+    @classmethod
+    def update(cls, cert_id, csr, private_key, country, state, city,
+               organisation, branch):
+        """ update a certificate """
+
+        cert = cls.info(cert_id)
+        common_name = cert['cn']
+
+        csr = cls.process_csr(common_name, csr, private_key, country, state,
+                              city, organisation, branch)
+
+        if not csr:
+            return
+
+        params = {'csr': csr}
+        try:
+            result = cls.call('cert.update', cert_id, params)
+        except UsageError as err:
+            params['--dry-run'] = True
+            msg = str(cls.call('cert.update', cert_id, params))
+            cls.error(msg)
             raise
 
         return result
@@ -100,6 +128,30 @@ class Certificate(GandiModule):
             return
 
         return csr_file
+
+    @classmethod
+    def process_csr(cls, common_name, csr, private_key, country, state, city,
+                    organisation, branch):
+        """ Create a PK and a CSR if needed """
+        if csr:
+            if branch or organisation or city or state or country:
+                cls.echo('Following options are only used to generate'
+                         ' the CSR.')
+        else:
+            params = (('CN', common_name),
+                      ('OU', branch),
+                      ('O', organisation),
+                      ('L', city),
+                      ('ST', state),
+                      ('C', country))
+            params = [(key, val) for key, val in params if val]
+            subj = '/'.join(['='.join(value) for value in params])
+            csr = cls.create_csr(common_name, private_key, params)
+
+        if csr and os.path.exists(csr):
+            csr = open(csr).read()
+
+        return csr
 
     @classmethod
     def pretty_format_cert(cls, cert):
