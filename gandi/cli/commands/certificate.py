@@ -183,24 +183,10 @@ def create(gandi, csr, private_key, common_name, country, state, city,
         gandi.echo('You need a CSR or a CN to create a certificate.')
         return
 
-    if csr:
-        if branch or organisation or city or state or country:
-            gandi.echo('Following options are only used to generate the CSR.')
-    else:
-        params = (('CN', common_name),
-                  ('OU', branch),
-                  ('O', organisation),
-                  ('L', city),
-                  ('ST', state),
-                  ('C', country))
-        params = [(key, val) for key, val in params if val]
-        subj = '/'.join(['='.join(value) for value in params])
-        csr = gandi.certificate.create_csr(common_name, private_key, params)
-        if not csr:
-            return
-
-    if os.path.exists(csr):
-        csr = open(csr).read()
+    csr = gandi.certificate.process_csr(common_name, csr, private_key, country,
+                                        state, city, organisation, branch)
+    if not csr:
+        return
 
     result = gandi.certificate.create(csr, duration, package)
 
