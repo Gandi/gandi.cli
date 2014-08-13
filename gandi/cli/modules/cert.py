@@ -79,12 +79,12 @@ class Certificate(GandiModule):
         subj = '/' + '/'.join(['='.join(value) for value in params])
 
         if private_key and os.path.exists(private_key):
-            cmd = 'openssl req -new -key %(key)s -out %(csr)s -subj %(subj)s'
+            cmd = 'openssl req -new -key %(key)s -out %(csr)s -subj "%(subj)s"'
         else:
             private_key = common_name + '.key'
             # TODO check if it exists
             cmd = ('openssl req -new -newkey rsa:2048 -nodes -out %(csr)s '
-                   '-keyout %(key)s -subj %(subj)s')
+                   '-keyout %(key)s -subj "%(subj)s"')
 
         if private_key.endswith('.crt') or private_key.endswith('.key'):
             csr_file = re.sub('\.(crt|key)$', '.csr', private_key)
