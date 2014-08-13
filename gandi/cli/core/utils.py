@@ -28,6 +28,7 @@ def output_generic(gandi, data, output_keys, justify=10):
         if key in data:
             output_line(gandi, key, data[key], justify)
 
+
 def output_vm(gandi, vm, datacenters, output_keys, justify=10):
     """ Helper to output a vm information """
 
@@ -107,17 +108,20 @@ def check_domain_available(ctx, domain):
 
     return domain
 
+
 def output_contact_info(gandi, data, output_keys, justify=10):
     """Helper to output chosen contacts info"""
     for key in output_keys:
         if data[key]:
             output_line(gandi, key, data[key]['handle'], justify)
 
+
 def randomstring(prefix=None):
     """ Helper to generate a random string, used for temporary hostnames """
     if not prefix:
         prefix = 'temp'
     return '%s%s' % (prefix, str(int(time.time())))
+
 
 def output_list(gandi, val):
     """Helper to generate a beautiful list"""

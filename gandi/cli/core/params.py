@@ -54,8 +54,8 @@ DATACENTER = DatacenterParamType()
 PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
 
-class EmailParamType(click.STRING):
-    """Check the email value"""
+class EmailParamType(click.ParamType):
+    """Check the email value and return a list ['login', 'domain']"""
     name = 'email'
 
     def convert(self, value, param, ctx):
@@ -66,7 +66,7 @@ class EmailParamType(click.STRING):
 
         return value
 
-EMAIL_TYPE = EmailParamType
+EMAIL_TYPE = EmailParamType()
 
 class GandiOption(click.Option):
     """ Custom command option class for handling configuration files
@@ -76,7 +76,7 @@ class GandiOption(click.Option):
     """
 
     def display_value(self, ctx, value):
-        """ Display value to be sued for this parameter """
+        """ Display value to be used for this parameter """
         gandi = ctx.obj
         gandi.echo('%s: %s' % (self.name, (value if value is not None
                                            else 'Not found')))
