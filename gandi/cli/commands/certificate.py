@@ -116,6 +116,42 @@ def info(gandi, resource, id, altnames, csr, cert, all_status):
 
 
 @cli.command()
+@click.argument('resource', nargs=-1)
+@click.option('-o', '--output', help='the file to write the cert')
+@pass_gandi
+def export(gandi, resource, output):
+    """ Write the certificate to <output> or <fqdn>.crt
+
+    Ressource can be a CN or an ID
+    """
+    ids = []
+    for res in resource:
+        ids.extend(gandi.certificate.usable_ids(res))
+
+    if output and len(ids) > 1:
+        gandi.echo('Do not know which cert you want to export.')
+        return
+
+    for id_ in set(ids):
+        cert = gandi.certificate.info(id_)
+        if not 'cert' in cert:
+            continue
+
+        crt_filename = output or cert['cn'] + '.crt'
+        if os.path.exists(crt_filename):
+            gandi.echo('The file %s already exists.' % crt_filename)
+            continue
+
+        crt = gandi.certificate.pretty_format_cert(cert)
+        if crt:
+            with open(crt_filename, 'w') as crt_file:
+                crt_file.write(crt)
+                gandi.echo('wrote %s' % crt_filename)
+
+        return crt
+
+
+@cli.command()
 @click.option('--csr', help='Csr of the new certificate', required=False)
 @click.option('--pk', '--private-key', required=False,
               help='Private key to use to generate the CSR')
