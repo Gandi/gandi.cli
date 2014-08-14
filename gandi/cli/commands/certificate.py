@@ -172,8 +172,8 @@ def export(gandi, resource, output, force):
 @click.option('-d', '--duration', default=1,
               type=IntChoice(['1', '2', '3', '4', '5']),
               help='The certificate duration in year')
-@option('--package', default='cert_std_1_0_0', type=CERTIFICATE_PACKAGE,
-        help='Certificate package')
+@click.option('--package', default='cert_std_1_0_0', type=CERTIFICATE_PACKAGE,
+              help='Certificate package')
 @click.option('--altnames', required=False, multiple=True,
               help='The certificate altnames')
 @click.option('--dcv-method', required=False, type=CERTIFICATE_DCV_METHOD,
