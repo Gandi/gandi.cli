@@ -34,10 +34,15 @@ class Mailbox(GandiModule):
         return cls.call('domain.mailbox.update', domain, login, options)
 
     @classmethod
-    def purge(cls, domain, login):
+    def purge(cls, domain, login, background=False):
         """Purge a mailbox"""
 
-        return cls.call('domain.mailbox.purge', domain, login)
+        oper = cls.call('domain.mailbox.purge', domain, login)
+        if background:
+            return oper
+        else:
+            cls.echo("Purge in progress")
+            cls.display_progress(oper)
 
     @classmethod
     def set_alias(cls, domain, login, aliases):
