@@ -240,6 +240,44 @@ def update(gandi, resource, csr, private_key, country, state, city,
 
 @cli.command()
 @click.argument('resource', nargs=1, required=True)
+@click.option('--dcv-method', required=True, type=CERTIFICATE_DCV_METHOD,
+              help='Give the updated DCV method to use')
+@pass_gandi
+def change_dcv(gandi, resource, dcv_method):
+    """ Change the DCV for a running certificate operation """
+    ids = gandi.certificate.usable_ids(resource)
+
+    if len(ids) > 1:
+        gandi.echo('Will not update, %s is not precise enough.' % resource)
+        gandi.echo('  * cert : ' +
+                   '\n  * cert : '.join([str(id_) for id_ in ids]))
+        return
+
+    id_ = ids[0]
+
+    opers = gandi.oper.list({'cert_id': id_})
+    if not opers:
+        gandi.echo('Can not find any operation for this certificate.')
+        return
+
+    oper = opers[0]
+    if (oper['step'] != 'RUN'
+        and oper['params']['inner_step'] != 'comodo_oper_updated'):
+        gandi.echo('This certificate operation is not in the good step to '
+                   'update the DCV method.')
+        return
+
+    gandi.certificate.change_dcv(oper['id'], dcv_method)
+    cert = gandi.certificate.info(id_)
+
+    csr = oper['params']['csr']
+    package = cert['package']
+    altnames = oper['params'].get('altnames')
+    gandi.certificate.advice_dcv_method(csr, package, altnames, dcv_method)
+
+
+@cli.command()
+@click.argument('resource', nargs=1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='run command in background mode (default=False)')
 @click.option('--force', '-f', is_flag=True,
