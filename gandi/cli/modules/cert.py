@@ -61,9 +61,11 @@ class Certificate(GandiModule):
         return cls.call('cert.info', cls.usable_id(id))
 
     @classmethod
-    def create(cls, csr, duration, package):
+    def create(cls, csr, duration, package, altnames):
         """ create a new certificate """
         params = {'csr': csr, 'package': package, 'duration': duration}
+        if altnames:
+            params['altnames'] = altnames
 
         try:
             result = cls.call('cert.create', params)
@@ -77,7 +79,7 @@ class Certificate(GandiModule):
 
     @classmethod
     def update(cls, cert_id, csr, private_key, country, state, city,
-               organisation, branch):
+               organisation, branch, altnames):
         """ update a certificate """
 
         cert = cls.info(cert_id)
@@ -90,6 +92,9 @@ class Certificate(GandiModule):
             return
 
         params = {'csr': csr}
+        if altnames:
+            params['altnames'] = altnames
+
         try:
             result = cls.call('cert.update', cert_id, params)
         except UsageError as err:

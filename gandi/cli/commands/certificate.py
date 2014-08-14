@@ -172,11 +172,12 @@ def export(gandi, resource, output):
               help='The certificate duration in year')
 @option('--package', default='cert_std_1_0_0', type=CERTIFICATE_PACKAGE,
         help='Certificate package')
+@click.option('--altnames', required=False, multiple=True,
+              help='The certificate altnames')
 # dcv method (email, dns, file, auto)
-# altnames
 @pass_gandi
 def create(gandi, csr, private_key, common_name, country, state, city,
-           organisation, branch, duration, package):
+           organisation, branch, duration, package, altnames):
     """Create a new certificate.
     """
     if not (csr or common_name):
@@ -188,7 +189,7 @@ def create(gandi, csr, private_key, common_name, country, state, city,
     if not csr:
         return
 
-    result = gandi.certificate.create(csr, duration, package)
+    result = gandi.certificate.create(csr, duration, package, altnames)
 
     return result
 
@@ -208,11 +209,12 @@ def create(gandi, csr, private_key, common_name, country, state, city,
               help='The generated CSR organisation (O)')
 @click.option('--ou', '--branch', required=False,
               help='The generated CSR branch (OU)')
+@click.option('--altnames', required=False, multiple=True,
+              help='The certificate altnames')
 # dcv method (email, dns, file, auto)
-# altnames
 @pass_gandi
 def update(gandi, resource, csr, private_key, country, state, city,
-           organisation, branch):
+           organisation, branch, altnames):
     """ Update a certificate CSR """
     ids = gandi.certificate.usable_ids(resource)
 
@@ -225,7 +227,7 @@ def update(gandi, resource, csr, private_key, country, state, city,
     id_ = ids[0]
 
     result = gandi.certificate.update(id_, csr, private_key, country, state,
-                                      city, organisation, branch)
+                                      city, organisation, branch, altnames)
 
     return result
 
