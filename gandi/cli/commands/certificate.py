@@ -4,8 +4,8 @@ from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_cert
-from gandi.cli.core.params import (pass_gandi, CERTIFICATE_PACKAGE, IntChoice,
-                                   option)
+from gandi.cli.core.params import (pass_gandi, IntChoice, option,
+                                   CERTIFICATE_PACKAGE, CERTIFICATE_DCV_METHOD)
 
 
 @cli.command(options_metavar='')
@@ -176,10 +176,11 @@ def export(gandi, resource, output, force):
         help='Certificate package')
 @click.option('--altnames', required=False, multiple=True,
               help='The certificate altnames')
-# dcv method (email, dns, file, auto)
+@click.option('--dcv-method', required=False, type=CERTIFICATE_DCV_METHOD,
+              help='Give the DCV method to use to check domain ownership')
 @pass_gandi
 def create(gandi, csr, private_key, common_name, country, state, city,
-           organisation, branch, duration, package, altnames):
+           organisation, branch, duration, package, altnames, dcv_method):
     """Create a new certificate.
     """
     if not (csr or common_name):
@@ -191,7 +192,8 @@ def create(gandi, csr, private_key, common_name, country, state, city,
     if not csr:
         return
 
-    result = gandi.certificate.create(csr, duration, package, altnames)
+    result = gandi.certificate.create(csr, duration, package, altnames,
+                                      dcv_method)
 
     return result
 
@@ -213,10 +215,11 @@ def create(gandi, csr, private_key, common_name, country, state, city,
               help='The generated CSR branch (OU)')
 @click.option('--altnames', required=False, multiple=True,
               help='The certificate altnames')
-# dcv method (email, dns, file, auto)
+@click.option('--dcv-method', required=False, type=CERTIFICATE_DCV_METHOD,
+              help='Give the DCV method to use to check domain ownership')
 @pass_gandi
 def update(gandi, resource, csr, private_key, country, state, city,
-           organisation, branch, altnames):
+           organisation, branch, altnames, dcv_method):
     """ Update a certificate CSR """
     ids = gandi.certificate.usable_ids(resource)
 
@@ -229,7 +232,8 @@ def update(gandi, resource, csr, private_key, country, state, city,
     id_ = ids[0]
 
     result = gandi.certificate.update(id_, csr, private_key, country, state,
-                                      city, organisation, branch, altnames)
+                                      city, organisation, branch, altnames,
+                                      dcv_method)
 
     return result
 

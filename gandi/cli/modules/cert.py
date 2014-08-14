@@ -61,11 +61,13 @@ class Certificate(GandiModule):
         return cls.call('cert.info', cls.usable_id(id))
 
     @classmethod
-    def create(cls, csr, duration, package, altnames):
+    def create(cls, csr, duration, package, altnames, dcv_method):
         """ create a new certificate """
         params = {'csr': csr, 'package': package, 'duration': duration}
         if altnames:
             params['altnames'] = altnames
+        if dcv_method:
+            params['dcv_method'] = dcv_method
 
         try:
             result = cls.call('cert.create', params)
@@ -79,7 +81,7 @@ class Certificate(GandiModule):
 
     @classmethod
     def update(cls, cert_id, csr, private_key, country, state, city,
-               organisation, branch, altnames):
+               organisation, branch, altnames, dcv_method):
         """ update a certificate """
 
         cert = cls.info(cert_id)
@@ -94,6 +96,8 @@ class Certificate(GandiModule):
         params = {'csr': csr}
         if altnames:
             params['altnames'] = altnames
+        if dcv_method:
+            params['dcv_method'] = dcv_method
 
         try:
             result = cls.call('cert.update', cert_id, params)
