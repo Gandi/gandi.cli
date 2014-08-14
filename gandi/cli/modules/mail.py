@@ -1,7 +1,7 @@
 from gandi.cli.core.base import GandiModule
 
 
-class Mailbox(GandiModule):
+class Mail(GandiModule):
 
     @classmethod
     def list(cls, domain, options):

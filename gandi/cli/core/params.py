@@ -60,11 +60,13 @@ class EmailParamType(click.ParamType):
 
     def convert(self, value, param, ctx):
         try:
-            value = value.split("@")
-        except Exception:
-            pass
+            if "@" in value:
+                value = value.split("@")
+                return value
+        except ValueError:
+            self.fail('%s is not a valid email address' % value, param, ctx)
 
-        return value
+        
 
 EMAIL_TYPE = EmailParamType()
 

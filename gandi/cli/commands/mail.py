@@ -14,7 +14,7 @@ def list(gandi, domain, limit):
     """List mailboxes created on a domain."""
 
     options = {'items_per_page': limit}
-    mailboxes = gandi.mailbox.list(domain, options)
+    mailboxes = gandi.mail.list(domain, options)
     for mailbox in mailboxes:
         gandi.echo(mailbox['login'])
 
@@ -30,7 +30,7 @@ def info(gandi, email):
     login, domain = email
 
     output_keys = ['login', 'aliases', 'fallback_email', 'quota', 'responder']
-    mailbox = gandi.mailbox.info(domain, login)
+    mailbox = gandi.mail.info(domain, login)
     output_generic(gandi, mailbox, output_keys, justify=12)
 
     return mailbox
@@ -57,7 +57,7 @@ def create(gandi, email, quota, fallback):
     options['password'] = password
 
     login, domain = email
-    result = gandi.mailbox.create(domain, login, options)
+    result = gandi.mail.create(domain, login, options)
 
     return result
 
@@ -74,7 +74,7 @@ def delete(gandi, email):
     if not proceed:
         result
 
-    result = gandi.mailbox.delete(domain, login)
+    result = gandi.mail.delete(domain, login)
 
     return result
 
@@ -106,7 +106,7 @@ def update(gandi, email, password, quota, fallback):
 
     login, domain = email
 
-    result = gandi.mailbox.update(domain, login, options)
+    result = gandi.mail.update(domain, login, options)
 
     return result
 
@@ -125,7 +125,7 @@ def purge(gandi, background, email):
     if not proceed:
         return
 
-    result = gandi.mailbox.purge(domain, login, background)
+    result = gandi.mail.purge(domain, login, background)
 
     return result
 
@@ -142,7 +142,7 @@ def alias(gandi, email, add, delete, purge):
 
     login, domain = email
 
-    aliases = gandi.mailbox.info(domain, login)['aliases']
+    aliases = gandi.mail.info(domain, login)['aliases']
     if add:
         for alias in add:
             aliases.append(alias)
@@ -157,6 +157,6 @@ def alias(gandi, email, add, delete, purge):
         if proceed:
             aliases = []
 
-    result = gandi.mailbox.set_alias(domain, login, aliases)
+    result = gandi.mail.set_alias(domain, login, aliases)
     output_list(gandi, result['aliases'])
     return result
