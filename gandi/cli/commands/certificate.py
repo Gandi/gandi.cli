@@ -118,8 +118,10 @@ def info(gandi, resource, id, altnames, csr, cert, all_status):
 @cli.command()
 @click.argument('resource', nargs=-1)
 @click.option('-o', '--output', help='the file to write the cert')
+@click.option('--force', '-f', is_flag=True,
+              help='Overide the crt file if it exists')
 @pass_gandi
-def export(gandi, resource, output):
+def export(gandi, resource, output, force):
     """ Write the certificate to <output> or <fqdn>.crt
 
     Ressource can be a CN or an ID
@@ -138,7 +140,7 @@ def export(gandi, resource, output):
             continue
 
         crt_filename = output or cert['cn'] + '.crt'
-        if os.path.exists(crt_filename):
+        if not force and os.path.exists(crt_filename):
             gandi.echo('The file %s already exists.' % crt_filename)
             continue
 
