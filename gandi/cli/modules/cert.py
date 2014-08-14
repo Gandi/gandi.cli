@@ -61,6 +61,14 @@ class Certificate(GandiModule):
         return cls.call('cert.info', cls.usable_id(id))
 
     @classmethod
+    def advice_dcv_method(cls, csr, package, altnames, dcv_method):
+        params = {'csr': csr, 'package': package, 'dcv_method': dcv_method}
+        result = cls.call('cert.get_dcv_params', params)
+        if dcv_method == 'dns':
+            cls.echo('You have to add these records in your domain zone :')
+        cls.echo('\n'.join(result['message']))
+
+    @classmethod
     def create(cls, csr, duration, package, altnames, dcv_method):
         """ create a new certificate """
         params = {'csr': csr, 'package': package, 'duration': duration}
@@ -68,12 +76,15 @@ class Certificate(GandiModule):
             params['altnames'] = altnames
         if dcv_method:
             params['dcv_method'] = dcv_method
+            if dcv_method in ('dns', 'file'):
+                cls.advice_dcv_method(csr, package, altnames, dcv_method)
 
         try:
             result = cls.call('cert.create', params)
-        except UsageError as err:
+        except UsageError:
             params['--dry-run'] = True
-            msg = str(cls.call('cert.create', params))
+            msg = '\n'.join(['%s (%s)' % (err['reason'], err['attr'])
+                             for err in cls.call('cert.create', params)])
             cls.error(msg)
             raise
 
@@ -101,7 +112,7 @@ class Certificate(GandiModule):
 
         try:
             result = cls.call('cert.update', cert_id, params)
-        except UsageError as err:
+        except UsageError:
             params['--dry-run'] = True
             msg = str(cls.call('cert.update', cert_id, params))
             cls.error(msg)
