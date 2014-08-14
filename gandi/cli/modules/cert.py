@@ -73,6 +73,10 @@ class Certificate(GandiModule):
         cls.call('cert.change_dcv', oper_id, dcv_method)
 
     @classmethod
+    def resend_dcv(cls, oper_id):
+        cls.call('cert.resend_dcv', oper_id)
+
+    @classmethod
     def create(cls, csr, duration, package, altnames, dcv_method):
         """ create a new certificate """
         params = {'csr': csr, 'package': package, 'duration': duration}

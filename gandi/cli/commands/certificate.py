@@ -278,6 +278,40 @@ def change_dcv(gandi, resource, dcv_method):
 
 @cli.command()
 @click.argument('resource', nargs=1, required=True)
+@pass_gandi
+def resend_dcv(gandi, resource):
+    """ Resend the DCV mail """
+    ids = gandi.certificate.usable_ids(resource)
+
+    if len(ids) > 1:
+        gandi.echo('Will not update, %s is not precise enough.' % resource)
+        gandi.echo('  * cert : ' +
+                   '\n  * cert : '.join([str(id_) for id_ in ids]))
+        return
+
+    id_ = ids[0]
+
+    opers = gandi.oper.list({'cert_id': id_})
+    if not opers:
+        gandi.echo('Can not find any operation for this certificate.')
+        return
+
+    oper = opers[0]
+    if (oper['step'] != 'RUN'
+        and oper['params']['inner_step'] != 'comodo_oper_updated'):
+        gandi.echo('This certificate operation is not in the good step to '
+                   'resend the DCV.')
+        return
+
+    if oper['params']['dcv_method'] != 'email':
+        gandi.echo('This certificate operation is not in email DCV.')
+        return
+
+    gandi.certificate.resend_dcv(oper['id'])
+
+
+@cli.command()
+@click.argument('resource', nargs=1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='run command in background mode (default=False)')
 @click.option('--force', '-f', is_flag=True,
