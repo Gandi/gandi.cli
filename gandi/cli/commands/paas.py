@@ -6,11 +6,11 @@ from gandi.cli.core.params import pass_gandi, DATACENTER, PAAS_TYPE, option
 
 
 @cli.command()
-@click.option('--state', default=None, help='filter results by state')
-@click.option('--id', help='display ids', is_flag=True)
-@click.option('--vhosts', help='display vhosts', default=True, is_flag=True)
-@click.option('--type', help='display types', is_flag=True)
-@click.option('--limit', help='limit number of results', default=100,
+@click.option('--state', default=None, help='Filter results by state.')
+@click.option('--id', help='Display ids.', is_flag=True)
+@click.option('--vhosts', help='Display vhosts.', default=True, is_flag=True)
+@click.option('--type', help='Display types.', is_flag=True)
+@click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @pass_gandi
 def list(gandi, state, id, vhosts, type, limit):
@@ -107,10 +107,10 @@ def deploy(gandi, vhost):
 
 @cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
-                   ' without prompting. (default=False)')
+                   ' without prompting. (default=False).')
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def delete(gandi, background, force, resource):
@@ -148,30 +148,30 @@ def delete(gandi, background, force, resource):
 @cli.command()
 @click.option('--name', default=None,
               help='Name of the PaaS instance, will be generated if not '
-                   'provided')
+                   'provided.')
 @option('--size', default='s',
         type=click.Choice(['s', 'm', 'x', 'xl', 'xxl']),
-        help='Size of the PaaS instance')
+        help='Size of the PaaS instance.')
 @option('--type', default='pythonpgsql',
         type=PAAS_TYPE,
-        help='Type of the PaaS instance')
+        help='Type of the PaaS instance.')
 @option('--quantity', default=0,
-        help='Additional disk amount (in GB)')
+        help='Additional disk amount (in GB).')
 @option('--duration', default='1m',
-        help='number of month, suffixed with m')
+        help='Number of month, suffixed with m.')
 @option('--datacenter', type=DATACENTER, prompt=True,
-        help='datacenter where the PaaS will be spawned')
+        help='Datacenter where the PaaS will be spawned.')
 @click.option('--vhosts', default=None, multiple=True,
-              help='List of virtual hosts to be linked to the instance')
+              help='List of virtual hosts to be linked to the instance.')
 @click.option('--password', prompt=True, hide_input=True,
               confirmation_prompt=True, required=True,
-              help='Password of the PaaS instance')
+              help='Password of the PaaS instance.')
 @click.option('--snapshot-profile', default=None,
-              help='Set a snapshot profile associated to this paas disk')
+              help='Set a snapshot profile associated to this paas disk.')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @option('--ssh-key',
-        help='Authorize ssh authentication for the given ssh key')
+        help='Authorize ssh authentication for the given ssh key.')
 @pass_gandi
 def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
            password, snapshot_profile, background, ssh_key):
@@ -198,26 +198,26 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
 
 @cli.command()
 @click.option('--name', type=click.STRING, default=None,
-              help='Name of the PaaS instance')
+              help='Name of the PaaS instance.')
 @click.option('--size', default=None,
               type=click.Choice(['s', 'm', 'x', 'xl', 'xxl']),
-              help='Size of the PaaS instance')
+              help='Size of the PaaS instance.')
 @click.option('--quantity', type=click.INT, default=0,
-              help='Additional disk amount (in GB)')
+              help='Additional disk amount (in GB).')
 @click.option('--password', default=False, is_flag=True,
-              help='Password of the PaaS instance')
+              help='Password of the PaaS instance.')
 @click.option('--ssh-key', default=None,
-              help='Authorize ssh authentication for the given ssh key')
+              help='Authorize ssh authentication for the given ssh key.')
 @click.option('--upgrade', default=None,
-              help='Upgrade the instance to the last system image if needed')
+              help='Upgrade the instance to the last system image if needed.')
 @click.option('--console', default=None,
-              help='Activate or deactivate the Console')
+              help='Activate or deactivate the Console.')
 @click.option('--snapshot-profile', default=None,
-              help='Set a snapshot profile associated to this paas disk')
+              help='Set a snapshot profile associated to this paas disk.')
 @click.option('--reset-mysql-password', default=None,
-              help='Reset mysql password for root')
+              help='Reset mysql password for root.')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @pass_gandi
 @click.argument('resource')
 def update(gandi, resource, name, size, quantity, password, ssh_key,
@@ -244,7 +244,7 @@ def update(gandi, resource, name, size, quantity, password, ssh_key,
 @cli.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False)')
@@ -292,6 +292,7 @@ def types(gandi):
         gandi.echo(type_['name'])
 
     return types
+
 
 @cli.command()
 @click.argument('resource')

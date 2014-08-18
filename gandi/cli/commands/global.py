@@ -28,7 +28,7 @@ Setup completed. You can now:
 
 
 @cli.command()
-@click.option('-g', help='edit global configuration (default=local)',
+@click.option('-g', help='Edit global configuration (default=local).',
               is_flag=True, default=False)
 @click.argument('key')
 @click.argument('value')
