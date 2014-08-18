@@ -72,7 +72,7 @@ def info(gandi, resource):
 @cli.command()
 @click.option('--name', type=click.STRING, default=None,
               help='Name of the PaaS instance')
-@click.option('--size', default=None,
+@click.option('--size', default=None, type=click.INT,
               help='Size of the PaaS instance')
 @click.option('--snapshot-profile', help='Selected napshot profile',
               default=None)
