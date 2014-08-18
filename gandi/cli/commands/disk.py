@@ -69,9 +69,16 @@ def info(gandi, resource):
     return disk
 
 
+def check_size(ctx, value):
+    if value % 1024:
+        raise click.ClickException('Size must be a multiple of 1024.')
+    return value
+
+
 @cli.command()
 @click.option('--name', type=click.STRING, default=None, help='Disk name.')
-@click.option('--size', default=None, type=click.INT, help='Disk size.')
+@click.option('--size', default=None, type=click.INT, help='Disk size.',
+              callback=check_size)
 @click.option('--snapshot-profile', help='Selected snapshot profile.',
               default=None)
 @click.option('--bg', '--background', default=False, is_flag=True,

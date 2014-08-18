@@ -51,14 +51,6 @@ class Disk(GandiModule):
         if name:
             disk_params['name'] = name
 
-        if size:
-            try:
-                disk_params['size'] = int(size)
-                if int(size) % 1024:
-                    cls.echo('size must be a multiple of 1024')
-            except ValueError:
-                cls.echo('size must be a multiple of 1024')
-
         if snapshot_profile:
             disk_params['snapshot_profile'] = snapshot_profile
 
