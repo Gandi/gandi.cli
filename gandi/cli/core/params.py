@@ -66,8 +66,6 @@ class EmailParamType(click.ParamType):
         except ValueError:
             self.fail('%s is not a valid email address' % value, param, ctx)
 
-        
-
 EMAIL_TYPE = EmailParamType()
 
 class GandiOption(click.Option):
