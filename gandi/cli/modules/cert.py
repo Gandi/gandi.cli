@@ -114,7 +114,9 @@ class Certificate(GandiModule):
 
         params = {'csr': csr}
         if altnames:
-            params['altnames'] = altnames
+            params['altnames'] = []
+            for altname in altnames:
+                params['altnames'].extend(altname.split(','))
         if dcv_method:
             params['dcv_method'] = dcv_method
 

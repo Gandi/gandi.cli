@@ -177,7 +177,8 @@ def export(gandi, resource, output, force):
 @click.option('--package', default='cert_std_1_0_0', type=CERTIFICATE_PACKAGE,
               help='Certificate package (default=cert_std_1_0_0).')
 @click.option('--altnames', required=False, multiple=True,
-              help='The certificate altnames.')
+              help='The certificate altnames (comma separated text without '
+                   'space).')
 @click.option('--dcv-method', required=False, type=CERTIFICATE_DCV_METHOD,
               help='Give the DCV method to use to check domain ownership.')
 @pass_gandi
@@ -216,7 +217,8 @@ def create(gandi, csr, private_key, common_name, country, state, city,
 @click.option('--ou', '--branch', required=False,
               help='The generated CSR branch (OU).')
 @click.option('--altnames', required=False, multiple=True,
-              help='The certificate altnames.')
+              help='All the certificate altnames (comma separated text '
+                   'without space).')
 @click.option('--dcv-method', required=False, type=CERTIFICATE_DCV_METHOD,
               help='Give the DCV method to use to check domain ownership.')
 @pass_gandi
