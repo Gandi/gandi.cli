@@ -74,7 +74,7 @@ def info(gandi, resource):
               help='Name of the PaaS instance')
 @click.option('--size', default=None, type=click.INT,
               help='Size of the PaaS instance')
-@click.option('--snapshot-profile', help='Selected napshot profile',
+@click.option('--snapshot-profile', help='Selected snapshot profile',
               default=None)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='run command in background mode (default=False)')
