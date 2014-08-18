@@ -6,10 +6,10 @@ from gandi.cli.core.params import pass_gandi
 
 
 @cli.command()
-@click.option('--limit', help='limit number of results', default=100,
+@click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
-@click.option('--id', help='display ids', is_flag=True)
-@click.option('--names', help='display names', is_flag=True)
+@click.option('--id', help='Display ids.', is_flag=True)
+@click.option('--names', help='Display names.', is_flag=True)
 @pass_gandi
 def list(gandi, limit, id, names):
     """ List vhosts. """
@@ -37,7 +37,7 @@ def list(gandi, limit, id, names):
 
 
 @cli.command()
-@click.option('--id', help='display ids', is_flag=True)
+@click.option('--id', help='Display ids.', is_flag=True)
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def info(gandi, resource, id):
@@ -65,12 +65,12 @@ def info(gandi, resource, id):
 
 
 @cli.command()
-@click.option('--vhost', help='vhost fqdn', required=True)
+@click.option('--vhost', help='Vhost fqdn.', required=True)
 @click.option('--paas', required=True,
-              help='PaaS instance on which to create it')
-@click.option('--alter-zone', help='will update the domain zone', is_flag=True)
+              help='PaaS instance on which to create it.')
+@click.option('--alter-zone', help='Will update the domain zone.', is_flag=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @pass_gandi
 def create(gandi, vhost, paas, alter_zone, background):
     """ Create a new vhost. """
@@ -88,9 +88,9 @@ def create(gandi, vhost, paas, alter_zone, background):
 @cli.command()
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
-                   ' without prompting. (default=False)')
+                   ' without prompting. (default=False).')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @click.argument('resource', required=True)
 @pass_gandi
 def delete(gandi, resource, force, background):

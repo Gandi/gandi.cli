@@ -10,9 +10,9 @@ from gandi.cli.core.params import (
 
 
 @cli.command()
-@click.option('--state', default=None, help='filter results by state')
-@click.option('--id', help='display ids', is_flag=True)
-@click.option('--limit', help='limit number of results', default=100,
+@click.option('--state', default=None, help='Filter results by state.')
+@click.option('--id', help='Display ids.', is_flag=True)
+@click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @pass_gandi
 def list(gandi, state, id, limit):
@@ -64,7 +64,7 @@ def info(gandi, resource):
 
 @cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def stop(gandi, background, resource):
@@ -85,7 +85,7 @@ def stop(gandi, background, resource):
 
 @cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def start(gandi, background, resource):
@@ -106,7 +106,7 @@ def start(gandi, background, resource):
 
 @cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def reboot(gandi, background, resource):
@@ -127,10 +127,10 @@ def reboot(gandi, background, resource):
 
 @cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
-                   ' without prompting. (default=False)')
+                   ' without prompting. (default=False).')
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def delete(gandi, background, force, resource):
@@ -180,34 +180,34 @@ def delete(gandi, background, force, resource):
 
 @cli.command()
 @option('--datacenter', type=DATACENTER, default='FR',
-        help='datacenter where the VM will be spawned')
+        help='Datacenter where the VM will be spawned.')
 @option('--memory', type=click.INT, default=256,
-        help='quantity of RAM in Megabytes to allocate')
+        help='Quantity of RAM in Megabytes to allocate.')
 @option('--cores', type=click.INT, default=1,
-        help='number of cpu')
+        help='Number of cpu.')
 @option('--ip-version', type=IntChoice(['4', '6']), default='4',
-        help='version of the created IP')
+        help='Version of created IP.')
 @option('--bandwidth', type=click.INT, default=102400,
-        help="network bandwidth in bit/s used to create the VM's first "
-             "network interface")
+        help="Network bandwidth in bit/s used to create the VM's first "
+             "network interface.")
 @option('--login', default='admin',
-        help='login to create on the VM')
+        help='Login to create on the VM.')
 @click.option('--password', default=False, is_flag=True,
-              help='will ask for a password to be set for the root account '
-                   'and the created login')
+              help='Will ask for a password to be set for the root account '
+                   'and the created login.')
 @click.option('--hostname', default=None,
-              help='hostname of the VM, will be generated if not provided')
+              help='Hostname of the VM, will be generated if not provided.')
 @option('--image', type=DISK_IMAGE, default='Debian 7',
-        help='disk image used to boot the vm')
+        help='Disk image used to boot the VM.')
 @click.option('--run', default=None,
-              help='shell command that will run at the first startup of a VM.'
+              help='Shell command that will run at the first startup of a VM.'
                    'This command will run with root privileges in the ``/`` '
                    'directory at the end of its boot: network interfaces and '
-                   'disks are mounted')
+                   'disks are mounted.')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @option('--ssh-key',
-        help='Authorize ssh authentication for the given ssh key')
+        help='Authorize ssh authentication for the given ssh key.')
 @option('--ssh-key-id', help='Add an ssh key id OR name from the portfolio.',
         multiple=True)
 @pass_gandi
@@ -247,16 +247,16 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
 
 @cli.command()
 @click.option('--memory', type=click.INT, default=None,
-              help='quantity of RAM in Megabytes to allocate')
+              help='Quantity of RAM in Megabytes to allocate.')
 @click.option('--cores', type=click.INT, default=None,
-              help='number of cpu')
+              help='Number of cpu.')
 @click.option('--console', default=None, is_flag=True,
-              help='activate the emergency console')
+              help='Activate the emergency console.')
 @click.option('--password', default=False, is_flag=True,
-              help='will ask for a password to be set for the root account '
-                   'and the created login')
+              help='Will ask for a password to be set for the root account '
+                   'and the created login.')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @click.argument('resource')
 @pass_gandi
 def update(gandi, resource, memory, cores, console, password, background):
@@ -294,7 +294,7 @@ def console(gandi, resource):
 
 @cli.command()
 @click.option('--datacenter', type=DATACENTER, default=None,
-              help='filter by datacenter')
+              help='Filter by datacenter.')
 @click.argument('label', required=False)
 @pass_gandi
 def images(gandi, label, datacenter):
@@ -323,7 +323,7 @@ def images(gandi, label, datacenter):
 
 
 @cli.command(root=True)
-@click.option('--id', help='display ids', is_flag=True)
+@click.option('--id', help='Display ids.', is_flag=True)
 @pass_gandi
 def datacenters(gandi, id):
     """List available datacenters."""

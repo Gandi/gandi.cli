@@ -6,7 +6,7 @@ from gandi.cli.core.params import pass_gandi
 
 
 @cli.command()
-@click.option('--limit', help='limit number of results', default=100,
+@click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @pass_gandi
 def list(gandi, limit):
