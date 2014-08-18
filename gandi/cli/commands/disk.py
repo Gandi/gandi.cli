@@ -6,14 +6,14 @@ from gandi.cli.core.params import pass_gandi, DATACENTER, option
 
 
 @cli.command()
-@click.option('--only-data', help='only display data disks', is_flag=True)
-@click.option('--only-snapshot', help='only display snapshots', is_flag=True)
-@click.option('--type', help='display types', is_flag=True)
-@click.option('--id', help='display ids', is_flag=True)
-@click.option('--vm', help='display vms', is_flag=True)
-@click.option('--snapshot-profile', help='display snapshot profile',
+@click.option('--only-data', help='Only display data disks.', is_flag=True)
+@click.option('--only-snapshot', help='Only display snapshots.', is_flag=True)
+@click.option('--type', help='Display types.', is_flag=True)
+@click.option('--id', help='Display ids.', is_flag=True)
+@click.option('--vm', help='Display vms.', is_flag=True)
+@click.option('--snapshot-profile', help='Display snapshot profile.',
               is_flag=True)
-@click.option('--limit', help='limit number of results', default=100,
+@click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @pass_gandi
 def list(gandi, only_data, only_snapshot, type, id, vm, snapshot_profile,
@@ -70,14 +70,12 @@ def info(gandi, resource):
 
 
 @cli.command()
-@click.option('--name', type=click.STRING, default=None,
-              help='Name of the PaaS instance')
-@click.option('--size', default=None, type=click.INT,
-              help='Size of the PaaS instance')
-@click.option('--snapshot-profile', help='Selected snapshot profile',
+@click.option('--name', type=click.STRING, default=None, help='Disk name.')
+@click.option('--size', default=None, type=click.INT, help='Disk size.')
+@click.option('--snapshot-profile', help='Selected snapshot profile.',
               default=None)
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @pass_gandi
 @click.argument('resource')
 def update(gandi, resource, name, size, snapshot_profile, background):
@@ -104,9 +102,9 @@ def update(gandi, resource, name, size, snapshot_profile, background):
 @cli.command()
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
-                   ' without prompting. (default=False)')
+                   ' without prompting. (default=False).')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='run command in background mode (default=False).')
 @click.argument('resource', required=True)
 @pass_gandi
 def delete(gandi, resource, force, background):
