@@ -27,14 +27,14 @@ def packages(gandi):
 
 
 @cli.command()
-@click.option('--id', help='display ids', is_flag=True)
-@click.option('--altnames', help='display altnames', is_flag=True)
-@click.option('--csr', help='display CSR', is_flag=True)
-@click.option('--cert', help='display CRT', is_flag=True)
-@click.option('--all-status', help='show all certificates', is_flag=True)
-@click.option('--status', help='display status', is_flag=True)
-@click.option('--dates', help='display dates', is_flag=True)
-@click.option('--limit', help='limit number of results', default=100,
+@click.option('--id', help='Display ids.', is_flag=True)
+@click.option('--altnames', help='Display altnames.', is_flag=True)
+@click.option('--csr', help='Display CSR.', is_flag=True)
+@click.option('--cert', help='Display CRT.', is_flag=True)
+@click.option('--all-status', help='Show all certificates.', is_flag=True)
+@click.option('--status', help='Display status.', is_flag=True)
+@click.option('--dates', help='Display dates.', is_flag=True)
+@click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @pass_gandi
 def list(gandi, id, altnames, csr, cert, all_status, status, dates, limit):
@@ -74,11 +74,11 @@ def list(gandi, id, altnames, csr, cert, all_status, status, dates, limit):
 
 @cli.command()
 @click.argument('resource', nargs=-1)
-@click.option('--id', help='display ids', is_flag=True)
-@click.option('--altnames', help='display altnames', is_flag=True)
-@click.option('--csr', help='display CSR', is_flag=True)
-@click.option('--cert', help='display CRT', is_flag=True)
-@click.option('--all-status', help='show all certificates', is_flag=True)
+@click.option('--id', help='Display ids.', is_flag=True)
+@click.option('--altnames', help='Display altnames.', is_flag=True)
+@click.option('--csr', help='Display CSR.', is_flag=True)
+@click.option('--cert', help='Display CRT.', is_flag=True)
+@click.option('--all-status', help='Show all certificates.', is_flag=True)
 @pass_gandi
 def info(gandi, resource, id, altnames, csr, cert, all_status):
     """ Display information about a certificate.
@@ -117,9 +117,9 @@ def info(gandi, resource, id, altnames, csr, cert, all_status):
 
 @cli.command()
 @click.argument('resource', nargs=-1)
-@click.option('-o', '--output', help='the file to write the cert')
+@click.option('-o', '--output', help='The file to write the cert.')
 @click.option('--force', '-f', is_flag=True,
-              help='Overide the crt file if it exists')
+              help='Overwrite the crt file if it exists.')
 @pass_gandi
 def export(gandi, resource, output, force):
     """ Write the certificate to <output> or <fqdn>.crt
@@ -155,30 +155,30 @@ def export(gandi, resource, output, force):
 
 
 @cli.command()
-@click.option('--csr', help='Csr of the new certificate', required=False)
+@click.option('--csr', help='Csr of the new certificate.', required=False)
 @click.option('--pk', '--private-key', required=False,
-              help='Private key to use to generate the CSR')
+              help='Private key to use to generate the CSR.')
 @click.option('--cn', '--common-name', required=False,
-              help='Common name to use when generating the CSR')
+              help='Common name to use when generating the CSR.')
 @click.option('--c', '--country', required=False,
-              help='The generated CSR country (C)')
+              help='The generated CSR country (C).')
 @click.option('--st', '--state', required=False,
-              help='The generated CSR state (ST)')
+              help='The generated CSR state (ST).')
 @click.option('--l', '--city', required=False,
-              help='The generated CSR location (L)')
+              help='The generated CSR location (L).')
 @click.option('--o', '--organisation', required=False,
-              help='The generated CSR organisation (O)')
+              help='The generated CSR organisation (O).')
 @click.option('--ou', '--branch', required=False,
-              help='The generated CSR branch (OU)')
+              help='The generated CSR branch (OU).')
 @click.option('-d', '--duration', default=1,
               type=IntChoice(['1', '2', '3', '4', '5']),
-              help='The certificate duration in year')
+              help='The certificate duration in year.')
 @click.option('--package', default='cert_std_1_0_0', type=CERTIFICATE_PACKAGE,
-              help='Certificate package')
+              help='Certificate package (default=cert_std_1_0_0).')
 @click.option('--altnames', required=False, multiple=True,
-              help='The certificate altnames')
+              help='The certificate altnames.')
 @click.option('--dcv-method', required=False, type=CERTIFICATE_DCV_METHOD,
-              help='Give the DCV method to use to check domain ownership')
+              help='Give the DCV method to use to check domain ownership.')
 @pass_gandi
 def create(gandi, csr, private_key, common_name, country, state, city,
            organisation, branch, duration, package, altnames, dcv_method):
@@ -201,23 +201,23 @@ def create(gandi, csr, private_key, common_name, country, state, city,
 
 @cli.command()
 @click.argument('resource', nargs=1, required=True)
-@click.option('--csr', help='New csr for the certificate', required=False)
+@click.option('--csr', help='New csr for the certificate.', required=False)
 @click.option('--pk', '--private-key', required=False,
-              help='Private key to use to generate the CSR')
+              help='Private key to use to generate the CSR.')
 @click.option('--c', '--country', required=False,
-              help='The generated CSR country (C)')
+              help='The generated CSR country (C).')
 @click.option('--st', '--state', required=False,
-              help='The generated CSR state (ST)')
+              help='The generated CSR state (ST).')
 @click.option('--l', '--city', required=False,
-              help='The generated CSR location (L)')
+              help='The generated CSR location (L).')
 @click.option('--o', '--organisation', required=False,
-              help='The generated CSR organisation (O)')
+              help='The generated CSR organisation (O).')
 @click.option('--ou', '--branch', required=False,
-              help='The generated CSR branch (OU)')
+              help='The generated CSR branch (OU).')
 @click.option('--altnames', required=False, multiple=True,
-              help='The certificate altnames')
+              help='The certificate altnames.')
 @click.option('--dcv-method', required=False, type=CERTIFICATE_DCV_METHOD,
-              help='Give the DCV method to use to check domain ownership')
+              help='Give the DCV method to use to check domain ownership.')
 @pass_gandi
 def update(gandi, resource, csr, private_key, country, state, city,
            organisation, branch, altnames, dcv_method):
@@ -245,7 +245,7 @@ def update(gandi, resource, csr, private_key, country, state, city,
 @cli.command()
 @click.argument('resource', nargs=1, required=True)
 @click.option('--dcv-method', required=True, type=CERTIFICATE_DCV_METHOD,
-              help='Give the updated DCV method to use')
+              help='Give the updated DCV method to use.')
 @pass_gandi
 def change_dcv(gandi, resource, dcv_method):
     """ Change the DCV for a running certificate operation.
@@ -323,10 +323,10 @@ def resend_dcv(gandi, resource):
 @cli.command()
 @click.argument('resource', nargs=1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
+              help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
-                   ' without prompting. (default=False)')
+                   ' without prompting. (default=False).')
 @pass_gandi
 def delete(gandi, resource, background, force):
     """ Revoke the certificate.
