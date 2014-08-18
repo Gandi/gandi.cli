@@ -31,7 +31,8 @@ def packages(gandi):
 @click.option('--altnames', help='Display altnames.', is_flag=True)
 @click.option('--csr', help='Display CSR.', is_flag=True)
 @click.option('--cert', help='Display CRT.', is_flag=True)
-@click.option('--all-status', help='Show all certificates.', is_flag=True)
+@click.option('--all-status', is_flag=True,
+              help='Show the certificate without regard to its status.')
 @click.option('--status', help='Display status.', is_flag=True)
 @click.option('--dates', help='Display dates.', is_flag=True)
 @click.option('--limit', help='Limit number of results.', default=100,
