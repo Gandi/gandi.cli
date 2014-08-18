@@ -38,47 +38,74 @@ COMMAND-LINE OPTIONS
 
 Namespaces:
 
-*  api            Display information about API used.
-*  config         Configure default values
-*  datacenters    List available datacenters.
-*  deploy         Deploy code on a remote vhost.
-*  domain create  Buy a domain.
-*  domain info    Display information about a domain.
-*  domain list    List domains.
-*  oper info      Display information about an operation.
-*  oper list      List operations.
-*  paas clone     Clone a remote vhost in a local git repository.
-*  paas create    Create a new PaaS instance and initialize associated git repository.
-*  paas delete    Delete a PaaS instance.
-*  paas info      Display information about a PaaS instance.
-*  paas list      List PaaS instances.
-*  paas restart   Restart a PaaS instance.
-*  paas types     List types PaaS instances.
-*  paas update    Update a PaaS instance.
-*  setup          Initialize Gandi CLI configuration.
-*  sshkey create  Create a new ssh key.
-*  sshkey delete  Delete thoses ssh keys.
-*  sshkey info    Display information about an ssh key.
-*  sshkey list    List ssh keys.
-*  vhost create   Create a new vhost.
-*  vhost delete   Delete a vhost.
-*  vhost info     Display information about a vhost.
-*  vhost list     List vhosts.
-*  vm console     Open a console to virtual machine.
-*  vm create      Create a new virtual machine.
-*  vm delete      Delete a virtual machine.
-*  vm images      List available system images for virtual machines.
-*  vm info        Display information about a virtual machine.
-*  vm list        List virtual machines.
-*  vm reboot      Reboot a virtual machine.
-*  vm start       Start a virtual machine.
-*  vm stop        Stop a virtual machine.
-*  vm update      Update a virtual machine.
+*  api                     Display information about API used.
+*  certificate change_dcv  Change the DCV for a running certificate...
+*  certificate create      Create a new certificate.
+*  certificate delete      Revoke the certificate.
+*  certificate export      Write the certificate to <output> or <fqdn>.
+*  certificate info        Display information about a certificate.
+*  certificate list        List certificates.
+*  certificate packages    List certificate packages.
+*  certificate resend_dcv  Resend the DCV mail.
+*  certificate update      Update a certificate CSR.
+*  config                  Configure default values
+*  datacenters             List available datacenters.
+*  deploy                  Deploy code on a remote vhost.
+*  domain create           Buy a domain.
+*  domain info             Display information about a domain.
+*  domain list             List domains.
+*  oper info               Display information about an operation.
+*  oper list               List operations.
+*  paas clone              Clone a remote vhost in a local git repository.
+*  paas create             Create a new PaaS instance and initialize associated git repository.
+*  paas delete             Delete a PaaS instance.
+*  paas info               Display information about a PaaS instance.
+*  paas list               List PaaS instances.
+*  paas restart            Restart a PaaS instance.
+*  paas types              List types PaaS instances.
+*  paas update             Update a PaaS instance.
+*  setup                   Initialize Gandi CLI configuration.
+*  sshkey create           Create a new ssh key.
+*  sshkey delete           Delete thoses ssh keys.
+*  sshkey info             Display information about an ssh key.
+*  sshkey list             List ssh keys.
+*  vhost create            Create a new vhost.
+*  vhost delete            Delete a vhost.
+*  vhost info              Display information about a vhost.
+*  vhost list              List vhosts.
+*  vm console              Open a console to virtual machine.
+*  vm create               Create a new virtual machine.
+*  vm delete               Delete a virtual machine.
+*  vm images               List available system images for virtual machines.
+*  vm info                 Display information about a virtual machine.
+*  vm list                 List virtual machines.
+*  vm reboot               Reboot a virtual machine.
+*  vm start                Start a virtual machine.
+*  vm stop                 Stop a virtual machine.
+*  vm update               Update a virtual machine.
 
 
 Details:
 
 * ``gandi api`` display information about the Gandi.net API.
+
+* ``certificate change_dcv resource`` allow to change the domain validation process for a specific certificate request. Mandatory option is ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
+
+* ``certificate create`` allow to request the creation of a certificate. If a private key is present as ``--private-key`` and not a CSR, the CSR will be generated. If no CSR or private key are present in the parameters, both are generated. Possible options are ``--csr TEXT`` and ``--private-key TEXT`` which could be the content of a certificate request and a private key or path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``-organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--duration INTEGER`` how many years of validity (up to 5 years), ``--package TEXT`` is the type of certificate as listed by ``gandi certificate package``, ``--altnames LIST`` is a list of all alternative names and ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
+
+* ``certificate delete resource`` delete a certificate. Possible option is ``--force`` (or ``-f``) to bypass the validation question; usefull in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``). Note that a resource can be a cn entry or an integer id.
+
+* ``certificate export resource`` write the selected certificate to a file. Possible option is ``--output TEXT`` for the path of the output file, ``--force`` overwrite any existing file. Note that a resource can be a cn entry or an integer id.
+
+* ``certificate info resource`` show detailed view of a specific certificate. Possible options are ``--id``, ``--altnames``, ``--csr``, ``--cert`` which show the integer id, the alternative names, the certificate request and the full certificate, ``--all-status`` show the certificate without regard for its status. Note that a resource can be a cn entry or an integer id. 
+
+* ``certificate list`` Possible options are ``--id``, ``--altnames``, ``--csr``, ``--cert`` which show the integer id, the alternative names, the certificate request and the full certificate for each element of the list, ``--all-status`` show certificates without regards to their status, ``--status``, ``--dates`` show the status of the certificate and the creation and expiration dates, ``--limit INTEGER`` show a subset of the list.
+
+* ``certificate packages`` show a full list of all available certificate types.
+
+* ``certificate resend_dcv resource`` send the validation email again (only for the 'email' DCV method). Note that a resource can be a cn entry or an integer id.
+
+* ``certificate update resource`` modify the options of a certificate. Possible options are ``--csr TEXT``, ``--private-key TEXT`` could be either the content of a certificate request and a private key or a path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``--organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--altnames LIST`` to change all the alternative names (comma separated text without space), ``--dcv-method TEXT`` with domain validation process method in email, dns, file, auto. Note that a resource can be a CN entry or an integer id.
 
 * ``gandi config key value`` configure value in the configuration file. Possible option is ``-g`` which mean the global configuration file will be change.
 
@@ -181,7 +208,7 @@ See CHANGES.rst in the project directory or in the documentation directory of yo
 TODO
 ====
 
-Add missing Gandi product like ``virtual disk`` or ``virtual network interface`` or ``private vlan`` or ``certificate``.
+Add missing Gandi product like ``virtual disk`` or ``virtual network interface`` or ``private vlan``.
 
 BUGS
 ====
