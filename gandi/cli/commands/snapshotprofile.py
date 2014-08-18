@@ -6,8 +6,8 @@ from gandi.cli.core.params import pass_gandi
 
 
 @cli.command()
-@click.option('--only-paas', help='only display paas profiles', is_flag=True)
-@click.option('--only-vm', help='only display vm profiles', is_flag=True)
+@click.option('--only-paas', help='Only display PaaS profiles.', is_flag=True)
+@click.option('--only-vm', help='Only display vm profile.s', is_flag=True)
 @pass_gandi
 def list(gandi, only_paas, only_vm):
     """ List snapshot profiles. """
