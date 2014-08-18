@@ -2,7 +2,8 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_disk, output_generic, randomstring
-from gandi.cli.core.params import pass_gandi, DATACENTER, option
+from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE,
+                                   option)
 
 
 @cli.command()
@@ -80,7 +81,7 @@ def check_size(ctx, value):
 @click.option('--size', default=None, type=click.INT, help='Disk size.',
               callback=check_size)
 @click.option('--snapshot-profile', help='Selected snapshot profile.',
-              default=None)
+              default=None, type=SNAPSHOTPROFILE)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi

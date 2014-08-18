@@ -50,9 +50,26 @@ class DiskImageParamType(click.Choice):
         choices = [item['label'] for item in gandi.image.list()]
         self.choices = choices
 
+
+class SnapshotParamType(click.Choice):
+    """ Choice parameter to select a snapshot profile between available ones.
+    """
+    name = 'snapeshot profile'
+
+    def __init__(self):
+        gandi = GandiContextHelper()
+        choices = [str(item['id']) for item in gandi.snapshotprofile.list()]
+        self.choices = choices
+
+    def convert(self, value, param, ctx):
+        value = click.Choice.convert(self, value, param, ctx)
+        return int(value)
+
+
 DATACENTER = DatacenterParamType()
 PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
+SNAPSHOTPROFILE = SnapshotParamType()
 
 
 class GandiOption(click.Option):
