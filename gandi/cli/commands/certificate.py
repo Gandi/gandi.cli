@@ -131,7 +131,8 @@ def export(gandi, resource, output, force):
         ids.extend(gandi.certificate.usable_ids(res))
 
     if output and len(ids) > 1:
-        gandi.echo('Do not know which cert you want to export.')
+        gandi.echo('Too many certs found, you must specify which cert you '
+                   'want to export')
         return
 
     for id_ in set(ids):
