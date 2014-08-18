@@ -220,7 +220,10 @@ def create(gandi, csr, private_key, common_name, country, state, city,
 @pass_gandi
 def update(gandi, resource, csr, private_key, country, state, city,
            organisation, branch, altnames, dcv_method):
-    """ Update a certificate CSR """
+    """ Update a certificate CSR.
+
+    Ressource can be a CN or an ID
+    """
     ids = gandi.certificate.usable_ids(resource)
 
     if len(ids) > 1:
@@ -244,7 +247,10 @@ def update(gandi, resource, csr, private_key, country, state, city,
               help='Give the updated DCV method to use')
 @pass_gandi
 def change_dcv(gandi, resource, dcv_method):
-    """ Change the DCV for a running certificate operation """
+    """ Change the DCV for a running certificate operation.
+
+    Ressource can be a CN or an ID
+    """
     ids = gandi.certificate.usable_ids(resource)
 
     if len(ids) > 1:
@@ -280,7 +286,10 @@ def change_dcv(gandi, resource, dcv_method):
 @click.argument('resource', nargs=1, required=True)
 @pass_gandi
 def resend_dcv(gandi, resource):
-    """ Resend the DCV mail """
+    """ Resend the DCV mail.
+
+    Ressource can be a CN or an ID
+    """
     ids = gandi.certificate.usable_ids(resource)
 
     if len(ids) > 1:
@@ -319,7 +328,7 @@ def resend_dcv(gandi, resource):
                    ' without prompting. (default=False)')
 @pass_gandi
 def delete(gandi, resource, background, force):
-    """ Write the certificate to <output> or <fqdn>.crt
+    """ Revoke the certificate.
 
     Ressource can be a CN or an ID
     """
