@@ -1,4 +1,5 @@
 import click
+import re
 from click.decorators import _param_memo
 
 from gandi.cli.core.base import GandiContextHelper
@@ -59,10 +60,14 @@ class EmailParamType(click.ParamType):
     name = 'email'
 
     def convert(self, value, param, ctx):
+        rxp = '^(?:(?!-)[-a-zA-Z0-9]{1,63}(?<!-)(\\.|$)){2,}$'
+        regex = re.compile(rxp, re.I)
         try:
-            if "@" in value:
+            if regex.match(value):
                 value = value.split("@")
                 return value
+            else:
+                self.fail('%s is not a valid email address' % value, param, ctx)
         except ValueError:
             self.fail('%s is not a valid email address' % value, param, ctx)
 

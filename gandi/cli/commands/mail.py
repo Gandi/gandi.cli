@@ -7,7 +7,7 @@ from gandi.cli.core.params import pass_gandi, EMAIL_TYPE
 
 @cli.command(options_metavar='')
 @click.option('--limit', help='limit number of results',
-            default=100, show_default=True)
+              default=100, show_default=True)
 @click.argument('domain', metavar='domain.tld')
 @pass_gandi
 def list(gandi, domain, limit):
@@ -37,18 +37,20 @@ def info(gandi, email):
 
 
 @cli.command(options_metavar='')
+@click.option('--password', prompt=True, hide_input=True,
+              confirmation_prompt=True, required=True,
+              help='Password of the mailbox.')
 @click.option('--quota', '-q', help='set a quota on a mailbox. 0 is unlimited',
-             default=None, type=click.INT)
+              default=None, type=click.INT)
 @click.option('--fallback', '-f', help='add an address of fallback',
-                 default=None)
-@click.argument("email", type=EMAIL_TYPE, metavar='login@domain.tld')
+              default=None)
+@click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
-def create(gandi, email, quota, fallback):
+def create(gandi, email, password, quota, fallback):
     """Create a mailbox."""
 
     options = {}
-    password = click.prompt('password', hide_input=True,
-                            confirmation_prompt=True)
+
     if quota is not None:
         options['quota'] = quota
     if fallback is not None:
@@ -63,16 +65,20 @@ def create(gandi, email, quota, fallback):
 
 
 @cli.command(options_metavar='')
+@click.option('--force', '-f', help='Force the deletion of the mailbox',
+              is_flag=True)
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
-def delete(gandi, email):
+def delete(gandi, email, force):
     """Delete a mailbox."""
 
     login, domain = email
-    proceed = click.confirm("Are you sure to delete the mailbox %s@%s?" % (login, domain))
+    if not force:
+        proceed = click.confirm('Are you sure to delete the mailbox %s@%s?' %
+                                (login, domain))
 
-    if not proceed:
-        result
+        if not proceed:
+            return
 
     result = gandi.mail.delete(domain, login)
 
@@ -81,11 +87,11 @@ def delete(gandi, email):
 
 @cli.command()
 @click.option('--password', '-p', help='prompt a password to set a mailbox',
-            is_flag=True)
+              is_flag=True)
 @click.option('--quota', '-q', help='set a quota on a mailbox. 0 is unlimited',
-                default=None, type=click.INT)
+              default=None, type=click.INT)
 @click.option('--fallback', '-f', help='add an address of fallback',
-            default=None, show_default=True)
+              default=None, show_default=True)
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
 def update(gandi, email, password, quota, fallback):
@@ -95,7 +101,7 @@ def update(gandi, email, password, quota, fallback):
 
     if password:
         password = click.prompt('password', hide_input=True,
-                                    confirmation_prompt=True)
+                                confirmation_prompt=True)
         options['password'] = password
 
     if quota is not None:
@@ -112,18 +118,22 @@ def update(gandi, email, password, quota, fallback):
 
 
 @cli.command(options_metavar='')
-@click.option( '--bg', '--background', default=False, is_flag=True,
-            help='run command in background mode (default=False)')
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='run command in background mode (default=False)')
+@click.option('--force', '-f', help='Force the deletion of the mailbox',
+              is_flag=True)
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
-def purge(gandi, background, email):
+def purge(gandi, email, background, force):
     """Purge a mailbox."""
 
     login, domain = email
-    proceed = click.confirm("Are you sure to purge the mailbox %s@%s?" % (login, domain))
+    if not force:
+        proceed = click.confirm('Are you sure to purge the mailbox %s@%s?' %
+                                (login, domain))
 
-    if not proceed:
-        return
+        if not proceed:
+            return
 
     result = gandi.mail.purge(domain, login, background)
 
@@ -134,7 +144,7 @@ def purge(gandi, background, email):
 @click.option('--add', '-a', help='add an alias on a mailbox', multiple=True)
 @click.option('--delete', '-d', help='remove an alias', multiple=True)
 @click.option('--purge', '-p', help='remove all aliases on a mailbox',
-            is_flag=True)
+              is_flag=True)
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
 def alias(gandi, email, add, delete, purge):
@@ -152,8 +162,8 @@ def alias(gandi, email, add, delete, purge):
             aliases.remove(alias)
 
     if purge:
-        proceed = click.confirm("Are you sure to delete all aliases for the "
-                                "mailbox %s@%s?" % (login, domain))
+        proceed = click.confirm('Are you sure to delete all aliases for the '
+                                'mailbox %s@%s?' % (login, domain))
         if proceed:
             aliases = []
 
