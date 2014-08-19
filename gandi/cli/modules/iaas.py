@@ -1,3 +1,4 @@
+import os
 import time
 
 from gandi.cli.core.base import GandiModule
@@ -146,8 +147,7 @@ class Iaas(GandiModule):
 
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
-               login, password, hostname, image, run, background,
-               ssh_key, ssh_key_id):
+               login, password, hostname, image, run, background, ssh_key):
         """create a new virtual machine.
 
         you can specify a configuration entry named 'ssh_key' containing
@@ -188,14 +188,26 @@ class Iaas(GandiModule):
         if password:
             vm_params['password'] = password
 
-        if ssh_key_id:
-            vm_params['keys'] = [Sshkey.usable_id(key) for key in ssh_key_id]
-
         if ssh_key:
-            with open(ssh_key) as fdesc:
-                ssh_key_ = fdesc.read()
-            if ssh_key_:
-                vm_params['ssh_key'] = ssh_key_
+            vm_params['keys'] = []
+            for ssh in ssh_key:
+                if os.path.exists(ssh):
+                    if 'ssh_key' in vm_params:
+                        cls.echo("Can't have more than one ssh_key file.")
+                        continue
+                    with open(ssh) as fdesc:
+                        ssh_key_ = fdesc.read()
+                    if ssh_key_:
+                        vm_params['ssh_key'] = ssh_key_
+                else:
+                    ssh_key_id = Sshkey.usable_id(ssh)
+                    if ssh_key_id:
+                        vm_params['keys'].append(ssh_key_id)
+                    else:
+                        cls.echo('This is not a ssh key %s' % ssh)
+
+            if not vm_params['keys']:
+                vm_params.pop('keys')
 
         # XXX: name of disk is limited to 15 chars in ext2fs, ext3fs
         # but api allow 255, so we limit to 15 for now
