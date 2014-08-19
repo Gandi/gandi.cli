@@ -54,7 +54,7 @@ class DiskImageParamType(click.Choice):
 class SnapshotParamType(click.Choice):
     """ Choice parameter to select a snapshot profile between available ones.
     """
-    name = 'snapeshot profile'
+    name = 'snapshot profile'
 
     def __init__(self):
         gandi = GandiContextHelper()
