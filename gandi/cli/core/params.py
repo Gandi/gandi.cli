@@ -60,7 +60,7 @@ class EmailParamType(click.ParamType):
     name = 'email'
 
     def convert(self, value, param, ctx):
-        rxp = '^(?:(?!-)[-a-zA-Z0-9]{1,63}(?<!-)(\\.|$)){2,}$'
+        rxp = '^[^@]+?@[-.a-z0-9]+$'
         regex = re.compile(rxp, re.I)
         try:
             if regex.match(value):
