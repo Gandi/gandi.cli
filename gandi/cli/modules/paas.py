@@ -191,6 +191,17 @@ class Paas(GandiModule):
         return ret
 
     @classmethod
+    def console(cls, id):
+        """open a console to PaaS"""
+
+        oper = cls.call('paas.update', cls.usable_id(id), {'console': 1})
+        cls.echo("Activation of the console on your PaaS")
+        cls.display_progress(oper)
+        console_url = Paas.info(cls.usable_id(id))['console']
+        access = 'ssh %s' % console_url
+        cls.shell(access)
+
+    @classmethod
     def init_vhost(cls, vhost, created=True, id=None, paas=None):
         assert id or paas
         if not paas:

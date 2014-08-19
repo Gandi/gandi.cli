@@ -7,12 +7,12 @@ from gandi.cli.core.params import pass_gandi
 
 
 @cli.command()
-@click.option('--id', help='display ids', is_flag=True)
-@click.option('--limit', help='limit number of results', default=100,
+@click.option('--id', help='Display ids.', is_flag=True)
+@click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @pass_gandi
 def list(gandi, id, limit):
-    '''List ssh keys.'''
+    '''List SSH keys.'''
     options = {
         'items_per_page': limit,
     }
@@ -32,11 +32,11 @@ def list(gandi, id, limit):
 
 @cli.command()
 @click.argument('resource', nargs=-1)
-@click.option('--id', help='display ids', is_flag=True)
-@click.option('--value', help='display value', is_flag=True)
+@click.option('--id', help='Display ids.', is_flag=True)
+@click.option('--value', help='Display value.', is_flag=True)
 @pass_gandi
 def info(gandi, resource, id, value):
-    '''Display information about an ssh key.
+    '''Display information about an SSH key.
 
     Ressource can be a name or an ID
     '''
@@ -56,12 +56,12 @@ def info(gandi, resource, id, value):
 
 
 @cli.command()
-@click.option('--name', help='the ssh key name', required=True)
-@click.option('--value', help='the content of the ssh key')
-@click.option('--sshkey', type=click.File('r'), help='the ssh key file')
+@click.option('--name', help='SSH key name.', required=True)
+@click.option('--value', help='Content of the SSH key.')
+@click.option('--sshkey', type=click.File('r'), help='SSH key file.')
 @pass_gandi
 def create(gandi, name, value=None, sshkey=None):
-    '''Create a new ssh key.'''
+    '''Create a new SSH key.'''
     if not value and not sshkey:
         raise UsageError('You must set value OR sshkey.')
 
@@ -83,7 +83,7 @@ def create(gandi, name, value=None, sshkey=None):
 @click.argument('resource', nargs=-1)
 @pass_gandi
 def delete(gandi, resource):
-    '''Delete thoses ssh keys.
+    '''Delete SSH keys.
 
     Ressource can be a name or an ID
     '''
