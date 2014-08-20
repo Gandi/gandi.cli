@@ -108,7 +108,7 @@ class GandiConfig(object):
         3/ global configuration
         """
         # first check environnment variables
-        ret = os.environ.get(key.upper())
+        ret = os.environ.get(key.upper().replace('.', '_'))
         if ret is not None:
             return ret
 
