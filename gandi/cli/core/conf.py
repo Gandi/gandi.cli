@@ -40,6 +40,8 @@ class GandiConfig(object):
         config_file = os.path.expanduser(cls.home_config)
         cls.load(config_file, 'global')
         cls.load(cls.local_config, 'local')
+        # delete old env key
+        cls._del('global', 'api.env')
 
     @classmethod
     def load(cls, filename, name=None):
@@ -63,6 +65,27 @@ class GandiConfig(object):
         """ Save configuration to yaml file """
         yaml.safe_dump(config, open(filename, "w"), indent=4,
                        default_flow_style=False)
+
+    @classmethod
+    def _del(cls, scope, key, separator='.', conf=None):
+        orig_key = key
+
+        key = key.split(separator)
+        if not conf:
+            conf = cls._conffiles.get(scope, {})
+
+        if separator not in orig_key:
+            if orig_key in conf:
+                del conf[orig_key]
+                return
+
+        for k in key:
+            if k not in conf:
+                return
+            else:
+                cls._del(scope, separator.join([k1 for k1 in key if k1 != k]),
+                         conf=conf[k])
+                return
 
     @classmethod
     def _set(cls, scope, key, val, separator='.'):
@@ -142,10 +165,11 @@ class GandiConfig(object):
 
         """
         try:
-            # load conf before and only overwrite some params not reset
-            # everything
+            # first load current conf and only overwrite needed params
+            # we don't want to reset everything
             config_file = os.path.expanduser(cls.home_config)
             config = cls.load(config_file, 'global')
+            cls._del('global', 'api.env')
 
             apikey = click.prompt('Api key')
             env_choice = click.Choice(cls.apienvs.keys())
@@ -157,7 +181,6 @@ class GandiConfig(object):
 
             config.update({
                 'api': {'key': apikey,
-                        'env': apienv,
                         'host': cls.apienvs[apienv]},
             })
             if ssh_key is not None:
