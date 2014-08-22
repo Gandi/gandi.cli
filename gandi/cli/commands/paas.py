@@ -182,6 +182,10 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
 
     >>> gandi config -g sshkey ~/.ssh/id_rsa.pub
 
+    or getting the ssh_key "work" from your gandi ssh keyring
+
+    >>> gandi config -g sshkey work
+
     to know which PaaS instance type to use as type
 
     >>> gandi types
