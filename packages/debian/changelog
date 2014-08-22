@@ -1,3 +1,16 @@
+gandicli (0.3-1) unstable; urgency=low
+
+  * New certificate namespace for managing certificates
+  * New disk namespace for managing iaas disks
+  * New snapshotprofile namespace to know which profiles exists
+  * Allow override of configuration values for apikey, apienv and apihost
+    using shell environment variables API_KEY, API_ENV, API_HOST.
+  * Bugfixes on various vm and paas commands
+  * Fixes typos in docstrings
+  * Update man page
+
+ -- Dejan Filipovic <sayoun@gandi.net>  Fri, 22 Aug 2014 11:43:37 +0200
+
 gandicli (0.2-1) unstable; urgency=low
 
   * New vhost namespace for managing virtual host for PaaS instances.
