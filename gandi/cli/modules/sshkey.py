@@ -69,7 +69,7 @@ class SshkeyHelper(object):
         if ssh_key:
             params['keys'] = []
             for ssh in ssh_key:
-                if os.path.exists(ssh):
+                if os.path.exists(os.path.expanduser(ssh)):
                     if 'ssh_key' in params:
                         cls.echo("Can't have more than one ssh_key file.")
                         continue
