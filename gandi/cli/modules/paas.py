@@ -19,6 +19,32 @@ class Vhost(GandiModule):
 class Paas(GandiModule):
 
     @classmethod
+    def convert_ssh_key(cls, ssh_key):
+        params = {}
+        if ssh_key:
+            params['keys'] = []
+            for ssh in ssh_key:
+                if os.path.exists(ssh):
+                    if 'ssh_key' in params:
+                        cls.echo("Can't have more than one ssh_key file.")
+                        continue
+                    with open(ssh) as fdesc:
+                        ssh_key_ = fdesc.read()
+                    if ssh_key_:
+                        params['ssh_key'] = ssh_key_
+                else:
+                    ssh_key_id = Sshkey.usable_id(ssh)
+                    if ssh_key_id:
+                        params['keys'].append(ssh_key_id)
+                    else:
+                        cls.echo('This is not a ssh key %s' % ssh)
+
+            if not params['keys']:
+                params.pop('keys')
+
+        return params
+
+    @classmethod
     def type_list(cls, options={}):
         """list type of PaaS instances"""
 
@@ -80,11 +106,7 @@ class Paas(GandiModule):
         if password:
             paas_params['password'] = password
 
-        if ssh_key:
-            with open(ssh_key) as fdesc:
-                ssh_key_ = fdesc.read()
-            if ssh_key_:
-                paas_params['ssh_key'] = ssh_key_
+        paas_params.update(cls.convert_ssh_key(ssh_key))
 
         if upgrade:
             paas_params['upgrade'] = upgrade
@@ -141,26 +163,7 @@ class Paas(GandiModule):
         if quantity:
             paas_params['quantity'] = quantity
 
-        if ssh_key:
-            paas_params['keys'] = []
-            for ssh in ssh_key:
-                if os.path.exists(ssh):
-                    if 'ssh_key' in paas_params:
-                        cls.echo("Can't have more than one ssh_key file.")
-                        continue
-                    with open(ssh) as fdesc:
-                        ssh_key_ = fdesc.read()
-                    if ssh_key_:
-                        paas_params['ssh_key'] = ssh_key_
-                else:
-                    ssh_key_id = Sshkey.usable_id(ssh)
-                    if ssh_key_id:
-                        paas_params['keys'].append(ssh_key_id)
-                    else:
-                        cls.echo('This is not a ssh key %s' % ssh)
-
-            if not paas_params['keys']:
-                paas_params.pop('keys')
+        paas_params.update(cls.convert_ssh_key(ssh_key))
 
         if snapshot_profile:
             paas_params['snapshot_profile'] = snapshot_profile
