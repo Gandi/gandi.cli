@@ -2,6 +2,7 @@
 import os
 import os.path
 import inspect
+from functools import update_wrapper
 
 import click
 
@@ -17,6 +18,14 @@ def add_help_option(self):
 click.Command.add_help_option = add_help_option
 
 
+def compatcallback(f):
+    # Click 1.0 does not have a version string stored, so we need to
+    # use getattr here to be safe.
+    if getattr(click, '__version__', '0.0') >= '2.0':
+        return f
+    return update_wrapper(lambda ctx, value: f(ctx, None, value), f)
+
+
 class GandiCLI(click.Group):
     """ Gandi command line utility.
 
@@ -28,10 +37,12 @@ class GandiCLI(click.Group):
 
     def __init__(self, help=None):
 
-        def set_debug(ctx, value):
+        @compatcallback
+        def set_debug(ctx, param, value):
             ctx.obj['verbose'] = value
 
-        def get_version(ctx, value):
+        @compatcallback
+        def get_version(ctx, param, value):
             if value:
                 print ('Gandi CLI %s\n\n'
                        'Copyright: © 2014 Gandi S.A.S.\n'
@@ -110,19 +121,25 @@ class GandiCLI(click.Group):
 
     def invoke(self, ctx):
         ctx.obj = GandiContextHelper(verbose=ctx.obj['verbose'])
+        click.Group.invoke(self, ctx)
 
-        if not ctx.args:
-            if self.invoke_without_command:
-                return click.Command.invoke(self, ctx)
-            ctx.fail('Missing command.')
+    def handle_subcommand(self, ctx, args, **extra):
+        cmd_name = click.utils.make_str(args[0])
+        original_cmd_name = cmd_name
 
-        cmd_name = click.utils.make_str(ctx.args[0])
+        # Get the command
         cmd = self.get_command(ctx, cmd_name)
         if cmd:
             cmd_name = cmd.name
 
+        # If we can't find the command but there is a normalization
+        # function available, we try with that one.
+        if cmd is None and ctx.token_normalize_func is not None:
+            cmd_name = ctx.token_normalize_func(cmd_name)
+            cmd = self.get_command(ctx, cmd_name)
+
         # If we don't find the command we want to show an error message
-        # to the user that it was not provided.  However there is
+        # to the user that it was not provided.  However, there is
         # something else we should do: if the first argument looks like
         # an option we want to kick off parsing again for arguments to
         # resolve things like --help which now should go to the main
@@ -130,9 +147,9 @@ class GandiCLI(click.Group):
         if cmd is None:
             if click.parser.split_opt(cmd_name)[0]:
                 self.parse_args(ctx, ctx.args)
-            ctx.fail('No such command "%s".' % cmd_name)
+            ctx.fail('No such command "%s".' % original_cmd_name)
 
-        return self.invoke_subcommand(ctx, cmd, cmd_name, ctx.args[1:])
+        return cmd.make_context(cmd_name, args[1:], parent=ctx, **extra)
 
 
 cli = GandiCLI()

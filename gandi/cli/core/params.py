@@ -66,10 +66,40 @@ class SnapshotParamType(click.Choice):
         return int(value)
 
 
+class CertificatePackage(click.Choice):
+    """ Choice parameter to select a certificate package between available
+    ones.
+    """
+    name = 'certificate package'
+
+    def __init__(self):
+        gandi = GandiContextHelper()
+        choices = [item['name'] for item in gandi.certificate.package_list()]
+        self.choices = choices
+
+
+class CertificateDcvMethod(click.Choice):
+    """ Choice parameter to select a certificate dcv method.
+        * 'email' will send you an email to check domain ownership
+        * 'dns' will require you to add a TXT record in your domain zone
+        * 'file' will require you to add a file on you server
+        * 'auto' can only be used when your domain and it's zone are on the
+          same gandi account you are currently using (gandi will add the TXT
+          dns record).
+    """
+    name = 'certificate dcv method'
+    choices = ['email', 'dns', 'file', 'auto']
+
+    def __init__(self):
+        pass
+
+
 DATACENTER = DatacenterParamType()
 PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
 SNAPSHOTPROFILE = SnapshotParamType()
+CERTIFICATE_PACKAGE = CertificatePackage()
+CERTIFICATE_DCV_METHOD = CertificateDcvMethod()
 
 
 class GandiOption(click.Option):
