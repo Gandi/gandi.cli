@@ -170,6 +170,10 @@ Details:
 
 * ``gandi setup`` initialize the configuration for the tool.
 
+* ``gandi snapshotprofile list`` show the list of all profile for virtual disk snapshot. Possible options are ``--only-paas`` and ``--only-vm`` to filter the output and show only the subset of profile for the Simple Hosting or the Gandi Hosting.
+
+* ``gandi snapshotprofile info resource`` detail the information about a profile : frequency of snapshot and retention period.
+
 * ``gandi sshkey create --name label`` add a SSH key identified by ``label`` which could be used for authentification. Possible option are ``--value TEXT``  with the content of the SSH public key or ``--sshkey FILENAME`` with the path to a file containing the SSH public key.
 
 * ``gandi sshkey delete resource`` remove a SSH key. Resource can be a name or the specific id.
