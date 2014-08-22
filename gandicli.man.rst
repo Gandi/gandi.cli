@@ -82,6 +82,8 @@ Namespaces:
 *  paas types              List types PaaS instances.
 *  paas update             Update a PaaS instance.
 *  setup                   Initialize Gandi CLI configuration.
+*  snapshotprofile list    List possible snapshot profiles.
+*  snapshotprofile info    Display information about a snapshot profile.
 *  sshkey create           Create a new ssh key.
 *  sshkey delete           Delete thoses ssh keys.
 *  sshkey info             Display information about an ssh key.
