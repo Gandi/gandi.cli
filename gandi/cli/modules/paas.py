@@ -1,6 +1,7 @@
 import os
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
+from gandi.cli.modules.sshkey import Sshkey
 
 
 class Vhost(GandiModule):
@@ -115,6 +116,10 @@ class Paas(GandiModule):
 
         >>> gandi config -g ssh_key ~/.ssh/id_rsa.pub
 
+        or getting the ssh_key "work" from your gandi ssh keyring
+
+        >>> gandi config -g ssh_key work
+
         """
 
         if not background and not cls.intty():
@@ -137,10 +142,25 @@ class Paas(GandiModule):
             paas_params['quantity'] = quantity
 
         if ssh_key:
-            with open(ssh_key) as fdesc:
-                ssh_key_ = fdesc.read()
-            if ssh_key_:
-                paas_params['ssh_key'] = ssh_key_
+            paas_params['keys'] = []
+            for ssh in ssh_key:
+                if os.path.exists(ssh):
+                    if 'ssh_key' in paas_params:
+                        cls.echo("Can't have more than one ssh_key file.")
+                        continue
+                    with open(ssh) as fdesc:
+                        ssh_key_ = fdesc.read()
+                    if ssh_key_:
+                        paas_params['ssh_key'] = ssh_key_
+                else:
+                    ssh_key_id = Sshkey.usable_id(ssh)
+                    if ssh_key_id:
+                        paas_params['keys'].append(ssh_key_id)
+                    else:
+                        cls.echo('This is not a ssh key %s' % ssh)
+
+            if not paas_params['keys']:
+                paas_params.pop('keys')
 
         if snapshot_profile:
             paas_params['snapshot_profile'] = snapshot_profile
