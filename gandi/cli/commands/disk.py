@@ -12,12 +12,12 @@ from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE,
 @click.option('--type', help='Display types.', is_flag=True)
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--vm', help='Display vms.', is_flag=True)
-@click.option('--snapshot-profile', help='Display snapshot profile.',
+@click.option('--snapshotprofile', help='Display snapshot profile.',
               is_flag=True)
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @pass_gandi
-def list(gandi, only_data, only_snapshot, type, id, vm, snapshot_profile,
+def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
          limit):
     """ List disks. """
 
@@ -39,7 +39,7 @@ def list(gandi, only_data, only_snapshot, type, id, vm, snapshot_profile,
         output_keys.append('vm')
 
     profiles = []
-    if snapshot_profile:
+    if snapshotprofile:
         output_keys.append('profile')
         profiles = gandi.snapshotprofile.list()
 
@@ -80,26 +80,26 @@ def check_size(ctx, value):
 @click.option('--name', type=click.STRING, default=None, help='Disk name.')
 @click.option('--size', default=None, type=click.INT, help='Disk size.',
               callback=check_size)
-@click.option('--snapshot-profile', help='Selected snapshot profile.',
+@click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
 @click.argument('resource')
-def update(gandi, resource, name, size, snapshot_profile, background):
+def update(gandi, resource, name, size, snapshotprofile, background):
     """ Update a disk.
 
     Resource can be a disk name, or it's ID
     """
     try:
-        snapshot_profile = int(snapshot_profile)
+        snapshotprofile = int(snapshotprofile)
     except ValueError:
-        gandi.echo('--snapshot-profile must be an existing profile.')
+        gandi.echo('--snapshotprofile must be an existing profile.')
         gandi.echo('get all existing profiles with :')
         gandi.echo('  gandi snapshotprofile list')
         return
 
-    result = gandi.disk.update(resource, name, size, snapshot_profile,
+    result = gandi.disk.update(resource, name, size, snapshotprofile,
                                background)
     if background:
         gandi.pretty_echo(result)
