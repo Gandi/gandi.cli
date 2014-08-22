@@ -3,10 +3,10 @@ import time
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import randomstring
 from gandi.cli.modules.datacenter import Datacenter
-from gandi.cli.modules.paas import Paas
+from gandi.cli.modules.sshkey import SshkeyHelper
 
 
-class Iaas(GandiModule):
+class Iaas(GandiModule, SshkeyHelper):
 
     @classmethod
     def list(cls, options=None):
@@ -187,7 +187,7 @@ class Iaas(GandiModule):
         if password:
             vm_params['password'] = password
 
-        vm_params.update(Paas.convert_ssh_key(ssh_key))
+        vm_params.update(cls.convert_ssh_key(ssh_key))
 
         # XXX: name of disk is limited to 15 chars in ext2fs, ext3fs
         # but api allow 255, so we limit to 15 for now
