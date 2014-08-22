@@ -30,6 +30,19 @@ GETTING STARTED
 
   Run `gandi setup` or create $HOME/.config/gandi/config.yaml file.
 
+ENVIRONMENT VARIABLES
+=====================
+
+`API_ENV` allow to switch between environment: the production API and the OT&E one.
+
+Example:
+  API_ENV=production gandi domain list
+
+
+`API_HOST` allow to specify a HTTP URL to connect and to send the API commands.
+
+`API_KEY` allow to specify an API key for the chosen environment. This option is useful when you work with multiple account.
+
 COMMAND-LINE OPTIONS
 =====================
 

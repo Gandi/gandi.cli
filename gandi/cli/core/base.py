@@ -40,6 +40,10 @@ class GandiModule(GandiConfig):
             if not apihost:
                 raise MissingConfiguration()
 
+            apienv = cls.get('api.env')
+            if apienv and apienv in cls.apienvs:
+                apihost = cls.apienvs[apienv]
+
             cls._api = XMLRPCClient(host=apihost, debug=cls.verbose)
 
         return cls._api
@@ -67,6 +71,9 @@ class GandiModule(GandiConfig):
         except APICallFailed as err:
             error = UsageError(err.errors)
             setattr(error, 'code', err.code)
+            if err.code == 510150:
+                error.show()
+                sys.exit(1)
             raise error
 
     @classmethod
@@ -199,7 +206,9 @@ class GandiContextHelper(GandiModule):
         """ initialize variables and api connection """
         GandiModule.verbose = verbose
         GandiModule.load_config()
-        self.load_modules()
+        # only load modules once
+        if not self._modules:
+            self.load_modules()
 
     def __getattribute__(self, item):
         if item in object.__getattribute__(self, '_modules'):
