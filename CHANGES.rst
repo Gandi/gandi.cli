@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.3
+---
+
+* New certificate namespace for managing certificates
+* New disk namespace for managing iaas disks
+* New snapshotprofile namespace to know which profiles exists
+
+
 0.2
 ---
 
