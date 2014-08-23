@@ -112,9 +112,9 @@ class Paas(GandiModule, SshkeyHelper):
 
         >>> gandi config -g ssh_key ~/.ssh/id_rsa.pub
 
-        or getting the ssh_key "ote" from your gandi ssh keyring
+        or getting the ssh_key "my_key" from your gandi ssh keyring
 
-        >>> gandi config -g ssh_key ote
+        >>> gandi config -g ssh_key my_key
 
         """
 

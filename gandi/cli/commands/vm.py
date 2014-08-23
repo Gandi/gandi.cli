@@ -218,9 +218,9 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
 
     >>> gandi config -g sshkey ~/.ssh/id_rsa.pub
 
-    or getting the sshkey "ote" from your gandi ssh keyring
+    or getting the sshkey "my_key" from your gandi ssh keyring
 
-    >>> gandi config -g sshkey ote
+    >>> gandi config -g sshkey my_key
 
     to know which disk image label (or id) to use as image
 
