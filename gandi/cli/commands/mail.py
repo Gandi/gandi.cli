@@ -15,9 +15,7 @@ def list(gandi, domain, limit):
 
     options = {'items_per_page': limit}
     mailboxes = gandi.mail.list(domain, options)
-    for mailbox in mailboxes:
-        gandi.echo(mailbox['login'])
-
+    output_list(gandi, [mbox['login'] for mbox in mailboxes])
     return mailboxes
 
 
