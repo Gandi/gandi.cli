@@ -29,10 +29,10 @@ then to read the manpage:
 How to install
 --------------
 
-Use pypy installation:
-  virtualenv /some/directory/gandicli
-  source /some/directory/gandicli/bin/enable
-  pip install python-yaml python-click gandicli
+Use pypi installation:
+  virtualenv /some/directory/gandi.cli
+  source /some/directory/gandi.cli/bin/enable
+  pip install gandi.cli
 
 and you will be able to start:
   gandi --help

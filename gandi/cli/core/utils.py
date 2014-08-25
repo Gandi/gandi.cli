@@ -89,9 +89,54 @@ def output_image(gandi, image, datacenters, output_keys, justify=14):
         output_line(gandi, 'datacenter', dc_name, justify)
 
 
+def output_disk(gandi, disk, datacenters, vms, profiles, output_keys,
+                justify=10):
+    """ Helper to output a disk """
+    output_generic(gandi, disk, output_keys, justify)
+
+    if 'dc' in output_keys:
+        dc_name = None
+        for dc in datacenters:
+            if dc['id'] == disk['datacenter_id']:
+                dc_name = dc['iso']
+                break
+
+        if dc_name:
+            output_line(gandi, 'datacenter', dc_name, justify)
+
+    if 'vm' in output_keys:
+        for vm_id in disk['vms_id']:
+            vm_name = vms.get(vm_id, {}).get('hostname')
+            if vm_name:
+                output_line(gandi, 'vm', vm_name, justify)
+
+    if 'profile' in output_keys and disk.get('snapshot_profile'):
+        output_line(gandi, 'profile', disk['snapshot_profile']['name'],
+                    justify)
+    elif 'profile' in output_keys and disk.get('snapshot_profile_id'):
+        for profile in profiles:
+            if profile['id'] == disk['snapshot_profile_id']:
+                output_line(gandi, 'profile', profile['name'], justify)
+                break
+
+
 def output_sshkey(gandi, sshkey, output_keys, justify=12):
     '''Helper to output an ssh key information '''
     output_generic(gandi, sshkey, output_keys, justify)
+
+
+def output_snapshot_profile(gandi, profile, output_keys, justify=13):
+    """ Helper to output a snapshot_profile """
+    schedules = 'schedules' in output_keys
+    if schedules:
+        output_keys.remove('schedules')
+    output_generic(gandi, profile, output_keys, justify)
+
+    if schedules:
+        schedule_keys = ['name', 'kept_version']
+        for schedule in profile['schedules']:
+            gandi.separator_line()
+            output_generic(gandi, schedule, schedule_keys, justify)
 
 
 def check_domain_available(ctx, domain):
@@ -114,6 +159,30 @@ def output_contact_info(gandi, data, output_keys, justify=10):
     for key in output_keys:
         if data[key]:
             output_line(gandi, key, data[key]['handle'], justify)
+
+def output_cert(gandi, cert, output_keys, justify=13):
+    output = list(output_keys)
+
+    display_altnames = False
+    if 'altnames' in output:
+        display_altnames = True
+        output.remove('altnames')
+
+    display_output = False
+    if 'cert' in output:
+        display_output = True
+        output.remove('cert')
+
+    output_generic(gandi, cert, output, justify)
+
+    if display_output:
+        crt = gandi.certificate.pretty_format_cert(cert)
+        if crt:
+            output_line(gandi, 'cert', '\n' + crt, justify)
+
+    if display_altnames:
+        for altname in cert['altnames']:
+            output_line(gandi, 'altname', altname, justify)
 
 
 def randomstring(prefix=None):
