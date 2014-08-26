@@ -54,6 +54,9 @@ class Disk(GandiModule):
         if snapshot_profile:
             disk_params['snapshot_profile'] = snapshot_profile
 
+        if size:
+            disk_params['size'] = size
+
         result = cls.call('hosting.disk.update',
                           cls.usable_id(resource),
                           disk_params)
