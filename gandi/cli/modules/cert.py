@@ -180,7 +180,6 @@ class Certificate(GandiModule):
                       ('ST', state),
                       ('C', country))
             params = [(key, val) for key, val in params if val]
-            subj = '/'.join(['='.join(value) for value in params])
             csr = cls.create_csr(common_name, private_key, params)
 
         if csr and os.path.exists(csr):
