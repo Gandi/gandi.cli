@@ -92,7 +92,7 @@ def update(gandi, resource, name, size, snapshotprofile, background):
     Resource can be a disk name, or it's ID
     """
     try:
-        snapshotprofile = int(snapshotprofile)
+        snapshotprofile = int(snapshotprofile) if snapshotprofile else None
     except ValueError:
         gandi.echo('--snapshotprofile must be an existing profile.')
         gandi.echo('get all existing profiles with :')
