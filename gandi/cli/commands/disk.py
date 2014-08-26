@@ -71,7 +71,7 @@ def info(gandi, resource):
 
 
 def check_size(ctx, value):
-    if value % 1024:
+    if value and value % 1024:
         raise click.ClickException('Size must be a multiple of 1024.')
     return value
 
