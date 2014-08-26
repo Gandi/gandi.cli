@@ -2,7 +2,6 @@ import os
 import re
 from click import UsageError
 from gandi.cli.core.base import GandiModule
-from gandi.cli.core.utils import DuplicateResults
 
 
 class Certificate(GandiModule):
