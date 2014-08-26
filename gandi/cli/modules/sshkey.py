@@ -59,3 +59,32 @@ class Sshkey(GandiModule):
     def delete(cls, id):
         '''delete this ssh key'''
         return cls.call('hosting.ssh.delete', cls.usable_id(id))
+
+
+class SshkeyHelper(object):
+
+    @classmethod
+    def convert_ssh_key(cls, ssh_key):
+        params = {}
+        if ssh_key:
+            params['keys'] = []
+            for ssh in ssh_key:
+                if os.path.exists(os.path.expanduser(ssh)):
+                    if 'ssh_key' in params:
+                        cls.echo("Can't have more than one ssh_key file.")
+                        continue
+                    with open(ssh) as fdesc:
+                        ssh_key_ = fdesc.read()
+                    if ssh_key_:
+                        params['ssh_key'] = ssh_key_
+                else:
+                    ssh_key_id = Sshkey.usable_id(ssh)
+                    if ssh_key_id:
+                        params['keys'].append(ssh_key_id)
+                    else:
+                        cls.echo('This is not a ssh key %s' % ssh)
+
+            if not params['keys']:
+                params.pop('keys')
+
+        return params

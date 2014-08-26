@@ -206,19 +206,21 @@ def delete(gandi, background, force, resource):
                    'disks are mounted.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
-@option('--ssh-key',
+@option('--sshkey', multiple=True,
         help='Authorize ssh authentication for the given ssh key.')
-@option('--ssh-key-id', help='Add an ssh key id OR name from the portfolio.',
-        multiple=True)
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
-           password, hostname, image, run, background, ssh_key, ssh_key_id):
+           password, hostname, image, run, background, sshkey):
     """Create a new virtual machine.
 
-    you can specify a configuration entry named 'ssh_key' containing
-    path to your ssh_key file
+    you can specify a configuration entry named 'sshkey' containing
+    path to your sshkey file
 
-    >>> gandi config -g ssh_key ~/.ssh/id_rsa.pub
+    >>> gandi config -g sshkey ~/.ssh/id_rsa.pub
+
+    or getting the sshkey "my_key" from your gandi ssh keyring
+
+    >>> gandi config -g sshkey my_key
 
     to know which disk image label (or id) to use as image
 
@@ -226,7 +228,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
 
     """
     pwd = None
-    if password or not (ssh_key or ssh_key_id):
+    if password or not sshkey:
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
@@ -238,7 +240,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                                bandwidth, login, pwd, hostname,
                                image, run,
                                background,
-                               ssh_key, ssh_key_id)
+                               sshkey)
     if background:
         gandi.pretty_echo(result)
 

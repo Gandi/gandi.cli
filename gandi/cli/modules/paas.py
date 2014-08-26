@@ -1,6 +1,7 @@
 import os
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
+from gandi.cli.modules.sshkey import SshkeyHelper
 
 
 class Vhost(GandiModule):
@@ -15,7 +16,7 @@ class Vhost(GandiModule):
         return cls.call('paas.vhost.list', options)
 
 
-class Paas(GandiModule):
+class Paas(GandiModule, SshkeyHelper):
 
     @classmethod
     def type_list(cls, options={}):
@@ -79,11 +80,7 @@ class Paas(GandiModule):
         if password:
             paas_params['password'] = password
 
-        if ssh_key:
-            with open(ssh_key) as fdesc:
-                ssh_key_ = fdesc.read()
-            if ssh_key_:
-                paas_params['ssh_key'] = ssh_key_
+        paas_params.update(cls.convert_ssh_key(ssh_key))
 
         if upgrade:
             paas_params['upgrade'] = upgrade
@@ -115,6 +112,10 @@ class Paas(GandiModule):
 
         >>> gandi config -g ssh_key ~/.ssh/id_rsa.pub
 
+        or getting the ssh_key "my_key" from your gandi ssh keyring
+
+        >>> gandi config -g ssh_key my_key
+
         """
 
         if not background and not cls.intty():
@@ -136,11 +137,7 @@ class Paas(GandiModule):
         if quantity:
             paas_params['quantity'] = quantity
 
-        if ssh_key:
-            with open(ssh_key) as fdesc:
-                ssh_key_ = fdesc.read()
-            if ssh_key_:
-                paas_params['ssh_key'] = ssh_key_
+        paas_params.update(cls.convert_ssh_key(ssh_key))
 
         if snapshot_profile:
             paas_params['snapshot_profile'] = snapshot_profile

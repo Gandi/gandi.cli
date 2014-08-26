@@ -170,17 +170,21 @@ def delete(gandi, background, force, resource):
               help='Set a snapshot profile associated to this paas disk.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
-@option('--ssh-key',
+@option('--sshkey',
         help='Authorize ssh authentication for the given ssh key.')
 @pass_gandi
 def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
-           password, snapshotprofile, background, ssh_key):
+           password, snapshotprofile, background, sshkey):
     """Create a new PaaS instance and initialize associated git repository.
 
-    you can specify a configuration entry named 'ssh_key' containing
-    path to your ssh_key file
+    you can specify a configuration entry named 'sshkey' containing
+    path to your sshkey file
 
-    >>> gandi config -g ssh_key ~/.ssh/id_rsa.pub
+    >>> gandi config -g sshkey ~/.ssh/id_rsa.pub
+
+    or getting the ssh_key "my_key" from your gandi ssh keyring
+
+    >>> gandi config -g sshke my_key
 
     to know which PaaS instance type to use as type
 
@@ -192,7 +196,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
 
     result = gandi.paas.create(name, size, type, quantity, duration,
                                datacenter, vhosts, password,
-                               snapshotprofile, background, ssh_key)
+                               snapshotprofile, background, sshkey)
     return result
 
 
@@ -206,7 +210,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
               help='Additional disk amount (in GB).')
 @click.option('--password', default=False, is_flag=True,
               help='Password of the PaaS instance.')
-@click.option('--ssh-key', default=None,
+@click.option('--sshkey', default=None,
               help='Authorize ssh authentication for the given ssh key.')
 @click.option('--upgrade', default=None,
               help='Upgrade the instance to the last system image if needed.')
@@ -220,7 +224,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
               help='Run command in background mode (default=False).')
 @pass_gandi
 @click.argument('resource')
-def update(gandi, resource, name, size, quantity, password, ssh_key,
+def update(gandi, resource, name, size, quantity, password, sshkey,
            upgrade, console, snapshotprofile, reset_mysql_password,
            background):
     """Update a PaaS instance.
@@ -233,7 +237,7 @@ def update(gandi, resource, name, size, quantity, password, ssh_key,
                            confirmation_prompt=True)
 
     result = gandi.paas.update(resource, name, size, quantity, pwd,
-                               ssh_key, upgrade, console, snapshotprofile,
+                               sshkey, upgrade, console, snapshotprofile,
                                reset_mysql_password, background)
     if background:
         gandi.pretty_echo(result)
