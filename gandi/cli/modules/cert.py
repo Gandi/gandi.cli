@@ -34,8 +34,8 @@ class Certificate(GandiModule):
             qry_id = None
 
         if not qry_id or not accept_multi and len(qry_id) != 1:
-           msg = 'unknown identifier %s' % id
-           cls.error(msg)
+            msg = 'unknown identifier %s' % id
+            cls.error(msg)
 
         return qry_id if accept_multi else qry_id[0]
 
