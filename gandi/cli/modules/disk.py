@@ -39,9 +39,14 @@ class Disk(GandiModule):
         return cls.call('hosting.disk.list', options)
 
     @classmethod
+    def _info(cls, disk_id):
+        """ get information about a disk """
+        return cls.call('hosting.disk.info', disk_id)
+
+    @classmethod
     def info(cls, name):
         """ get information about a disk """
-        return cls.call('hosting.disk.info', cls.usable_id(name))
+        return cls._info(cls.usable_id(name))
 
     @classmethod
     def update(cls, resource, name, size, snapshot_profile, background):
@@ -68,14 +73,46 @@ class Disk(GandiModule):
         cls.display_progress(result)
 
     @classmethod
+    def _detach(cls, disk_id, background=False):
+        """ detach a disk from a vm """
+        disk = cls._info(disk_id)
+        opers = []
+        if disk.get('vms_id'):
+            for vm_id in disk['vms_id']:
+                cls.echo('The disk is still attached to the vm %s.' % vm_id)
+                cls.echo('Will detach it.')
+                opers.append(cls.call('hosting.vm.disk_detach',
+                                      vm_id, disk_id))
+        return opers
+
+    @classmethod
+    def detach(cls, resource, background=False):
+        """ detach a disk from a vm """
+        disk_id = cls.usable_id(resource)
+        return cls._detach(resource, background)
+
+    @classmethod
     def delete(cls, resources, background=False):
         """ delete this disk """
         if not isinstance(resources, (list, tuple)):
             resources = [resources]
 
+        resources = [cls.usable_id(item) for item in resources]
+
         opers = []
-        for item in resources:
-            oper = cls.call('hosting.disk.delete', cls.usable_id(item))
+        for disk_id in resources:
+            opers.extend(cls._detach(disk_id))
+
+        if opers:
+            cls.echo('Detaching your disk(s).')
+            cls.display_progress(opers)
+
+        opers = []
+        for disk_id in resources:
+            detach_opers = cls.detach(disk_id)
+            if detach_opers:
+                print detach_opers
+            oper = cls.call('hosting.disk.delete', disk_id)
             opers.append(oper)
 
         if background:
