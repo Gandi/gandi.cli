@@ -39,12 +39,13 @@ class SnapshotProfile(GandiModule):
 
         result = []
         if not target or target == 'paas':
-            for profile in cls.call('paas.snapshotprofile.list', options):
+            for profile in cls.safe_call('paas.snapshotprofile.list', options):
                 profile['target'] = 'paas'
                 result.append((profile['id'], profile))
 
         if not target or target == 'vm':
-            for profile in cls.call('hosting.snapshotprofile.list', options):
+            for profile in cls.safe_call('hosting.snapshotprofile.list',
+                                         options):
                 profile['target'] = 'vm'
                 result.append((profile['id'], profile))
 
