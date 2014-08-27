@@ -130,3 +130,37 @@ def delete(gandi, resource, force, background):
             output_generic(gandi, oper, output_keys)
 
     return opers
+
+
+@cli.command()
+@click.option('--name', type=click.STRING, default=None, help='Disk name.')
+@click.option('--vm', default=None, type=click.STRING,
+              help='Attach the newly created disk to the vm.')
+@click.option('--size', default=3072, type=click.INT, help='Disk size.',
+              callback=check_size)
+@click.option('--snapshotprofile', help='Selected snapshot profile.',
+              default=None, type=SNAPSHOTPROFILE)
+@option('--datacenter', type=DATACENTER, default='FR',
+        help='Datacenter where the VM will be spawned.')
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='run command in background mode (default=False).')
+@pass_gandi
+def create(gandi, name, vm, size, snapshotprofile, datacenter, background):
+    """ Create a new disk. """
+    try:
+        snapshotprofile = int(snapshotprofile) if snapshotprofile else None
+    except ValueError:
+        gandi.echo('--snapshotprofile must be an existing profile.')
+        gandi.echo('get all existing profiles with :')
+        gandi.echo('  gandi snapshotprofile list')
+        return
+
+    name = name or randomstring()
+
+    result = gandi.disk.create(name, vm, size, snapshotprofile, datacenter,
+                               background)
+
+    if background:
+        gandi.pretty_echo(result)
+
+    return result

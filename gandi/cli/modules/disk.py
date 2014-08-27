@@ -1,5 +1,6 @@
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import DuplicateResults
+from .iaas import Iaas, Datacenter
 
 
 class Disk(GandiModule):
@@ -48,9 +49,8 @@ class Disk(GandiModule):
         """ get information about a disk """
         return cls._info(cls.usable_id(name))
 
-    @classmethod
-    def update(cls, resource, name, size, snapshot_profile, background):
-        """ update this disk """
+    @staticmethod
+    def disk_param(name, size, snapshot_profile):
         disk_params = {}
 
         if name:
@@ -61,6 +61,13 @@ class Disk(GandiModule):
 
         if size:
             disk_params['size'] = size
+
+        return disk_params
+
+    @classmethod
+    def update(cls, resource, name, size, snapshot_profile, background):
+        """ update this disk """
+        disk_params = cls.disk_param(name, size, snapshot_profile)
 
         result = cls.call('hosting.disk.update',
                           cls.usable_id(resource),
@@ -111,3 +118,37 @@ class Disk(GandiModule):
 
         cls.echo('Deleting your disk.')
         cls.display_progress(opers)
+
+    @classmethod
+    def _attach(cls, disk_id, vm_id):
+        """ attach a disk to a vm """
+        oper = cls.call('hosting.vm.disk_attach', vm_id, disk_id)
+        return oper
+
+    @classmethod
+    def create(cls, name, vm, size, snapshotprofile, datacenter,
+               background=False):
+        """ create a disk and attach it to a vm """
+        disk_params = cls.disk_param(name, size, snapshotprofile)
+        disk_params['datacenter_id'] = int(Datacenter.usable_id(datacenter))
+
+        result = cls.call('hosting.disk.create', disk_params)
+
+        if background and not vm:
+            return result
+
+        # interactive mode, run a progress bar
+        cls.echo('Creating your disk.')
+        cls.display_progress(result)
+
+        if not vm:
+            return
+
+        vm_id = Iaas.usable_id(vm)
+        result = cls._attach(result['disk_id'], vm_id)
+
+        if background:
+            return result
+
+        cls.echo('Attaching your disk.')
+        cls.display_progress(result)
