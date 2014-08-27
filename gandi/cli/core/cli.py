@@ -117,7 +117,7 @@ class GandiCLI(click.Group):
             'gandi.cli': command_folder
         }
 
-        if os.environ.get('GANDICLI_PATH'):
+        if 'GANDICLI_PATH' in os.environ:
             for path in os.environ.get('GANDICLI_PATH').split(':'):
                 command_dirs[os.path.basename(path)] = os.path.join(path,
                                                                     'commands')
