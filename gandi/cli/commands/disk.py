@@ -143,7 +143,7 @@ def delete(gandi, resource, force, background):
 @option('--datacenter', type=DATACENTER, default='FR',
         help='Datacenter where the VM will be spawned.')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False).')
+              help='Run command in background mode (default=False).')
 @pass_gandi
 def create(gandi, name, vm, size, snapshotprofile, datacenter, background):
     """ Create a new disk. """
