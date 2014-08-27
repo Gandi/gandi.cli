@@ -204,6 +204,10 @@ class Iaas(GandiModule, SshkeyHelper):
         # interactive mode, run a progress bar
         cls.echo("Creating your Virtual Machine with default settings.")
         cls.display_progress(result)
+        cls.echo('Your Virtual Machine %s have been created.' % hostname)
+
+        if 'ssh_key' not in vm_params and 'keys' not in vm_params:
+            return
 
         vm_id = None
         for oper in result:
@@ -215,15 +219,14 @@ class Iaas(GandiModule, SshkeyHelper):
         for iface in vm_info['ifaces']:
             for ip in iface['ips']:
                 if ip['version'] == 4:
-                    access = 'ssh %s@%s' % (login, ip['ip'])
+                    access = 'ssh root@%s' % ip['ip']
                     ip_addr = ip['ip']
                 else:
-                    access = 'ssh -6 %s@%s' % (login, ip['ip'])
+                    access = 'ssh -6 root@%s' % ip['ip']
                     ip_addr = ip['ip']
                 # stop on first access found
                 break
 
-        cls.echo('Your Virtual Machine %s have been created.' % hostname)
         cls.echo('Requesting access using: %s ...' % access)
         # XXX: we must remove ssh key entry in case we use the same ip
         # as it's recyclable
