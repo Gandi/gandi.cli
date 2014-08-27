@@ -132,8 +132,8 @@ class GandiOption(click.Option):
     def display_value(self, ctx, value):
         """ Display value to be used for this parameter """
         gandi = ctx.obj
-        gandi.echo('%s: %s' % (self.name, (value if value is not None
-                                           else 'Not found')))
+        gandi.log('%s: %s' % (self.name, (value if value is not None
+                                          else 'Not found')))
 
     def get_default(self, ctx):
         """ Retrieve default value and display it when prompt disabled """
