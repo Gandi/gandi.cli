@@ -1,3 +1,12 @@
+gandicli (0.4-1) unstable; urgency=medium
+
+ * Fixes bug with snapshotprofile list command preventing
+   'gandi setup' to work after clean installation
+ * Allow Gandi CLI to load custom modules/commands using
+   'GANDICLI_PATH' environment variable
+
+ -- Dejan Filipovic <sayoun@gandi.net>  Wed, 27 Aug 2014 11:09:31 +0200
+
 gandicli (0.3-1) unstable; urgency=low
 
   * New certificate namespace for managing certificates
