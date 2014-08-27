@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.4
+---
+
+* Fixes bug with snapshotprofile list command preventing
+  'gandi setup' to work after clean installation
+* Allow Gandi CLI to load custom modules/commands using
+  'GANDICLI_PATH' environment variable
+
 0.3
 ---
 
