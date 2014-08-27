@@ -1,6 +1,6 @@
 import click
 
-from gandi.cli.core.cli import cli
+from gandi.cli.core.cli import cli, compatcallback
 from gandi.cli.core.utils import output_disk, output_generic, randomstring
 from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE,
                                    option)
@@ -70,7 +70,8 @@ def info(gandi, resource):
     return disk
 
 
-def check_size(ctx, value):
+@compatcallback
+def check_size(ctx, param, value):
     if value and value % 1024:
         raise click.ClickException('Size must be a multiple of 1024.')
     return value
