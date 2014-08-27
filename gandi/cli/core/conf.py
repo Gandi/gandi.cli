@@ -48,7 +48,7 @@ class GandiConfig(object):
         """ update configuration if needed """
         need_save = False
         # delete old env key
-        if 'env' in config['api']:
+        if 'api' in config and 'env' in config['api']:
             del config['api']['env']
             need_save = True
         # convert old ssh_key configuration entry
