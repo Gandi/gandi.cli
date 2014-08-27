@@ -1,3 +1,4 @@
+import os
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import DuplicateResults
 
@@ -64,23 +65,23 @@ class Sshkey(GandiModule):
 class SshkeyHelper(object):
 
     @classmethod
-    def convert_ssh_key(cls, ssh_key):
+    def convert_sshkey(cls, sshkey):
         params = {}
-        if ssh_key:
+        if sshkey:
             params['keys'] = []
-            for ssh in ssh_key:
+            for ssh in sshkey:
                 if os.path.exists(os.path.expanduser(ssh)):
                     if 'ssh_key' in params:
-                        cls.echo("Can't have more than one ssh_key file.")
+                        cls.echo("Can't have more than one sshkey file.")
                         continue
                     with open(ssh) as fdesc:
-                        ssh_key_ = fdesc.read()
-                    if ssh_key_:
-                        params['ssh_key'] = ssh_key_
+                        sshkey_ = fdesc.read()
+                    if sshkey_:
+                        params['ssh_key'] = sshkey_
                 else:
-                    ssh_key_id = Sshkey.usable_id(ssh)
-                    if ssh_key_id:
-                        params['keys'].append(ssh_key_id)
+                    sshkey_id = Sshkey.usable_id(ssh)
+                    if sshkey_id:
+                        params['keys'].append(sshkey_id)
                     else:
                         cls.echo('This is not a ssh key %s' % ssh)
 

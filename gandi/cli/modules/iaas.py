@@ -146,13 +146,13 @@ class Iaas(GandiModule, SshkeyHelper):
 
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
-               login, password, hostname, image, run, background, ssh_key):
+               login, password, hostname, image, run, background, sshkey):
         """create a new virtual machine.
 
-        you can specify a configuration entry named 'ssh_key' containing
-        path to your ssh_key file
+        you can specify a configuration entry named 'sshkey' containing
+        path to your sshkey file
 
-        >>> gandi config -g ssh_key ~/.ssh/id_rsa.pub
+        >>> gandi config -g sshkey ~/.ssh/id_rsa.pub
 
         to know which disk image label (or id) to use as image
 
@@ -187,7 +187,7 @@ class Iaas(GandiModule, SshkeyHelper):
         if password:
             vm_params['password'] = password
 
-        vm_params.update(cls.convert_ssh_key(ssh_key))
+        vm_params.update(cls.convert_sshkey(sshkey))
 
         # XXX: name of disk is limited to 15 chars in ext2fs, ext3fs
         # but api allow 255, so we limit to 15 for now

@@ -59,7 +59,7 @@ class Paas(GandiModule, SshkeyHelper):
         cls.display_progress(opers)
 
     @classmethod
-    def update(cls, id, name, size, quantity, password, ssh_key, upgrade,
+    def update(cls, id, name, size, quantity, password, sshkey, upgrade,
                console, snapshot_profile, reset_mysql_password, background):
         """update a PaaS instance"""
 
@@ -80,7 +80,7 @@ class Paas(GandiModule, SshkeyHelper):
         if password:
             paas_params['password'] = password
 
-        paas_params.update(cls.convert_ssh_key(ssh_key))
+        paas_params.update(cls.convert_sshkey(sshkey))
 
         if upgrade:
             paas_params['upgrade'] = upgrade
@@ -104,17 +104,17 @@ class Paas(GandiModule, SshkeyHelper):
 
     @classmethod
     def create(cls, name, size, type, quantity, duration, datacenter, vhosts,
-               password, snapshot_profile, background, ssh_key):
+               password, snapshot_profile, background, sshkey):
         """create a new PaaS instance.
 
-        you can specify a configuration entry named 'ssh_key' containing
-        path to your ssh_key file
+        you can specify a configuration entry named 'sshkey' containing
+        path to your sshkey file
 
-        >>> gandi config -g ssh_key ~/.ssh/id_rsa.pub
+        >>> gandi config -g sshkey ~/.ssh/id_rsa.pub
 
-        or getting the ssh_key "my_key" from your gandi ssh keyring
+        or getting the sshkey "my_key" from your gandi ssh keyring
 
-        >>> gandi config -g ssh_key my_key
+        >>> gandi config -g sshkey my_key
 
         """
 
@@ -137,7 +137,7 @@ class Paas(GandiModule, SshkeyHelper):
         if quantity:
             paas_params['quantity'] = quantity
 
-        paas_params.update(cls.convert_ssh_key(ssh_key))
+        paas_params.update(cls.convert_sshkey(sshkey))
 
         if snapshot_profile:
             paas_params['snapshot_profile'] = snapshot_profile

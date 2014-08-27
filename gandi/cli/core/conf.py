@@ -176,15 +176,15 @@ class GandiConfig(object):
             apienv = click.prompt('Environnment',
                                   default=cls.default_apienv,
                                   type=env_choice)
-            ssh_key = click.prompt('SSH keyfile',
-                                   default='~/.ssh/id_rsa.pub')
+            sshkey = click.prompt('SSH keyfile',
+                                  default='~/.ssh/id_rsa.pub')
 
             config.update({
                 'api': {'key': apikey,
                         'host': cls.apienvs[apienv]},
             })
-            if ssh_key is not None:
-                config['ssh_key'] = os.path.expanduser(ssh_key)
+            if sshkey is not None:
+                config['sshkey'] = [os.path.expanduser(sshkey)]
 
             directory = os.path.expanduser("~/.config/gandi")
             if not os.path.exists(directory):
