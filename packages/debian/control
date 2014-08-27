@@ -7,9 +7,9 @@ Build-Depends-Indep: python-setuptools,
  python-docutils
 Standards-Version: 3.9.4
 X-Python-Version: >= 2.6
- 
+
 Package: gandicli
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}
+Depends: ${misc:Depends}, ${python:Depends}, python-pkg-resources
 Description: commandline client for Gandi.net
  tool in commandline to access Gandi.net services
