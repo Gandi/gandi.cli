@@ -306,6 +306,6 @@ def console(gandi, resource):
 
     Resource can be a hostname or an ID
     """
+    gandi.echo('/!\ Use ~. ssh escape key to exit.')
 
-    result = gandi.paas.console(resource)
-    return result
+    gandi.paas.console(resource)
