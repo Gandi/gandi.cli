@@ -232,7 +232,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
-    if not password:
+    if not pwd:
         gandi.echo('/!\ Please be aware that you did not provide a password, '
                    'some services like console will not be able to work.')
 
