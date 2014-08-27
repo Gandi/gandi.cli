@@ -73,7 +73,7 @@ class Disk(GandiModule):
         cls.display_progress(result)
 
     @classmethod
-    def _detach(cls, disk_id, background=False):
+    def _detach(cls, disk_id):
         """ detach a disk from a vm """
         disk = cls._info(disk_id)
         opers = []
@@ -84,12 +84,6 @@ class Disk(GandiModule):
                 opers.append(cls.call('hosting.vm.disk_detach',
                                       vm_id, disk_id))
         return opers
-
-    @classmethod
-    def detach(cls, resource, background=False):
-        """ detach a disk from a vm """
-        disk_id = cls.usable_id(resource)
-        return cls._detach(resource, background)
 
     @classmethod
     def delete(cls, resources, background=False):
@@ -109,9 +103,6 @@ class Disk(GandiModule):
 
         opers = []
         for disk_id in resources:
-            detach_opers = cls.detach(disk_id)
-            if detach_opers:
-                print detach_opers
             oper = cls.call('hosting.disk.delete', disk_id)
             opers.append(oper)
 
