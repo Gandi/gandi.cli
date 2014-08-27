@@ -27,7 +27,7 @@ class GandiModule(GandiConfig):
     """
     _op_scores = {'BILL': 0, 'WAIT': 1, 'RUN': 2, 'DONE': 3}
 
-    verbose = False
+    verbose = 0
     _api = None
 
     @classmethod
@@ -111,8 +111,14 @@ class GandiModule(GandiConfig):
 
     @classmethod
     def debug(cls, message):
-        if cls.verbose:
+        if cls.verbose > 1:
             msg = '[DEBUG] %s' % message
+            cls.echo(msg)
+
+    @classmethod
+    def log(cls, message):
+        if cls.verbose > 0:
+            msg = '[INFO] %s' % message
             cls.echo(msg)
 
     @classmethod

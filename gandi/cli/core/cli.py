@@ -54,7 +54,8 @@ class GandiCLI(click.Group):
 
         click.Group.__init__(self, help=help, params=[
             click.Option(['-v'],
-                         help='Enable or disable verbose mode.',
+                         help='Enable or disable verbose mode. Use multiple '
+                              'time for higher level of verbosity: -v, -vv',
                          count=True, metavar='',
                          default=False, callback=set_debug),
             click.Option(['--version'],
