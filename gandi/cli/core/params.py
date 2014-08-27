@@ -95,13 +95,6 @@ class CertificateDcvMethod(click.Choice):
         pass
 
 
-DATACENTER = DatacenterParamType()
-PAAS_TYPE = PaasTypeParamType()
-DISK_IMAGE = DiskImageParamType()
-SNAPSHOTPROFILE = SnapshotParamType()
-CERTIFICATE_PACKAGE = CertificatePackage()
-CERTIFICATE_DCV_METHOD = CertificateDcvMethod()
-
 class EmailParamType(click.ParamType):
     """Check the email value and return a list ['login', 'domain']"""
     name = 'email'
@@ -114,11 +107,20 @@ class EmailParamType(click.ParamType):
                 value = value.split("@")
                 return value
             else:
-                self.fail('%s is not a valid email address' % value, param, ctx)
+                self.fail('%s is not a valid email address' % value, param,
+                          ctx)
         except ValueError:
             self.fail('%s is not a valid email address' % value, param, ctx)
 
+
+DATACENTER = DatacenterParamType()
+PAAS_TYPE = PaasTypeParamType()
+DISK_IMAGE = DiskImageParamType()
+SNAPSHOTPROFILE = SnapshotParamType()
+CERTIFICATE_PACKAGE = CertificatePackage()
+CERTIFICATE_DCV_METHOD = CertificateDcvMethod()
 EMAIL_TYPE = EmailParamType()
+
 
 class GandiOption(click.Option):
     """ Custom command option class for handling configuration files
