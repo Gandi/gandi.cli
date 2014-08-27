@@ -113,11 +113,21 @@ class GandiCLI(click.Group):
         """ Load cli commands from submodules """
         command_folder = os.path.join(os.path.dirname(__file__),
                                       '..', 'commands')
-        for filename in sorted(os.listdir(command_folder)):
-            if filename.endswith('.py'):
-                submod = filename[:-3]
-                module_name = 'gandi.cli.commands.' + submod
-                __import__(module_name, fromlist=[module_name])
+        command_dirs = {
+            'gandi.cli': command_folder
+        }
+
+        if os.environ.get('GANDICLI_PATH'):
+            for path in os.environ.get('GANDICLI_PATH').split(':'):
+                command_dirs[os.path.basename(path)] = os.path.join(path,
+                                                                    'commands')
+
+        for module_basename, dir in command_dirs.iteritems():
+            for filename in sorted(os.listdir(dir)):
+                if filename.endswith('.py'):
+                    submod = filename[:-3]
+                    module_name = module_basename + '.commands.' + submod
+                    __import__(module_name, fromlist=[module_name])
 
     def invoke(self, ctx):
         ctx.obj = GandiContextHelper(verbose=ctx.obj['verbose'])
