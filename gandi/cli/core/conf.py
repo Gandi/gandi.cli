@@ -38,10 +38,35 @@ class GandiConfig(object):
         """ Load global and local configuration files or initialize if needed
         """
         config_file = os.path.expanduser(cls.home_config)
-        cls.load(config_file, 'global')
+        global_conf = cls.load(config_file, 'global')
         cls.load(cls.local_config, 'local')
+        # update global configuration if needed
+        cls.update_config(config_file, global_conf)
+
+    @classmethod
+    def update_config(cls, config_file, config):
+        """ update configuration if needed """
+        need_save = False
         # delete old env key
-        cls._del('global', 'api.env')
+        if 'env' in config['api']:
+            del config['api']['env']
+            need_save = True
+        # convert old ssh_key configuration entry
+        ssh_key = config.get('ssh_key')
+        sshkeys = config.get('sshkey')
+        if ssh_key and not sshkeys:
+            config.update({'sshkey': [ssh_key]})
+            need_save = True
+        elif ssh_key and sshkeys:
+            config.update({'sshkey': sshkeys.append(ssh_key)})
+            need_save = True
+        # remove old value
+        if ssh_key:
+            del config['ssh_key']
+            need_save = True
+        # save to disk
+        if need_save:
+            cls.save(config_file, config)
 
     @classmethod
     def load(cls, filename, name=None):
