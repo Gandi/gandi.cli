@@ -108,6 +108,10 @@ class Certificate(GandiModule):
         """ update a certificate """
 
         cert = cls.info(cert_id)
+        if cert['status'] != 'valid':
+            cls.error('The certificate must be in valid status to be updated.')
+            return
+
         common_name = cert['cn']
 
         csr = cls.process_csr(common_name, csr, private_key, country, state,
