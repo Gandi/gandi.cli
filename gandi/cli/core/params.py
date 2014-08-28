@@ -51,6 +51,25 @@ class DiskImageParamType(click.Choice):
         choices = [item['label'] for item in gandi.image.list()]
         self.choices = choices
 
+    def convert(self, value, param, ctx):
+        # Exact match
+        if value in self.choices:
+            return value
+
+        # Try to find 64 bits version
+        new_value = '%s 64 bits' % value
+        if new_value in self.choices:
+            return new_value
+
+        # Try to find without specific bits version
+        p = re.compile(' (64|32) bits')
+        new_value = p.sub('', value)
+        if new_value in self.choices:
+            return new_value
+
+        self.fail('invalid choice: %s. (choose from %s)' %
+                  (value, ', '.join(self.choices)), param, ctx)
+
 
 class SnapshotParamType(click.Choice):
     """ Choice parameter to select a snapshot profile between available ones.
