@@ -54,3 +54,8 @@ celerybeat-schedule
 .gandirc
 gandi.1.man
 gandi.1
+
+# gandi certificate
+*.crt
+*.csr
+*.key
