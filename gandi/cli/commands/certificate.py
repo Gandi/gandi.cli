@@ -32,7 +32,7 @@ def packages(gandi):
 @click.option('--csr', help='Display CSR.', is_flag=True)
 @click.option('--cert', help='Display CRT.', is_flag=True)
 @click.option('--all-status', is_flag=True,
-              help='Show the certificate without regard to its status.')
+              help='Filter the certificate without regard to its status.')
 @click.option('--status', help='Display status.', is_flag=True)
 @click.option('--dates', help='Display dates.', is_flag=True)
 @click.option('--limit', help='Limit number of results.', default=100,
@@ -156,20 +156,22 @@ def export(gandi, resource, output, force):
 
 
 @cli.command()
-@click.option('--csr', help='Csr of the new certificate.', required=False)
+@click.option('--csr', required=False,
+              help='Csr of the new certificate (filename or content).')
 @click.option('--pk', '--private-key', required=False,
-              help='Private key to use to generate the CSR.')
+              help='Private key to use to generate the CSR (filename or '
+              'content).')
 @click.option('--cn', '--common-name', required=False,
               help='Common name to use when generating the CSR.')
-@click.option('--c', '--country', required=False,
+@click.option('--country', required=False,
               help='The generated CSR country (C).')
-@click.option('--st', '--state', required=False,
+@click.option('--state', required=False,
               help='The generated CSR state (ST).')
-@click.option('--l', '--city', required=False,
+@click.option('--city', required=False,
               help='The generated CSR location (L).')
-@click.option('--o', '--organisation', required=False,
+@click.option('--organisation', required=False,
               help='The generated CSR organisation (O).')
-@click.option('--ou', '--branch', required=False,
+@click.option('--branch', required=False,
               help='The generated CSR branch (OU).')
 @click.option('-d', '--duration', default=1,
               type=IntChoice(['1', '2', '3', '4', '5']),
