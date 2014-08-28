@@ -198,9 +198,10 @@ class GandiConfig(object):
 
             apikey = click.prompt('Api key')
             env_choice = click.Choice(cls.apienvs.keys())
-            apienv = click.prompt('Environnment',
+            apienv = click.prompt('Environnment [production]/ote',
                                   default=cls.default_apienv,
-                                  type=env_choice)
+                                  type=env_choice,
+                                  show_default=False)
             sshkey = click.prompt('SSH keyfile',
                                   default='~/.ssh/id_rsa.pub')
 
