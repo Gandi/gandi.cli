@@ -202,7 +202,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return result
 
         # interactive mode, run a progress bar
-        cls.echo("Creating your Virtual Machine with default settings.")
+        cls.echo("We're creating your Virtual Machine.")
         cls.display_progress(result)
         cls.echo('Your Virtual Machine %s have been created.' % hostname)
 
