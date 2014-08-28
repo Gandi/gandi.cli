@@ -49,3 +49,20 @@ def api(gandi):
     output_generic(gandi, result, output_keys)
 
     return result
+
+
+@cli.command()
+@click.argument('command', required=False, nargs=-1)
+@click.pass_context
+def help(ctx, command):
+    """Display help for a command"""
+    command = ' '.join(command)
+    if not command:
+        click.echo(cli.get_help(ctx))
+        return
+
+    cmd = cli.get_command(ctx, command)
+    if cmd:
+        click.echo(cmd.get_help(ctx))
+    else:
+        click.echo(cli.get_help(ctx))
