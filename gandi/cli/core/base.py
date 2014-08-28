@@ -69,10 +69,12 @@ class GandiModule(GandiConfig):
         try:
             return api.request(apikey, method, *args)
         except APICallFailed as err:
+            if kwargs.get('safe'):
+                return []
             error = UsageError(err.errors)
             setattr(error, 'code', err.code)
             if err.code == 510150:
-                error.show()
+                cls.echo("Invalid API key, please use 'gandi setup' command.")
                 sys.exit(1)
             raise error
 
