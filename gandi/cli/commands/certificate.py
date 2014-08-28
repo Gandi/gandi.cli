@@ -138,7 +138,7 @@ def export(gandi, resource, output, force):
 
     for id_ in set(ids):
         cert = gandi.certificate.info(id_)
-        if not 'cert' in cert:
+        if 'cert' not in cert:
             continue
 
         crt_filename = output or cert['cn'] + '.crt'
@@ -272,7 +272,7 @@ def change_dcv(gandi, resource, dcv_method):
 
     oper = opers[0]
     if (oper['step'] != 'RUN'
-        and oper['params']['inner_step'] != 'comodo_oper_updated'):
+            and oper['params']['inner_step'] != 'comodo_oper_updated'):
         gandi.echo('This certificate operation is not in the good step to '
                    'update the DCV method.')
         return
@@ -311,7 +311,7 @@ def resend_dcv(gandi, resource):
 
     oper = opers[0]
     if (oper['step'] != 'RUN'
-        and oper['params']['inner_step'] != 'comodo_oper_updated'):
+            and oper['params']['inner_step'] != 'comodo_oper_updated'):
         gandi.echo('This certificate operation is not in the good step to '
                    'resend the DCV.')
         return
