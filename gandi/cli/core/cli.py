@@ -98,14 +98,16 @@ class GandiCLI(click.Group):
         """
         def decorator(f):
             namespace = f.__module__.rsplit('.', 1)[1]
+            name = args[0] if args else kwargs.get('name', f.__name__.lower())
             # XXX: hack for handling commands without namespaces (root)
             if namespace == 'global' or 'root' in kwargs:
-                new_name = '%s' % f.__name__.lower()
+                new_name = '%s' % name
                 kwargs.pop('root', None)
             else:
-                new_name = '%s %s' % (namespace, f.__name__.lower())
+                new_name = '%s %s' % (namespace, name)
             kwargs['name'] = new_name
-            cmd = click.command(*args, **kwargs)(f)
+            _args = args[1:] if args else args
+            cmd = click.command(*_args, **kwargs)(f)
             self.add_command(cmd)
             return cmd
         return decorator

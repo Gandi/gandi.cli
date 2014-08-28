@@ -247,7 +247,7 @@ def update(gandi, resource, csr, private_key, country, state, city,
     return result
 
 
-@cli.command()
+@cli.command('change-dcv')
 @click.argument('resource', nargs=1, required=True)
 @click.option('--dcv-method', required=True, type=CERTIFICATE_DCV_METHOD,
               help='Give the updated DCV method to use.')
@@ -288,7 +288,7 @@ def change_dcv(gandi, resource, dcv_method):
     gandi.certificate.advice_dcv_method(csr, package, altnames, dcv_method)
 
 
-@cli.command()
+@cli.command('resend-dcv')
 @click.argument('resource', nargs=1, required=True)
 @pass_gandi
 def resend_dcv(gandi, resource):
