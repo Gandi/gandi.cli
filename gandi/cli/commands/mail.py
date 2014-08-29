@@ -98,11 +98,13 @@ def delete(gandi, email, force, alias):
               default=None, type=click.INT)
 @click.option('--fallback', '-f', help='Add fallback address.',
               default=None, show_default=True)
-@click.option('--alias', '-a', help='Add mailbox alias.',
+@click.option('--alias-add', '-a', help='Add mailbox alias.',
+              multiple=True, required=False)
+@click.option('--alias-del', '-d', help='Delete mailbox alias.',
               multiple=True, required=False)
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
-def update(gandi, email, password, quota, fallback):
+def update(gandi, email, password, quota, fallback, alias_add, alias_del):
     """Update a mailbox."""
 
     options = {}
@@ -120,7 +122,7 @@ def update(gandi, email, password, quota, fallback):
 
     login, domain = email
 
-    result = gandi.mail.update(domain, login, options)
+    result = gandi.mail.update(domain, login, options, alias_add, alias_del)
 
     return result
 

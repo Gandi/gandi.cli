@@ -35,10 +35,29 @@ class Mail(GandiModule):
         return cls.call('domain.mailbox.delete', domain, login)
 
     @classmethod
-    def update(cls, domain, login, options):
+    def update(cls, domain, login, options, alias_add, alias_del):
         """Update a mailbox"""
 
-        return cls.call('domain.mailbox.update', domain, login, options)
+        cls.echo("Updating your mailbox.")
+        result = cls.call('domain.mailbox.update', domain, login, options)
+
+        if alias_add or alias_del:
+            current_aliases = cls.info(domain, login)['aliases']
+            aliases = current_aliases[:]
+            if alias_add:
+                for alias in alias_add:
+                    if alias not in aliases:
+                        aliases.append(alias)
+            if alias_del:
+                for alias in alias_del:
+                    if alias in aliases:
+                        aliases.remove(alias)
+
+            if len(current_aliases) != len(aliases):
+                cls.echo("Updating aliases.")
+                result = cls.set_alias(domain, login, aliases)
+
+        return result
 
     @classmethod
     def purge(cls, domain, login, background=False):
