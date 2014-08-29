@@ -16,10 +16,17 @@ class Mail(GandiModule):
         return cls.call('domain.mailbox.info', domain, login)
 
     @classmethod
-    def create(cls, domain, login, options):
+    def create(cls, domain, login, options, alias):
         """Create a mailbox"""
 
-        return cls.call('domain.mailbox.create', domain, login, options)
+        cls.echo("Creating your mailbox.")
+        result = cls.call('domain.mailbox.create', domain, login, options)
+
+        if alias:
+            cls.echo("Creating aliases.")
+            result = cls.set_alias(domain, login, list(alias))
+
+        return result
 
     @classmethod
     def delete(cls, domain, login):

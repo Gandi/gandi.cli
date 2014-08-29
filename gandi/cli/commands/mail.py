@@ -29,7 +29,7 @@ def info(gandi, email):
 
     output_keys = ['login', 'aliases', 'fallback_email', 'quota', 'responder']
     mailbox = gandi.mail.info(domain, login)
-    output_generic(gandi, mailbox, output_keys, justify=12)
+    output_generic(gandi, mailbox, output_keys, justify=14)
 
     return mailbox
 
@@ -47,23 +47,16 @@ def create(gandi, email, quota, fallback, alias):
     """Create a mailbox."""
     login, domain = email
     options = {}
-    if alias:
-        aliases = gandi.mail.info(domain, login)['aliases']
-        for element in alias:
-            aliases.append(element)
+    password = click.prompt('password', hide_input=True,
+                            confirmation_prompt=True)
+    options['password'] = password
+    if quota is not None:
+        options['quota'] = quota
+    if fallback is not None:
+        options['fallback_email'] = fallback
+    options['password'] = password
 
-        result = gandi.mail.set_alias(domain, login, aliases)
-    else:
-        password = click.prompt('password', hide_input=True,
-                                confirmation_prompt=True)
-        options['password'] = password
-        if quota is not None:
-            options['quota'] = quota
-        if fallback is not None:
-            options['fallback_email'] = fallback
-        options['password'] = password
-
-        result = gandi.mail.create(domain, login, options)
+    result = gandi.mail.create(domain, login, options, alias)
 
     return result
 
@@ -87,7 +80,7 @@ def delete(gandi, email, force, alias):
         result = gandi.mail.set_alias(domain, login, aliases)
     else:
         if not force:
-            proceed = click.confirm('Are you sure to delete the'
+            proceed = click.confirm('Are you sure to delete the '
                                     'mailbox %s@%s ?' % (login, domain))
 
             if not proceed:
@@ -145,7 +138,7 @@ def purge(gandi, email, background, force, alias):
     login, domain = email
     if alias:
         if not force:
-            proceed = click.confirm('Are you sure to purge the aliases on the'
+            proceed = click.confirm('Are you sure to purge the aliases on the '
                                     'mailbox %s@%s ?' % (login, domain))
             if not proceed:
                 return
