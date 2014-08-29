@@ -52,14 +52,14 @@ COMMAND-LINE OPTIONS
 Namespaces:
 
 *  api                     Display information about API used.
-*  certificate change_dcv  Change the DCV for a running certificate...
+*  certificate change-dcv  Change the DCV for a pending certificate.
 *  certificate create      Create a new certificate.
 *  certificate delete      Revoke the certificate.
 *  certificate export      Write the certificate to <output> or <fqdn>.
 *  certificate info        Display information about a certificate.
 *  certificate list        List certificates.
 *  certificate packages    List certificate packages.
-*  certificate resend_dcv  Resend the DCV mail.
+*  certificate resend-dcv  Resend the DCV mail for a pending certificate.
 *  certificate update      Update a certificate CSR.
 *  config                  Configure default values
 *  datacenters             List available datacenters.
@@ -108,7 +108,7 @@ Details:
 
 * ``gandi api`` display information about the Gandi.net API.
 
-* ``certificate change_dcv resource`` allow to change the domain validation process for a specific certificate request. Mandatory option is ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
+* ``certificate change-dcv resource`` allow to change the domain validation process for a specific certificate request. Mandatory option is ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
 
 * ``certificate create`` allow to request the creation of a certificate. If a private key is present as ``--private-key`` and not a CSR, the CSR will be generated. If no CSR or private key are present in the parameters, both are generated. Possible options are ``--csr TEXT`` and ``--private-key TEXT`` which could be the content of a certificate request and a private key or path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``-organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--duration INTEGER`` how many years of validity (up to 5 years), ``--package TEXT`` is the type of certificate as listed by ``gandi certificate package``, ``--altnames LIST`` is a list of all alternative names and ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
 
@@ -122,7 +122,7 @@ Details:
 
 * ``certificate packages`` show a full list of all available certificate types.
 
-* ``certificate resend_dcv resource`` send the validation email again (only for the 'email' DCV method). Note that a resource can be a cn entry or an integer id.
+* ``certificate resend-dcv resource`` send the validation email again (only for the 'email' DCV method). Note that a resource can be a cn entry or an integer id.
 
 * ``certificate update resource`` modify the options of a certificate. Possible options are ``--csr TEXT``, ``--private-key TEXT`` could be either the content of a certificate request and a private key or a path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``--organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--altnames LIST`` to change all the alternative names (comma separated text without space), ``--dcv-method TEXT`` with domain validation process method in email, dns, file, auto. Note that a resource can be a CN entry or an integer id.
 
