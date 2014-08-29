@@ -12,7 +12,7 @@ from gandi.cli.core.params import pass_gandi
               show_default=True)
 @pass_gandi
 def list(gandi, id, limit):
-    '''List SSH keys.'''
+    """ List SSH keys. """
     options = {
         'items_per_page': limit,
     }
@@ -36,10 +36,10 @@ def list(gandi, id, limit):
 @click.option('--value', help='Display value.', is_flag=True)
 @pass_gandi
 def info(gandi, resource, id, value):
-    '''Display information about an SSH key.
+    """Display information about an SSH key.
 
     Resource can be a name or an ID
-    '''
+    """
     output_keys = ['name', 'fingerprint']
     if id:
         output_keys.append('id')
@@ -61,7 +61,7 @@ def info(gandi, resource, id, value):
 @click.option('--sshkey', type=click.File('r'), help='SSH key file.')
 @pass_gandi
 def create(gandi, name, value=None, sshkey=None):
-    '''Create a new SSH key.'''
+    """ Create a new SSH key. """
     if not value and not sshkey:
         raise UsageError('You must set value OR sshkey.')
 
@@ -83,9 +83,9 @@ def create(gandi, name, value=None, sshkey=None):
 @click.argument('resource', nargs=-1)
 @pass_gandi
 def delete(gandi, resource):
-    '''Delete SSH keys.
+    """Delete SSH keys.
 
     Resource can be a name or an ID
-    '''
+    """
     for item in resource:
         gandi.sshkey.delete(item)
