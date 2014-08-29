@@ -45,6 +45,7 @@ def info(gandi, email):
 @pass_gandi
 def create(gandi, email, quota, fallback, alias):
     """Create a mailbox."""
+
     login, domain = email
     options = {}
     password = click.prompt('password', hide_input=True,
@@ -64,8 +65,6 @@ def create(gandi, email, quota, fallback, alias):
 @cli.command(options_metavar='')
 @click.option('--force', '-f', help='Force mailbox deletion.',
               is_flag=True)
-@click.option('--alias', '-a', help='Remove mailbox alias.',
-              multiple=True)
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
 def delete(gandi, email, force, alias):
@@ -73,20 +72,14 @@ def delete(gandi, email, force, alias):
 
     login, domain = email
 
-    if alias:
-        aliases = gandi.mail.info(domain, login)['aliases']
-        for element in alias:
-            aliases.remove(element)
-        result = gandi.mail.set_alias(domain, login, aliases)
-    else:
-        if not force:
-            proceed = click.confirm('Are you sure to delete the '
-                                    'mailbox %s@%s ?' % (login, domain))
+    if not force:
+        proceed = click.confirm('Are you sure to delete the '
+                                'mailbox %s@%s ?' % (login, domain))
 
-            if not proceed:
-                return
+        if not proceed:
+            return
 
-        result = gandi.mail.delete(domain, login)
+    result = gandi.mail.delete(domain, login)
 
     return result
 
