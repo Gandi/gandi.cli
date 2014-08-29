@@ -6,7 +6,7 @@ from gandi.cli.core.params import pass_gandi, EMAIL_TYPE
 
 
 @cli.command(options_metavar='')
-@click.option('--limit', help='limit number of results',
+@click.option('--limit', help='Limit number of results.',
               default=100, show_default=True)
 @click.argument('domain', metavar='domain.tld')
 @pass_gandi
@@ -35,11 +35,11 @@ def info(gandi, email):
 
 
 @cli.command(options_metavar='')
-@click.option('--quota', '-q', help='set a quota on a mailbox. 0 is unlimited',
+@click.option('--quota', '-q', help='Set quota on mailbox. 0 is unlimited.',
               default=None, type=click.INT)
-@click.option('--fallback', '-f', help='add an address of fallback',
+@click.option('--fallback', '-f', help='Add fallback address.',
               default=None)
-@click.option('--alias', '-a', help='add aliases on a mailbox',
+@click.option('--alias', '-a', help='Add mailbox alias.',
               multiple=True, required=False)
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
@@ -62,9 +62,9 @@ def create(gandi, email, quota, fallback, alias):
 
 
 @cli.command(options_metavar='')
-@click.option('--force', '-f', help='Force the deletion of the mailbox',
+@click.option('--force', '-f', help='Force mailbox deletion.',
               is_flag=True)
-@click.option('--alias', '-a', help='Remove aliases on a mailbox',
+@click.option('--alias', '-a', help='Remove mailbox alias.',
               multiple=True)
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
@@ -92,12 +92,14 @@ def delete(gandi, email, force, alias):
 
 
 @cli.command()
-@click.option('--password', '-p', help='prompt a password to set a mailbox',
+@click.option('--password', '-p', help='Prompt a password to set a mailbox.',
               is_flag=True)
-@click.option('--quota', '-q', help='set a quota on a mailbox. 0 is unlimited',
+@click.option('--quota', '-q', help='Set quota on mailbox. 0 is unlimited.',
               default=None, type=click.INT)
-@click.option('--fallback', '-f', help='add an address of fallback',
+@click.option('--fallback', '-f', help='Add fallback address.',
               default=None, show_default=True)
+@click.option('--alias', '-a', help='Add mailbox alias.',
+              multiple=True, required=False)
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
 def update(gandi, email, password, quota, fallback):
@@ -125,10 +127,10 @@ def update(gandi, email, password, quota, fallback):
 
 @cli.command(options_metavar='')
 @click.option('--bg', '--background', default=False, is_flag=True,
-              help='run command in background mode (default=False)')
-@click.option('--force', '-f', help='Force the deletion of the mailbox',
+              help='Run command in background mode (default=False).')
+@click.option('--force', '-f', help='Force mailbox deletion.',
               is_flag=True)
-@click.option('--alias', '-a', help='Purge all aliases', default=False,
+@click.option('--alias', '-a', help='Purge all aliases.', default=False,
               is_flag=True)
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
