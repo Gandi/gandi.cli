@@ -135,15 +135,15 @@ def purge(gandi, email, background, force, alias):
     login, domain = email
     if alias:
         if not force:
-            proceed = click.confirm('Are you sure to purge the aliases on the '
+            proceed = click.confirm('Are you sure to purge all aliases for '
                                     'mailbox %s@%s ?' % (login, domain))
             if not proceed:
                 return
         result = gandi.mail.set_alias(domain, login, [])
     else:
         if not force:
-            proceed = click.confirm('Are you sure to purge the '
-                                    'mailbox %s@%s ?' % (login, domain))
+            proceed = click.confirm('Are you sure to purge mailbox %s@%s ?'
+                                    % (login, domain))
             if not proceed:
                 return
         result = gandi.mail.purge(domain, login, background)
