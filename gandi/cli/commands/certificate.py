@@ -141,6 +141,11 @@ def export(gandi, resource, output, force):
         if 'cert' not in cert:
             continue
 
+        if cert['status'] != 'valid':
+            gandi.echo('The certificate must be in valid status to be '
+                       'exported (%s).' % id_)
+            continue
+
         crt_filename = output or cert['cn'] + '.crt'
         if not force and os.path.exists(crt_filename):
             gandi.echo('The file %s already exists.' % crt_filename)
