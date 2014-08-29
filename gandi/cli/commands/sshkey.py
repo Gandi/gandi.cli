@@ -38,7 +38,7 @@ def list(gandi, id, limit):
 def info(gandi, resource, id, value):
     '''Display information about an SSH key.
 
-    Ressource can be a name or an ID
+    Resource can be a name or an ID
     '''
     output_keys = ['name', 'fingerprint']
     if id:
@@ -85,7 +85,7 @@ def create(gandi, name, value=None, sshkey=None):
 def delete(gandi, resource):
     '''Delete SSH keys.
 
-    Ressource can be a name or an ID
+    Resource can be a name or an ID
     '''
     for item in resource:
         gandi.sshkey.delete(item)

@@ -84,7 +84,7 @@ def list(gandi, id, altnames, csr, cert, all_status, status, dates, limit):
 def info(gandi, resource, id, altnames, csr, cert, all_status):
     """ Display information about a certificate.
 
-    Ressource can be a CN or an ID
+    Resource can be a CN or an ID
     """
     output_keys = ['cn', 'date_created', 'date_end', 'package', 'status']
 
@@ -125,7 +125,7 @@ def info(gandi, resource, id, altnames, csr, cert, all_status):
 def export(gandi, resource, output, force):
     """ Write the certificate to <output> or <fqdn>.crt
 
-    Ressource can be a CN or an ID
+    Resource can be a CN or an ID
     """
     ids = []
     for res in resource:
@@ -228,7 +228,7 @@ def update(gandi, resource, csr, private_key, country, state, city,
            organisation, branch, altnames, dcv_method):
     """ Update a certificate CSR.
 
-    Ressource can be a CN or an ID
+    Resource can be a CN or an ID
     """
     ids = gandi.certificate.usable_ids(resource)
 
@@ -255,7 +255,7 @@ def update(gandi, resource, csr, private_key, country, state, city,
 def change_dcv(gandi, resource, dcv_method):
     """ Change the DCV for a running certificate operation.
 
-    Ressource can be a CN or an ID
+    Resource can be a CN or an ID
     """
     ids = gandi.certificate.usable_ids(resource)
 
@@ -294,7 +294,7 @@ def change_dcv(gandi, resource, dcv_method):
 def resend_dcv(gandi, resource):
     """ Resend the DCV mail.
 
-    Ressource can be a CN or an ID
+    Resource can be a CN or an ID
     """
     ids = gandi.certificate.usable_ids(resource)
 
@@ -336,7 +336,7 @@ def resend_dcv(gandi, resource):
 def delete(gandi, resource, background, force):
     """ Revoke the certificate.
 
-    Ressource can be a CN or an ID
+    Resource can be a CN or an ID
     """
     ids = gandi.certificate.usable_ids(resource)
 

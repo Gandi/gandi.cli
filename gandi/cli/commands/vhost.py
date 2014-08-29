@@ -43,7 +43,7 @@ def list(gandi, limit, id, names):
 def info(gandi, resource, id):
     """ Display information about a vhost.
 
-    Ressource must be the vhost fqdn.
+    Resource must be the vhost fqdn.
     """
     output_keys = ['name', 'state', 'date_creation', 'paas_name']
 
