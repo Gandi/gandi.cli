@@ -132,8 +132,9 @@ class Certificate(GandiModule):
             result = cls.call('cert.update', cert_id, params)
         except UsageError:
             params['--dry-run'] = True
-            msg = str(cls.call('cert.update', cert_id, params))
-            cls.error(msg)
+            msg = cls.call('cert.update', cert_id, params)
+            if msg:
+                cls.error(str(msg))
             raise
 
         return result
