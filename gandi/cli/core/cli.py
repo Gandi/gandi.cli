@@ -88,7 +88,23 @@ class GandiCLI(click.Group):
             if sub_cmd:
                 del ctx.args[1]
             return click.Group.get_command(self, ctx, matches[0])
-        ctx.fail('Too many matches: %s' % ', '.join(sorted(matches)))
+
+        formatter = ctx.make_formatter()
+        rows = []
+        for matched in sorted(matches):
+            rv = click.Group.get_command(self, ctx, matched)
+            # What is this, the tool lied about a command.  Ignore it
+            if rv is None:
+                continue
+
+            help = rv.short_help or ''
+            rows.append((matched, help))
+
+        if rows:
+            formatter.write_dl(rows)
+
+        print formatter.getvalue().rstrip('\n')
+        ctx.exit()
 
     def command(self, *args, **kwargs):
         """A shortcut decorator for declaring and attaching a command to
