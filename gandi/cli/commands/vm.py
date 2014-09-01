@@ -179,7 +179,7 @@ def delete(gandi, background, force, resource):
 
 
 @cli.command()
-@option('--datacenter', type=DATACENTER, default='FR',
+@option('--datacenter', type=DATACENTER, default='LU',
         help='Datacenter where the VM will be spawned.')
 @option('--memory', type=click.INT, default=256,
         help='Quantity of RAM in Megabytes to allocate.')
@@ -305,11 +305,11 @@ def images(gandi, label, datacenter):
 
     You can also filter results using label, by example:
 
-    >>> gandi vm images Ubuntu --datacenter FR
+    >>> gandi vm images Ubuntu --datacenter LU
 
     or
 
-    >>> gandi vm images 'Ubuntu 10.04' --datacenter FR
+    >>> gandi vm images 'Ubuntu 10.04' --datacenter LU
 
     """
 

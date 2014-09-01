@@ -141,7 +141,7 @@ def delete(gandi, resource, force, background):
               callback=check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE)
-@option('--datacenter', type=DATACENTER, default='FR',
+@option('--datacenter', type=DATACENTER, default='LU',
         help='Datacenter where the VM will be spawned.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
