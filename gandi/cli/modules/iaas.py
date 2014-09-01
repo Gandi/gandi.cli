@@ -215,24 +215,9 @@ class Iaas(GandiModule, SshkeyHelper):
                 vm_id = oper.get('vm_id')
                 break
 
-        vm_info = cls.call('hosting.vm.info', vm_id)
-        for iface in vm_info['ifaces']:
-            for ip in iface['ips']:
-                if ip['version'] == 4:
-                    access = 'ssh root@%s' % ip['ip']
-                    ip_addr = ip['ip']
-                else:
-                    access = 'ssh -6 root@%s' % ip['ip']
-                    ip_addr = ip['ip']
-                # stop on first access found
-                break
-
-        cls.echo('Requesting access using: %s ...' % access)
-        # XXX: we must remove ssh key entry in case we use the same ip
-        # as it's recyclable
-        cls.shell('ssh-keygen -R "%s"' % ip_addr)
-        time.sleep(5)
-        cls.shell(access)
+        if vm_id:
+            time.sleep(5)
+            cls.ssh(oper['vm_id'], wipe_key=True)
 
     @classmethod
     def from_hostname(cls, hostname):
@@ -260,6 +245,29 @@ class Iaas(GandiModule, SshkeyHelper):
             cls.error(msg)
 
         return qry_id
+
+    @classmethod
+    def ssh(cls, vm_id, wipe_key=False):
+        """spawn an ssh session to virtual machine"""
+        vm_info = cls.info(vm_id)
+        for iface in vm_info['ifaces']:
+            for ip in iface['ips']:
+                if ip['version'] == 4:
+                    access = 'ssh root@%s' % ip['ip']
+                    ip_addr = ip['ip']
+                else:
+                    access = 'ssh -6 root@%s' % ip['ip']
+                    ip_addr = ip['ip']
+                # stop on first access found
+                break
+
+        cls.echo('Requesting access using: %s ...' % access)
+        # XXX: we must remove ssh key entry in case we use the same ip
+        # as it's recyclable
+        if wipe_key:
+            cls.shell('ssh-keygen -R "%s"' % ip_addr)
+
+        cls.shell(access)
 
     @classmethod
     def console(cls, id):

@@ -296,6 +296,19 @@ def console(gandi, resource):
 
 
 @cli.command()
+@click.option('--wipe-key', default=False, is_flag=True,
+              help='Wipe SSH known host entry first.')
+@click.argument('resource')
+@pass_gandi
+def ssh(gandi, resource, wipe_key):
+    """Spawn an SSH session to virtual machine.
+
+    Resource can be a Hostname or an ID
+    """
+    gandi.iaas.ssh(resource, wipe_key)
+
+
+@cli.command()
 @click.option('--datacenter', type=DATACENTER, default=None,
               help='Filter by datacenter.')
 @click.argument('label', required=False)
