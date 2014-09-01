@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.5
+---
+
+* Fixes Debian packaging
+
+
 0.4
 ---
 
