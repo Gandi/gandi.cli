@@ -50,7 +50,6 @@ COMMAND-LINE OPTIONS
 --version   Display version.
 
 Namespaces:
-
 *  api                     Display information about API used.
 *  certificate change-dcv  Change the DCV for a pending certificate.
 *  certificate create      Create a new certificate.
@@ -61,9 +60,10 @@ Namespaces:
 *  certificate packages    List certificate packages.
 *  certificate resend-dcv  Resend the DCV mail for a pending certificate.
 *  certificate update      Update a certificate CSR.
-*  config                  Configure default values
+*  config                  Configure default values.
 *  datacenters             List available datacenters.
 *  deploy                  Deploy code on a remote vhost.
+*  disk create             Create a new disk.
 *  disk delete             Delete a disk.
 *  disk info               Display information about a disk.
 *  disk list               List disks.
@@ -71,9 +71,17 @@ Namespaces:
 *  domain create           Buy a domain.
 *  domain info             Display information about a domain.
 *  domain list             List domains.
+*  help                    Display help for a command.
+*  mail create             Create a mailbox.
+*  mail delete             Delete a mailbox.
+*  mail info               Display information about a mailbox.
+*  mail list               List mailboxes created on a domain.
+*  mail purge              Purge a mailbox.
+*  mail update             Update a mailbox.
 *  oper info               Display information about an operation.
 *  oper list               List operations.
 *  paas clone              Clone a remote vhost in a local git repository.
+*  paas console            Open a console on a PaaS.
 *  paas create             Create a new PaaS instance and initialize associated git repository.
 *  paas delete             Delete a PaaS instance.
 *  paas info               Display information about a PaaS instance.
@@ -82,12 +90,12 @@ Namespaces:
 *  paas types              List types PaaS instances.
 *  paas update             Update a PaaS instance.
 *  setup                   Initialize Gandi CLI configuration.
-*  snapshotprofile list    List possible snapshot profiles.
 *  snapshotprofile info    Display information about a snapshot profile.
-*  sshkey create           Create a new ssh key.
-*  sshkey delete           Delete thoses ssh keys.
-*  sshkey info             Display information about an ssh key.
-*  sshkey list             List ssh keys.
+*  snapshotprofile list    List possible snapshot profiles.
+*  sshkey create           Create a new SSH key.
+*  sshkey delete           Delete SSH keys.
+*  sshkey info             Display information about an SSH key.
+*  sshkey list             List SSH keys.
 *  vhost create            Create a new vhost.
 *  vhost delete            Delete a vhost.
 *  vhost info              Display information about a vhost.
@@ -133,6 +141,8 @@ Details:
 
 * ``gandi deploy virtualhost.domain.tld1`` push the files in the current directory to the virtualhost setup on a Gandi Simple Hosting instance.
 
+* ``gandi disk create`` create a new virtual disk. Possible options are ``--name TEXT`` for the label of the virtual disk, ``--size INTEGER`` for the new size of the disk, ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``, ``--vm TEXT`` to attach the newly create virtual disk to an existing virtual machine instance, ``--snapshotprofile 1|2|3|7`` to select a profile of snapshot to apply to the disk for keeping multiple version of data in a timeline. The operation can be done as background process using the option ``--background`` (or ``--bg``).
+
 * ``gandi disk delete resource`` delete a virtual disk identified as resource. Possible option is ``--force`` (or ``-f``) to bypass the validation question; useful in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi disk info resource`` show a detailed view of a specific virtual disk identified as resource.
@@ -147,15 +157,29 @@ Details:
 
 * ``gandi domain list`` show all the domains in the Gandi account. Possible option is ``--limit INTEGER`` which will show a subset of the list.
 
-* ``gandi oper list`` show all the running operation on your product at Gandi (for example Simple Hosting, domain, hosting). Possible option is ``--limit INTEGER`` which list only a subset of the full list of running operations.
+* ``gandi help command`` display help for command, if command is a namespace it will display list of available commands for this namespace.
+
+* ``gandi mail create login@domain.tld`` create a new mailbox. Possible options are ``-q, --quota INTEGER`` to define a quota for this mailbox, ``-f, --fallback TEXT`` to define a fallback addresse, ``-a, --alias TEXT`` to add an alias for this mailbox, this last option can be used multiple times.
+
+* ``gandi mail delete login@domain.tld`` delete mailbox ``login@domain.tld``. Option ``-f, --force`` can be used to disable confirmation prompt.
+
+* ``gandi mail info login@domain.tld`` show information about mailbox ``login@domain.tld``.
+
+* ``gandi mail list domain.tld`` show all existing mailboxes for specific domain ``domain.tld``.
+
+* ``gandi mail purge login@domain.tld`` purge mailbox ``login@domain.tld``. Possible options are ``-a, --alias`` to purge all aliases on this mailbox, ``--force`` (or ``-f``) to bypass the validation question; useful in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``).
+
+* ``gandi mail update login@domain.tld`` update mailbox ``login@domain.tld``. Possible options are ``-p, --password`` will prompt for a new password for this mailbox, ``-q, --quota INTEGER`` to define a quota for this mailbox, ``-f, --fallback TEXT`` to define a fallback addresse, ``-a, --alias-add TEXT`` to add an alias for this mailbox, can be used multiple times, ``-d, --alias-del TEXT`` to delete an alias for this mailbox, can be used multiple times.
 
 * ``gandi oper info id`` show information about the operation ``id``.
+
+* ``gandi oper list`` show all the running operation on your product at Gandi (for example Simple Hosting, domain, hosting). Possible option is ``--limit INTEGER`` which list only a subset of the full list of running operations.
 
 * ``gandi paas clone host.domain.tld`` clone all files of a remote virtual host to a local git repository.
 
 * ``gandi paas console resource`` open a console to the SimpleHosting. Note that resource could be a full qualified domain name or an integer id.
 
-* ``gandi paas create`` allow to create a Simple Hosting instance. Mandatory option is  ``--password TEXT`` for the password of the instance. Possible option are ``--name TEXT`` for the name of the instance (if not present, will be autogenerated), ``--size s|m|x|xl|xxl`` for the size (amount of RAM and processes), ``--type TYPE`` for the type as listed by the ``gandi paas types`` command, ``--quantity INTEGER`` for the additional disk space, ``--duration TEXT`` for the number of month suffixed with 'm', ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``, ``--vhosts TEXT`` for a list of virtual hosts to link to this instance, ``--snapshotprofile TEXT`` for the snapshot profile for the disk of the instance, ``--ssh-key TEXT`` to specifiy a name of a SSH key. The operation can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi paas create`` allow to create a Simple Hosting instance. Mandatory option is  ``--password TEXT`` for the password of the instance. Possible option are ``--name TEXT`` for the name of the instance (if not present, will be autogenerated), ``--size s|m|x|xl|xxl`` for the size (amount of RAM and processes), ``--type TYPE`` for the type as listed by the ``gandi paas types`` command, ``--quantity INTEGER`` for the additional disk space, ``--duration TEXT`` for the number of month suffixed with 'm', ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``, ``--vhosts TEXT`` for a list of virtual hosts to link to this instance, ``--snapshotprofile TEXT`` for the snapshot profile for the disk of the instance, ``--sshkey TEXT`` to specifiy a name of a SSH key. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi paas delete resource`` delete a Simple Hosting instance. Possible option is ``--force`` (or ``-f``) to bypass the validation question; useful in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
@@ -167,13 +191,13 @@ Details:
 
 * ``gandi paas types`` show all the Simple Hosting type available. For example: phpmysql which provides PHP and MySQL or pythonmongodb which provides Python and MongoDB.
 
-* ``gandi paas updates resource`` modify the options of a Simple Hosting. Possible options are ``--name TEXT`` which allow to rename a instance, ``--size s|m|x|xl|xxl`` to change the size of the instance, ``--quantity INTEGER`` to add disk space, ``--password`` to change the password of the instance, ``--ssh-key TEXT`` to specifiy a name of a SSH key, ``--upgrade TEXT`` to upgrade the instance to the latest system image, ``--console TEXT`` to enable or disable the console, ``--snapshotprofile TEXT`` to set the snapshot profile for the disk of the instance, ``--reset-mysql-password TEXT`` to reset the root password of MySQLd running on the instance. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi paas updates resource`` modify the options of a Simple Hosting. Possible options are ``--name TEXT`` which allow to rename a instance, ``--size s|m|x|xl|xxl`` to change the size of the instance, ``--quantity INTEGER`` to add disk space, ``--password`` to change the password of the instance, ``--sshkey TEXT`` to specifiy a name of a SSH key, ``--upgrade TEXT`` to upgrade the instance to the latest system image, ``--console TEXT`` to enable or disable the console, ``--snapshotprofile TEXT`` to set the snapshot profile for the disk of the instance, ``--reset-mysql-password TEXT`` to reset the root password of MySQLd running on the instance. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi setup`` initialize the configuration for the tool.
 
-* ``gandi snapshotprofile list`` show the list of all profile for virtual disk snapshot. Possible options are ``--only-paas`` and ``--only-vm`` to filter the output and show only the subset of profile for the Simple Hosting or the Gandi Hosting.
-
 * ``gandi snapshotprofile info resource`` detail the information about a profile : frequency of snapshot and retention period.
+
+* ``gandi snapshotprofile list`` show the list of all profile for virtual disk snapshot. Possible options are ``--only-paas`` and ``--only-vm`` to filter the output and show only the subset of profile for the Simple Hosting or the Gandi Hosting.
 
 * ``gandi sshkey create --name label`` add a SSH key identified by ``label`` which could be used for authentification. Possible option are ``--value TEXT``  with the content of the SSH public key or ``--sshkey FILENAME`` with the path to a file containing the SSH public key.
 
@@ -192,6 +216,8 @@ Details:
 * ``gandi vhost list`` show all the virtual host defined in Simple Hosting. Possible option are ``--names`` which add the name of the Simple Hosting instance on which the virtual host is setup, ``--ids`` which show the integer identificator and ``--limit INTEGER`` which show a subset of the full list of virtual host.
 
 * ``gandi vm console resource`` open a console on the virtual machine and give you a shell access.
+
+* ``gandi vm create`` create a new virtual machine. Possible option are ``--hostname TEXT`` for the hostname of the machine (if not present, will be autogenerated), ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``, ``--memory INTEGER`` for quantity of memory, ``--cores INTEGER`` for number of virtual CPU, ``--ip-version 4|6`` for version of created IP, ``--bandwidth INTEGER`` to set network bandwidth in bits/s on first network interface created, ``--login TEXT`` to define login to created on virtual machine, ``--image TEXT`` for the disk image to be used to boot the virtual machine as listed by ``gandi vm images``, ``--sshkey TEXT`` to specifiy name of a SSH key, ``--password`` will prompt for a password to set for the created login, ``--run TEXT`` to specify shell command that will run at the first boot of virtual machine. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi vm delete resource`` destroy a virtual machine, its main disk and its first virtual network interface. This operation can be done as background process using the option ``--background`` (or ``--bg``). Another possible parameter is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting.
 
