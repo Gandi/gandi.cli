@@ -1,6 +1,19 @@
 Changelog
 =========
 
+0.6
+---
+
+* New mail namespace for managing mailboxes and aliases
+* New command 'disk create' to create a virtual disk
+* New command 'vm ssh' to open a ssh connection to an existing
+  virtual machine
+* New command 'help' which behave like --help option.
+* Using 'gandi namespace' without full command will display list
+  of available commands for this namespace and associated short help.
+* 'gandi paas create' and 'gandi vm create' commands now use sshkeys,
+  and default to LU as default datacenter.
+
 0.5
 ---
 
