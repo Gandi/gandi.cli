@@ -249,4 +249,4 @@ Add missing Gandi product like ``virtual network interface`` or ``private vlan``
 BUGS
 ====
 
-Please report any bugs or issue on https://github.com/Gandi/gandi.cli by opening an issue using thi form https://github.com/Gandi/gandi.cli/issues/new.
+Please report any bugs or issue on https://github.com/Gandi/gandi.cli by opening an issue using this form https://github.com/Gandi/gandi.cli/issues/new. You can send patches by email to feedback@gandi.net.
