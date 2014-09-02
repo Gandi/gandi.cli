@@ -1,25 +1,36 @@
+""" Vhost commands module. """
+
 from click import UsageError
 
-from .paas import Paas
+from gandi.cli.modules.paas import Paas
 from gandi.cli.core.base import GandiModule
 
 
 class Vhost(GandiModule):
 
+    """ Module to handle CLI commands.
+
+    $ gandi vhost create
+    $ gandi vhost delete
+    $ gandi vhost info
+    $ gandi vhost list
+
+    """
+
     @classmethod
     def list(cls, options=None):
-        """ list paas vhosts (in the future it should handle iaas vhosts) """
+        """ List paas vhosts (in the future it should handle iaas vhosts)."""
         options = options or {}
         return cls.call('paas.vhost.list', options)
 
     @classmethod
     def info(cls, name):
-        """ display information about a vhost """
+        """ Display information about a vhost. """
         return cls.call('paas.vhost.info', name)
 
     @classmethod
     def create(cls, paas, vhost, alter_zone, background):
-        """ create a new vhost """
+        """ Create a new vhost. """
         if not background and not cls.intty():
             background = True
 
@@ -52,8 +63,7 @@ class Vhost(GandiModule):
 
     @classmethod
     def delete(cls, resources, background=False):
-        """ delete this vhost """
-
+        """ Delete this vhost. """
         if not isinstance(resources, (list, tuple)):
             resources = [resources]
 

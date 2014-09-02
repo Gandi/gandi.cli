@@ -1,3 +1,5 @@
+""" Custom command line validation parameters. """
+
 import click
 import re
 from click.decorators import _param_memo
@@ -6,34 +8,44 @@ from gandi.cli.core.base import GandiContextHelper
 
 
 class DatacenterParamType(click.Choice):
-    """ Choice parameter to select a datacenter between available ones. """
+
+    """ Choice parameter to select an available datacenter. """
+
     name = 'datacenter'
 
     def __init__(self):
+        """ Initialize choices list. """
         gandi = GandiContextHelper()
         choices = [item['iso'] for item in gandi.datacenter.list()]
         self.choices = choices
 
     def convert(self, value, param, ctx):
+        """ Convert value to uppercase. """
         value = value.upper()
         return click.Choice.convert(self, value, param, ctx)
 
 
 class PaasTypeParamType(click.Choice):
-    """ Choice parameter to select a PaaS type between available ones. """
+
+    """ Choice parameter to select an available PaaS instance type. """
+
     name = 'paas type'
 
     def __init__(self):
+        """ Initialize choices list. """
         gandi = GandiContextHelper()
         choices = [item['name'] for item in gandi.paas.type_list()]
         self.choices = choices
 
 
 class IntChoice(click.Choice):
-    """ Choice parameter to select an integer value in a set of int values"""
+
+    """ Choice parameter to select an integer value in a set of int values."""
+
     name = 'integer choice'
 
     def convert(self, value, param, ctx):
+        """ Convert value to int. """
         try:
             value = str(value)
         except Exception:
@@ -43,15 +55,19 @@ class IntChoice(click.Choice):
 
 
 class DiskImageParamType(click.Choice):
-    """ Choice parameter to select a disk image between available ones. """
+
+    """ Choice parameter to select an available disk image. """
+
     name = 'images'
 
     def __init__(self):
+        """ Initialize choices list. """
         gandi = GandiContextHelper()
         choices = [item['label'] for item in gandi.image.list()]
         self.choices = choices
 
     def convert(self, value, param, ctx):
+        """ Try to find correct disk image regarding version. """
         # Exact match
         if value in self.choices:
             return value
@@ -72,53 +88,64 @@ class DiskImageParamType(click.Choice):
 
 
 class SnapshotParamType(click.Choice):
-    """ Choice parameter to select a snapshot profile between available ones.
-    """
+
+    """ Choice parameter to select an available snapshot profile. """
+
     name = 'snapshot profile'
 
     def __init__(self):
+        """ Initialize choices list. """
         gandi = GandiContextHelper()
         choices = [str(item['id']) for item in gandi.snapshotprofile.list()]
         self.choices = choices
 
     def convert(self, value, param, ctx):
+        """ Convert value to int. """
         value = click.Choice.convert(self, value, param, ctx)
         return int(value)
 
 
 class CertificatePackage(click.Choice):
-    """ Choice parameter to select a certificate package between available
-    ones.
-    """
+
+    """ Choice parameter to select an available certificate package. """
+
     name = 'certificate package'
 
     def __init__(self):
+        """ Initialize choices list. """
         gandi = GandiContextHelper()
         choices = [item['name'] for item in gandi.certificate.package_list()]
         self.choices = choices
 
 
 class CertificateDcvMethod(click.Choice):
+
     """ Choice parameter to select a certificate dcv method.
-        * 'email' will send you an email to check domain ownership
-        * 'dns' will require you to add a TXT record in your domain zone
-        * 'file' will require you to add a file on you server
-        * 'auto' can only be used when your domain and it's zone are on the
-          same gandi account you are currently using (gandi will add the TXT
-          dns record).
+
+    * 'email' will send you an email to check domain ownership
+    * 'dns' will require you to add a TXT record in your domain zone
+    * 'file' will require you to add a file on you server
+    * 'auto' can only be used when your domain and it's zone are on the
+       same gandi account you are currently using (gandi will add the TXT
+       dns record).
     """
+
     name = 'certificate dcv method'
     choices = ['email', 'dns', 'file', 'auto']
 
     def __init__(self):
+        """ Initialize choices list. """
         pass
 
 
 class EmailParamType(click.ParamType):
-    """Check the email value and return a list ['login', 'domain']"""
+
+    """Check the email value and return a list ['login', 'domain']. """
+
     name = 'email'
 
     def convert(self, value, param, ctx):
+        """ Validate value using regexp. """
         rxp = '^[^@]+?@[-.a-z0-9]+$'
         regex = re.compile(rxp, re.I)
         try:
@@ -142,20 +169,21 @@ EMAIL_TYPE = EmailParamType()
 
 
 class GandiOption(click.Option):
-    """ Custom command option class for handling configuration files
+
+    """ Custom command option class for handling configuration files.
 
     When no value was found on command line, try to pull it from configuration
     Display default or configuration value when needed
     """
 
     def display_value(self, ctx, value):
-        """ Display value to be used for this parameter """
+        """ Display value to be used for this parameter. """
         gandi = ctx.obj
         gandi.log('%s: %s' % (self.name, (value if value is not None
                                           else 'Not found')))
 
     def get_default(self, ctx):
-        """ Retrieve default value and display it when prompt disabled """
+        """ Retrieve default value and display it when prompt disabled. """
         value = click.Option.get_default(self, ctx)
         if not self.prompt:
             # value found in default display it
@@ -163,7 +191,7 @@ class GandiOption(click.Option):
         return value
 
     def consume_value(self, ctx, opts):
-        """ Retrieve default value and display it when prompt is disabled """
+        """ Retrieve default value and display it when prompt is disabled. """
         value = click.Option.consume_value(self, ctx, opts)
         if not value:
             # value not found by click on command line
@@ -185,7 +213,7 @@ class GandiOption(click.Option):
         return value
 
     def handle_parse_result(self, ctx, opts, args):
-        """ Save value for this option in configuration """
+        """ Save value for this option in configuration. """
         value, args = click.Option.handle_parse_result(self, ctx, opts, args)
 
         if value is not None:
@@ -196,11 +224,12 @@ class GandiOption(click.Option):
 
 
 def option(*param_decls, **attrs):
-    """Attaches an option to the command.  All positional arguments are
-    passed as parameter declarations to :class:`Option`, all keyword
-    arguments are forwarded unchanged.  This is equivalent to creating an
-    :class:`Option` instance manually and attaching it to the
-    :attr:`Command.params` list.
+    """Attach an option to the command.
+
+    All positional arguments are passed as parameter declarations
+    to :class:`Option`, all keyword arguments are forwarded unchanged.
+    This is equivalent to creating an :class:`Option` instance manually and
+    attaching it to the :attr:`Command.params` list.
     """
     def decorator(f):
         _param_memo(f, GandiOption(param_decls, **attrs))

@@ -1,3 +1,5 @@
+""" Main namespace commands. """
+
 import click
 
 from gandi.cli.core.cli import cli
@@ -34,7 +36,7 @@ Setup completed. You can now:
 @click.argument('value')
 @pass_gandi
 def config(gandi, g, key, value):
-    """Configure default values"""
+    """Configure default values."""
     gandi.configure(global_=g, key=key, val=value)
 
 
@@ -42,7 +44,6 @@ def config(gandi, g, key, value):
 @pass_gandi
 def api(gandi):
     """Display information about API used."""
-
     output_keys = ['api_version']
 
     result = gandi.api.info()
@@ -55,7 +56,7 @@ def api(gandi):
 @click.argument('command', required=False, nargs=-1)
 @click.pass_context
 def help(ctx, command):
-    """Display help for a command"""
+    """Display help for a command."""
     command = ' '.join(command)
     if not command:
         click.echo(cli.get_help(ctx))

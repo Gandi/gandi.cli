@@ -1,3 +1,5 @@
+""" Disk namespace commands. """
+
 import click
 
 from gandi.cli.core.cli import cli, compatcallback
@@ -20,7 +22,6 @@ from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE,
 def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
          limit):
     """ List disks. """
-
     options = {
         'items_per_page': limit,
     }
@@ -73,6 +74,7 @@ def info(gandi, resource):
 
 @compatcallback
 def check_size(ctx, param, value):
+    """ Validation callback for size parameter."""
     if value and value % 1024:
         raise click.ClickException('Size must be a multiple of 1024.')
     return value

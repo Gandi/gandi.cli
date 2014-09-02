@@ -1,3 +1,5 @@
+""" Virtual machines namespace commands. """
+
 import click
 
 from gandi.cli.core.cli import cli
@@ -17,7 +19,6 @@ from gandi.cli.core.params import (
 @pass_gandi
 def list(gandi, state, id, limit):
     """List virtual machines."""
-
     options = {
         'items_per_page': limit,
     }
@@ -45,7 +46,6 @@ def info(gandi, resource):
 
     Resource can be a Hostname or an ID
     """
-
     output_keys = ['hostname', 'state', 'cores', 'memory', 'console',
                    'datacenter', 'ip']
 
@@ -72,7 +72,6 @@ def stop(gandi, background, resource):
 
     Resource can be a Hostname or an ID
     """
-
     output_keys = ['id', 'type', 'step']
 
     opers = gandi.iaas.stop(resource, background)
@@ -93,7 +92,6 @@ def start(gandi, background, resource):
 
     Resource can be a Hostname or an ID
     """
-
     output_keys = ['id', 'type', 'step']
 
     opers = gandi.iaas.start(resource, background)
@@ -114,7 +112,6 @@ def reboot(gandi, background, resource):
 
     Resource can be a Hostname or an ID
     """
-
     output_keys = ['id', 'type', 'step']
 
     opers = gandi.iaas.reboot(resource, background)
@@ -138,7 +135,6 @@ def delete(gandi, background, force, resource):
 
     Resource can be a Hostname or an ID
     """
-
     output_keys = ['id', 'type', 'step']
 
     iaas_list = gandi.iaas.list()
@@ -325,7 +321,6 @@ def images(gandi, label, datacenter):
     $ gandi vm images 'Ubuntu 10.04' --datacenter LU
 
     """
-
     output_keys = ['label', 'os_arch', 'kernel_version', 'disk_id',
                    'dc']
 
@@ -343,7 +338,6 @@ def images(gandi, label, datacenter):
 @pass_gandi
 def datacenters(gandi, id):
     """List available datacenters."""
-
     output_keys = ['iso', 'name', 'country']
     if id:
         output_keys.append('id')

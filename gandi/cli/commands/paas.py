@@ -1,3 +1,5 @@
+""" PaaS instances namespace commands. """
+
 import click
 
 from gandi.cli.core.cli import cli
@@ -15,7 +17,6 @@ from gandi.cli.core.params import pass_gandi, DATACENTER, PAAS_TYPE, option
 @pass_gandi
 def list(gandi, state, id, vhosts, type, limit):
     """List PaaS instances."""
-
     options = {
         'items_per_page': limit,
     }
@@ -54,7 +55,6 @@ def info(gandi, resource):
 
     Resource can be a vhost, a hostname, or an ID
     """
-
     output_keys = ['name', 'type', 'size', 'memory', 'console', 'vhost',
                    'dc', 'sftp_server', 'git_server']
 
@@ -74,7 +74,6 @@ def info(gandi, resource):
 @pass_gandi
 def clone(gandi, vhost):
     """Clone a remote vhost in a local git repository."""
-
     paas_access = gandi.get('paas.access')
     if not vhost and not paas_access:
         gandi.error('missing VHOST parameter')
@@ -91,7 +90,6 @@ def clone(gandi, vhost):
 @pass_gandi
 def deploy(gandi, vhost):
     """Deploy code on a remote vhost."""
-
     paas_access = gandi.get('paas.access')
     if not vhost and not paas_access:
         gandi.error('missing VHOST parameter')
@@ -118,7 +116,6 @@ def delete(gandi, background, force, resource):
 
     Resource can be a vhost, a hostname, or an ID
     """
-
     output_keys = ['id', 'type', 'step']
 
     possible_resources = gandi.paas.resource_list()
@@ -258,7 +255,6 @@ def restart(gandi, resource, background, force):
 
     Resource can be a vhost, a hostname, or an ID
     """
-
     output_keys = ['id', 'type', 'step']
 
     possible_resources = gandi.paas.resource_list()
@@ -289,7 +285,6 @@ def restart(gandi, resource, background, force):
 @pass_gandi
 def types(gandi):
     """List types PaaS instances."""
-
     options = {}
     types = gandi.paas.type_list(options)
     for type_ in types:
@@ -302,7 +297,7 @@ def types(gandi):
 @click.argument('resource')
 @pass_gandi
 def console(gandi, resource):
-    """Open a console on a PaaS
+    """Open a console on a PaaS.
 
     Resource can be a hostname or an ID
     """

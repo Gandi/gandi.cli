@@ -1,20 +1,25 @@
+""" Datacenter commands module. """
+
 from gandi.cli.core.base import GandiModule
 
 
 class Datacenter(GandiModule):
 
+    """ Module to handle CLI commands.
+
+    $ gandi datacenters
+    """
+
     @classmethod
     def list(cls):
-        """list available datacenters"""
-
+        """List available datacenters."""
         options = {}
 
         return cls.safe_call('hosting.datacenter.list', options)
 
     @classmethod
     def from_iso(cls, iso):
-        """retrieve datacenter id associated to an ISO"""
-
+        """Retrieve datacenter id associated to an ISO."""
         result = cls.list()
         dc_isos = {}
         for dc in result:
@@ -24,8 +29,7 @@ class Datacenter(GandiModule):
 
     @classmethod
     def from_name(cls, name):
-        """retrieve datacenter id associated to a name"""
-
+        """Retrieve datacenter id associated to a name."""
         result = cls.list()
         dc_names = {}
         for dc in result:
@@ -35,8 +39,7 @@ class Datacenter(GandiModule):
 
     @classmethod
     def from_country(cls, country):
-        """retrieve datacenter id associated to a country"""
-
+        """Retrieve datacenter id associated to a country."""
         result = cls.list()
         dc_countries = {}
         for dc in result:
@@ -46,6 +49,7 @@ class Datacenter(GandiModule):
 
     @classmethod
     def usable_id(cls, id):
+        """ Retrieve id from input which can be ISO, name, country."""
         try:
             # id is maybe a ISO
             qry_id = cls.from_iso(id)

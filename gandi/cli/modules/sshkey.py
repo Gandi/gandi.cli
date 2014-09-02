@@ -1,3 +1,5 @@
+""" SSH key commands module. """
+
 import os
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import DuplicateResults
@@ -5,9 +7,18 @@ from gandi.cli.core.utils import DuplicateResults
 
 class Sshkey(GandiModule):
 
+    """ Module to handle CLI commands.
+
+    $ gandi sshkey create
+    $ gandi sshkey delete
+    $ gandi sshkey info
+    $ gandi sshkey list
+
+    """
+
     @classmethod
     def from_name(cls, name):
-        '''retrieve a sshkey id associated to a name'''
+        """Retrieve a sshkey id associated to a name."""
         sshkeys = cls.list({'name': name})
         if len(sshkeys) == 1:
             return sshkeys[0]['id']
@@ -18,6 +29,7 @@ class Sshkey(GandiModule):
 
     @classmethod
     def usable_id(cls, id):
+        """ Retrieve id from input which can be name or id."""
         try:
             # id is maybe a sshkey name
             qry_id = cls.from_name(id)
@@ -36,18 +48,18 @@ class Sshkey(GandiModule):
 
     @classmethod
     def list(cls, options=None):
-        '''list ssh keys'''
+        """ List ssh keys."""
         options = options if options else {}
         return cls.call('hosting.ssh.list', options)
 
     @classmethod
     def info(cls, id):
-        '''display information about an ssh key'''
+        """ Display information about an ssh key. """
         return cls.call('hosting.ssh.info', cls.usable_id(id))
 
     @classmethod
     def create(cls, name, value):
-        '''create a new ssh key'''
+        """ Create a new ssh key."""
         sshkey_params = {
             'name': name,
             'value': value,
@@ -58,14 +70,17 @@ class Sshkey(GandiModule):
 
     @classmethod
     def delete(cls, id):
-        '''delete this ssh key'''
+        """Delete this ssh key."""
         return cls.call('hosting.ssh.delete', cls.usable_id(id))
 
 
 class SshkeyHelper(object):
 
+    """ Helper class to handle sshkey configuration entry. """
+
     @classmethod
     def convert_sshkey(cls, sshkey):
+        """ Return dict param with valid entries for vm/paas methods. """
         params = {}
         if sshkey:
             params['keys'] = []

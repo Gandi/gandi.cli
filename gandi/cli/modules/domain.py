@@ -1,24 +1,31 @@
+""" Domain commands module. """
+
 from gandi.cli.core.base import GandiModule
 
 
 class Domain(GandiModule):
 
+    """ Module to handle CLI commands.
+
+    $ gandi domain create
+    $ gandi domain info
+    $ gandi domain list
+
+    """
+
     @classmethod
     def list(cls, options):
-        """list operation"""
-
+        """List operation."""
         return cls.call('domain.list', options)
 
     @classmethod
     def info(cls, fqdn):
-        """display information about a domain"""
-
+        """Display information about a domain."""
         return cls.call('domain.info', fqdn)
 
     @classmethod
     def create(cls, fqdn, duration, owner, admin, tech, bill, background):
-        """Buy a domain."""
-
+        """Create a domain."""
         if not background and not cls.intty():
             background = True
 
@@ -50,8 +57,7 @@ class Domain(GandiModule):
 
     @classmethod
     def from_fqdn(cls, fqdn):
-        """retrieve domain id associated to a FQDN"""
-
+        """Retrieve domain id associated to a FQDN."""
         result = cls.list({})
         domains = {}
         for domain in result:
@@ -61,6 +67,7 @@ class Domain(GandiModule):
 
     @classmethod
     def usable_id(cls, id):
+        """ Retrieve id from input which can be fqdn or id."""
         try:
             # id is maybe a fqdn
             qry_id = cls.from_fqdn(id)

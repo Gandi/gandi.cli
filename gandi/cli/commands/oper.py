@@ -1,3 +1,5 @@
+""" Operation namespace commands. """
+
 import click
 
 from gandi.cli.core.cli import cli
@@ -11,7 +13,6 @@ from gandi.cli.core.params import pass_gandi
 @pass_gandi
 def list(gandi, limit):
     """List operations."""
-
     output_keys = ['id', 'type', 'step']
 
     options = {
@@ -32,7 +33,6 @@ def list(gandi, limit):
 @pass_gandi
 def info(gandi, id):
     """Display information about an operation."""
-
     output_keys = ['id', 'type', 'step', 'last_error']
 
     oper = gandi.oper.info(id)

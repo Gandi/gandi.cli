@@ -1,3 +1,5 @@
+""" Disk commands module. """
+
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import DuplicateResults
 from .iaas import Iaas, Datacenter
@@ -5,9 +7,19 @@ from .iaas import Iaas, Datacenter
 
 class Disk(GandiModule):
 
+    """ Module to handle CLI commands.
+
+    $ gandi disk create
+    $ gandi disk delete
+    $ gandi disk info
+    $ gandi disk list
+    $ gandi disk update
+
+    """
+
     @classmethod
     def from_name(cls, name):
-        """ retrieve a disk id accsociated to a name """
+        """ Retrieve a disk id accsociated to a name. """
         disks = cls.list({'name': name})
         if len(disks) == 1:
             return disks[0]['id']
@@ -18,6 +30,7 @@ class Disk(GandiModule):
 
     @classmethod
     def usable_id(cls, id):
+        """ Retrieve id from input which can be name or id."""
         try:
             qry_id = cls.from_name(id)
             if not qry_id:
@@ -35,22 +48,23 @@ class Disk(GandiModule):
 
     @classmethod
     def list(cls, options=None):
-        """ list all disks """
+        """ List all disks."""
         options = options or {}
         return cls.call('hosting.disk.list', options)
 
     @classmethod
     def _info(cls, disk_id):
-        """ get information about a disk """
+        """ Get information about a disk."""
         return cls.call('hosting.disk.info', disk_id)
 
     @classmethod
     def info(cls, name):
-        """ get information about a disk """
+        """ Get information about a disk."""
         return cls._info(cls.usable_id(name))
 
     @staticmethod
     def disk_param(name, size, snapshot_profile):
+        """ Return disk parameter structure. """
         disk_params = {}
 
         if name:
@@ -66,7 +80,7 @@ class Disk(GandiModule):
 
     @classmethod
     def update(cls, resource, name, size, snapshot_profile, background):
-        """ update this disk """
+        """ Update this disk. """
         disk_params = cls.disk_param(name, size, snapshot_profile)
 
         result = cls.call('hosting.disk.update',
@@ -81,7 +95,7 @@ class Disk(GandiModule):
 
     @classmethod
     def _detach(cls, disk_id):
-        """ detach a disk from a vm """
+        """ Detach a disk from a vm. """
         disk = cls._info(disk_id)
         opers = []
         if disk.get('vms_id'):
@@ -94,7 +108,7 @@ class Disk(GandiModule):
 
     @classmethod
     def delete(cls, resources, background=False):
-        """ delete this disk """
+        """ Delete this disk."""
         if not isinstance(resources, (list, tuple)):
             resources = [resources]
 
@@ -121,14 +135,14 @@ class Disk(GandiModule):
 
     @classmethod
     def _attach(cls, disk_id, vm_id):
-        """ attach a disk to a vm """
+        """ Attach a disk to a vm. """
         oper = cls.call('hosting.vm.disk_attach', vm_id, disk_id)
         return oper
 
     @classmethod
     def create(cls, name, vm, size, snapshotprofile, datacenter,
                background=False):
-        """ create a disk and attach it to a vm """
+        """ Create a disk and attach it to a vm. """
         disk_params = cls.disk_param(name, size, snapshotprofile)
         disk_params['datacenter_id'] = int(Datacenter.usable_id(datacenter))
 

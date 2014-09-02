@@ -1,3 +1,5 @@
+""" VM commands module. """
+
 import time
 
 from gandi.cli.core.base import GandiModule
@@ -8,10 +10,24 @@ from gandi.cli.modules.sshkey import SshkeyHelper
 
 class Iaas(GandiModule, SshkeyHelper):
 
+    """ Module to handle CLI commands.
+
+    $ gandi vm console
+    $ gandi vm create
+    $ gandi vm delete
+    $ gandi vm info
+    $ gandi vm list
+    $ gandi vm reboot
+    $ gandi vm ssh
+    $ gandi vm start
+    $ gandi vm stop
+    $ gandi vm update
+
+    """
+
     @classmethod
     def list(cls, options=None):
-        """list virtual machines"""
-
+        """List virtual machines."""
         if not options:
             options = {}
 
@@ -19,14 +35,12 @@ class Iaas(GandiModule, SshkeyHelper):
 
     @classmethod
     def info(cls, id):
-        """display information about a virtual machine"""
-
+        """Display information about a virtual machine."""
         return cls.call('hosting.vm.info', cls.usable_id(id))
 
     @classmethod
     def stop(cls, resources, background=False):
-        """stop a virtual machine"""
-
+        """Stop a virtual machine."""
         if not isinstance(resources, (list, tuple)):
             resources = [resources]
 
@@ -47,8 +61,7 @@ class Iaas(GandiModule, SshkeyHelper):
 
     @classmethod
     def start(cls, resources, background=False):
-        """start a virtual machine"""
-
+        """Start a virtual machine."""
         if not isinstance(resources, (list, tuple)):
             resources = [resources]
 
@@ -69,8 +82,7 @@ class Iaas(GandiModule, SshkeyHelper):
 
     @classmethod
     def reboot(cls, resources, background=False):
-        """reboot a virtual machine"""
-
+        """Reboot a virtual machine."""
         if not isinstance(resources, (list, tuple)):
             resources = [resources]
 
@@ -91,8 +103,7 @@ class Iaas(GandiModule, SshkeyHelper):
 
     @classmethod
     def delete(cls, resources, background=False):
-        """delete a virtual machine"""
-
+        """Delete a virtual machine."""
         if not isinstance(resources, (list, tuple)):
             resources = [resources]
 
@@ -117,8 +128,7 @@ class Iaas(GandiModule, SshkeyHelper):
 
     @classmethod
     def update(cls, id, memory, cores, console, password, background):
-        """update a virtual machine"""
-
+        """Update a virtual machine."""
         if not background and not cls.intty():
             background = True
 
@@ -147,19 +157,7 @@ class Iaas(GandiModule, SshkeyHelper):
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
                login, password, hostname, image, run, background, sshkey):
-        """create a new virtual machine.
-
-        you can specify a configuration entry named 'sshkey' containing
-        path to your sshkey file
-
-        $ gandi config -g sshkey ~/.ssh/id_rsa.pub
-
-        to know which disk image label (or id) to use as image
-
-        $ gandi images
-
-        """
-
+        """Create a new virtual machine."""
         if not background and not cls.intty():
             background = True
 
@@ -221,8 +219,7 @@ class Iaas(GandiModule, SshkeyHelper):
 
     @classmethod
     def from_hostname(cls, hostname):
-        """retrieve virtual machine id associated to a hostname"""
-
+        """Retrieve virtual machine id associated to a hostname."""
         result = cls.list()
         vm_hosts = {}
         for host in result:
@@ -232,6 +229,7 @@ class Iaas(GandiModule, SshkeyHelper):
 
     @classmethod
     def usable_id(cls, id):
+        """ Retrieve id from input which can be hostname or id."""
         try:
             # id is maybe a hostname
             qry_id = cls.from_hostname(id)
@@ -248,7 +246,7 @@ class Iaas(GandiModule, SshkeyHelper):
 
     @classmethod
     def ssh(cls, vm_id, wipe_key=False):
-        """spawn an ssh session to virtual machine"""
+        """Spawn an ssh session to virtual machine."""
         vm_info = cls.info(vm_id)
         for iface in vm_info['ifaces']:
             for ip in iface['ips']:
@@ -271,8 +269,7 @@ class Iaas(GandiModule, SshkeyHelper):
 
     @classmethod
     def console(cls, id):
-        """open a console to virtual machine"""
-
+        """Open a console to virtual machine."""
         vm_info = cls.info(id)
         if not vm_info['console']:
             # first activate console
@@ -297,10 +294,15 @@ class Iaas(GandiModule, SshkeyHelper):
 
 class Image(GandiModule):
 
+    """ Module to handle CLI commands.
+
+    $ gandi vm images
+
+    """
+
     @classmethod
     def list(cls, datacenter=None, label=None):
-        """list available images for vm creation"""
-
+        """List available images for vm creation."""
         options = {}
         if datacenter:
             datacenter_id = int(Datacenter.usable_id(datacenter))
@@ -315,8 +317,7 @@ class Image(GandiModule):
 
     @classmethod
     def from_label(cls, label, datacenter=None):
-        """retrieve disk image id associated to a label"""
-
+        """Retrieve disk image id associated to a label."""
         result = cls.list(datacenter=datacenter)
         image_labels = dict([(image['label'], image['disk_id'])
                             for image in result])
@@ -325,6 +326,7 @@ class Image(GandiModule):
 
     @classmethod
     def usable_id(cls, id, datacenter=None):
+        """ Retrieve id from input which can be label or id."""
         try:
             qry_id = int(id)
         except:

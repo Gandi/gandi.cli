@@ -1,16 +1,23 @@
+""" Operation commands module. """
+
 from gandi.cli.core.base import GandiModule
 
 
 class Oper(GandiModule):
 
+    """ Module to handle CLI commands.
+
+    $ gandi oper info
+    $ gandi oper list
+
+    """
+
     @classmethod
     def list(cls, options):
-        """list operation"""
-
+        """List operation."""
         return cls.call('operation.list', options)
 
     @classmethod
     def info(cls, id):
-        """display information about an operation"""
-
+        """Display information about an operation."""
         return cls.call('operation.info', id)

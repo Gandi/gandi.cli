@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+""" GandiCLI class declaration and initialization. """
+
 import os
 import os.path
 import inspect
@@ -12,21 +14,25 @@ from gandi.cli import __version__
 
 # XXX: dirty hack of click help command to allow short help -h
 def add_help_option(self):
-    """Adds a help option to the command."""
+    """Add a help option to the command."""
     click.help_option(*('--help', '-h'))(self)
 
 click.Command.add_help_option = add_help_option
 
 
 def compatcallback(f):
-    # Click 1.0 does not have a version string stored, so we need to
-    # use getattr here to be safe.
+    """ Compatibility callback decorator for older click version.
+
+    Click 1.0 does not have a version string stored, so we need to
+    use getattr here to be safe.
+    """
     if getattr(click, '__version__', '0.0') >= '2.0':
         return f
     return update_wrapper(lambda ctx, value: f(ctx, None, value), f)
 
 
 class GandiCLI(click.Group):
+
     """ Gandi command line utility.
 
     All CLI commands have a documented help
@@ -36,7 +42,7 @@ class GandiCLI(click.Group):
     """
 
     def __init__(self, help=None):
-
+        """ Initialize CLI command line."""
         @compatcallback
         def set_debug(ctx, param, value):
             ctx.obj['verbose'] = value
@@ -66,6 +72,11 @@ class GandiCLI(click.Group):
         ])
 
     def get_command(self, ctx, cmd_name):
+        """ Retrieve command from internal list.
+
+        Handle custom namespace commands.
+        Display custom help when no command was found in a namespace.
+        """
         sub_cmd = False
         if len(ctx.args) > 1:
             # XXX: dirty hack to handle namespaces by merging the first 2 args
@@ -107,8 +118,9 @@ class GandiCLI(click.Group):
         ctx.exit()
 
     def command(self, *args, **kwargs):
-        """A shortcut decorator for declaring and attaching a command to
-        the group.  This takes the same arguments as :func:`command` but
+        """Decorator for declaring and attaching a command to the group.
+
+        This takes the same arguments as :func:`command` but
         immediately registers the created command with this instance by
         calling into :meth:`add_command`.
         """
@@ -129,7 +141,7 @@ class GandiCLI(click.Group):
         return decorator
 
     def load_commands(self):
-        """ Load cli commands from submodules """
+        """ Load cli commands from submodules. """
         command_folder = os.path.join(os.path.dirname(__file__),
                                       '..', 'commands')
         command_dirs = {
@@ -149,10 +161,12 @@ class GandiCLI(click.Group):
                     __import__(module_name, fromlist=[module_name])
 
     def invoke(self, ctx):
+        """ Invoke command in context. """
         ctx.obj = GandiContextHelper(verbose=ctx.obj['verbose'])
         click.Group.invoke(self, ctx)
 
     def handle_subcommand(self, ctx, args, **extra):
+        """ Override click method to handle namespace commands. """
         cmd_name = click.utils.make_str(args[0])
         original_cmd_name = cmd_name
 

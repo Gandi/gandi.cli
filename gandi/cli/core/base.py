@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+""" Contains GandiModule and GandiContextHelper classes.
+
+GandiModule class is used by commands modules.
+GandiContextHelper class is used as click context for commands.
+"""
+
 import os
 import sys
 import time
@@ -14,17 +20,19 @@ from .conf import GandiConfig
 
 
 class MissingConfiguration(Exception):
-    """ Raise when no configuration was found """
+
+    """ Raise when no configuration was found. """
 
 
 class GandiModule(GandiConfig):
-    """ Base class for modules
+
+    """ Base class for modules.
 
     Manage
     - initializing xmlrpc connection
     - execute remote api calls
-
     """
+
     _op_scores = {'BILL': 0, 'WAIT': 1, 'RUN': 2, 'DONE': 3}
 
     verbose = 0
@@ -32,7 +40,7 @@ class GandiModule(GandiConfig):
 
     @classmethod
     def get_api_connector(cls):
-        """ initialize an api connector for future use"""
+        """ Initialize an api connector for future use."""
         if cls._api is None:
             cls.load_config()
             cls.debug('initialize connection to remote server')
@@ -50,7 +58,7 @@ class GandiModule(GandiConfig):
 
     @classmethod
     def call(cls, method, *args, **kwargs):
-        """ call a remote api method and return the result """
+        """ Call a remote api method and return the result."""
         try:
             api = cls.get_api_connector()
             apikey = cls.get('api.key')
@@ -80,11 +88,12 @@ class GandiModule(GandiConfig):
 
     @classmethod
     def safe_call(cls, method, *args):
-        """ call a remote api method but don't raise if an error occured """
+        """ Call a remote api method but don't raise if an error occured."""
         return cls.call(method, *args, safe=True)
 
     @classmethod
     def intty(cls):
+        """ Check if we are in a tty. """
         # XXX: temporary hack until we can detect if we are in a pipe or not
         return True
 
@@ -95,12 +104,14 @@ class GandiModule(GandiConfig):
 
     @classmethod
     def echo(cls, message):
+        """ Display message. """
         if cls.intty():
             if message:
                 print message
 
     @classmethod
     def pretty_echo(cls, message):
+        """ Display message using pretty print formatting. """
         if cls.intty():
             if message:
                 from pprint import pprint
@@ -108,27 +119,32 @@ class GandiModule(GandiConfig):
 
     @classmethod
     def separator_line(cls, sep='-', size=10):
+        """ Display a separator line. """
         if cls.intty():
             cls.echo(sep * size)
 
     @classmethod
     def debug(cls, message):
+        """ Display debug message if verbose level allows it. """
         if cls.verbose > 1:
             msg = '[DEBUG] %s' % message
             cls.echo(msg)
 
     @classmethod
     def log(cls, message):
+        """ Display info message if verbose level allows it. """
         if cls.verbose > 0:
             msg = '[INFO] %s' % message
             cls.echo(msg)
 
     @classmethod
     def error(cls, msg):
+        """ Raise click UsageError exception using msg. """
         raise UsageError(msg)
 
     @classmethod
     def shell(cls, command):
+        """ Execute a shell command. """
         cls.debug(command)
         try:
             check_call(command, shell=True)
@@ -138,6 +154,7 @@ class GandiModule(GandiConfig):
 
     @classmethod
     def update_progress(cls, progress, starttime):
+        """ Display an ascii progress bar while processing operation. """
         width, _height = click.get_terminal_size()
         if not width:
             return
@@ -169,11 +186,10 @@ class GandiModule(GandiConfig):
 
     @classmethod
     def display_progress(cls, operations):
-        """ Display progress of Gandi operations
+        """ Display progress of Gandi operations.
 
-        polls API every 1 seconds to retrieve status
+        polls API every 1 seconds to retrieve status.
         """
-
         start_crea = datetime.utcnow()
 
         # count number of operations, 3 steps per operation
@@ -203,15 +219,16 @@ class GandiModule(GandiConfig):
 
 
 class GandiContextHelper(GandiModule):
-    """ Gandi context helper
 
-    Load module classes from modules directory at start
+    """ Gandi context helper.
+
+    Import module classes from modules directory upon initialization.
     """
 
     _modules = {}
 
     def __init__(self, verbose=False):
-        """ initialize variables and api connection """
+        """ Initialize variables and api connection. """
         GandiModule.verbose = verbose
         GandiModule.load_config()
         # only load modules once
@@ -219,11 +236,13 @@ class GandiContextHelper(GandiModule):
             self.load_modules()
 
     def __getattribute__(self, item):
+        """ Return module from internal imported modules dict. """
         if item in object.__getattribute__(self, '_modules'):
             return object.__getattribute__(self, '_modules')[item]
         return object.__getattribute__(self, item)
 
     def load_modules(self):
+        """ Import CLI commands modules. """
         module_folder = os.path.join(os.path.dirname(__file__), '../modules')
         for filename in os.listdir(module_folder):
             if filename.endswith('.py') and '__init__' not in filename:

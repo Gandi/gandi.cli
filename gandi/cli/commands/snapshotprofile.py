@@ -1,3 +1,5 @@
+""" Snapshot profiles namespace commands. """
+
 import click
 
 from gandi.cli.core.cli import cli
@@ -11,7 +13,6 @@ from gandi.cli.core.params import pass_gandi
 @pass_gandi
 def list(gandi, only_paas, only_vm):
     """ List snapshot profiles. """
-
     target = None
     if only_paas and not only_vm:
         target = 'paas'

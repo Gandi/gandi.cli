@@ -1,3 +1,5 @@
+""" PaaS commands module. """
+
 import os
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
@@ -6,10 +8,11 @@ from gandi.cli.modules.sshkey import SshkeyHelper
 
 class Vhost(GandiModule):
 
+    """ Helper class to retrieve list of vhosts. """
+
     @classmethod
     def list(cls, options=None):
-        """list virtual hosts"""
-
+        """List virtual hosts."""
         if not options:
             options = {}
 
@@ -18,28 +21,38 @@ class Vhost(GandiModule):
 
 class Paas(GandiModule, SshkeyHelper):
 
+    """ Module to handle CLI commands.
+
+    $ gandi paas clone
+    $ gandi paas console
+    $ gandi paas create
+    $ gandi paas delete
+    $ gandi paas info
+    $ gandi paas list
+    $ gandi paas restart
+    $ gandi paas types
+    $ gandi paas update
+
+    """
+
     @classmethod
     def type_list(cls, options={}):
-        """list type of PaaS instances"""
-
+        """List type of PaaS instances."""
         return cls.safe_call('paas.type.list', options)
 
     @classmethod
     def list(cls, options=None):
-        """list PaaS instances"""
-
+        """List PaaS instances."""
         return cls.call('paas.list', options)
 
     @classmethod
     def info(cls, id):
-        """display information about a PaaS instance"""
-
+        """Display information about a PaaS instance."""
         return cls.call('paas.info', cls.usable_id(id))
 
     @classmethod
     def delete(cls, resources, background=False):
-        """delete a PaaS instance"""
-
+        """Delete a PaaS instance."""
         if not isinstance(resources, (list, tuple)):
             resources = [resources]
 
@@ -61,8 +74,7 @@ class Paas(GandiModule, SshkeyHelper):
     @classmethod
     def update(cls, id, name, size, quantity, password, sshkey, upgrade,
                console, snapshot_profile, reset_mysql_password, background):
-        """update a PaaS instance"""
-
+        """Update a PaaS instance."""
         if not background and not cls.intty():
             background = True
 
@@ -105,19 +117,7 @@ class Paas(GandiModule, SshkeyHelper):
     @classmethod
     def create(cls, name, size, type, quantity, duration, datacenter, vhosts,
                password, snapshot_profile, background, sshkey):
-        """create a new PaaS instance.
-
-        you can specify a configuration entry named 'sshkey' containing
-        path to your sshkey file
-
-        $ gandi config -g sshkey ~/.ssh/id_rsa.pub
-
-        or getting the sshkey "my_key" from your gandi ssh keyring
-
-        $ gandi config -g sshkey my_key
-
-        """
-
+        """Create a new PaaS instance."""
         if not background and not cls.intty():
             background = True
 
@@ -155,8 +155,7 @@ class Paas(GandiModule, SshkeyHelper):
 
     @classmethod
     def restart(cls, resources, background=False):
-        """restart a PaaS instance"""
-
+        """Restart a PaaS instance."""
         if not isinstance(resources, (list, tuple)):
             resources = [resources]
 
@@ -189,8 +188,7 @@ class Paas(GandiModule, SshkeyHelper):
 
     @classmethod
     def console(cls, id):
-        """open a console to PaaS"""
-
+        """Open a console to a PaaS instance."""
         oper = cls.call('paas.update', cls.usable_id(id), {'console': 1})
         cls.echo("Activation of the console on your PaaS")
         cls.display_progress(oper)
@@ -200,6 +198,7 @@ class Paas(GandiModule, SshkeyHelper):
 
     @classmethod
     def init_vhost(cls, vhost, created=True, id=None, paas=None):
+        """Initialize vhost directory and create a local configuration file."""
         assert id or paas
         if not paas:
             paas = Paas.info(cls.usable_id(id))
@@ -260,6 +259,7 @@ class Paas(GandiModule, SshkeyHelper):
 
     @classmethod
     def usable_id(cls, id):
+        """ Retrieve id from input which can be hostname, vhost, id."""
         try:
             # id is maybe a hostname
             qry_id = cls.from_hostname(id)
@@ -279,8 +279,7 @@ class Paas(GandiModule, SshkeyHelper):
 
     @classmethod
     def from_vhost(cls, vhost):
-        """retrieve paas instance id associated to a vhost"""
-
+        """Retrieve paas instance id associated to a vhost."""
         result = Vhost().list()
         paas_hosts = {}
         for host in result:
@@ -290,8 +289,7 @@ class Paas(GandiModule, SshkeyHelper):
 
     @classmethod
     def from_hostname(cls, hostname):
-        """retrieve paas instance id associated to a host"""
-
+        """Retrieve paas instance id associated to a host."""
         result = cls.list({})
         paas_hosts = {}
         for host in result:
@@ -301,8 +299,7 @@ class Paas(GandiModule, SshkeyHelper):
 
     @classmethod
     def list_names(cls):
-        """ retrieve paas id and names """
-
+        """Retrieve paas id and names."""
         ret = dict([(item['id'], item['name'])
                     for item in cls.list({})])
         return ret

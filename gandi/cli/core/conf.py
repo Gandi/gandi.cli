@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+""" Configuration handler class declaration. """
+
 import os
 import sys
 import yaml
@@ -14,7 +16,8 @@ import click
 
 
 class GandiConfig(object):
-    """ Base class for yaml configuration
+
+    """ Base class for yaml configuration.
 
     Manage
     - read/write configuration files/values
@@ -35,8 +38,7 @@ class GandiConfig(object):
 
     @classmethod
     def load_config(cls):
-        """ Load global and local configuration files or initialize if needed
-        """
+        """ Load global and local configuration files and update if needed."""
         config_file = os.path.expanduser(cls.home_config)
         global_conf = cls.load(config_file, 'global')
         cls.load(cls.local_config, 'local')
@@ -45,7 +47,7 @@ class GandiConfig(object):
 
     @classmethod
     def update_config(cls, config_file, config):
-        """ update configuration if needed """
+        """ Update configuration if needed. """
         need_save = False
         # delete old env key
         if 'api' in config and 'env' in config['api']:
@@ -70,7 +72,7 @@ class GandiConfig(object):
 
     @classmethod
     def load(cls, filename, name=None):
-        """ Load yaml configuration from filename """
+        """ Load yaml configuration from filename. """
         if not os.path.exists(filename):
             return {}
         name = name or filename
@@ -87,7 +89,7 @@ class GandiConfig(object):
 
     @classmethod
     def save(cls, filename, config):
-        """ Save configuration to yaml file """
+        """ Save configuration to yaml file. """
         yaml.safe_dump(config, open(filename, "w"), indent=4,
                        default_flow_style=False)
 
@@ -148,7 +150,7 @@ class GandiConfig(object):
 
     @classmethod
     def get(cls, key, default=None, separator='.'):
-        """ Retrieve a key value from loaded configuration
+        """ Retrieve a key value from loaded configuration.
 
         Order of search :
         1/ environnment variables
@@ -171,6 +173,7 @@ class GandiConfig(object):
 
     @classmethod
     def configure(cls, global_, key, val):
+        """ Update and save configuration value to file. """
         # first retrieve current configuration
         scope = 'global' if global_ else 'local'
         if scope not in cls._conffiles:
@@ -184,7 +187,7 @@ class GandiConfig(object):
 
     @classmethod
     def init_config(cls):
-        """ Initialize Gandi CLI configuration
+        """ Initialize Gandi CLI configuration.
 
         Create global configuration directory with API credentials
 

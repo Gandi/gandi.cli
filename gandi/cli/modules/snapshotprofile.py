@@ -1,12 +1,21 @@
+""" Snapshot profile commands module. """
+
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import DuplicateResults
 
 
 class SnapshotProfile(GandiModule):
 
+    """ Module to handle CLI commands.
+
+    $ gandi snapshotprofile info
+    $ gandi snapshotprofile list
+
+    """
+
     @classmethod
     def from_name(cls, name):
-        """ retrieve a snapshot profile accsociated to a name """
+        """ Retrieve a snapshot profile accsociated to a name."""
         snps = cls.list({'name': name})
         if len(snps) == 1:
             return snps[0]['id']
@@ -17,6 +26,7 @@ class SnapshotProfile(GandiModule):
 
     @classmethod
     def usable_id(cls, id):
+        """ Retrieve id from input which can be name or id."""
         try:
             qry_id = cls.from_name(id)
             if not qry_id:
@@ -34,7 +44,7 @@ class SnapshotProfile(GandiModule):
 
     @classmethod
     def list(cls, options=None, target=None):
-        """ list all snapshot profiles """
+        """ List all snapshot profiles."""
         options = options or {}
 
         result = []
@@ -54,7 +64,7 @@ class SnapshotProfile(GandiModule):
 
     @classmethod
     def info(cls, resource):
-        """ """
+        """Display information about a snapshot profile."""
         snps = cls.list({'id': cls.usable_id(resource)})
         if len(snps) == 1:
             return snps[0]

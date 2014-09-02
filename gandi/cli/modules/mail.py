@@ -1,24 +1,34 @@
+""" Mail commands module. """
+
 from gandi.cli.core.base import GandiModule
 
 
 class Mail(GandiModule):
 
+    """ Module to handle CLI commands.
+
+    $ gandi mail create
+    $ gandi mail delete
+    $ gandi mail info
+    $ gandi mail list
+    $ gandi mail purge
+    $ gandi mail update
+
+    """
+
     @classmethod
     def list(cls, domain, options):
-        """list mailboxes for a given domain name"""
-
+        """List mailboxes for a given domain name."""
         return cls.call('domain.mailbox.list', domain, options)
 
     @classmethod
     def info(cls, domain, login):
-        """Display information about a mailbox"""
-
+        """Display information about a mailbox."""
         return cls.call('domain.mailbox.info', domain, login)
 
     @classmethod
     def create(cls, domain, login, options, alias):
-        """Create a mailbox"""
-
+        """Create a mailbox."""
         cls.echo("Creating your mailbox.")
         result = cls.call('domain.mailbox.create', domain, login, options)
 
@@ -30,14 +40,12 @@ class Mail(GandiModule):
 
     @classmethod
     def delete(cls, domain, login):
-        """Delete a mailbox"""
-
+        """Delete a mailbox."""
         return cls.call('domain.mailbox.delete', domain, login)
 
     @classmethod
     def update(cls, domain, login, options, alias_add, alias_del):
-        """Update a mailbox"""
-
+        """Update a mailbox."""
         cls.echo("Updating your mailbox.")
         result = cls.call('domain.mailbox.update', domain, login, options)
 
@@ -61,8 +69,7 @@ class Mail(GandiModule):
 
     @classmethod
     def purge(cls, domain, login, background=False):
-        """Purge a mailbox"""
-
+        """Purge a mailbox."""
         oper = cls.call('domain.mailbox.purge', domain, login)
         if background:
             return oper
@@ -72,6 +79,5 @@ class Mail(GandiModule):
 
     @classmethod
     def set_alias(cls, domain, login, aliases):
-        """Update aliases on a mailbox"""
-
+        """Update aliases on a mailbox."""
         return cls.call('domain.mailbox.alias.set', domain, login, aliases)

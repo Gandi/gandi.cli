@@ -1,3 +1,5 @@
+""" Certificate namespace commands. """
+
 import os
 import click
 
@@ -122,7 +124,7 @@ def info(gandi, resource, id, altnames, csr, cert, all_status):
               help='Overwrite the crt file if it exists.')
 @pass_gandi
 def export(gandi, resource, output, force):
-    """ Write the certificate to <output> or <fqdn>.crt
+    """ Write the certificate to <output> or <fqdn>.crt.
 
     Resource can be a CN or an ID
     """
@@ -190,8 +192,7 @@ def export(gandi, resource, output, force):
 @pass_gandi
 def create(gandi, csr, private_key, common_name, country, state, city,
            organisation, branch, duration, package, altnames, dcv_method):
-    """Create a new certificate.
-    """
+    """Create a new certificate."""
     if not (csr or common_name):
         gandi.echo('You need a CSR or a CN to create a certificate.')
         return

@@ -1,3 +1,5 @@
+""" SSH keys namespace commands. """
+
 import click
 from click.exceptions import UsageError
 

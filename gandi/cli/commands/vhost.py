@@ -1,3 +1,5 @@
+""" Virtual hosts namespace commands. """
+
 import click
 
 from gandi.cli.core.cli import cli

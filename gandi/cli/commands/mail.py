@@ -1,3 +1,5 @@
+""" Mail namespace commands. """
+
 import click
 
 from gandi.cli.core.cli import cli
@@ -12,7 +14,6 @@ from gandi.cli.core.params import pass_gandi, EMAIL_TYPE
 @pass_gandi
 def list(gandi, domain, limit):
     """List mailboxes created on a domain."""
-
     options = {'items_per_page': limit}
     mailboxes = gandi.mail.list(domain, options)
     output_list(gandi, [mbox['login'] for mbox in mailboxes])
@@ -24,7 +25,6 @@ def list(gandi, domain, limit):
 @pass_gandi
 def info(gandi, email):
     """Display information about a mailbox."""
-
     login, domain = email
 
     output_keys = ['login', 'aliases', 'fallback_email', 'quota', 'responder']
@@ -45,7 +45,6 @@ def info(gandi, email):
 @pass_gandi
 def create(gandi, email, quota, fallback, alias):
     """Create a mailbox."""
-
     login, domain = email
     options = {}
     password = click.prompt('password', hide_input=True,
@@ -69,7 +68,6 @@ def create(gandi, email, quota, fallback, alias):
 @pass_gandi
 def delete(gandi, email, force, alias):
     """Delete a mailbox."""
-
     login, domain = email
 
     if not force:
@@ -99,7 +97,6 @@ def delete(gandi, email, force, alias):
 @pass_gandi
 def update(gandi, email, password, quota, fallback, alias_add, alias_del):
     """Update a mailbox."""
-
     options = {}
 
     if password:
@@ -131,7 +128,6 @@ def update(gandi, email, password, quota, fallback, alias_add, alias_del):
 @pass_gandi
 def purge(gandi, email, background, force, alias):
     """Purge a mailbox."""
-
     login, domain = email
     if alias:
         if not force:

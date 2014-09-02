@@ -1,3 +1,5 @@
+""" Certificate commands module. """
+
 import os
 import re
 from click import UsageError
@@ -6,9 +8,22 @@ from gandi.cli.core.base import GandiModule
 
 class Certificate(GandiModule):
 
+    """ Module to handle CLI commands.
+
+    $ gandi certificate change-dcv
+    $ gandi certificate create
+    $ gandi certificate delete
+    $ gandi certificate export
+    $ gandi certificate info
+    $ gandi certificate list
+    $ gandi certificate packages
+    $ gandi certificate resend-dcv
+    $ gandi certificate update
+    """
+
     @classmethod
     def from_cn(cls, common_name):
-        """ retrieve a certificate by it's common name """
+        """ Retrieve a certificate by it's common name. """
         result = [(cert['id'], [cert['cn']] + cert['altnames'])
                   for cert in cls.list({'status': ['pending', 'valid']})]
 
@@ -25,6 +40,7 @@ class Certificate(GandiModule):
 
     @classmethod
     def usable_ids(cls, id, accept_multi=True):
+        """ Retrieve id from input which can be an id or a cn."""
         try:
             qry_id = cls.from_cn(id)
             if not qry_id:
@@ -40,11 +56,12 @@ class Certificate(GandiModule):
 
     @classmethod
     def usable_id(cls, id):
+        """ Retrieve id from single input."""
         return cls.usable_ids(id, False)
 
     @classmethod
     def package_list(cls, options=None):
-        """ list possible certificate packages """
+        """ List possible certificate packages."""
         options = options or {}
         try:
             return cls.safe_call('cert.package.list', options)
@@ -55,17 +72,18 @@ class Certificate(GandiModule):
 
     @classmethod
     def list(cls, options=None):
-        """ list certificates """
+        """ List certificates."""
         options = options or {}
         return cls.call('cert.list', options)
 
     @classmethod
     def info(cls, id):
-        """ display information about a certificate """
+        """ Display information about a certificate."""
         return cls.call('cert.info', cls.usable_id(id))
 
     @classmethod
     def advice_dcv_method(cls, csr, package, altnames, dcv_method):
+        """ Display dcv_method information. """
         params = {'csr': csr, 'package': package, 'dcv_method': dcv_method}
         result = cls.call('cert.get_dcv_params', params)
         if dcv_method == 'dns':
@@ -74,15 +92,17 @@ class Certificate(GandiModule):
 
     @classmethod
     def change_dcv(cls, oper_id, dcv_method):
+        """ Change dcv method."""
         cls.call('cert.change_dcv', oper_id, dcv_method)
 
     @classmethod
     def resend_dcv(cls, oper_id):
+        """ Resend dcv. """
         cls.call('cert.resend_dcv', oper_id)
 
     @classmethod
     def create(cls, csr, duration, package, altnames, dcv_method):
-        """ create a new certificate """
+        """ Create a new certificate. """
         params = {'csr': csr, 'package': package, 'duration': duration}
         if altnames:
             params['altnames'] = altnames
@@ -105,8 +125,7 @@ class Certificate(GandiModule):
     @classmethod
     def update(cls, cert_id, csr, private_key, country, state, city,
                organisation, branch, altnames, dcv_method):
-        """ update a certificate """
-
+        """ Update a certificate. """
         cert = cls.info(cert_id)
         if cert['status'] != 'valid':
             cls.error('The certificate must be in valid status to be updated.')
@@ -141,6 +160,7 @@ class Certificate(GandiModule):
 
     @classmethod
     def create_csr(cls, common_name, private_key=None, params=None):
+        """ Create CSR. """
         params = params or []
 
         params = [(key, val) for key, val in params if val]
@@ -171,7 +191,7 @@ class Certificate(GandiModule):
     @classmethod
     def process_csr(cls, common_name, csr, private_key, country, state, city,
                     organisation, branch):
-        """ Create a PK and a CSR if needed """
+        """ Create a PK and a CSR if needed."""
         if csr:
             if branch or organisation or city or state or country:
                 cls.echo('Following options are only used to generate'
@@ -193,6 +213,7 @@ class Certificate(GandiModule):
 
     @classmethod
     def pretty_format_cert(cls, cert):
+        """ Pretty display of a certificate."""
         crt = cert['cert']
         if crt:
             crt = ('-----BEGIN CERTIFICATE-----\n' +
@@ -203,7 +224,7 @@ class Certificate(GandiModule):
 
     @classmethod
     def delete(cls, cert_id, background=False):
-        """ delete a certificate """
+        """ Delete a certificate."""
         result = cls.call('cert.delete', cert_id)
 
         if background:
