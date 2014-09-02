@@ -244,9 +244,9 @@ See CHANGES.rst in the project directory or in the documentation directory of yo
 TODO
 ====
 
-Add missing Gandi product like ``virtual disk`` or ``virtual network interface`` or ``private vlan``.
+Add missing Gandi product like ``virtual network interface`` or ``private vlan``.
 
 BUGS
 ====
 
-Please report any bugs or issue on https://github.com/Gandi/gandicli by opening an issue using thi form https://github.com/Gandi/gandicli/issues/new.
+Please report any bugs or issue on https://github.com/Gandi/gandi.cli by opening an issue using thi form https://github.com/Gandi/gandi.cli/issues/new.
