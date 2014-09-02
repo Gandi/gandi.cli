@@ -152,11 +152,11 @@ class Iaas(GandiModule, SshkeyHelper):
         you can specify a configuration entry named 'sshkey' containing
         path to your sshkey file
 
-        >>> gandi config -g sshkey ~/.ssh/id_rsa.pub
+        $ gandi config -g sshkey ~/.ssh/id_rsa.pub
 
         to know which disk image label (or id) to use as image
 
-        >>> gandi images
+        $ gandi images
 
         """
 

@@ -160,6 +160,7 @@ def output_contact_info(gandi, data, output_keys, justify=10):
         if data[key]:
             output_line(gandi, key, data[key]['handle'], justify)
 
+
 def output_cert(gandi, cert, output_keys, justify=13):
     output = list(output_keys)
 

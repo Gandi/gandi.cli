@@ -1,10 +1,9 @@
 import os
 import click
-from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_cert
-from gandi.cli.core.params import (pass_gandi, IntChoice, option,
+from gandi.cli.core.params import (pass_gandi, IntChoice,
                                    CERTIFICATE_PACKAGE, CERTIFICATE_DCV_METHOD)
 
 

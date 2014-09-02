@@ -44,7 +44,7 @@ def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
         profiles = gandi.snapshotprofile.list()
 
     result = gandi.disk.list(options)
-    vms = dict([(vm['id'], vm) for vm in gandi.iaas.list()])
+    vms = dict([(vm_['id'], vm_) for vm_ in gandi.iaas.list()])
 
     for disk in result:
         gandi.separator_line()
@@ -61,7 +61,8 @@ def info(gandi, resource):
 
     Resource can be a disk name, or it's ID
     """
-    output_keys = ['name', 'state', 'size', 'type', 'id', 'dc', 'vm', 'profile']
+    output_keys = ['name', 'state', 'size', 'type', 'id', 'dc', 'vm',
+                   'profile']
 
     disk = gandi.disk.info(resource)
     vms = dict([(vm['id'], vm) for vm in gandi.iaas.list()])

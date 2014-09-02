@@ -110,11 +110,11 @@ class Paas(GandiModule, SshkeyHelper):
         you can specify a configuration entry named 'sshkey' containing
         path to your sshkey file
 
-        >>> gandi config -g sshkey ~/.ssh/id_rsa.pub
+        $ gandi config -g sshkey ~/.ssh/id_rsa.pub
 
         or getting the sshkey "my_key" from your gandi ssh keyring
 
-        >>> gandi config -g sshkey my_key
+        $ gandi config -g sshkey my_key
 
         """
 

@@ -216,15 +216,15 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     you can specify a configuration entry named 'sshkey' containing
     path to your sshkey file
 
-    >>> gandi config -g sshkey ~/.ssh/id_rsa.pub
+    $ gandi config -g sshkey ~/.ssh/id_rsa.pub
 
     or getting the sshkey "my_key" from your gandi ssh keyring
 
-    >>> gandi config -g sshkey my_key
+    $ gandi config -g sshkey my_key
 
     to know which disk image label (or id) to use as image
 
-    >>> gandi vm images
+    $ gandi vm images
 
     """
     pwd = None
@@ -318,11 +318,11 @@ def images(gandi, label, datacenter):
 
     You can also filter results using label, by example:
 
-    >>> gandi vm images Ubuntu --datacenter LU
+    $ gandi vm images Ubuntu --datacenter LU
 
     or
 
-    >>> gandi vm images 'Ubuntu 10.04' --datacenter LU
+    $ gandi vm images 'Ubuntu 10.04' --datacenter LU
 
     """
 

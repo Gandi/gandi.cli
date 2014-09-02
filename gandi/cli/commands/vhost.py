@@ -68,7 +68,8 @@ def info(gandi, resource, id):
 @click.option('--vhost', help='Vhost fqdn.', required=True)
 @click.option('--paas', required=True,
               help='PaaS instance on which to create it.')
-@click.option('--alter-zone', help='Will update the domain zone.', is_flag=True)
+@click.option('--alter-zone', help='Will update the domain zone.',
+              is_flag=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
