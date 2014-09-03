@@ -1,3 +1,10 @@
+gandicli (0.7) unstable; urgency=medium
+
+  * Add and update License information to use GPL-3
+  * Uniformize help strings during creation/deletion commands
+
+ -- Dejan Filipovic <sayoun@gandi.net>  Wed, 03 Sep 2014 17:44:50 +0200
+
 gandicli (0.6) unstable; urgency=medium
 
   * New mail namespace for managing mailboxes and aliases

@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.7
+---
+
+* Add and update License information to use GPL-3
+* Uniformize help strings during creation/deletion commands
+
 0.6
 ---
 
