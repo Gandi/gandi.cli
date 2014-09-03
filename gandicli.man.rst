@@ -161,7 +161,7 @@ Details:
 
 * ``gandi mail create login@domain.tld`` create a new mailbox. Possible options are ``-q, --quota INTEGER`` to define a quota for this mailbox, ``-f, --fallback TEXT`` to define a fallback addresse, ``-a, --alias TEXT`` to add an alias for this mailbox, this last option can be used multiple times.
 
-* ``gandi mail delete login@domain.tld`` delete mailbox ``login@domain.tld``. Option ``-f, --force`` can be used to disable confirmation prompt.
+* ``gandi mail delete login@domain.tld`` delete mailbox ``login@domain.tld``. Possible option is ``--force`` (or ``-f``) to bypass the validation question; useful in non-interactive mode when scripting.
 
 * ``gandi mail info login@domain.tld`` show information about mailbox ``login@domain.tld``.
 

@@ -62,8 +62,9 @@ def create(gandi, email, quota, fallback, alias):
 
 
 @cli.command(options_metavar='')
-@click.option('--force', '-f', help='Force mailbox deletion.',
-              is_flag=True)
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False).')
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
 def delete(gandi, email, force, alias):
@@ -120,8 +121,9 @@ def update(gandi, email, password, quota, fallback, alias_add, alias_del):
 @cli.command(options_metavar='')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
-@click.option('--force', '-f', help='Force mailbox deletion.',
-              is_flag=True)
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False).')
 @click.option('--alias', '-a', help='Purge all aliases.', default=False,
               is_flag=True)
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
