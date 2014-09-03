@@ -230,7 +230,7 @@ class Certificate(GandiModule):
         if background:
             return result
 
-        cls.echo("We're deleting the certificate.")
+        cls.echo("Deleting your certificate.")
         cls.display_progress(result)
         cls.echo('Your certificate %s have been deleted.' % cert_id)
 

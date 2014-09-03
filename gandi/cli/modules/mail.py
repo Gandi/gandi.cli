@@ -29,11 +29,11 @@ class Mail(GandiModule):
     @classmethod
     def create(cls, domain, login, options, alias):
         """Create a mailbox."""
-        cls.echo("Creating your mailbox.")
+        cls.echo('Creating your mailbox.')
         result = cls.call('domain.mailbox.create', domain, login, options)
 
         if alias:
-            cls.echo("Creating aliases.")
+            cls.echo('Creating aliases.')
             result = cls.set_alias(domain, login, list(alias))
 
         return result
@@ -46,7 +46,7 @@ class Mail(GandiModule):
     @classmethod
     def update(cls, domain, login, options, alias_add, alias_del):
         """Update a mailbox."""
-        cls.echo("Updating your mailbox.")
+        cls.echo('Updating your mailbox.')
         result = cls.call('domain.mailbox.update', domain, login, options)
 
         if alias_add or alias_del:
@@ -62,7 +62,7 @@ class Mail(GandiModule):
                         aliases.remove(alias)
 
             if len(current_aliases) != len(aliases):
-                cls.echo("Updating aliases.")
+                cls.echo('Updating aliases.')
                 result = cls.set_alias(domain, login, aliases)
 
         return result
@@ -74,7 +74,7 @@ class Mail(GandiModule):
         if background:
             return oper
         else:
-            cls.echo("Purge in progress")
+            cls.echo('Purging in progress')
             cls.display_progress(oper)
 
     @classmethod

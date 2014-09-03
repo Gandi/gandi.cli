@@ -68,7 +68,7 @@ class Paas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo("Deleting your PaaS instance.")
+        cls.echo('Deleting your PaaS instance.')
         cls.display_progress(opers)
 
     @classmethod
@@ -111,7 +111,7 @@ class Paas(GandiModule, SshkeyHelper):
             return result
 
         # interactive mode, run a progress bar
-        cls.echo("Updating your PaaS instance.")
+        cls.echo('Updating your PaaS instance.')
         cls.display_progress(result)
 
     @classmethod
@@ -146,9 +146,9 @@ class Paas(GandiModule, SshkeyHelper):
 
         if not background:
             # interactive mode, run a progress bar
-            cls.echo("We're creating your PaaS instance.")
+            cls.echo('Creating your PaaS instance.')
             cls.display_progress(result)
-            cls.echo('Your PaaS %s have been created.' % name)
+            cls.echo('Your PaaS instance %s have been created.' % name)
 
         cls.init_conf(name, created=not background, vhosts=vhosts)
         return result
@@ -171,7 +171,7 @@ class Paas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo("Restart your PaaS instance.")
+        cls.echo('Restarting your PaaS instance.')
         cls.display_progress(opers)
 
     @classmethod
@@ -190,7 +190,7 @@ class Paas(GandiModule, SshkeyHelper):
     def console(cls, id):
         """Open a console to a PaaS instance."""
         oper = cls.call('paas.update', cls.usable_id(id), {'console': 1})
-        cls.echo("Activation of the console on your PaaS")
+        cls.echo('Activation of the console on your PaaS instance')
         cls.display_progress(oper)
         console_url = Paas.info(cls.usable_id(id))['console']
         access = 'ssh %s' % console_url

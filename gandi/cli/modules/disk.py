@@ -90,7 +90,7 @@ class Disk(GandiModule):
             return result
 
         # interactive mode, run a progress bar
-        cls.echo("Updating your disk.")
+        cls.echo('Updating your disk.')
         cls.display_progress(result)
 
     @classmethod

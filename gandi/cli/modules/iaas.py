@@ -56,7 +56,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo("Stop your Virtual Machine.")
+        cls.echo('Stopping your Virtual Machine.')
         cls.display_progress(opers)
 
     @classmethod
@@ -77,7 +77,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo("Start your Virtual Machine.")
+        cls.echo('Starting your Virtual Machine.')
         cls.display_progress(opers)
 
     @classmethod
@@ -98,7 +98,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo("Reboot your Virtual Machine.")
+        cls.echo('Rebooting your Virtual Machine.')
         cls.display_progress(opers)
 
     @classmethod
@@ -122,7 +122,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo("Deleting your Virtual Machine.")
+        cls.echo('Deleting your Virtual Machine.')
         if opers:
             cls.display_progress(opers)
 
@@ -151,7 +151,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return result
 
         # interactive mode, run a progress bar
-        cls.echo("Updating your Virtual Machine.")
+        cls.echo('Updating your Virtual Machine.')
         cls.display_progress(result)
 
     @classmethod
@@ -200,7 +200,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return result
 
         # interactive mode, run a progress bar
-        cls.echo("We're creating your Virtual Machine.")
+        cls.echo('Creating your Virtual Machine.')
         cls.display_progress(result)
         cls.echo('Your Virtual Machine %s have been created.' % hostname)
 

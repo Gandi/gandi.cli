@@ -51,7 +51,7 @@ class Domain(GandiModule):
             return result
 
         # interactive mode, run a progress bar
-        cls.echo("We're creating your domain.")
+        cls.echo('Creating your domain.')
         cls.display_progress(result)
         cls.echo('Your domain %s have been created.' % fqdn)
 

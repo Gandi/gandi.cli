@@ -54,7 +54,7 @@ class Vhost(GandiModule):
         if background:
             return result
 
-        cls.echo("We're creating a new vhost.")
+        cls.echo('Creating a new vhost.')
         cls.display_progress(result)
         cls.echo('Your vhost %s have been created.' % vhost)
 
