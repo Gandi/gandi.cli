@@ -200,18 +200,18 @@ Run `$ gandi setup` to configure your settings (see [Getting started](#getting-s
 
 Use `$ gandi config` to set and edit custom variables.
 The default variables are:
-    * `sshkey`         # path to your public ssh key
-    * `api.host`       # the URL of the API endpoint to use (i.e OTE or Production)
-    * `api.key`        # the relevant API key for the chosen endpoint
+  * `sshkey`         # path to your public ssh key
+  * `api.host`       # the URL of the API endpoint to use (i.e OTE or Production)
+  * `api.key`        # the relevant API key for the chosen endpoint
 
 ### Development
 
 To add a new command to the CLI:
-    * check if there's an existing namespace to either add a command or an option to an already existing one
-    * each command is composed of 2 python files, located in the `commands/` and `modules/` directories
-        ** `commands/` contains everything that is related to shell arguments, parameter validation, default values
-        ** `modules/` contains code that uses the Gandi API and can be used by other python scripts, or in the python shell.
-        ** `packages/` contains packaging code (see `packages/README.rst`)
+  * check if there's an existing namespace to either add a command or an option to an already existing one
+  * each command is composed of 2 python files, located in the `commands/` and `modules/` directories
+    ** `commands/` contains everything that is related to shell arguments, parameter validation, default values
+    ** `modules/` contains code that uses the Gandi API and can be used by other python scripts, or in the python shell.
+    ** `packages/` contains packaging code (see `packages/README.rst`)
 
 Code must follow PEP8 recommendations: http://legacy.python.org/dev/peps/pep-0008/
 Docstrings should follow PEP257 recommendations: http://legacy.python.org/dev/peps/pep-0257/
