@@ -50,6 +50,7 @@ COMMAND-LINE OPTIONS
 --version   Display version.
 
 Namespaces:
+
 *  api                     Display information about API used.
 *  certificate change-dcv  Change the DCV for a pending certificate.
 *  certificate create      Create a new certificate.
