@@ -209,9 +209,9 @@ The default variables are:
 To add a new command to the CLI:
   * check if there's an existing namespace to either add a command or an option to an already existing one
   * each command is composed of 2 python files, located in the `commands/` and `modules/` directories
-    ** `commands/` contains everything that is related to shell arguments, parameter validation, default values
-    ** `modules/` contains code that uses the Gandi API and can be used by other python scripts, or in the python shell.
-    ** `packages/` contains packaging code (see `packages/README.rst`)
+  ** `commands/` contains everything that is related to shell arguments, parameter validation, default values
+  ** `modules/` contains code that uses the Gandi API and can be used by other python scripts, or in the python shell.
+  ** `packages/` contains packaging code (see `packages/README.rst`)
 
 Code must follow PEP8 recommendations: http://legacy.python.org/dev/peps/pep-0008/
 Docstrings should follow PEP257 recommendations: http://legacy.python.org/dev/peps/pep-0257/
