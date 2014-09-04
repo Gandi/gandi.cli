@@ -32,7 +32,7 @@ Use `$ gandi` to easily create and manage web resources from the command line.
 * Python 2.6/2.7 (Python 3 not yet supported)
 
 Recommended tools
-* [PyPI](https://pypi.python.org/pypi)
+* [pip](https://pip.pypa.io/en/latest/installing.html)
 * [virtualenv](https://pypi.python.org/pypi/virtualenv)
 
 ## Installation
