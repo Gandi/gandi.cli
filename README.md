@@ -37,6 +37,12 @@ Recommended tools
 
 ## Installation
 
+### Install with pip and virtualenv
+
+$ virtualenv /some/directory/gandi.cli
+$ source /some/directory/gandi.cli/bin/activate
+$ pip install gandi.cli
+
 ### Build from source
 $ cd /path/to/the/repository
 $ python setup.py install --user
