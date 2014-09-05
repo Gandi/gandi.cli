@@ -6,7 +6,7 @@ from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (
     output_generic,
 )
-from gandi.cli.core.params import pass_gandi
+from gandi.cli.core.params import pass_gandi, StringConstraint
 
 
 @cli.command(options_metavar='')
@@ -41,6 +41,7 @@ def list(gandi, domain, zone_id):
                                  'WKS', 'SRV', 'LOC', 'SPF']),
               help='DNS record type')
 @click.option('--value', default=None, required=True,
+              type=StringConstraint(minlen=1, maxlen=1024),
               help='Value for record. Semantics depends on the record type.'
                    'Currently limited to 1024 ASCII characters.'
                    'In case of TXT, each part between quotes is limited to 255'

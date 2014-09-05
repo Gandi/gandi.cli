@@ -138,6 +138,36 @@ class CertificateDcvMethod(click.Choice):
         pass
 
 
+class StringConstraint(click.types.StringParamType):
+
+    """ Check that provided string matches constraints."""
+
+    name = 'string constraints'
+
+    def __init__(self, minlen=None, maxlen=None):
+        self.min = minlen
+        self.max = maxlen
+
+    def convert(self, value, param, ctx):
+        value = click.types.StringParamType.convert(self, value, param, ctx)
+        rv = len(value)
+        if self.min is not None and rv < self.min or \
+           self.max is not None and rv > self.max:
+            if self.min is None:
+                self.fail('%s is longer than the maximum valid length '
+                          '%s.' % (rv, self.max), param, ctx)
+            elif self.max is None:
+                self.fail('%s is shorter than the minimum valid length '
+                          '%s.' % (rv, self.min), param, ctx)
+            else:
+                self.fail('%s is not in the valid length range of %s to %s.'
+                          % (rv, self.min, self.max), param, ctx)
+        return value
+
+    def __repr__(self):
+        return 'StringConstraint(%r, %r)' % (self.min, self.max)
+
+
 class EmailParamType(click.ParamType):
 
     """Check the email value and return a list ['login', 'domain']. """
