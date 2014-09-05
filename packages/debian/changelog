@@ -1,3 +1,9 @@
+gandicli (0.8) unstable; urgency=medium
+
+  * New record namespace to manage domain zone record entries
+
+ -- Dejan Filipovic <sayoun@gandi.net>  Fri, 05 Sep 2014 15:25:49 +0200
+
 gandicli (0.7) unstable; urgency=medium
 
   * Add and update License information to use GPL-3

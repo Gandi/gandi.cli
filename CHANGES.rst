@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.8
+---
+
+* New record namespace to manage domain zone record entries
+
 0.7
 ---
 
