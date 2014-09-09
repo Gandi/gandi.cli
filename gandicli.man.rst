@@ -234,7 +234,7 @@ Details:
 
 * ``gandi vm info resource`` show details of a specific operation.
 
-* ``gandi vm ssh resource`` open a ssh connection on the virtual machine and give you a shell access.
+* ``gandi vm ssh resource`` open a ssh connection on the virtual machine and give you a shell access. The ``-i TEXT`` option (or ``--identity TEXT``) refers to a local ssh key, as used in the ssh command. Using ``--wipe-key``, previous entry for that host is discarded from the known_hosts file first.
 
 * ``gandi vm start resource`` allow to start a virtual machine (a resource can either be a hostname as defined in the creation process or the id of the virtual machine). This operation can be done as background process using the option ``--background`` (or ``--bg``).
 
