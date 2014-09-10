@@ -90,6 +90,8 @@ Namespaces:
 *  paas restart            Restart a PaaS instance.
 *  paas types              List types PaaS instances.
 *  paas update             Update a PaaS instance.
+*  record create           Create new DNS zone record entry for a domain.
+*  record list             List DNS zone records for a domain.
 *  setup                   Initialize Gandi CLI configuration.
 *  snapshotprofile info    Display information about a snapshot profile.
 *  snapshotprofile list    List possible snapshot profiles.
@@ -194,6 +196,10 @@ Details:
 
 * ``gandi paas updates resource`` modify the options of a Simple Hosting. Possible options are ``--name TEXT`` which allow to rename a instance, ``--size s|m|x|xl|xxl`` to change the size of the instance, ``--quantity INTEGER`` to add disk space, ``--password`` to change the password of the instance, ``--sshkey TEXT`` to specifiy a name of a SSH key, ``--upgrade TEXT`` to upgrade the instance to the latest system image, ``--console TEXT`` to enable or disable the console, ``--snapshotprofile TEXT`` to set the snapshot profile for the disk of the instance, ``--reset-mysql-password TEXT`` to reset the root password of MySQLd running on the instance. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
+* ``gandi record create domain.tld`` will create new DNS zone record entry for specific domain ``domain.tld`` in a new zone version and activate it. Mandatory options are ``--zone-id INTEGER`` to specify a zone id to use, if not provided default zone will be used, ``--name TEXT`` to set record relative name, may contains leading wildcard, use @ for empty name, ``--type A|AAAA|CNAME|MX|NS|TXT|WKS|SRV|LOC|SPF`` to set record type, ``--value TEXT`` to set record value, may contains up to 1024 ascii characters. Possible options are ``--ttl INTEGER`` to set record time to live value.
+
+* ``gandi record list domain.tld`` show the list of DNS zone records for specific domain ``domain.tld``. Possible options are ``--zone-id INTEGER`` to specify a zone id to use, if not provided default zone will be used.
+
 * ``gandi setup`` initialize the configuration for the tool.
 
 * ``gandi snapshotprofile info resource`` detail the information about a profile : frequency of snapshot and retention period.
@@ -228,7 +234,7 @@ Details:
 
 * ``gandi vm info resource`` show details of a specific operation.
 
-* ``gandi vm ssh resource`` open a ssh connection on the virtual machine and give you a shell access.
+* ``gandi vm ssh resource`` open a ssh connection on the virtual machine and give you a shell access. The ``-i TEXT`` option (or ``--identity TEXT``) refers to a local ssh key, as used in the ssh command. Using ``--wipe-key``, previous entry for that host is discarded from the known_hosts file first.
 
 * ``gandi vm start resource`` allow to start a virtual machine (a resource can either be a hostname as defined in the creation process or the id of the virtual machine). This operation can be done as background process using the option ``--background`` (or ``--bg``).
 

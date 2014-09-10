@@ -39,17 +39,18 @@ Recommended tools
 
 ### Install with pip and virtualenv
 
-$ virtualenv /some/directory/gandi.cli
-$ source /some/directory/gandi.cli/bin/activate
-$ pip install gandi.cli
+    $ virtualenv /some/directory/gandi.cli
+    $ source /some/directory/gandi.cli/bin/activate
+    $ pip install gandi.cli
 
 ### Build from source
-$ cd /path/to/the/repository
-$ python setup.py install --user
+
+    $ cd /path/to/the/repository
+    $ python setup.py install --user
 
 ### From the Debian package
 
-$ ln -sf packages/debian debian && debuild -us -uc -b && echo "Bisou"
+    $ ln -sf packages/debian debian && debuild -us -uc -b && echo "Bisou"
 
 ## Getting started
 
