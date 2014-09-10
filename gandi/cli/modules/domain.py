@@ -53,7 +53,7 @@ class Domain(GandiModule):
         # interactive mode, run a progress bar
         cls.echo('Creating your domain.')
         cls.display_progress(result)
-        cls.echo('Your domain %s have been created.' % fqdn)
+        cls.echo('Your domain %s has been created.' % fqdn)
 
     @classmethod
     def from_fqdn(cls, fqdn):

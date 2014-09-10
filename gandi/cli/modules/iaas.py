@@ -202,7 +202,7 @@ class Iaas(GandiModule, SshkeyHelper):
         # interactive mode, run a progress bar
         cls.echo('Creating your Virtual Machine.')
         cls.display_progress(result)
-        cls.echo('Your Virtual Machine %s have been created.' % hostname)
+        cls.echo('Your Virtual Machine %s has been created.' % hostname)
 
         if 'ssh_key' not in vm_params and 'keys' not in vm_params:
             return

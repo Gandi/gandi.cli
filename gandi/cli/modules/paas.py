@@ -148,7 +148,7 @@ class Paas(GandiModule, SshkeyHelper):
             # interactive mode, run a progress bar
             cls.echo('Creating your PaaS instance.')
             cls.display_progress(result)
-            cls.echo('Your PaaS instance %s have been created.' % name)
+            cls.echo('Your PaaS instance %s has been created.' % name)
 
         cls.init_conf(name, created=not background, vhosts=vhosts)
         return result
