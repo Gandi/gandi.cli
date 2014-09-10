@@ -1,4 +1,4 @@
-""" Operation namespace commands. """
+""" Docker namespace commands. """
 
 import click
 
@@ -7,7 +7,7 @@ from gandi.cli.core.utils import output_generic
 from gandi.cli.core.params import pass_gandi
 
 @cli.command(root=True)
-@click.option('--vm', help='use given VM for docker connection')
+@click.option('--vm', help='Use given VM for docker connection')
 @click.argument('args', nargs=-1)
 @pass_gandi
 def docker(gandi, vm, args):

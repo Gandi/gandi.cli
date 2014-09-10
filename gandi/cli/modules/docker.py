@@ -1,9 +1,8 @@
+import subprocess
+
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.iaas import Iaas
 from gandi.cli.core.utils import unixpipe
-
-
-import subprocess
 
 class Docker(GandiModule):
     """ Module to handle docker vms.
