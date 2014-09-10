@@ -95,7 +95,13 @@ def tcp4_to_unix(local_port, unix_path):
     server = socket.socket(socket.AF_INET,
         socket.SOCK_STREAM, socket.IPPROTO_TCP)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server.bind(('127.0.0.1', local_port))
+    try:
+        server.bind(('127.0.0.1', local_port))
+    except socket.error, e:
+        sys.stderr.write('remote cant grab port %d\n' % service_port)
+        # let other end time to connect to maintain ssh up
+        time.sleep(10)
+        sys.exit(0)
     server.listen(32)
 
     while True:
@@ -136,6 +142,8 @@ def setup(addr, user, remote_path, local_key=None):
         ssh_call.insert(1, '-i')
     
     subprocess.call(ssh_call)
+    #XXX Sleep is a bad way to wait for the tunnel endpoint
+    time.sleep(1)
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'server':
