@@ -228,9 +228,13 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
+    # Display a short summary for creation
+    gandi.echo('* root and %s users will be created.' % login)
+    if sshkey:
+        gandi.echo('* SSH key authorization will be used.')
     if not pwd:
-        gandi.echo('/!\ Please be aware that you did not provide a password, '
-                   'some services like console will not be able to work.')
+        gandi.echo('* No password was supplied (Warning: emergency console '
+                   'access from the web interface is disabled).')
 
     result = gandi.iaas.create(datacenter, memory, cores, ip_version,
                                bandwidth, login, pwd, hostname,

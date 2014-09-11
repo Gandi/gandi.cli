@@ -196,6 +196,10 @@ class Iaas(GandiModule, SshkeyHelper):
 
         result = cls.call('hosting.vm.create_from', vm_params, disk_params,
                           sys_disk_id_)
+
+        cls.echo('* Configuration used: %d cores, %dMb memory, ip v%d, '
+                 'image %s, hostname: %s' % (cores, memory, ip_version, image,
+                                             hostname))
         if background:
             return result
 
