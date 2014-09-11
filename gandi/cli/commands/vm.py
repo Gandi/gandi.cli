@@ -294,15 +294,18 @@ def console(gandi, resource):
 @cli.command()
 @click.option('--wipe-key', default=False, is_flag=True,
               help='Wipe SSH known host entry first.')
+@click.option('--login', '-l', default='root', help='Use given login for ssh call')
 @click.option('--identity', '-i', default=None, help='Use specified path for ssh key')
 @click.argument('resource')
 @pass_gandi
-def ssh(gandi, resource, identity, wipe_key):
+def ssh(gandi, resource, login, identity, wipe_key):
     """Spawn an SSH session to virtual machine.
 
     Resource can be a Hostname or an ID
     """
-    gandi.iaas.ssh(resource, identity, wipe_key)
+    if '@' in resource:
+        (login, resource) = resource.split('@', 1)
+    gandi.iaas.ssh(resource, login, identity, wipe_key)
 
 
 @cli.command()

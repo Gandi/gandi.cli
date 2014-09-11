@@ -245,7 +245,7 @@ class Iaas(GandiModule, SshkeyHelper):
         return qry_id
 
     @classmethod
-    def ssh(cls, vm_id, identity=None, wipe_key=False):
+    def ssh(cls, vm_id, login, identity, wipe_key=False):
         """Spawn an ssh session to virtual machine."""
         vm_info = cls.info(vm_id)
 
@@ -261,7 +261,7 @@ class Iaas(GandiModule, SshkeyHelper):
                 # stop on first access found
                 break
 
-        cmd.append('root@%s' % ip_addr)
+        cmd.append('%s@%s' % (login, ip_addr,))
 
         cls.echo('Requesting access using: %s ...' % ' '.join(cmd))
         # XXX: we must remove ssh key entry in case we use the same ip
