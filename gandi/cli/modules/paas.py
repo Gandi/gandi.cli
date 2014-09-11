@@ -194,7 +194,7 @@ class Paas(GandiModule, SshkeyHelper):
         cls.display_progress(oper)
         console_url = Paas.info(cls.usable_id(id))['console']
         access = 'ssh %s' % console_url
-        cls.shell(access)
+        cls.execute(access)
 
     @classmethod
     def init_vhost(cls, vhost, created=True, id=None, paas=None):
@@ -218,7 +218,7 @@ class Paas(GandiModule, SshkeyHelper):
                          repo_path)
                 return
 
-            init_git = cls.shell('git clone ssh+git://%s/%s.git' %
+            init_git = cls.execute('git clone ssh+git://%s/%s.git' %
                                  (paas_access, vhost))
             if not init_git:
                 cls.echo('An error has occured during git clone of instance.')

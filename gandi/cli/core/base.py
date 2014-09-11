@@ -143,7 +143,7 @@ class GandiModule(GandiConfig):
         raise UsageError(msg)
 
     @classmethod
-    def shell(cls, command, shell=True):
+    def execute(cls, command, shell=True):
         """ Execute a shell command. """
         cls.debug(command)
         try:

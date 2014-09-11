@@ -267,9 +267,9 @@ class Iaas(GandiModule, SshkeyHelper):
         # XXX: we must remove ssh key entry in case we use the same ip
         # as it's recyclable
         if wipe_key:
-            cls.shell('ssh-keygen -R "%s"' % ip_addr)
+            cls.execute('ssh-keygen -R "%s"' % ip_addr)
 
-        cls.shell(cmd, False)
+        cls.execute(cmd, False)
 
     @classmethod
     def console(cls, id):
@@ -293,7 +293,7 @@ class Iaas(GandiModule, SshkeyHelper):
 
         console_url = vm_info.get('console_url', 'console.gandi.net')
         access = 'ssh %s@%s' % (ip_addr, console_url)
-        cls.shell(access)
+        cls.execute(access)
 
 
 class Image(GandiModule):
