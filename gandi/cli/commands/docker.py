@@ -25,6 +25,9 @@ No docker vm specified. You can create one:
 
 Then configure it using:
     $ gandi docker --vm docker ps
+
+Or to both change target vm and spawn a process (note the -- separator):
+    $ gandi docker --vm myvm -- run -i -t debian bash
 """
         return
 
