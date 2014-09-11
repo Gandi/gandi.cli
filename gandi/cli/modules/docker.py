@@ -4,6 +4,7 @@ from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.iaas import Iaas
 from gandi.cli.core.utils import unixpipe
 
+
 class Docker(GandiModule):
     """ Module to handle docker vms.
 
@@ -38,7 +39,7 @@ class Docker(GandiModule):
             for ip in iface['ips']:
                 if ip['version'] == 4:
                     remote_addr = ip['ip']
- 
+
         unixpipe.setup(remote_addr, 'root', '/var/run/docker.sock')
         subprocess.call(['docker', '-H',
             'tcp://localhost:%d' % unixpipe.service_port] + list(args))

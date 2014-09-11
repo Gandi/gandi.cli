@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-import os
 import posix
 import socket
 import select
@@ -10,8 +9,11 @@ import time
 
 service_port = 12042
 
+
 class FdPipe:
+
     """Connect two pairs of file objects"""
+
     def __init__(self, in0, out0, in1, out1):
         flags = select.POLLERR | select.POLLIN | select.POLLHUP
         self.poller = select.poll()
@@ -26,16 +28,16 @@ class FdPipe:
         self.out_buf = {}
 
     def select_for_flush(self, fd):
-        self.poller.register(fd, select.POLLERR | select.POLLHUP | \
-            select.POLLIN | select.POLLOUT)
+        self.poller.register(fd, select.POLLERR | select.POLLHUP |
+                             select.POLLIN | select.POLLOUT)
 
     def select_for_write(self, fd):
-        self.poller.register(fd, select.POLLERR | select.POLLHUP | \
-            select.POLLIN | select.POLLOUT)
+        self.poller.register(fd, select.POLLERR | select.POLLHUP |
+                             select.POLLIN | select.POLLOUT)
 
     def select_for_read(self, fd):
-        self.poller.register(fd, select.POLLERR | select.POLLHUP | \
-            select.POLLIN)
+        self.poller.register(fd, select.POLLERR | select.POLLHUP |
+                             select.POLLIN)
 
     def do_write(self, outfd):
         if not self.out_buf[outfd]:
@@ -60,7 +62,7 @@ class FdPipe:
             for outfd in self.out_buf:
                 try:
                     self.do_write(outfd)
-                except OSError, e:
+                except OSError:
                     return
 
     def one_loop(self):
@@ -80,10 +82,11 @@ class FdPipe:
                 self.do_write(fd)
         return ret
 
+
 def scp(addr, user, local_path, remote_path, local_key=None):
-    scp_call = ['scp', local_path, 
-        '%s@%s:%s' % (user, addr, remote_path)
-    ]
+    scp_call = ['scp', local_path,
+                '%s@%s:%s' % (user, addr, remote_path)
+                ]
 
     if local_key:
         scp_call.insert(1, local_key)
@@ -91,13 +94,14 @@ def scp(addr, user, local_path, remote_path, local_key=None):
 
     subprocess.call(scp_call)
 
+
 def tcp4_to_unix(local_port, unix_path):
-    server = socket.socket(socket.AF_INET,
-        socket.SOCK_STREAM, socket.IPPROTO_TCP)
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM,
+                           socket.IPPROTO_TCP)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
         server.bind(('127.0.0.1', local_port))
-    except socket.error, e:
+    except socket.error:
         sys.stderr.write('remote cant grab port %d\n' % service_port)
         # let other end time to connect to maintain ssh up
         time.sleep(10)
@@ -120,9 +124,10 @@ def tcp4_to_unix(local_port, unix_path):
         except OSError:
             pass
 
+
 def setup(addr, user, remote_path, local_key=None):
-    test_sock = socket.socket(socket.AF_INET,
-        socket.SOCK_STREAM, socket.IPPROTO_TCP)
+    test_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM,
+                              socket.IPPROTO_TCP)
     try:
         test_sock.connect(('127.0.0.1', service_port))
         test_sock.close()
@@ -134,13 +139,13 @@ def setup(addr, user, remote_path, local_key=None):
     scp(addr, user, __file__, '~/unixpipe', local_key)
 
     ssh_call = ['ssh', '-fL%d:127.0.0.1:%d' % (service_port, service_port),
-        '-o ExitOnForwardFailure=yes',
-        '%s@%s' % (user, addr,), 'python', '~/unixpipe', 
-            'server', remote_path]
+                '-o ExitOnForwardFailure=yes',
+                '%s@%s' % (user, addr,), 'python', '~/unixpipe',
+                'server', remote_path]
     if local_key:
         ssh_call.insert(1, local_key)
         ssh_call.insert(1, '-i')
-    
+
     subprocess.call(ssh_call)
     #XXX Sleep is a bad way to wait for the tunnel endpoint
     time.sleep(1)
