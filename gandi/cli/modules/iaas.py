@@ -197,8 +197,12 @@ class Iaas(GandiModule, SshkeyHelper):
         result = cls.call('hosting.vm.create_from', vm_params, disk_params,
                           sys_disk_id_)
 
-        cls.echo('* Configuration used: %d cores, %dMb memory, ip v%d, '
-                 'image %s, hostname: %s' % (cores, memory, ip_version, image,
+        if ip_version == 4:
+            ip_summary = 'ip v4+v6'
+        else:
+            ip_summary = 'ip v6'
+        cls.echo('* Configuration used: %d cores, %dMb memory, %s, '
+                 'image %s, hostname: %s' % (cores, memory, ip_summary, image,
                                              hostname))
         if background:
             return result

@@ -233,9 +233,8 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     if sshkey:
         gandi.echo('* SSH key authorization will be used.')
     if not pwd:
-        gandi.echo('* No password was supplied (Warning: emergency console '
-                   'access from the web interface is disabled).')
-
+        gandi.echo('* No password supplied for user %s (required to enable '
+                   'emergency web console access).' % login)
     result = gandi.iaas.create(datacenter, memory, cores, ip_version,
                                bandwidth, login, pwd, hostname,
                                image, run,
