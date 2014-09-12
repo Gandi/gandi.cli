@@ -1,1 +1,7 @@
 node_modules
+
+# ignore folders from the master branch
+/css/
+/gandi.cli.egg-info/
+/gandi/
+/venv/
