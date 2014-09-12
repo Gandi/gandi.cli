@@ -1,0 +1,45 @@
+// buttons.
+button,
+.button {
+
+  box-sizing: border-box;
+  display: inline-block;
+
+  height: @button-height;
+  line-height: @button-height;
+  margin: 0 @margin 0 0;
+  padding: @button-border-width @margin 0 @margin;
+
+  font-family: OpenSans,sans-serif;
+  font-size: @button-font-size;
+
+  background-image: none;
+  border: none;
+  border-bottom: @button-border-width solid;
+  box-shadow: none;
+  border-radius: 0;
+
+  // default colors
+  color: @button-secondary-color;
+  background: @button-secondary-background;
+  border-color: @button-secondary-border;
+
+  &.button-primary {
+    color: @button-main-color;
+    background: @button-main-background;
+    border-color: @button-main-border;
+  }
+
+
+  &:hover,
+  &:focus {
+    padding-bottom: @button-border-width;
+    padding-top: @button-border-width;
+    border-bottom-width: 0;
+
+    &:active {
+      border-top-width: @button-border-width;
+      padding-bottom: @button-border-width;
+    }
+  }
+}
