@@ -15,6 +15,7 @@ h1, h2, h3, h4 {
 #l-header {
   background-color: @header-background;
   color: @header-color-main;
+  .selection(@header-color-main, @header-background);
 
   padding: 87px 0 80px 0;
 
@@ -29,12 +30,14 @@ h1, h2, h3, h4 {
 
     strong {
       color: @header-color-strong;
+      .selection(@header-color-strong, @header-background);
     }
   }
 
   pre {
     background-color: @header-pre-background;
     color: @header-pre-color;
+    .selection(@header-pre-color, @header-pre-background);
 
     font-size: 25px;
     padding: 12px 0;
@@ -69,9 +72,18 @@ h1, h2, h3, h4 {
   background-color: @footer-background;
   color: @footer-color-main;
   height: 95px;
+  .selection(@footer-color-main, @footer-background);
 }
 
 .l-wrapper {
   width: @layout-width;
   margin: auto;
+}
+
+#forkme {
+  border: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  .user-select(none);
 }
