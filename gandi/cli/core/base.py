@@ -145,9 +145,9 @@ class GandiModule(GandiConfig):
     @classmethod
     def execute(cls, command, shell=True):
         """ Execute a shell command. """
-        cls.debug(command)
+        cls.debug('execute command (shell flag:%r): %r ' % (shell, command))
         try:
-            check_call(command, shell)
+            check_call(command, shell=shell)
             return True
         except CalledProcessError:
             return False
