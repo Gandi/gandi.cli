@@ -17,7 +17,7 @@ h1, h2, h3, h4 {
   color: @header-color-main;
   .selection(@header-color-main, @header-background);
 
-  padding: 87px 0 80px 0;
+  padding: 60px 0 80px 0;
 
   h1 {
     font-size: 85px;
@@ -27,8 +27,9 @@ h1, h2, h3, h4 {
   h2 {
     color: @header-color-main;
     font-weight: normal;
+    margin: 2.2em 0 0 0;
 
-    strong {
+    > strong {
       color: @header-color-strong;
       .selection(@header-color-strong, @header-background);
     }
@@ -40,6 +41,7 @@ h1, h2, h3, h4 {
     .selection(@header-pre-color, @header-pre-background);
 
     font-size: 25px;
+    margin: 34px 0;
     padding: 12px 0;
     text-align: center;
   }
@@ -53,13 +55,14 @@ h1, h2, h3, h4 {
 }
 #l-header-buttons {
   font-size: 0;  // inline-block fix
+  margin-top: 80px;
 }
 #l-main {
-  margin: auto;
+  background-color: @section-main-background;
   text-align: center;
-  width: @layout-width;
-  figure {
-    margin: 0;
+  > figure {
+    margin: auto;
+    padding: 80px 0;
     width: @layout-width;
     > video,
     > video img {
