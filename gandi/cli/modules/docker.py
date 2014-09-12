@@ -25,7 +25,9 @@ class Docker(GandiModule):
 
     @classmethod
     def handle(cls, vm, args):
-        """Setup forwarding connection to the given VM and pipe docker cmds over SSH."""
+        """
+        Setup forwarding connection to given VM and pipe docker cmds over SSH.
+        """
         docker = Iaas.info(vm)
         if not docker:
             raise Exception('docker vm %s not found' % vm)
@@ -42,4 +44,5 @@ class Docker(GandiModule):
 
         unixpipe.setup(remote_addr, 'root', '/var/run/docker.sock')
         subprocess.call(['docker', '-H',
-            'tcp://localhost:%d' % unixpipe.service_port] + list(args))
+                         'tcp://localhost:%d' % unixpipe.service_port]
+                        + list(args))
