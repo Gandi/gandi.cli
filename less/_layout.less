@@ -72,7 +72,23 @@ h1, h2, h3, h4 {
   background-color: @footer-background;
   color: @footer-color-main;
   height: 95px;
+  line-height: 95px;
   .selection(@footer-color-main, @footer-background);
+
+  font-size: 0;  // inline-block fix
+  > * {
+    display: inline-block;
+    vertical-align: top;
+    width: 50%;
+  }
+  > h3 {
+    font-size: 25px;
+  }
+  > p {
+    font-size: 20px;
+    margin: 0;
+    text-align: center;
+  }
 }
 
 .l-wrapper {
@@ -86,4 +102,13 @@ h1, h2, h3, h4 {
   right: 0;
   top: 0;
   .user-select(none);
+}
+
+#gandi {
+  .hide-text();
+  display: inline-block;
+  background: url('/img/gandi.png') 0 0 no-repeat;
+  background-size: 200px;
+  height: 54px;
+  width: 200px;
 }
