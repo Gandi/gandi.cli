@@ -176,8 +176,10 @@ class Iaas(GandiModule, SshkeyHelper):
             'cores': cores,
             'ip_version': ip_version,
             'bandwidth': bandwidth,
-            'login': login,
         }
+
+        if login:
+            vm_params['login'] = login
 
         if run:
             vm_params['run'] = run

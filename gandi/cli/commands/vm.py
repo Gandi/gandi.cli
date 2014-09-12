@@ -186,8 +186,8 @@ def delete(gandi, background, force, resource):
 @option('--bandwidth', type=click.INT, default=102400,
         help="Network bandwidth in bit/s used to create the VM's first "
              "network interface.")
-@option('--login', default='admin',
-        help='Login to create on the VM.')
+@click.option('--login', default=None,
+              help='Login to create on the VM.')
 @click.option('--password', default=False, is_flag=True,
               help='Will ask for a password to be set for the root account '
                    'and the created login.')
@@ -229,11 +229,16 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                            confirmation_prompt=True)
 
     # Display a short summary for creation
-    gandi.echo('* root and %s users will be created.' % login)
+    if login:
+        user_summary = 'root and %s users' % login
+    else:
+        user_summary = 'root user'
+
+    gandi.echo('* %s will be created.' % user_summary)
     if sshkey:
         gandi.echo('* SSH key authorization will be used.')
     if not pwd:
-        gandi.echo('* No password supplied for user %s (required to enable '
+        gandi.echo('* No password supplied for vm (required to enable '
                    'emergency web console access).' % login)
     result = gandi.iaas.create(datacenter, memory, cores, ip_version,
                                bandwidth, login, pwd, hostname,
