@@ -82,7 +82,7 @@ def clone(gandi, vhost):
         gandi.paas.init_vhost(vhost, id=vhost)
     else:
         paas_access = gandi.get('paas.access')
-        gandi.shell('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
+        gandi.execute('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
 
 
 @cli.command(root=True, options_metavar='')
@@ -100,7 +100,7 @@ def deploy(gandi, vhost):
     paas_access = gandi.get('paas.access')
     deploy_git_host = gandi.get('paas.deploy_git_host')
 
-    gandi.shell("ssh %s 'deploy %s'" % (paas_access, deploy_git_host))
+    gandi.execute("ssh %s 'deploy %s'" % (paas_access, deploy_git_host))
 
 
 @cli.command()

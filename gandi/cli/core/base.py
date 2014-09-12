@@ -143,11 +143,11 @@ class GandiModule(GandiConfig):
         raise UsageError(msg)
 
     @classmethod
-    def shell(cls, command):
+    def execute(cls, command, shell=True):
         """ Execute a shell command. """
         cls.debug(command)
         try:
-            check_call(command, shell=True)
+            check_call(command, shell)
             return True
         except CalledProcessError:
             return False

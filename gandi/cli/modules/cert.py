@@ -180,7 +180,7 @@ class Certificate(GandiModule):
             csr_file = private_key + '.csr'
 
         cmd = cmd % {'csr': csr_file, 'key': private_key, 'subj': subj}
-        result = cls.shell(cmd)
+        result = cls.execute(cmd)
         if not result:
             cls.echo('CSR creation failed')
             cls.echo(cmd)

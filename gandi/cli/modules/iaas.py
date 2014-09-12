@@ -255,31 +255,31 @@ class Iaas(GandiModule, SshkeyHelper):
         return qry_id
 
     @classmethod
-    def ssh(cls, vm_id, identity=None, wipe_key=False):
+    def ssh(cls, vm_id, login, identity, wipe_key=False):
         """Spawn an ssh session to virtual machine."""
         vm_info = cls.info(vm_id)
+
+        cmd = ['ssh']
+        if identity:
+            cmd.extend(('-i', identity,))
+
         for iface in vm_info['ifaces']:
             for ip in iface['ips']:
-                if ip['version'] == 4:
-                    access = 'root@%s' % ip['ip']
-                    ip_addr = ip['ip']
-                else:
-                    access = '-6 root@%s' % ip['ip']
-                    ip_addr = ip['ip']
+                ip_addr = ip['ip']
+                if ip['version'] == 6:
+                    cmd.append('-6')
                 # stop on first access found
                 break
 
-        if identity:
-            access = '-i %s %s' % (identity, access,)
-        access = 'ssh %s' % access
+        cmd.append('%s@%s' % (login, ip_addr,))
 
-        cls.echo('Requesting access using: %s ...' % access)
+        cls.echo('Requesting access using: %s ...' % ' '.join(cmd))
         # XXX: we must remove ssh key entry in case we use the same ip
         # as it's recyclable
         if wipe_key:
-            cls.shell('ssh-keygen -R "%s"' % ip_addr)
+            cls.execute('ssh-keygen -R "%s"' % ip_addr)
 
-        cls.shell(access)
+        cls.execute(cmd, False)
 
     @classmethod
     def console(cls, id):
@@ -303,7 +303,7 @@ class Iaas(GandiModule, SshkeyHelper):
 
         console_url = vm_info.get('console_url', 'console.gandi.net')
         access = 'ssh %s@%s' % (ip_addr, console_url)
-        cls.shell(access)
+        cls.execute(access)
 
 
 class Image(GandiModule):
