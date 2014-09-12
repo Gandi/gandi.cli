@@ -30,7 +30,6 @@ class GandiConfig(object):
     local_config = '.gandi.config.yaml'
 
     apienvs = {
-        'dev': 'http://api-v3.dev.gandi.net/',
         'ote': 'https://rpc.ote.gandi.net/xmlrpc/',
         'production': 'https://rpc.gandi.net/xmlrpc/',
     }

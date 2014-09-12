@@ -225,7 +225,7 @@ class Iaas(GandiModule, SshkeyHelper):
 
         if vm_id:
             time.sleep(5)
-            cls.ssh(oper['vm_id'], wipe_key=True)
+            cls.ssh(oper['vm_id'], login='root', identity=None, wipe_key=True)
 
     @classmethod
     def from_hostname(cls, hostname):
