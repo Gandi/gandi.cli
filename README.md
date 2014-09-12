@@ -195,11 +195,11 @@ For extended instructions, check out the `man` page.
 
 Install python-docutils and run:
 
-$ rst2man --no-generator gandicli.man.rst > gandi.1.man
+    $ rst2man --no-generator gandicli.man.rst > gandi.1.man
 
 Then to read the manpage:
 
-$ man ./gandi.1.man
+    $ man ./gandi.1.man
 
 ### Configuration
 
