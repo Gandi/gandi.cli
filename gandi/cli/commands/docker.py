@@ -1,5 +1,7 @@
 """ Docker namespace commands. """
 
+import os
+
 import click
 
 from gandi.cli.core.cli import cli
@@ -12,6 +14,15 @@ from gandi.cli.core.params import pass_gandi
 @pass_gandi
 def docker(gandi, vm, args):
     """Manage docker instance"""
+    for basedir in os.getenv('PATH', '.:/usr/bin').split(':'):
+        if os.path.exists('%s/docker' % basedir):
+            break
+    else:
+        print """'docker' not found in $PATH, required for this command to work
+See https://docs.docker.com/installation/#installation to install, or use:
+    # curl https://get.docker.io/ | sh"""
+        return
+        
     if vm:
         gandi.configure(True, 'dockervm', vm)
     else:
