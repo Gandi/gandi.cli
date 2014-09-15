@@ -120,21 +120,35 @@ def tcp4_to_unix(local_port, unix_path):
         except OSError:
             pass
 
+def _ssh_master_cmd(addr, user, command, local_key=None):
+    """Exit or check ssh mux"""
+    ssh_call = ['ssh', '-qNfL%d:127.0.0.1:%d' % (service_port, service_port),
+        '-o', 'ControlPath=~/.ssh/unixpipe_%r@%h:%p',
+        '-O', command,
+        '%s@%s' % (user, addr,)
+    ]
+
+    if local_key:
+        ssh_call.insert(1, local_key)
+        ssh_call.insert(1, '-i')
+    
+    return subprocess.call(ssh_call)
+
+def is_alive(addr, user):
+    """Check whether a tunnel is alive"""
+    return _ssh_master_cmd(addr, user, 'check') == 0
+
 def setup(addr, user, remote_path, local_key=None):
-    test_sock = socket.socket(socket.AF_INET,
-        socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    try:
-        test_sock.connect(('127.0.0.1', service_port))
-        test_sock.close()
+    """Setup the tunnel"""
+    if is_alive(addr, user):
         return
-    except socket.error, e:
-        if e.errno != 111:
-            raise
 
     scp(addr, user, __file__, '~/unixpipe', local_key)
 
     ssh_call = ['ssh', '-fL%d:127.0.0.1:%d' % (service_port, service_port),
-        '-o ExitOnForwardFailure=yes',
+        '-o', 'ExitOnForwardFailure=yes',
+        '-o', 'ControlPath=~/.ssh/unixpipe_%r@%h:%p',
+        '-o', 'ControlMaster=auto',
         '%s@%s' % (user, addr,), 'python', '~/unixpipe', 
             'server', remote_path]
     if local_key:
