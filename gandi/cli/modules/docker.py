@@ -33,12 +33,8 @@ class Docker(GandiModule):
             Iaas.start(vm)
 
         # XXX
-        remote_addr = None
-        for iface in docker['ifaces']:
-            for ip in iface['ips']:
-                if ip['version'] == 4:
-                    remote_addr = ip['ip']
- 
+        remote_addr = docker['ifaces'][0]['ips'][0]['ip']
+
         unixpipe.setup(remote_addr, 'root', '/var/run/docker.sock')
         subprocess.call(['docker', '-H',
             'tcp://localhost:%d' % unixpipe.service_port] + list(args))
