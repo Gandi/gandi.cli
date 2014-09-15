@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 from gandi.cli.core.base import GandiModule
