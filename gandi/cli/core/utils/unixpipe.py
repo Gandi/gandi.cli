@@ -113,11 +113,15 @@ def tcp4_to_unix(local_port, unix_path):
             (client, _) = server.accept()
             if not posix.fork():
                 unix = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-                unix.connect(unix_path)
+                try:
+                    unix.connect(unix_path)
+                except socket.error, e:
+                    print 'Unable to grab %s: %s' % (unix_path, e)
                 pipe = FdPipe(client, client, unix, unix)
                 while pipe.one_loop():
                     pass
                 return
+            client.close()
         try:
             posix.waitpid(-1, posix.WNOHANG)
         except OSError:
