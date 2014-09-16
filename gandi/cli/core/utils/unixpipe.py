@@ -1,14 +1,13 @@
 #!/usr/bin/python
 
+import os
 import posix
+import pwd
 import socket
 import select
 import subprocess
 import sys
 import time
-
-service_port = 12042
-
 
 class FdPipe:
 
@@ -84,8 +83,8 @@ class FdPipe:
 
 
 def scp(addr, user, local_path, remote_path, local_key=None):
-    scp_call = ['scp', local_path,
-                '%s@%s:%s' % (user, addr, remote_path)
+    scp_call = ['scp', local_path, 
+                '%s@[%s]:%s' % (user, addr, remote_path)
                 ]
 
     if local_key:
@@ -101,8 +100,8 @@ def tcp4_to_unix(local_port, unix_path):
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
         server.bind(('127.0.0.1', local_port))
-    except socket.error:
-        sys.stderr.write('remote cant grab port %d\n' % service_port)
+    except socket.error, e:
+        sys.stderr.write('remote cant grab port %d\n' % local_port)
         # let other end time to connect to maintain ssh up
         time.sleep(10)
         sys.exit(0)
@@ -114,42 +113,80 @@ def tcp4_to_unix(local_port, unix_path):
             (client, _) = server.accept()
             if not posix.fork():
                 unix = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-                unix.connect(unix_path)
+                try:
+                    unix.connect(unix_path)
+                except socket.error, e:
+                    print 'Unable to grab %s: %s' % (unix_path, e)
                 pipe = FdPipe(client, client, unix, unix)
                 while pipe.one_loop():
                     pass
                 return
+            client.close()
         try:
             posix.waitpid(-1, posix.WNOHANG)
         except OSError:
             pass
 
+def find_port(addr, user):
+    """Find local port in existing tunnels"""
+    home = pwd.getpwuid(os.getuid()).pw_dir
+    for name in os.listdir('%s/.ssh/' % home):
+        if name.startswith('unixpipe_%s@%s_' % (user, addr,)):
+            return int(name.split('_')[2])
 
-def setup(addr, user, remote_path, local_key=None):
-    test_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM,
-                              socket.IPPROTO_TCP)
-    try:
-        test_sock.connect(('127.0.0.1', service_port))
-        test_sock.close()
-        return
-    except socket.error, e:
-        if e.errno != 111:
-            raise
+def new_port():
+    """Find a free local port and allocate it"""
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
+    for i in range(12042, 16042):
+        try:
+            s.bind(('127.0.0.1', i))
+            s.close()
+            return i
+        except socket.error, e:
+            pass
+    raise Exception('No local port available')
 
-    scp(addr, user, __file__, '~/unixpipe', local_key)
+def _ssh_master_cmd(addr, user, command, local_key=None):
+    """Exit or check ssh mux"""
+    ssh_call = ['ssh', '-qNfL%d:127.0.0.1:12042' % find_port(addr, user),
+        '-o', 'ControlPath=~/.ssh/unixpipe_%%r@%%h_%d' % find_port(addr, user),
+        '-O', command, '%s@%s' % (user, addr,)]
 
-    ssh_call = ['ssh', '-fL%d:127.0.0.1:%d' % (service_port, service_port),
-                '-o ExitOnForwardFailure=yes',
-                '%s@%s' % (user, addr,), 'python', '~/unixpipe',
-                'server', remote_path]
     if local_key:
         ssh_call.insert(1, local_key)
         ssh_call.insert(1, '-i')
+    
+    return subprocess.call(ssh_call)
 
-    subprocess.call(ssh_call)
-    #XXX Sleep is a bad way to wait for the tunnel endpoint
-    time.sleep(1)
+def is_alive(addr, user):
+    """Check wether a tunnel is alive"""
+    return _ssh_master_cmd(addr, user, 'check') == 0
+
+def setup(addr, user, remote_path, local_key=None):
+    """Setup the tunnel"""
+    port = find_port(addr, user)
+
+    if not port or not is_alive(addr, user):
+        port = new_port()
+
+        scp(addr, user, __file__, '~/unixpipe', local_key)
+
+        ssh_call = ['ssh', '-fL%d:127.0.0.1:12042' % port,
+            '-o', 'ExitOnForwardFailure=yes',
+            '-o', 'ControlPath=~/.ssh/unixpipe_%%r@%%h_%d' % port,
+            '-o', 'ControlMaster=auto',
+            '%s@%s' % (user, addr,), 'python', '~/unixpipe', 
+                'server', remote_path]
+        if local_key:
+            ssh_call.insert(1, local_key)
+            ssh_call.insert(1, '-i')
+
+        subprocess.call(ssh_call)
+        #XXX Sleep is a bad way to wait for the tunnel endpoint
+        time.sleep(1)
+
+    return port
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'server':
-        tcp4_to_unix(service_port, sys.argv[2])
+        tcp4_to_unix(12042, sys.argv[2])
