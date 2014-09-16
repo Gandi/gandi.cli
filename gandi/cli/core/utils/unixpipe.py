@@ -84,8 +84,8 @@ class FdPipe:
 
 def scp(addr, user, local_path, remote_path, local_key=None):
     scp_call = ['scp', local_path, 
-        '%s@[%s]:%s' % (user, addr, remote_path)
-        ]
+                '%s@[%s]:%s' % (user, addr, remote_path)
+                ]
 
     if local_key:
         scp_call.insert(1, local_key)
@@ -150,9 +150,7 @@ def _ssh_master_cmd(addr, user, command, local_key=None):
     """Exit or check ssh mux"""
     ssh_call = ['ssh', '-qNfL%d:127.0.0.1:12042' % find_port(addr, user),
         '-o', 'ControlPath=~/.ssh/unixpipe_%%r@%%h_%d' % find_port(addr, user),
-        '-O', command,
-        '%s@%s' % (user, addr,)
-    ]
+        '-O', command, '%s@%s' % (user, addr,)]
 
     if local_key:
         ssh_call.insert(1, local_key)

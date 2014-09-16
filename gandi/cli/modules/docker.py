@@ -7,7 +7,8 @@ from gandi.cli.core.utils import unixpipe
 
 
 class Docker(GandiModule):
-    """ Module to handle docker vms.
+    """
+    Module to handle docker vms.
 
     $ gandi docker create
     $ gandi docker help
