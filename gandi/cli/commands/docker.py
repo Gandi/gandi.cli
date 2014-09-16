@@ -16,10 +16,8 @@ def docker(gandi, vm, args):
     """
     Manage docker instance
     """
-    for basedir in os.getenv('PATH', '.:/usr/bin').split(':'):
-        if os.path.exists('%s/docker' % basedir):
-            break
-    else:
+    if not [basedir for basedir in os.getenv('PATH', '.:/usr/bin').split(':')
+            if os.path.exists('%s/docker' % basedir)]:
         gandi.echo("""'docker' not found in $PATH, required for this command \
 to work
 See https://docs.docker.com/installation/#installation to install, or use:
