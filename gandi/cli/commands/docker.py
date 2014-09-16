@@ -20,9 +20,10 @@ def docker(gandi, vm, args):
         if os.path.exists('%s/docker' % basedir):
             break
     else:
-        print """'docker' not found in $PATH, required for this command to work
+        gandi.echo("""'docker' not found in $PATH, required for this command \
+to work
 See https://docs.docker.com/installation/#installation to install, or use:
-    # curl https://get.docker.io/ | sh"""
+    # curl https://get.docker.io/ | sh""")
         return
 
     if vm:
@@ -31,7 +32,7 @@ See https://docs.docker.com/installation/#installation to install, or use:
         vm = gandi.get('dockervm')
 
     if not vm:
-        print """
+        gandi.echo("""
 No docker vm specified. You can create one:
     $ gandi vm create --hostname docker --image "Ubuntu 14.04 64 bits LTS" \\
         --run 'wget -O - https://get.docker.io/ | sh'
@@ -41,7 +42,7 @@ Then configure it using:
 
 Or to both change target vm and spawn a process (note the -- separator):
     $ gandi docker --vm myvm -- run -i -t debian bash
-"""
+""")
         return
 
     return gandi.docker.handle(vm, args)
