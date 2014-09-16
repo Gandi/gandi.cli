@@ -37,5 +37,8 @@ class Docker(GandiModule):
         remote_addr = docker['ifaces'][0]['ips'][0]['ip']
 
         port = unixpipe.setup(remote_addr, 'root', '/var/run/docker.sock')
-        subprocess.call(['docker', '-H',
-            'tcp://localhost:%d' % port] + list(args))
+
+        os.environ['DOCKER_HOST'] = 'tcp://localhost:%d' % port
+        print 'using DOCKER_HOST=%s' % os.environ['DOCKER_HOST']
+
+        subprocess.call(['docker'] + list(args))
