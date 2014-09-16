@@ -131,13 +131,8 @@ def find_port(addr, user):
     """Find local port in existing tunnels"""
     home = pwd.getpwuid(os.getuid()).pw_dir
     for name in os.listdir('%s/.ssh/' % home):
-        if name.startswith('unixpipe_%s@%s' % (user, addr,)):
-            found = name
-            break
-    else:
-        return
-
-    return int(name.split('_')[2])
+        if name.startswith('unixpipe_%s@%s_' % (user, addr,)):
+            return int(name.split('_')[2])
 
 def new_port():
     """Find a free local port and allocate it"""
