@@ -9,6 +9,7 @@ import subprocess
 import sys
 import time
 
+
 class FdPipe:
 
     """Connect two pairs of file objects"""
@@ -83,7 +84,7 @@ class FdPipe:
 
 
 def scp(addr, user, local_path, remote_path, local_key=None):
-    scp_call = ['scp', local_path, 
+    scp_call = ['scp', local_path,
                 '%s@[%s]:%s' % (user, addr, remote_path)
                 ]
 
@@ -100,7 +101,7 @@ def tcp4_to_unix(local_port, unix_path):
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
         server.bind(('127.0.0.1', local_port))
-    except socket.error, e:
+    except socket.error as e:
         sys.stderr.write('remote cant grab port %d\n' % local_port)
         # let other end time to connect to maintain ssh up
         time.sleep(10)
@@ -115,7 +116,7 @@ def tcp4_to_unix(local_port, unix_path):
                 unix = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
                 try:
                     unix.connect(unix_path)
-                except socket.error, e:
+                except socket.error as e:
                     print 'Unable to grab %s: %s' % (unix_path, e)
                 pipe = FdPipe(client, client, unix, unix)
                 while pipe.one_loop():
@@ -127,12 +128,14 @@ def tcp4_to_unix(local_port, unix_path):
         except OSError:
             pass
 
+
 def find_port(addr, user):
     """Find local port in existing tunnels"""
     home = pwd.getpwuid(os.getuid()).pw_dir
     for name in os.listdir('%s/.ssh/' % home):
         if name.startswith('unixpipe_%s@%s_' % (user, addr,)):
             return int(name.split('_')[2])
+
 
 def new_port():
     """Find a free local port and allocate it"""
@@ -142,9 +145,10 @@ def new_port():
             s.bind(('127.0.0.1', i))
             s.close()
             return i
-        except socket.error, e:
+        except socket.error as e:
             pass
     raise Exception('No local port available')
+
 
 def _ssh_master_cmd(addr, user, command, local_key=None):
     """Exit or check ssh mux"""
@@ -155,12 +159,14 @@ def _ssh_master_cmd(addr, user, command, local_key=None):
     if local_key:
         ssh_call.insert(1, local_key)
         ssh_call.insert(1, '-i')
-    
+
     return subprocess.call(ssh_call)
+
 
 def is_alive(addr, user):
     """Check wether a tunnel is alive"""
     return _ssh_master_cmd(addr, user, 'check') == 0
+
 
 def setup(addr, user, remote_path, local_key=None):
     """Setup the tunnel"""
@@ -175,7 +181,7 @@ def setup(addr, user, remote_path, local_key=None):
             '-o', 'ExitOnForwardFailure=yes',
             '-o', 'ControlPath=~/.ssh/unixpipe_%%r@%%h_%d' % port,
             '-o', 'ControlMaster=auto',
-            '%s@%s' % (user, addr,), 'python', '~/unixpipe', 
+            '%s@%s' % (user, addr,), 'python', '~/unixpipe',
                 'server', remote_path]
         if local_key:
             ssh_call.insert(1, local_key)
