@@ -107,7 +107,7 @@ class GandiModule(GandiConfig):
         """ Display message. """
         if cls.intty():
             if message:
-                print message
+                print(message)
 
     @classmethod
     def pretty_echo(cls, message):

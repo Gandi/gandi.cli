@@ -2,7 +2,11 @@
 """ XML-RPC connection helper. """
 
 import socket
-import xmlrpclib
+
+try:
+    import xmlrpclib
+except ImportError:
+    import xmlrpc.client as xmlrpclib
 
 from gandi.cli import __version__
 

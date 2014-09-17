@@ -199,7 +199,7 @@ class GandiConfig(object):
             cls._del('global', 'api.env')
 
             apikey = click.prompt('Api key')
-            env_choice = click.Choice(cls.apienvs.keys())
+            env_choice = click.Choice(list(cls.apienvs.keys()))
             apienv = click.prompt('Environnment [production]/ote',
                                   default=cls.default_apienv,
                                   type=env_choice,

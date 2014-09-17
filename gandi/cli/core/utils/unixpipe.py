@@ -83,7 +83,7 @@ class FdPipe:
 
 
 def scp(addr, user, local_path, remote_path, local_key=None):
-    scp_call = ['scp', local_path, 
+    scp_call = ['scp', local_path,
                 '%s@[%s]:%s' % (user, addr, remote_path)
                 ]
 
@@ -115,8 +115,8 @@ def tcp4_to_unix(local_port, unix_path):
                 unix = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
                 try:
                     unix.connect(unix_path)
-                except socket.error, e:
-                    print 'Unable to grab %s: %s' % (unix_path, e)
+                except socket.error as e:
+                    print('Unable to grab %s: %s' % (unix_path, e))
                 pipe = FdPipe(client, client, unix, unix)
                 while pipe.one_loop():
                     pass
@@ -155,7 +155,7 @@ def _ssh_master_cmd(addr, user, command, local_key=None):
     if local_key:
         ssh_call.insert(1, local_key)
         ssh_call.insert(1, '-i')
-    
+
     return subprocess.call(ssh_call)
 
 def is_alive(addr, user):
@@ -175,7 +175,7 @@ def setup(addr, user, remote_path, local_key=None):
             '-o', 'ExitOnForwardFailure=yes',
             '-o', 'ControlPath=~/.ssh/unixpipe_%%r@%%h_%d' % port,
             '-o', 'ControlMaster=auto',
-            '%s@%s' % (user, addr,), 'python', '~/unixpipe', 
+            '%s@%s' % (user, addr,), 'python', '~/unixpipe',
                 'server', remote_path]
         if local_key:
             ssh_call.insert(1, local_key)
