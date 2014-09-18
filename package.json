@@ -4,7 +4,9 @@
   "description": "The gandi cli gh-pages build",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "./node_modules/.bin/gulp less",
+    "dev": "./node_modules/.bin/gulp"
   },
   "repository": {
     "type": "git",
