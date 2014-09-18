@@ -221,6 +221,7 @@ To add a new command to the CLI:
     * `packages/` contains packaging code (see `packages/README.rst`)
 
 Code must follow PEP8 recommendations: http://legacy.python.org/dev/peps/pep-0008/
+
 Docstrings should follow PEP257 recommendations: http://legacy.python.org/dev/peps/pep-0257/
 
 
