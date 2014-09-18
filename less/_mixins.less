@@ -1,0 +1,38 @@
+// Mixins
+
+.transition(@duration:0.2s, @ease:ease-out) {
+  -webkit-transition: all @duration @ease;
+  -moz-transition: all @duration @ease;
+  -o-transition: all @duration @ease;
+  transition: all @duration @ease;
+}
+
+
+.user-select(@user-select) {
+  -webkit-touch-callout: @user-select;
+  -webkit-user-select: @user-select;
+  -khtml-user-select: @user-select;
+  -moz-user-select: @user-select;
+  -ms-user-select: @user-select;
+  user-select: @user-select;
+}
+.selection(@background, @color) {
+  &::-moz-selection,
+  ::-moz-selection {
+    background: @background;
+    color: @color;
+  }
+  &::selection,
+  ::selection {
+    background: @background;
+    color: @color;
+  }
+}
+
+
+.hide-text() {
+  overflow: hidden;
+  padding: 0;
+  text-indent: 100%;
+  white-space: nowrap;
+}

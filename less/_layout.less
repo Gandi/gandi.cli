@@ -1,0 +1,130 @@
+html, body {margin: 0; padding: 0;}
+
+body {
+  font-family: OpenSans,sans-serif;
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.25em;
+  text-align: center;
+}
+
+#l-header {
+  background-color: @header-background;
+  color: @header-color-main;
+  .selection(@header-color-main, @header-background);
+
+  padding: 60px 0 80px 0;
+
+  h1 {
+    font-size: 85px;
+    font-weight: lighter;
+    margin: 0;
+  }
+  h2 {
+    color: @header-color-main;
+    font-weight: normal;
+    margin: 2.2em 0 0 0;
+
+    > strong {
+      color: @header-color-strong;
+      .selection(@header-color-strong, @header-background);
+    }
+  }
+
+  pre {
+    background-color: @header-pre-background;
+    color: @header-pre-color;
+    .selection(@header-pre-color, @header-pre-background);
+
+    font-size: 25px;
+    margin: 34px 0;
+    padding: 12px 0;
+    text-align: center;
+  }
+  code {
+    &:before {
+      content: '$';
+      padding-right: 0.25em;
+    }
+    font-family: OpenSans,sans-serif;
+  }
+}
+#l-header-buttons {
+  font-size: 0;  // inline-block fix
+  margin-top: 80px;
+  .selection(transparent, white);
+}
+#l-main {
+  background-color: @section-main-background;
+  text-align: center;
+  > figure {
+    margin: auto;
+    padding: 80px 0;
+    width: @layout-width;
+    > .video-container {
+        position: relative;
+        padding-bottom: 56.25%;
+        padding-top: 30px; height: 0; overflow: hidden;
+
+        & > iframe,
+        & > object,
+        & > embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    }
+  }
+}
+#l-footer {
+  background-color: @footer-background;
+  color: @footer-color-main;
+  height: 95px;
+  line-height: 95px;
+  .selection(@footer-color-main, @footer-background);
+
+  font-size: 0;  // inline-block fix
+  > * {
+    display: inline-block;
+    vertical-align: top;
+    width: 50%;
+  }
+  > h3 {
+    font-size: 25px;
+    margin: 25px 0 0 0;
+    padding: 0;
+  }
+  > p {
+    font-size: 20px;
+    margin: 0;
+    text-align: center;
+  }
+}
+
+.l-wrapper {
+  width: @layout-width;
+  margin: auto;
+}
+
+#forkme {
+  border: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  .user-select(none);
+}
+
+#gandi {
+  .hide-text();
+  display: inline-block;
+  background: url('/img/logo_Gandi.png') 0 0 no-repeat;
+  background-size: 200px;
+  height: 54px;
+  width: 200px;
+}
