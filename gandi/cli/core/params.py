@@ -1,7 +1,9 @@
 """ Custom command line validation parameters. """
 
-import click
 import re
+import sys
+
+import click
 from click.decorators import _param_memo
 
 from gandi.cli.core.base import GandiContextHelper
@@ -21,6 +23,12 @@ class DatacenterParamType(click.Choice):
 
     def convert(self, value, param, ctx):
         """ Convert value to uppercase. """
+        if not self.choices:
+            gandi = GandiContextHelper()
+            gandi.echo("No configuration found, please use 'gandi setup' "
+                       "command")
+            sys.exit(1)
+
         value = value.upper()
         return click.Choice.convert(self, value, param, ctx)
 
@@ -36,6 +44,16 @@ class PaasTypeParamType(click.Choice):
         gandi = GandiContextHelper()
         choices = [item['name'] for item in gandi.paas.type_list()]
         self.choices = choices
+
+    def convert(self, value, param, ctx):
+        """ Return converted value. """
+        if not self.choices:
+            gandi = GandiContextHelper()
+            gandi.echo("No configuration found, please use 'gandi setup' "
+                       "command")
+            sys.exit(1)
+
+        return click.Choice.convert(self, value, param, ctx)
 
 
 class IntChoice(click.Choice):
@@ -68,6 +86,12 @@ class DiskImageParamType(click.Choice):
 
     def convert(self, value, param, ctx):
         """ Try to find correct disk image regarding version. """
+        if not self.choices:
+            gandi = GandiContextHelper()
+            gandi.echo("No configuration found, please use 'gandi setup' "
+                       "command")
+            sys.exit(1)
+
         # Exact match
         if value in self.choices:
             return value
@@ -101,6 +125,12 @@ class SnapshotParamType(click.Choice):
 
     def convert(self, value, param, ctx):
         """ Convert value to int. """
+        if not self.choices:
+            gandi = GandiContextHelper()
+            gandi.echo("No configuration found, please use 'gandi setup' "
+                       "command")
+            sys.exit(1)
+
         value = click.Choice.convert(self, value, param, ctx)
         return int(value)
 
@@ -116,6 +146,16 @@ class CertificatePackage(click.Choice):
         gandi = GandiContextHelper()
         choices = [item['name'] for item in gandi.certificate.package_list()]
         self.choices = choices
+
+    def convert(self, value, param, ctx):
+        """ Return converted value. """
+        if not self.choices:
+            gandi = GandiContextHelper()
+            gandi.echo("No configuration found, please use 'gandi setup' "
+                       "command")
+            sys.exit(1)
+
+        return click.Choice.convert(self, value, param, ctx)
 
 
 class CertificateDcvMethod(click.Choice):
