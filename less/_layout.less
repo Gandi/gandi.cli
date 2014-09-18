@@ -5,6 +5,7 @@ body {
   height: 100%;
   margin: 0;
   width: 100%;
+  min-width: @layout-width + 2 * @margin;
 }
 
 h1, h2, h3, h4 {
@@ -17,7 +18,8 @@ h1, h2, h3, h4 {
   color: @header-color-main;
   .selection(@header-color-main, @header-background);
 
-  padding: 60px 0 80px 0;
+  padding: 60px @margin 80px @margin;
+  position: relative;
 
   h1 {
     font-size: 85px;
@@ -52,14 +54,19 @@ h1, h2, h3, h4 {
     }
     font-family: OpenSans,sans-serif;
   }
+
+  .button {
+    width: 250px;
+  }
 }
 #l-header-buttons {
   font-size: 0;  // inline-block fix
   margin-top: 80px;
-  .selection(transparent, white);
+  .selection(transparent, @button-main-color);
 }
 #l-main {
   background-color: @section-main-background;
+  padding: @margin;
   text-align: center;
   > figure {
     margin: auto;
@@ -87,23 +94,27 @@ h1, h2, h3, h4 {
   color: @footer-color-main;
   height: 95px;
   line-height: 95px;
+  padding: @margin;
   .selection(@footer-color-main, @footer-background);
 
-  font-size: 0;  // inline-block fix
-  > * {
-    display: inline-block;
-    vertical-align: top;
-    width: 50%;
-  }
-  > h3 {
-    font-size: 25px;
-    margin: 25px 0 0 0;
-    padding: 0;
-  }
-  > p {
-    font-size: 20px;
-    margin: 0;
-    text-align: center;
+  > .l-wrapper {
+    width: @layout-width;
+    > h3 {
+      float: left;
+      font-size: 25px;
+      margin: 25px 0 0 0;
+      padding: 0;
+      > a {
+        color: @footer-color-main;
+      }
+    }
+    > p {
+      float: right;
+      font-size: 20px;
+      font-weight: normal;
+      margin: 0;
+      text-align: center;
+    }
   }
 }
 
