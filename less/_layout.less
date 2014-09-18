@@ -5,6 +5,7 @@ body {
   height: 100%;
   margin: 0;
   width: 100%;
+  min-width: @layout-width;
 }
 
 h1, h2, h3, h4 {
@@ -52,6 +53,10 @@ h1, h2, h3, h4 {
     }
     font-family: OpenSans,sans-serif;
   }
+
+  .button {
+    width: 250px;
+  }
 }
 #l-header-buttons {
   font-size: 0;  // inline-block fix
@@ -89,21 +94,20 @@ h1, h2, h3, h4 {
   line-height: 95px;
   .selection(@footer-color-main, @footer-background);
 
-  font-size: 0;  // inline-block fix
-  > * {
-    display: inline-block;
-    vertical-align: top;
-    width: 50%;
-  }
-  > h3 {
-    font-size: 25px;
-    margin: 25px 0 0 0;
-    padding: 0;
-  }
-  > p {
-    font-size: 20px;
-    margin: 0;
-    text-align: center;
+  > .l-wrapper {
+    width: @layout-width;
+    > h3 {
+      float: left;
+      font-size: 25px;
+      margin: 25px 0 0 0;
+      padding: 0;
+    }
+    > p {
+      float: right;
+      font-size: 20px;
+      margin: 0;
+      text-align: center;
+    }
   }
 }
 
