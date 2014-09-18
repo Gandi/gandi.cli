@@ -212,7 +212,9 @@ class GandiConfig(object):
                         'host': cls.apienvs[apienv]},
             })
             if sshkey is not None:
-                config['sshkey'] = [os.path.expanduser(sshkey)]
+                sshkey_file = os.path.expanduser(sshkey)
+                if os.path.exists(sshkey_file):
+                    config['sshkey'] = [sshkey_file]
 
             directory = os.path.expanduser("~/.config/gandi")
             if not os.path.exists(directory):

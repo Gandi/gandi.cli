@@ -234,7 +234,7 @@ class GandiOption(click.Option):
                 # value found in configuration display it
                 self.display_value(ctx, value)
             else:
-                if self.default is None:
+                if self.default is None and self.required:
                     metavar = ''
                     if self.type.name not in ['integer', 'text']:
                         metavar = self.make_metavar()
