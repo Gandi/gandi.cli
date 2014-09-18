@@ -5,7 +5,7 @@ body {
   height: 100%;
   margin: 0;
   width: 100%;
-  min-width: @layout-width;
+  min-width: @layout-width + 2 * @margin;
 }
 
 h1, h2, h3, h4 {
@@ -18,7 +18,8 @@ h1, h2, h3, h4 {
   color: @header-color-main;
   .selection(@header-color-main, @header-background);
 
-  padding: 60px 0 80px 0;
+  padding: 60px @margin 80px @margin;
+  position: relative;
 
   h1 {
     font-size: 85px;
@@ -65,6 +66,7 @@ h1, h2, h3, h4 {
 }
 #l-main {
   background-color: @section-main-background;
+  padding: @margin;
   text-align: center;
   > figure {
     margin: auto;
@@ -92,6 +94,7 @@ h1, h2, h3, h4 {
   color: @footer-color-main;
   height: 95px;
   line-height: 95px;
+  padding: @margin;
   .selection(@footer-color-main, @footer-background);
 
   > .l-wrapper {
