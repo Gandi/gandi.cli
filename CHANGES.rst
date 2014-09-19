@@ -1,6 +1,20 @@
 Changelog
 =========
 
+0.9
+---
+
+* New command 'gandi docker' to manage docker instance.
+  This requires a docker client to work.
+* Improve 'vm ssh' command to support identity file, login@
+  syntax.
+* Login is no longer a mandatory option and saved to configuration
+  when creating a virtual machine.
+* Add short summary to output when creating a virtual machine.
+* Fixes bug when no sshkey available during setup.
+* Fixes bug with parameters validation when calling a command
+  before having entered api credentials.
+
 0.8
 ---
 
