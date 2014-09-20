@@ -216,7 +216,7 @@ class GandiConfig(object):
 
             directory = os.path.expanduser("~/.config/gandi")
             if not os.path.exists(directory):
-                mkpath(directory, 0750)
+                mkpath(directory, 0o750)
 
             # save to disk
             cls.save(config_file, config)
