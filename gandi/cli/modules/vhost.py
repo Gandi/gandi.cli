@@ -37,7 +37,7 @@ class Vhost(GandiModule):
         paas_id = Paas.usable_id(paas)
         params = {'paas_id': paas_id,
                   'vhost': vhost,
-                  'alter_zone': alter_zone}
+                  'zone_alter': alter_zone}
         try:
             result = cls.call('paas.vhost.create', params)
         except UsageError as err:
