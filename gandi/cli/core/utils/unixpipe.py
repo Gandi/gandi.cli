@@ -117,7 +117,7 @@ def tcp4_to_unix(local_port, unix_path):
                 try:
                     unix.connect(unix_path)
                 except socket.error as e:
-                    print 'Unable to grab %s: %s' % (unix_path, e)
+                    print('Unable to grab %s: %s' % (unix_path, e))
                 pipe = FdPipe(client, client, unix, unix)
                 while pipe.one_loop():
                     pass

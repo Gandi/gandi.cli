@@ -50,9 +50,9 @@ class GandiCLI(click.Group):
         @compatcallback
         def get_version(ctx, param, value):
             if value:
-                print ('Gandi CLI %s\n\n'
+                print(('Gandi CLI %s\n\n'
                        'Copyright: © 2014 Gandi S.A.S.\n'
-                       'License: GPL-3' % __version__)
+                       'License: GPL-3' % __version__))
                 ctx.exit()
 
         if help is None:
@@ -114,7 +114,7 @@ class GandiCLI(click.Group):
         if rows:
             formatter.write_dl(rows)
 
-        print formatter.getvalue().rstrip('\n')
+        print(formatter.getvalue().rstrip('\n'))
         ctx.exit()
 
     def command(self, *args, **kwargs):
@@ -153,7 +153,7 @@ class GandiCLI(click.Group):
                 command_dirs[os.path.basename(path)] = os.path.join(path,
                                                                     'commands')
 
-        for module_basename, dir in command_dirs.iteritems():
+        for module_basename, dir in command_dirs.items():
             for filename in sorted(os.listdir(dir)):
                 if filename.endswith('.py'):
                     submod = filename[:-3]
