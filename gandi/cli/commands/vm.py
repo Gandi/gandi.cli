@@ -4,7 +4,8 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (
-    output_vm, output_image, output_generic,
+    output_vm, output_image, output_generic, output_datacenter,
+    output_kernels
 )
 from gandi.cli.core.params import (
     pass_gandi, option, IntChoice, DATACENTER, DISK_IMAGE,
@@ -345,6 +346,34 @@ def images(gandi, label, datacenter):
         output_image(gandi, image, datacenters, output_keys)
 
     return result
+
+@cli.command()
+@click.option('--vm', default=None,
+              help='Output available kernels for given vm.')
+@click.option('--datacenter', type=DATACENTER, default=None,
+              help='Filter by datacenter.')
+@click.option('--flavor', default=None,
+              help='Filter by kernel flavor.')
+@click.argument('match', default='', required=False)
+@pass_gandi
+def kernels(gandi, vm, datacenter, flavor, match):
+    """List available kernels."""
+
+    opts = {}
+    if vm:
+        opts['id'] = gandi.iaas.info(vm)['datacenter_id']
+    elif datacenter:
+        opts['id'] = datacenter.usable_id()
+
+    dc_list = gandi.datacenter.list(opts)
+
+    for dc in dc_list:
+        gandi.echo('\n')
+        output_datacenter(gandi, dc)
+        kmap = gandi.kernel.list(dc['id'], flavor, match)
+        for _flavor in kmap:
+            gandi.separator_line()
+            output_kernels(gandi, _flavor, kmap[_flavor])
 
 
 @cli.command(root=True)
