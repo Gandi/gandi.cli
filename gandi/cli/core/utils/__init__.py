@@ -93,6 +93,17 @@ def output_image(gandi, image, datacenters, output_keys, justify=14):
         output_line(gandi, 'datacenter', dc_name, justify)
 
 
+def output_kernels(gandi, flavor, name_list, justify=14):
+    """ Helper to output kernel flavor versions."""
+    output_line(gandi, 'flavor', flavor, justify)
+    for name in name_list:
+        output_line(gandi, 'version', name, justify)
+
+
+def output_datacenter(gandi, datacenter, justify=14):
+    output_line(gandi, 'datacenter', datacenter['name'], justify)
+
+
 def output_disk(gandi, disk, datacenters, vms, profiles, output_keys,
                 justify=10):
     """ Helper to output a disk."""
