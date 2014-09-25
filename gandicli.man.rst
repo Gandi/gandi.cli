@@ -109,6 +109,7 @@ Namespaces:
 *  vm delete               Delete a virtual machine.
 *  vm images               List available system images for virtual machines.
 *  vm info                 Display information about a virtual machine.
+*  vm kernels              List available kernels for virtual machines.
 *  vm list                 List virtual machines.
 *  vm reboot               Reboot a virtual machine.
 *  vm ssh                  Spawn an SSH session to virtual machine.
@@ -232,6 +233,8 @@ Details:
 * ``gandi vm delete resource`` destroy a virtual machine, its main disk and its first virtual network interface. This operation can be done as background process using the option ``--background`` (or ``--bg``). Another possible parameter is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting.
 
 * ``gandi vm images pattern`` list all the available images of system whose name contains the pattern. Possible option is ``--datacenter FR|US|LU`` which filter by geograhical datacenter.
+
+* ``gandi vm kernel pattern`` list all the available kernels whos name contains the pattern. Possible options are ``--flavor TEXT`` to filter given kernel flavors, ``--vm TEXT`` to only show kernels available for a given vm, ``--datacenter FR|US|LU`` to specify a given datacenter.
 
 * ``gandi vm list`` show all the virtual machine created in Gandi hosting for the account. Possible options are ``--state`` which filter the output according to define virtual machine state, ``--id`` to obtain the id of each virtual machine, ``--limit INTEGER`` which list only a subset of the full list of virtual machines.
 
