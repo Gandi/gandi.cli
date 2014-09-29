@@ -89,8 +89,9 @@ class GandiConfig(object):
     @classmethod
     def save(cls, filename, config):
         """ Save configuration to yaml file. """
-        yaml.safe_dump(config, open(filename, "w"), indent=4,
-                       default_flow_style=False)
+        mode = os.O_WRONLY | os.O_CREAT
+        with os.fdopen(os.open(filename, mode, 0o600), 'w') as fname:
+            yaml.safe_dump(config, fname, indent=4, default_flow_style=False)
 
     @classmethod
     def _del(cls, scope, key, separator='.', conf=None):
@@ -218,7 +219,7 @@ class GandiConfig(object):
 
             directory = os.path.expanduser("~/.config/gandi")
             if not os.path.exists(directory):
-                mkpath(directory, 0o750)
+                mkpath(directory, 0o700)
 
             # save to disk
             cls.save(config_file, config)
