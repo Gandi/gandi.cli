@@ -13,10 +13,7 @@ class Datacenter(GandiModule):
     @classmethod
     def list(cls, options=None):
         """List available datacenters."""
-        if not options:
-            options = {}
-
-        return cls.safe_call('hosting.datacenter.list', options)
+        return cls.safe_call('hosting.datacenter.list', options or {})
 
     @classmethod
     def from_iso(cls, iso):

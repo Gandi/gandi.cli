@@ -365,8 +365,8 @@ class Kernel(GandiModule):
         kmap = cls.safe_call('hosting.disk.list_kernels', dc_id)
 
         if match:
-            for f, values in kmap.items():
-                kmap[f] = filter(lambda x: match in x, values)
+            for flav in kmap:
+                kmap[flav] = [x for x in kmap[flav] if match in x]
 
         if flavor:
             if flavor not in kmap:
