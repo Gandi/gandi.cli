@@ -354,7 +354,7 @@ def images(gandi, label, datacenter):
               help='Filter by datacenter.')
 @click.option('--flavor', default=None,
               help='Filter by kernel flavor.')
-@click.argument('match', default='', required=False)
+@click.argument('match', default='', required=False, metavar='pattern')
 @pass_gandi
 def kernels(gandi, vm, datacenter, flavor, match):
     """List available kernels."""
