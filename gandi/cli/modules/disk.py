@@ -63,7 +63,7 @@ class Disk(GandiModule):
         return cls._info(cls.usable_id(name))
 
     @staticmethod
-    def disk_param(cmdline, kernel, name, size, snapshot_profile):
+    def disk_param(name, size, snapshot_profile, cmdline=None, kernel=None):
         """ Return disk parameter structure. """
         disk_params = {}
 
@@ -85,11 +85,11 @@ class Disk(GandiModule):
         return disk_params
 
     @classmethod
-    def update(cls, resource, cmdline, kernel, name, size,
-               snapshot_profile, background):
+    def update(cls, resource, name, size, snapshot_profile,
+               background, cmdline=None, kernel=None):
         """ Update this disk. """
-        disk_params = cls.disk_param(cmdline, kernel, name, size,
-                                     snapshot_profile)
+        disk_params = cls.disk_param(name, size, snapshot_profile,
+                                     cmdline, kernel)
 
         result = cls.call('hosting.disk.update',
                           cls.usable_id(resource),
@@ -151,7 +151,7 @@ class Disk(GandiModule):
     def create(cls, name, vm, size, snapshotprofile, datacenter,
                background=False):
         """ Create a disk and attach it to a vm. """
-        disk_params = cls.disk_param(None, None, name, size, snapshotprofile)
+        disk_params = cls.disk_param(name, size, snapshotprofile)
         disk_params['datacenter_id'] = int(Datacenter.usable_id(datacenter))
 
         result = cls.call('hosting.disk.create', disk_params)

@@ -106,8 +106,8 @@ def update(gandi, resource, cmdline, kernel, name, size,
         gandi.echo('  gandi snapshotprofile list')
         return
 
-    result = gandi.disk.update(resource, cmdline, kernel, name, size,
-                               snapshotprofile, background)
+    result = gandi.disk.update(resource, name, size, snapshotprofile,
+                               background, cmdline, kernel)
     if background:
         gandi.pretty_echo(result)
 
