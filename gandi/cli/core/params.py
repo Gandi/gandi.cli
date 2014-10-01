@@ -93,6 +93,11 @@ class DiskImageParamType(click.Choice):
                        "command")
             sys.exit(1)
 
+        try:
+            return int(value)
+        except ValueError:
+            pass
+
         # Exact match
         if value in self.choices:
             return value
