@@ -343,13 +343,20 @@ class Image(GandiModule):
         return image_labels.get(label)
 
     @classmethod
+    def from_sysdisk(cls, label):
+        """Retrieve disk id from available system disks"""
+        disks = cls.safe_call('hosting.disk.list', {'name': label})
+        if len(disks):
+            return disks[0]['id']
+
+    @classmethod
     def usable_id(cls, id, datacenter=None):
         """ Retrieve id from input which can be label or id."""
         try:
             qry_id = int(id)
         except:
-            # id is maybe a label
-            qry_id = cls.from_label(id, datacenter)
+            # if id is a string, prefer a system disk then a label
+            qry_id = cls.from_sysdisk(id) or cls.from_label(id, datacenter)
 
         if not qry_id:
             msg = 'unknown identifier %s' % id
