@@ -156,7 +156,8 @@ class Iaas(GandiModule, SshkeyHelper):
 
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
-               login, password, hostname, image, run, background, sshkey):
+               login, password, hostname, image, run, background, sshkey,
+               size):
         """Create a new virtual machine."""
         if not background and not cls.intty():
             background = True
@@ -193,6 +194,9 @@ class Iaas(GandiModule, SshkeyHelper):
         # but api allow 255, so we limit to 15 for now
         disk_params = {'datacenter_id': vm_params['datacenter_id'],
                        'name': disk_name[:15]}
+
+        if size:
+            disk_params['size'] = size
 
         sys_disk_id_ = int(Image.usable_id(image, datacenter_id_))
 
