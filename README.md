@@ -33,7 +33,7 @@ Use `$ gandi` to easily create and manage web resources from the command line.
 
 Recommended tools
 * [pip](https://pip.pypa.io/en/latest/installing.html)
-* [virtualenv](https://pypi.python.org/pypi/virtualenv)
+* [virtualenv](https://virtualenv.pypa.io/en/latest/virtualenv.html#installation)
 
 ## Installation
 
