@@ -53,6 +53,21 @@ class Disk(GandiModule):
         return cls.call('hosting.disk.list', options)
 
     @classmethod
+    def list_create(cls, datacenter=None, label=None):
+        """List available disks for vm creation."""
+        options = {}
+        if datacenter:
+            datacenter_id = int(Datacenter.usable_id(datacenter))
+            options['datacenter_id'] = datacenter_id
+
+        # implement a filter by label as API doesn't handle it
+        images = cls.safe_call('hosting.disk.list', options)
+        if not label:
+            return images
+        return [img for img in images
+                if label.lower() in img['name'].lower()]
+
+    @classmethod
     def _info(cls, disk_id):
         """ Get information about a disk."""
         return cls.call('hosting.disk.info', disk_id)

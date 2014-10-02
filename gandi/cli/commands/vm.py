@@ -205,7 +205,8 @@ def delete(gandi, background, force, resource):
               help='Run command in background mode (default=False).')
 @option('--sshkey', multiple=True,
         help='Authorize ssh authentication for the given ssh key.')
-@option('--size', type=click.INT, default=None, help="System disk size in MiB.")
+@click.option('--size', type=click.INT, default=None,
+              help="System disk size in MiB.")
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
            password, hostname, image, run, background, sshkey, size):
@@ -338,13 +339,19 @@ def images(gandi, label, datacenter):
 
     """
     output_keys = ['label', 'os_arch', 'kernel_version', 'disk_id',
-                   'dc']
+                   'dc', 'name']
 
     datacenters = gandi.datacenter.list()
     result = gandi.image.list(datacenter, label)
     for image in result:
         gandi.separator_line()
         output_image(gandi, image, datacenters, output_keys)
+
+    # also display usable disks
+    result = gandi.disk.list_create(datacenter, label)
+    for disk in result:
+        gandi.separator_line()
+        output_image(gandi, disk, datacenters, output_keys)
 
     return result
 
