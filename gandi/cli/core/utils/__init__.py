@@ -206,9 +206,10 @@ def output_vlan(gandi, vlan, datacenters, output_keys, justify=10):
     """ Helper to output a vlan information."""
     output_generic(gandi, vlan, output_keys, justify)
 
-    if 'datacenter' in output_keys:
+    if 'dc' in output_keys:
         for dc in datacenters:
-            if dc['id'] == vlan['datacenter_id']:
+            if dc['id'] == vlan.get('datacenter_id',
+                                    vlan.get('datacenter', {}).get('id')):
                 dc_name = dc['iso']
                 break
 

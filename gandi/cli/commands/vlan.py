@@ -14,7 +14,7 @@ from gandi.cli.core.params import pass_gandi, DATACENTER
 @pass_gandi
 def list(gandi, datacenter, id):
     """List vlans."""
-    output_keys = ['name', 'state', 'datacenter']
+    output_keys = ['name', 'state', 'dc']
     if id:
         output_keys.append('id')
 
@@ -26,3 +26,18 @@ def list(gandi, datacenter, id):
         output_vlan(gandi, vlan, datacenters, output_keys)
 
     return vlans
+
+
+@cli.command()
+@click.argument('resource')
+@pass_gandi
+def info(gandi, resource):
+    """Display information about a vlan."""
+    output_keys = ['name', 'state', 'dc']
+
+    datacenters = gandi.datacenter.list()
+
+    vlan = gandi.vlan.info(resource)
+    output_vlan(gandi, vlan, datacenters, output_keys)
+
+    return vlan
