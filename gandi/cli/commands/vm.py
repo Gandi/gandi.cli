@@ -285,9 +285,9 @@ def update(gandi, resource, memory, cores, console, password, background,
         max_memory = gandi.iaas.required_max_memory(resource, memory)
 
     if max_memory and not reboot:
-        gandi.echo('memory update would require a reboot.')
-        gandi.echo('please use --reboot to confirm this change')
-        return
+        gandi.echo('memory update must be done offline.')
+        if not click.confirm("reboot machine %s?" % resource):
+            return
 
     result = gandi.iaas.update(resource, memory, cores, console, pwd,
                                background, max_memory)
