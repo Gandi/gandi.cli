@@ -205,7 +205,7 @@ def delete(gandi, background, force, resource):
 @option('--sshkey', multiple=True,
         help='Authorize ssh authentication for the given ssh key.')
 @click.option('--size', type=click.INT, default=None,
-        help="System disk size in MiB.")
+              help="System disk size in MiB.")
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
            password, hostname, image, run, background, sshkey, size):
