@@ -16,6 +16,21 @@ class Datacenter(GandiModule):
         return cls.safe_call('hosting.datacenter.list', options or {})
 
     @classmethod
+    def filtered_list(cls, name=None, obj=None):
+        """List datacenters matching name and compatible
+        with obj"""
+        options = {}
+        if name:
+            options['id'] = cls.usable_id(name)
+
+        def obj_ok(dc, obj):
+            if not obj or obj['datacenter_id'] == dc['id']:
+                return True
+            return False
+
+        return [x for x in cls.list(options) if obj_ok(x, obj)]
+
+    @classmethod
     def from_iso(cls, iso):
         """Retrieve datacenter id associated to an ISO."""
         result = cls.list()

@@ -367,13 +367,10 @@ def images(gandi, label, datacenter):
 def kernels(gandi, vm, datacenter, flavor, match):
     """List available kernels."""
 
-    opts = {}
     if vm:
-        opts['id'] = gandi.iaas.info(vm)['datacenter_id']
-    elif datacenter:
-        opts['id'] = datacenter.usable_id()
+        vm = gandi.iaas.info(vm)
 
-    dc_list = gandi.datacenter.list(opts)
+    dc_list = gandi.datacenter.filtered_list(datacenter, vm)
 
     for dc in dc_list:
         gandi.echo('\n')
