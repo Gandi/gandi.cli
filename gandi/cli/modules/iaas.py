@@ -363,3 +363,25 @@ class Image(GandiModule):
             cls.error(msg)
 
         return qry_id
+
+
+class Kernel(GandiModule):
+    """ Module to handle Gandi Kernels. """
+
+
+    @classmethod
+    def list(cls, datacenter, flavor=None, match=''):
+        """ List available kernels for datacenter."""
+        dc_id = Datacenter.usable_id(datacenter)
+        kmap = cls.safe_call('hosting.disk.list_kernels', dc_id)
+
+        if match:
+            for flav in kmap:
+                kmap[flav] = [x for x in kmap[flav] if match in x]
+
+        if flavor:
+            if flavor not in kmap:
+                cls.error('flavor %s not supported here' % flavor)
+            return kmap[flavor]
+
+        return kmap

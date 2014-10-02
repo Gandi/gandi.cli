@@ -5,7 +5,7 @@ import click
 from gandi.cli.core.cli import cli, compatcallback
 from gandi.cli.core.utils import output_disk, output_generic, randomstring
 from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE,
-                                   option)
+                                   KERNEL, option)
 
 
 @cli.command()
@@ -81,6 +81,8 @@ def check_size(ctx, param, value):
 
 
 @cli.command()
+@click.option('--cmdline', type=click.STRING, default=None, help='Kernel cmdline.')
+@click.option('--kernel', type=KERNEL, default=None, help='Kernel for disk.')
 @click.option('--name', type=click.STRING, default=None, help='Disk name.')
 @click.option('--size', default=None, type=click.INT, help='Disk size.',
               callback=check_size)
@@ -90,7 +92,8 @@ def check_size(ctx, param, value):
               help='Run command in background mode (default=False).')
 @pass_gandi
 @click.argument('resource')
-def update(gandi, resource, name, size, snapshotprofile, background):
+def update(gandi, resource, cmdline, kernel, name, size, 
+           snapshotprofile, background):
     """ Update a disk.
 
     Resource can be a disk name, or it's ID
@@ -104,7 +107,7 @@ def update(gandi, resource, name, size, snapshotprofile, background):
         return
 
     result = gandi.disk.update(resource, name, size, snapshotprofile,
-                               background)
+                               background, cmdline, kernel)
     if background:
         gandi.pretty_echo(result)
 

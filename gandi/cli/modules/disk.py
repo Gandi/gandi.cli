@@ -78,9 +78,15 @@ class Disk(GandiModule):
         return cls._info(cls.usable_id(name))
 
     @staticmethod
-    def disk_param(name, size, snapshot_profile):
+    def disk_param(name, size, snapshot_profile, cmdline=None, kernel=None):
         """ Return disk parameter structure. """
         disk_params = {}
+
+        if cmdline:
+            disk_params['cmdline'] = cmdline
+
+        if kernel:
+            disk_params['kernel'] = kernel
 
         if name:
             disk_params['name'] = name
@@ -94,9 +100,11 @@ class Disk(GandiModule):
         return disk_params
 
     @classmethod
-    def update(cls, resource, name, size, snapshot_profile, background):
+    def update(cls, resource, name, size, snapshot_profile,
+               background, cmdline=None, kernel=None):
         """ Update this disk. """
-        disk_params = cls.disk_param(name, size, snapshot_profile)
+        disk_params = cls.disk_param(name, size, snapshot_profile,
+                                     cmdline, kernel)
 
         result = cls.call('hosting.disk.update',
                           cls.usable_id(resource),
