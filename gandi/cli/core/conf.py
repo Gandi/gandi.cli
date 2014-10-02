@@ -89,7 +89,7 @@ class GandiConfig(object):
     @classmethod
     def save(cls, filename, config):
         """ Save configuration to yaml file. """
-        mode = os.O_WRONLY | os.O_CREAT
+        mode = os.O_WRONLY | os.O_TRUNC | os.O_CREAT
         with os.fdopen(os.open(filename, mode, 0o600), 'w') as fname:
             yaml.safe_dump(config, fname, indent=4, default_flow_style=False)
 
