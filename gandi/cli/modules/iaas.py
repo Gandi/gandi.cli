@@ -1,5 +1,6 @@
 """ VM commands module. """
 
+import math
 import time
 
 from gandi.cli.core.base import GandiModule
@@ -127,7 +128,24 @@ class Iaas(GandiModule, SshkeyHelper):
             cls.display_progress(opers)
 
     @classmethod
-    def update(cls, id, memory, cores, console, password, background):
+    def required_max_memory(cls, id, memory):
+        """
+        Recommend a max_memory setting for this vm given memory. If the
+        VM already has a nice setting, return None. The max_memory 
+        param cannot be fixed too high, because page table allocation 
+        would cost too much for small memory profile. Use a range as below.
+        """
+        best = int(max(2**math.ceil(math.log(memory, 2)), 2048))
+
+        actual_vm = cls.info(id)
+
+        if (actual_vm['state'] == 'running' 
+            and actual_vm['vm_max_memory'] != best):
+            return best
+
+    @classmethod
+    def update(cls, id, memory, cores, console, password, background,
+               max_memory):
         """Update a virtual machine."""
         if not background and not cls.intty():
             background = True
@@ -145,6 +163,9 @@ class Iaas(GandiModule, SshkeyHelper):
 
         if password:
             vm_params['password'] = password
+
+        if max_memory:
+            vm_params['vm_max_memory'] = max_memory
 
         result = cls.call('hosting.vm.update', cls.usable_id(id), vm_params)
         if background:

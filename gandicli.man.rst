@@ -248,7 +248,7 @@ Details:
 
 * ``gandi vm reboot resource``, same parameter as start but allow to reboot a virtual machine.
 
-* ``gandi vm update resource`` allow to change the quantity of memory (using ``--memory INTEGER``), the number of virtual CPU (using ``--cores INTEGER``), enable the virtual console which allow to get a shell to the virtual machine even without network interfaces on the virtual machine (using ``--console``) or change the root password (using ``--password``). All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi vm update resource`` allow to change the quantity of memory (using ``--memory INTEGER``), the number of virtual CPU (using ``--cores INTEGER``), enable the virtual console which allow to get a shell to the virtual machine even without network interfaces on the virtual machine (using ``--console``) or change the root password (using ``--password``). All these modification can be done as background process using the option ``--background`` (or ``--bg``). *NOTE*: Because of the cost of page table setup, a maximum memory limit has to be given for some kernels, limiting dynamic updates. You cannot online resize a VM memory crossing this value, and the ``--reboot`` option allows you to acknowledge the required reboot.
 
 
 FILES
