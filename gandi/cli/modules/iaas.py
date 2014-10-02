@@ -137,7 +137,7 @@ class Iaas(GandiModule, SshkeyHelper):
         """
         best = int(max(2**math.ceil(math.log(memory, 2)), 2048))
 
-        actual_vm = cls.call('hosting.vm.info', cls.usable_id(id))
+        actual_vm = cls.info(id)
 
         if (actual_vm['state'] == 'running' 
             and actual_vm['vm_max_memory'] != best):
