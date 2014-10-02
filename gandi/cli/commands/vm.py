@@ -280,6 +280,7 @@ def update(gandi, resource, memory, cores, console, password, background,
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
+    max_memory = None
     if memory:
         max_memory = gandi.iaas.required_max_memory(resource, memory)
 
