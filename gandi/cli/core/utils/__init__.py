@@ -191,6 +191,19 @@ def output_cert(gandi, cert, output_keys, justify=13):
             output_line(gandi, 'altname', altname, justify)
 
 
+def output_vlan(gandi, vlan, datacenters, output_keys, justify=10):
+    """ Helper to output a vlan information."""
+    output_generic(gandi, vlan, output_keys, justify)
+
+    if 'datacenter' in output_keys:
+        for dc in datacenters:
+            if dc['id'] == vlan['datacenter_id']:
+                dc_name = dc['iso']
+                break
+
+        output_line(gandi, 'datacenter', dc_name, justify)
+
+
 def randomstring(prefix=None):
     """ Helper to generate a random string, used for temporary hostnames."""
     if not prefix:
