@@ -265,9 +265,12 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                    'and the created login.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
+@click.option('--reboot', default=False, is_flag=True,
+              help='Accept a VM reboot for non-live updates')
 @click.argument('resource')
 @pass_gandi
-def update(gandi, resource, memory, cores, console, password, background):
+def update(gandi, resource, memory, cores, console, password, background,
+           reboot):
     """Update a virtual machine.
 
     Resource can be a Hostname or an ID
@@ -277,8 +280,16 @@ def update(gandi, resource, memory, cores, console, password, background):
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
+    if memory:
+        max_memory = gandi.iaas.required_max_memory(resource, memory)
+
+    if max_memory and not reboot:
+        gandi.echo('memory update would require a reboot.')
+        gandi.echo('please use --reboot to confirm this change')
+        return
+
     result = gandi.iaas.update(resource, memory, cores, console, pwd,
-                               background)
+                               background, max_memory)
     if background:
         gandi.pretty_echo(result)
 
