@@ -33,6 +33,31 @@ class Vlan(GandiModule):
         return cls._info(cls.usable_id(name))
 
     @classmethod
+    def delete(cls, resources, background=False):
+        """Delete a vlan."""
+        if not isinstance(resources, (list, tuple)):
+            resources = [resources]
+
+        opers = []
+        for item in resources:
+            oper = cls.call('hosting.vlan.delete', cls.usable_id(item))
+            if not oper:
+                continue
+
+            if isinstance(oper, list):
+                opers.extend(oper)
+            else:
+                opers.append(oper)
+
+        if background:
+            return opers
+
+        # interactive mode, run a progress bar
+        cls.echo('Deleting your vlan.')
+        if opers:
+            cls.display_progress(opers)
+
+    @classmethod
     def from_name(cls, name):
         """Retrieve domain id associated to a FQDN."""
         result = cls.list()

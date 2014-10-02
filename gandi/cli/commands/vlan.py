@@ -3,7 +3,7 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_vlan
+from gandi.cli.core.utils import output_vlan, output_generic
 from gandi.cli.core.params import pass_gandi, DATACENTER
 
 
@@ -41,3 +41,42 @@ def info(gandi, resource):
     output_vlan(gandi, vlan, datacenters, output_keys)
 
     return vlan
+
+
+@cli.command()
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False).')
+@click.argument('resource', nargs=-1, required=True)
+@pass_gandi
+def delete(gandi, background, force, resource):
+    """Delete a vlan.
+
+    Resource can be a vlan name, or an ID
+    """
+    output_keys = ['id', 'type', 'step']
+
+    vlan_list = gandi.vlan.list()
+    vlan_namelist = [vlan['name'] for vlan in vlan_list]
+    for item in resource:
+        if item not in vlan_namelist:
+            gandi.echo('Sorry vlan %s does not exist' % item)
+            gandi.echo('Please use one of the following: %s' % vlan_namelist)
+            return
+
+    if not force:
+        vlan_info = "'%s'" % ', '.join(resource)
+        proceed = click.confirm('Are you sure to delete vlan %s?' %
+                                vlan_info)
+
+        if not proceed:
+            return
+
+    opers = gandi.vlan.delete(resource, background)
+    if background:
+        for oper in opers:
+            output_generic(gandi, oper, output_keys)
+
+    return opers
