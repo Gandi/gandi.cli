@@ -112,6 +112,39 @@ class DiskImageParamType(click.Choice):
                   (value, ', '.join(self.choices)), param, ctx)
 
 
+class KernelParamType(click.Choice):
+
+    """ Choice parameter to select an available kernel. """
+
+    name = 'kernels'
+
+    def __init__(self):
+        """ Initialize choices list. """
+        gandi = GandiContextHelper()
+        self.choices = [ item['kernel_version'] for item in 
+            gandi.image.list() ]
+
+    def convert(self, value, param, ctx):
+        """ Try to find correct kernel regarding version. """
+        if not self.choices:
+            gandi = GandiContextHelper()
+            gandi.echo("No configuration found, please use 'gandi setup' "
+                       "command")
+            sys.exit(1)
+
+        # Exact match first
+        if value in self.choices:
+            return value
+
+        # Also try with x86-64 suffix
+        new_value = '%s-x86_64' % value
+        if new_value in self.choices:
+            return new_value
+
+        self.fail('invalid choice: %s. (choose from %s)' %
+                  (value, ', '.join(self.choices)), param, ctx)
+
+
 class SnapshotParamType(click.Choice):
 
     """ Choice parameter to select an available snapshot profile. """
@@ -233,6 +266,7 @@ class EmailParamType(click.ParamType):
 DATACENTER = DatacenterParamType()
 PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
+KERNEL = KernelParamType()
 SNAPSHOTPROFILE = SnapshotParamType()
 CERTIFICATE_PACKAGE = CertificatePackage()
 CERTIFICATE_DCV_METHOD = CertificateDcvMethod()

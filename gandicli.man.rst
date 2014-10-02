@@ -109,6 +109,7 @@ Namespaces:
 *  vm delete               Delete a virtual machine.
 *  vm images               List available system images for virtual machines.
 *  vm info                 Display information about a virtual machine.
+*  vm kernels              List available kernels for virtual machines.
 *  vm list                 List virtual machines.
 *  vm reboot               Reboot a virtual machine.
 *  vm ssh                  Spawn an SSH session to virtual machine.
@@ -153,7 +154,7 @@ Details:
 
   ``gandi disk list`` show a list of virtual disk. Possible options to filter the list are : ``--only-data`` and ``--only-snapshot`` which limit the list to regular disk and to snapshots, ``--type`` add the type of the virtual disk, ``--id`` add the integer id of each virtual disk, ``--vm`` show the virtual machines by which the disk are used, ``--snapshotprofile`` show the profile of data retention associated and ``--limit INTEGER`` show only a limit amount of disks.
 
-* ``gandi disk update resource`` modify the options of a virtual disk. Possible options are ``--name TEXT`` for the label of the virtual disk, ``--size INTEGER`` for the new size of the disk, ``--snapshotprofile TEXT`` to select a profile of snapshot to apply to the disk for keeping multiple version of data in a timeline. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi disk update resource`` modify the options of a virtual disk. Possible options are ``--kernel KERNEL`` to setup or update disk kernel, ``--cmdline TEXT`` to change kernel cmdline, ``--name TEXT`` for the label of the virtual disk, ``--size INTEGER`` for the new size of the disk, ``--snapshotprofile TEXT`` to select a profile of snapshot to apply to the disk for keeping multiple version of data in a timeline. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi docker`` will setup ssh forwarding towards a gandi VM, remotely feeding a docker unix socket. This, for example, can be used for zeroconf access to scripted temporary build VMs. The ``--vm`` option alters the ``dockervm`` configuration parameter and can be used to set the VM used for future docker connections. ``dockervm`` can also be set locally for per-project vms (See ``gandi config``). *NOTE*: passing option parameters to docker require the usage of the POSIX argument parsing ``--`` separator. *NOTE*: a local docker client is required for this command to operate.
 
@@ -232,6 +233,8 @@ Details:
 * ``gandi vm delete resource`` destroy a virtual machine, its main disk and its first virtual network interface. This operation can be done as background process using the option ``--background`` (or ``--bg``). Another possible parameter is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting.
 
 * ``gandi vm images pattern`` list all the available images of system whose name contains the pattern. Possible option is ``--datacenter FR|US|LU`` which filter by geograhical datacenter.
+
+* ``gandi vm kernel pattern`` list all the available kernels whos name contains the pattern. Possible options are ``--flavor TEXT`` to filter given kernel flavors, ``--vm TEXT`` to only show kernels available for a given vm, ``--datacenter FR|US|LU`` to specify a given datacenter.
 
 * ``gandi vm list`` show all the virtual machine created in Gandi hosting for the account. Possible options are ``--state`` which filter the output according to define virtual machine state, ``--id`` to obtain the id of each virtual machine, ``--limit INTEGER`` which list only a subset of the full list of virtual machines.
 
