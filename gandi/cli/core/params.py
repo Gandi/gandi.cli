@@ -82,7 +82,7 @@ class DiskImageParamType(click.Choice):
         """ Initialize choices list. """
         gandi = GandiContextHelper()
         choices = [item['label'] for item in gandi.image.list()] + \
-            [item['name'] for item in gandi.disk.list()]
+            [item['name'] for item in gandi.disk.list_create()]
         self.choices = choices
 
     def convert(self, value, param, ctx):
