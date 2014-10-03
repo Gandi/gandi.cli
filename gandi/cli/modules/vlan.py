@@ -58,6 +58,28 @@ class Vlan(GandiModule):
             cls.display_progress(opers)
 
     @classmethod
+    def create(cls, name, datacenter, background):
+        """Create a new vlan."""
+        if not background and not cls.intty():
+            background = True
+
+        datacenter_id_ = int(Datacenter.usable_id(datacenter))
+
+        vlan_params = {
+            'name': name,
+            'datacenter_id': datacenter_id_,
+        }
+        result = cls.call('hosting.vlan.create', vlan_params)
+
+        if not background:
+            # interactive mode, run a progress bar
+            cls.echo('Creating your vlan.')
+            cls.display_progress(result)
+            cls.echo('Your vlan %s has been created.' % name)
+
+        return result
+
+    @classmethod
     def from_name(cls, name):
         """Retrieve domain id associated to a FQDN."""
         result = cls.list()

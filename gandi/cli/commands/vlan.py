@@ -4,7 +4,7 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_vlan, output_generic
-from gandi.cli.core.params import pass_gandi, DATACENTER
+from gandi.cli.core.params import option, pass_gandi, DATACENTER
 
 
 @cli.command()
@@ -80,3 +80,23 @@ def delete(gandi, background, force, resource):
             output_generic(gandi, oper, output_keys)
 
     return opers
+
+
+@cli.command()
+@click.option('--name', required=True, help='Name of the vlan.')
+@option('--datacenter', type=DATACENTER, default='LU',
+        help='Datacenter where the PaaS will be spawned.')
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@pass_gandi
+def create(gandi, name, datacenter, background):
+    """ Create a new vlan """
+    result = gandi.vlan.create(name, datacenter, background)
+
+    if not result:
+        return
+
+    if background:
+        gandi.pretty_echo(result)
+
+    return result
