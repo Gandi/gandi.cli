@@ -9,51 +9,58 @@ from click.decorators import _param_memo
 from gandi.cli.core.base import GandiContextHelper
 
 
-class DatacenterParamType(click.Choice):
+class GandiChoice(click.Choice):
+
+    """ Base class for custom Choice parameters. """
+
+    def __init__(self):
+        """ Initialize choices list. """
+        self._choices = []
+
+    def _get_choices(self, gandi):
+        """ Internal method to get choices list """
+        raise NotImplementedError
+
+    @property
+    def choices(self):
+        """ Retrieve choices from API if possible"""
+        if not self._choices:
+            gandi = GandiContextHelper()
+            self._choices = self._get_choices(gandi)
+            if not self._choices:
+                gandi = GandiContextHelper()
+                gandi.echo("No configuration found, please use 'gandi setup' "
+                           "command")
+                sys.exit(1)
+
+        return self._choices
+
+
+class DatacenterParamType(GandiChoice):
 
     """ Choice parameter to select an available datacenter. """
 
     name = 'datacenter'
 
-    def __init__(self):
-        """ Initialize choices list. """
-        gandi = GandiContextHelper()
-        choices = [item['iso'] for item in gandi.datacenter.list()]
-        self.choices = choices
+    def _get_choices(self, gandi):
+        """ Internal method to get choices list """
+        return [item['iso'] for item in gandi.datacenter.list()]
 
     def convert(self, value, param, ctx):
         """ Convert value to uppercase. """
-        if not self.choices:
-            gandi = GandiContextHelper()
-            gandi.echo("No configuration found, please use 'gandi setup' "
-                       "command")
-            sys.exit(1)
-
         value = value.upper()
         return click.Choice.convert(self, value, param, ctx)
 
 
-class PaasTypeParamType(click.Choice):
+class PaasTypeParamType(GandiChoice):
 
     """ Choice parameter to select an available PaaS instance type. """
 
     name = 'paas type'
 
-    def __init__(self):
-        """ Initialize choices list. """
-        gandi = GandiContextHelper()
-        choices = [item['name'] for item in gandi.paas.type_list()]
-        self.choices = choices
-
-    def convert(self, value, param, ctx):
-        """ Return converted value. """
-        if not self.choices:
-            gandi = GandiContextHelper()
-            gandi.echo("No configuration found, please use 'gandi setup' "
-                       "command")
-            sys.exit(1)
-
-        return click.Choice.convert(self, value, param, ctx)
+    def _get_choices(self, gandi):
+        """ Internal method to get choices list """
+        return [item['name'] for item in gandi.paas.type_list()]
 
 
 class IntChoice(click.Choice):
@@ -72,27 +79,19 @@ class IntChoice(click.Choice):
         return int(value)
 
 
-class DiskImageParamType(click.Choice):
+class DiskImageParamType(GandiChoice):
 
     """ Choice parameter to select an available disk image. """
 
     name = 'images'
 
-    def __init__(self):
-        """ Initialize choices list. """
-        gandi = GandiContextHelper()
-        choices = [item['label'] for item in gandi.image.list()] + \
-            [item['name'] for item in gandi.disk.list_create()]
-        self.choices = choices
+    def _get_choices(self, gandi):
+        """ Internal method to get choices list """
+        return ([item['label'] for item in gandi.image.list()] +
+                [item['name'] for item in gandi.disk.list_create()])
 
     def convert(self, value, param, ctx):
         """ Try to find correct disk image regarding version. """
-        if not self.choices:
-            gandi = GandiContextHelper()
-            gandi.echo("No configuration found, please use 'gandi setup' "
-                       "command")
-            sys.exit(1)
-
         # Exact match
         if value in self.choices:
             return value
@@ -112,26 +111,18 @@ class DiskImageParamType(click.Choice):
                   (value, ', '.join(self.choices)), param, ctx)
 
 
-class KernelParamType(click.Choice):
+class KernelParamType(GandiChoice):
 
     """ Choice parameter to select an available kernel. """
 
     name = 'kernels'
 
-    def __init__(self):
-        """ Initialize choices list. """
-        gandi = GandiContextHelper()
-        self.choices = [ item['kernel_version'] for item in 
-            gandi.image.list() ]
+    def _get_choices(self, gandi):
+        """ Internal method to get choices list """
+        return [item['kernel_version'] for item in gandi.image.list()]
 
     def convert(self, value, param, ctx):
         """ Try to find correct kernel regarding version. """
-        if not self.choices:
-            gandi = GandiContextHelper()
-            gandi.echo("No configuration found, please use 'gandi setup' "
-                       "command")
-            sys.exit(1)
-
         # Exact match first
         if value in self.choices:
             return value
@@ -145,51 +136,31 @@ class KernelParamType(click.Choice):
                   (value, ', '.join(self.choices)), param, ctx)
 
 
-class SnapshotParamType(click.Choice):
+class SnapshotParamType(GandiChoice):
 
     """ Choice parameter to select an available snapshot profile. """
 
     name = 'snapshot profile'
 
-    def __init__(self):
-        """ Initialize choices list. """
-        gandi = GandiContextHelper()
-        choices = [str(item['id']) for item in gandi.snapshotprofile.list()]
-        self.choices = choices
+    def _get_choices(self, gandi):
+        """ Internal method to get choices list """
+        return [str(item['id']) for item in gandi.snapshotprofile.list()]
 
     def convert(self, value, param, ctx):
         """ Convert value to int. """
-        if not self.choices:
-            gandi = GandiContextHelper()
-            gandi.echo("No configuration found, please use 'gandi setup' "
-                       "command")
-            sys.exit(1)
-
         value = click.Choice.convert(self, value, param, ctx)
         return int(value)
 
 
-class CertificatePackage(click.Choice):
+class CertificatePackage(GandiChoice):
 
     """ Choice parameter to select an available certificate package. """
 
     name = 'certificate package'
 
-    def __init__(self):
-        """ Initialize choices list. """
-        gandi = GandiContextHelper()
-        choices = [item['name'] for item in gandi.certificate.package_list()]
-        self.choices = choices
-
-    def convert(self, value, param, ctx):
-        """ Return converted value. """
-        if not self.choices:
-            gandi = GandiContextHelper()
-            gandi.echo("No configuration found, please use 'gandi setup' "
-                       "command")
-            sys.exit(1)
-
-        return click.Choice.convert(self, value, param, ctx)
+    def _get_choices(self, gandi):
+        """ Internal method to get choices list """
+        return [item['name'] for item in gandi.certificate.package_list()]
 
 
 class CertificateDcvMethod(click.Choice):
