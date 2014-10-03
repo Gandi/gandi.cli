@@ -35,7 +35,7 @@ def list(gandi, only_paas, only_vm):
 def info(gandi, resource):
     """ Display information about a snapshot profile.
 
-    Resource can be a profile name or it's ID
+    Resource can be a profile name or ID
     """
     output_keys = ['id', 'name', 'kept_total', 'target', 'quota_factor',
                    'schedules']

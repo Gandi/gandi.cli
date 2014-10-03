@@ -60,7 +60,7 @@ def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
 def info(gandi, resource):
     """ Display information about a disk.
 
-    Resource can be a disk name, or it's ID
+    Resource can be a disk name or ID
     """
     output_keys = ['name', 'state', 'size', 'type', 'id', 'dc', 'vm',
                    'profile']
@@ -96,7 +96,7 @@ def update(gandi, resource, cmdline, kernel, name, size,
            snapshotprofile, background):
     """ Update a disk.
 
-    Resource can be a disk name, or it's ID
+    Resource can be a disk name, or ID
     """
     try:
         snapshotprofile = int(snapshotprofile) if snapshotprofile else None
