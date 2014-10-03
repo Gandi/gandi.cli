@@ -9,12 +9,18 @@ class Vlan(GandiModule):
     """ Module to handle CLI commands.
 
     $ gandi vlan list
+    $ gandi vlan info
+    $ gandi vlan create
+    $ gandi vlan update
+    $ gandi vlan delete
 
     """
 
     @classmethod
     def list(cls, datacenter=None):
-        """List vm vlan (in the future it should also handle paas vlan)."""
+        """List virtual machine vlan
+
+        (in the future it should also handle PaaS vlan)."""
         options = {}
         if datacenter:
             datacenter_id = int(Datacenter.usable_id(datacenter))
@@ -93,7 +99,7 @@ class Vlan(GandiModule):
 
     @classmethod
     def from_name(cls, name):
-        """Retrieve domain id associated to a FQDN."""
+        """Retrieve vlan id associated to a name."""
         result = cls.list()
         vlans = {}
         for vlan in result:
