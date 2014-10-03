@@ -104,6 +104,11 @@ Namespaces:
 *  vhost delete            Delete a vhost.
 *  vhost info              Display information about a vhost.
 *  vhost list              List vhosts.
+*  vlan create             Create a new vlan
+*  vlan delete             Delete a vlan.
+*  vlan info               Display information about a vlan.
+*  vlan list               List vlans.
+*  vlan update             Update a vlan
 *  vm console              Open a console to virtual machine.
 *  vm create               Create a new virtual machine.
 *  vm delete               Delete a virtual machine.
@@ -225,6 +230,16 @@ Details:
 * ``gandi vhost info host.domain.tld`` show details about a specific virtual host. Possible option is ``--ids`` which show the integer identificator.
 
 * ``gandi vhost list`` show all the virtual host defined in Simple Hosting. Possible option are ``--names`` which add the name of the Simple Hosting instance on which the virtual host is setup, ``--ids`` which show the integer identificator and ``--limit INTEGER`` which show a subset of the full list of virtual host.
+
+*  ``gandi vlan create`` add a new vlan. Mandatory options are ``--name TEXT`` for the label of the vlan, ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``. The operation can be done as background process using the option ``--background`` (or ``--bg``).
+
+*  ``gandi vlan delete resource`` delete a vlan after asking for user validation. Possible option is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting. Deletion can be done as background process using the option ``--background`` (or ``--bg``).
+
+*  ``gandi vlan info resource`` show details of a specific vlan.
+
+*  ``gandi vlan list`` show all the vlan created in Gandi hosting for the account. Possible options are ``--id`` to obtain the id of each vlan, ``--datacenter FR|US|LU`` which filter by geograhical datacenter.
+
+*  ``gandi vlan update`` update a vlan. Mandatory options are ``--name TEXT`` for the label of the vlan.
 
 * ``gandi vm console resource`` open a console on the virtual machine and give you a shell access.
 
