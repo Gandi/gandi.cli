@@ -35,6 +35,14 @@ class GandiTransport(xmlrpclib.SafeTransport):
         connection.putheader('User-Agent', self._user_agent)
 
 
+class DryRunException(APICallFailed):
+    dry_run = None
+
+    def __init__(self, message, code, dry_run):
+        super(DryRunException, self).__init__(message, code)
+        self.dry_run = dry_run
+
+
 class XMLRPCClient(object):
 
     """ Class wrapper for xmlrpc calls to Gandi public API. """
@@ -45,8 +53,10 @@ class XMLRPCClient(object):
         self.endpoint = xmlrpclib.ServerProxy(host, allow_none=True,
                                               use_datetime=True)
 
-    def request(self, apikey, method, *args):
+    def request(self, apikey, method, *args, **kwargs):
         """ Make a xml-rpc call to remote API. """
+        dry_run = kwargs.get('dry_run', False)
+
         try:
             func = getattr(self.endpoint, method)
             return func(apikey, *args)
@@ -55,6 +65,10 @@ class XMLRPCClient(object):
             raise APICallFailed(msg)
         except xmlrpclib.Fault as err:
             msg = 'Gandi API has returned an error: %s' % err
+            if dry_run:
+                args[-1]['--dry-run'] = True
+                ret = func(apikey, *args)
+                raise DryRunException(msg, err.faultCode, ret)
             raise APICallFailed(msg, err.faultCode)
         except TypeError as err:
             msg = 'An unknown error as occured: %s' % err
