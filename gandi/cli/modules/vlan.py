@@ -80,6 +80,18 @@ class Vlan(GandiModule):
         return result
 
     @classmethod
+    def update(cls, id, name):
+        """Update an existing vlan."""
+        vlan_params = {
+            'name': name,
+        }
+
+        cls.echo('Updating your vlan.')
+        result = cls.call('hosting.vlan.update', cls.usable_id(id),
+                          vlan_params)
+        return result
+
+    @classmethod
     def from_name(cls, name):
         """Retrieve domain id associated to a FQDN."""
         result = cls.list()

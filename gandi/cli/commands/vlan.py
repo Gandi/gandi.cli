@@ -54,7 +54,7 @@ def info(gandi, resource):
 def delete(gandi, background, force, resource):
     """Delete a vlan.
 
-    Resource can be a vlan name, or an ID
+    Resource can be a vlan name or an ID
     """
     output_keys = ['id', 'type', 'step']
 
@@ -98,5 +98,19 @@ def create(gandi, name, datacenter, background):
 
     if background:
         gandi.pretty_echo(result)
+
+    return result
+
+
+@cli.command()
+@click.option('--name', required=True, help='Name of the vlan.')
+@click.argument('resource')
+@pass_gandi
+def update(gandi, resource, name):
+    """ Update a vlan """
+    result = gandi.vlan.update(resource, name)
+
+    if not result:
+        return
 
     return result
