@@ -199,7 +199,7 @@ class CertificateDcvMethod(click.Choice):
     * 'email' will send you an email to check domain ownership
     * 'dns' will require you to add a TXT record in your domain zone
     * 'file' will require you to add a file on you server
-    * 'auto' can only be used when your domain and it's zone are on the
+    * 'auto' can only be used when your domain and its zone are on the
        same gandi account you are currently using (gandi will add the TXT
        dns record).
     """

@@ -23,7 +23,7 @@ class Certificate(GandiModule):
 
     @classmethod
     def from_cn(cls, common_name):
-        """ Retrieve a certificate by it's common name. """
+        """ Retrieve a certificate by its common name. """
         result = [(cert['id'], [cert['cn']] + cert['altnames'])
                   for cert in cls.list({'status': ['pending', 'valid']})]
 
