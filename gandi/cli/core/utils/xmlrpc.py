@@ -33,7 +33,8 @@ class RequestsTransport(xmlrpclib.Transport):
         """
         Make an xmlrpc request.
         """
-        headers = {'Accept': 'text/xml',
+        headers = {'User-Agent': self.user_agent,
+                   'Accept': 'text/xml',
                    'Content-Type': 'text/xml'}
 
         url = self._build_url(host, handler)

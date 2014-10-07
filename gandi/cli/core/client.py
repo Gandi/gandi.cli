@@ -22,18 +22,11 @@ class APICallFailed(Exception):
         self.code = code
 
 
-class GandiTransport(xmlrpclib.SafeTransport):
+class GandiTransport(RequestsTransport):
 
     """ Mixin to send custom User-Agent in requests."""
 
-    _user_agent = None
-
-    def send_user_agent(self, connection):
-        """ Add User-Agent header to request if not already existing."""
-        if not self._user_agent:
-            self._user_agent = '%s %s' % (xmlrpclib.Transport.user_agent,
-                                          'gandi.cli/%s' % __version__)
-        connection.putheader('User-Agent', self._user_agent)
+    user_agent = 'gandi.cli/%s' % __version__
 
 
 class XMLRPCClient(object):
@@ -45,7 +38,7 @@ class XMLRPCClient(object):
         self.debug = debug
         self.endpoint = xmlrpclib.ServerProxy(
             host, allow_none=True, use_datetime=True,
-            transport=RequestsTransport(use_datetime=True, host=host))
+            transport=GandiTransport(use_datetime=True, host=host))
 
     def request(self, apikey, method, *args):
         """ Make a xml-rpc call to remote API. """
