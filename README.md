@@ -220,9 +220,9 @@ To add a new command to the CLI:
     * `modules/` contains code that uses the Gandi API and can be used by other python scripts, or in the python shell.
     * `packages/` contains packaging code (see `packages/README.rst`)
 
-Code must follow PEP8 recommendations: http://legacy.python.org/dev/peps/pep-0008/
+Code must follow PEP8 recommendations: http://www.python.org/dev/peps/pep-0008/
 
-Docstrings should follow PEP257 recommendations: http://legacy.python.org/dev/peps/pep-0257/
+Docstrings should follow PEP257 recommendations: http://www.python.org/dev/peps/pep-0257/
 
 
 ## Contributing
