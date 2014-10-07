@@ -8,7 +8,7 @@ URL: http://github.com/gandi/
 Source0: gandicli-%{version}.tar.gz
 Provides: gandicli
 BuildRequires: python-docutils, python2-devel
-Requires: python >= 2.7, python-click, python-yaml
+Requires: python >= 2.7, python-click, python-yaml, python-requests
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
