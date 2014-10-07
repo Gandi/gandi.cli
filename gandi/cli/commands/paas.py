@@ -167,7 +167,7 @@ def delete(gandi, background, force, resource):
               help='Set a snapshot profile associated to this paas disk.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
-@option('--sshkey',
+@option('--sshkey', multiple=True,
         help='Authorize ssh authentication for the given ssh key.')
 @pass_gandi
 def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
@@ -207,7 +207,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
               help='Additional disk amount (in GB).')
 @click.option('--password', default=False, is_flag=True,
               help='Password of the PaaS instance.')
-@click.option('--sshkey', default=None,
+@click.option('--sshkey', multiple=True,
               help='Authorize ssh authentication for the given ssh key.')
 @click.option('--upgrade', default=None,
               help='Upgrade the instance to the last system image if needed.')
