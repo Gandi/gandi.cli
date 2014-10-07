@@ -1,13 +1,19 @@
 """
 Security enhancements for xmlrpc.
 """
+import sys
 
 try:
     import xmlrpc.client as xmlrpclib
 except ImportError:
     import xmlrpclib
 
-import requests
+try:
+    import requests
+except ImportError:
+    print >> sys.stderr, 'python requests is required, please reinstall.'
+    sys.exit(1)
+
 
 class RequestsTransport(xmlrpclib.Transport):
     """
@@ -15,7 +21,6 @@ class RequestsTransport(xmlrpclib.Transport):
     # https://gist.github.com/chrisguitarguy/2354951
     # https://github.com/mardiros/pyshop/blob/master/pyshop/helpers/pypi.py
     """
-
 
     def request(self, host, handler, request_body, verbose):
         """
@@ -29,13 +34,13 @@ class RequestsTransport(xmlrpclib.Transport):
         except ValueError:
             raise
         except Exception:
-            raise # something went wrong
+            raise  # something went wrong
         else:
             try:
                 resp.raise_for_status()
             except requests.RequestException as e:
                 raise xmlrpclib.ProtocolError(url, resp.status_code,
-                                                        str(e), resp.headers)
+                                              str(e), resp.headers)
             else:
                 return self.parse_response(resp)
 
