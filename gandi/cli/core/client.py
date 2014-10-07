@@ -9,6 +9,7 @@ except ImportError:
     import xmlrpc.client as xmlrpclib
 
 from gandi.cli import __version__
+from gandi.cli.core.utils.xmlrpc import RequestsTransport
 
 
 class APICallFailed(Exception):
@@ -51,7 +52,8 @@ class XMLRPCClient(object):
         """ Initialize xml-rpc endpoint connector. """
         self.debug = debug
         self.endpoint = xmlrpclib.ServerProxy(host, allow_none=True,
-                                              use_datetime=True)
+                                              use_datetime=True,
+                                              transport=RequestsTransport())
 
     def request(self, apikey, method, *args, **kwargs):
         """ Make a xml-rpc call to remote API. """
