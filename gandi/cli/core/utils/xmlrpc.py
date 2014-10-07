@@ -22,13 +22,21 @@ class RequestsTransport(xmlrpclib.Transport):
     # https://github.com/mardiros/pyshop/blob/master/pyshop/helpers/pypi.py
     """
 
+    use_https = True
+
+    def __init__(self, use_datetime=0, host=None):
+        xmlrpclib.Transport.__init__(self, use_datetime)
+        if host:
+            self.use_https = 'https' in host
+
     def request(self, host, handler, request_body, verbose):
         """
         Make an xmlrpc request.
         """
         headers = {'Accept': 'text/xml',
                    'Content-Type': 'text/xml'}
-        url = 'https://%s%s' % (host, handler,)
+
+        url = self._build_url(host, handler)
         try:
             resp = requests.post(url, data=request_body, headers=headers)
         except ValueError:
@@ -52,3 +60,11 @@ class RequestsTransport(xmlrpclib.Transport):
         p.feed(resp.content)
         p.close()
         return u.close()
+
+    def _build_url(self, host, handler):
+        """
+        Build a url for our request based on the host, handler and use_https
+        property
+        """
+        scheme = 'https' if self.use_https else 'http'
+        return '%s://%s%s' % (scheme, host, handler)

@@ -43,9 +43,9 @@ class XMLRPCClient(object):
     def __init__(self, host, debug=False):
         """ Initialize xml-rpc endpoint connector. """
         self.debug = debug
-        self.endpoint = xmlrpclib.ServerProxy(host, allow_none=True,
-                                              use_datetime=True,
-                                              transport=RequestsTransport())
+        self.endpoint = xmlrpclib.ServerProxy(
+            host, allow_none=True, use_datetime=True,
+            transport=RequestsTransport(use_datetime=True, host=host))
 
     def request(self, apikey, method, *args):
         """ Make a xml-rpc call to remote API. """
