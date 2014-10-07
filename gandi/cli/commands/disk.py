@@ -92,7 +92,7 @@ def check_size(ctx, param, value):
               help='Run command in background mode (default=False).')
 @pass_gandi
 @click.argument('resource')
-def update(gandi, resource, cmdline, kernel, name, size, 
+def update(gandi, resource, cmdline, kernel, name, size,
            snapshotprofile, background):
     """ Update a disk.
 

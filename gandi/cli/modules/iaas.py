@@ -57,7 +57,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo('Stopping your Virtual Machine.')
+        cls.echo('Stopping your Virtual Machine %s.' % item)
         cls.display_progress(opers)
 
     @classmethod
@@ -78,7 +78,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo('Starting your Virtual Machine.')
+        cls.echo('Starting your Virtual Machine %s.' % item)
         cls.display_progress(opers)
 
     @classmethod
@@ -99,7 +99,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo('Rebooting your Virtual Machine.')
+        cls.echo('Rebooting your Virtual Machine %s.' % item)
         cls.display_progress(opers)
 
     @classmethod
@@ -123,7 +123,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo('Deleting your Virtual Machine.')
+        cls.echo('Deleting your Virtual Machine %s.' % item)
         if opers:
             cls.display_progress(opers)
 
@@ -131,15 +131,15 @@ class Iaas(GandiModule, SshkeyHelper):
     def required_max_memory(cls, id, memory):
         """
         Recommend a max_memory setting for this vm given memory. If the
-        VM already has a nice setting, return None. The max_memory 
-        param cannot be fixed too high, because page table allocation 
+        VM already has a nice setting, return None. The max_memory
+        param cannot be fixed too high, because page table allocation
         would cost too much for small memory profile. Use a range as below.
         """
         best = int(max(2**math.ceil(math.log(memory, 2)), 2048))
 
         actual_vm = cls.info(id)
 
-        if (actual_vm['state'] == 'running' 
+        if (actual_vm['state'] == 'running'
             and actual_vm['vm_max_memory'] != best):
             return best
 
@@ -172,7 +172,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return result
 
         # interactive mode, run a progress bar
-        cls.echo('Updating your Virtual Machine.')
+        cls.echo('Updating your Virtual Machine %s.' % id)
         cls.display_progress(result)
 
     @classmethod
@@ -235,7 +235,7 @@ class Iaas(GandiModule, SshkeyHelper):
             return result
 
         # interactive mode, run a progress bar
-        cls.echo('Creating your Virtual Machine.')
+        cls.echo('Creating your Virtual Machine %s.' % hostname)
         cls.display_progress(result)
         cls.echo('Your Virtual Machine %s has been created.' % hostname)
 
