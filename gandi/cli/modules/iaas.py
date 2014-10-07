@@ -131,15 +131,15 @@ class Iaas(GandiModule, SshkeyHelper):
     def required_max_memory(cls, id, memory):
         """
         Recommend a max_memory setting for this vm given memory. If the
-        VM already has a nice setting, return None. The max_memory 
-        param cannot be fixed too high, because page table allocation 
+        VM already has a nice setting, return None. The max_memory
+        param cannot be fixed too high, because page table allocation
         would cost too much for small memory profile. Use a range as below.
         """
         best = int(max(2**math.ceil(math.log(memory, 2)), 2048))
 
         actual_vm = cls.info(id)
 
-        if (actual_vm['state'] == 'running' 
+        if (actual_vm['state'] == 'running'
             and actual_vm['vm_max_memory'] != best):
             return best
 
