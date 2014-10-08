@@ -135,12 +135,12 @@ class Iaas(GandiModule, SshkeyHelper):
         param cannot be fixed too high, because page table allocation
         would cost too much for small memory profile. Use a range as below.
         """
-        best = int(max(2**math.ceil(math.log(memory, 2)), 2048))
+        best = int(max(2 ** math.ceil(math.log(memory, 2)), 2048))
 
         actual_vm = cls.info(id)
 
         if (actual_vm['state'] == 'running'
-            and actual_vm['vm_max_memory'] != best):
+                and actual_vm['vm_max_memory'] != best):
             return best
 
     @classmethod
@@ -387,8 +387,8 @@ class Image(GandiModule):
 
 
 class Kernel(GandiModule):
-    """ Module to handle Gandi Kernels. """
 
+    """ Module to handle Gandi Kernels. """
 
     @classmethod
     def list(cls, datacenter, flavor=None, match=''):
