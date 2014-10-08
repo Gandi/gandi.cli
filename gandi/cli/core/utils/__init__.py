@@ -234,6 +234,10 @@ def output_iface(gandi, iface, datacenters, vms, output_keys, justify=10):
 
         output_line(gandi, 'datacenter', dc_name, justify)
 
+    if 'vlan_' in output_keys:
+        vlan = iface.get('vlan') or {}
+        output_line(gandi, 'vlan', vlan.get('name', '-'), justify)
+
 
 def randomstring(prefix=None):
     """ Helper to generate a random string, used for temporary hostnames."""
