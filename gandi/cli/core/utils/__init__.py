@@ -216,6 +216,25 @@ def output_vlan(gandi, vlan, datacenters, output_keys, justify=10):
         output_line(gandi, 'datacenter', dc_name, justify)
 
 
+def output_iface(gandi, iface, datacenters, vms, output_keys, justify=10):
+    """ Helper to output an iface information."""
+    output_generic(gandi, iface, output_keys, justify)
+
+    if 'vm' in output_keys:
+        vm_name = vms.get(iface['vm_id'], {}).get('hostname')
+        if vm_name:
+            output_line(gandi, 'vm', vm_name, justify)
+
+    if 'dc' in output_keys:
+        for dc in datacenters:
+            if dc['id'] == iface.get('datacenter_id',
+                                     iface.get('datacenter', {}).get('id')):
+                dc_name = dc['iso']
+                break
+
+        output_line(gandi, 'datacenter', dc_name, justify)
+
+
 def randomstring(prefix=None):
     """ Helper to generate a random string, used for temporary hostnames."""
     if not prefix:
