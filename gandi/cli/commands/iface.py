@@ -17,7 +17,7 @@ def list(gandi, vm, vlan):
     if vm:
         output_keys.append('vm')
     if vlan:
-        output_keys.append('vlan')
+        output_keys.append('vlan_')
 
     datacenters = gandi.datacenter.list()
     vms = dict([(vm_['id'], vm_) for vm_ in gandi.iaas.list()])
@@ -38,7 +38,7 @@ def info(gandi, resource):
 
     Resource can be an iface ID
     """
-    output_keys = ['num', 'type', 'state', 'dc', 'bandwidth', 'vm']
+    output_keys = ['num', 'type', 'state', 'dc', 'bandwidth', 'vm', 'vlan_']
 
     datacenters = gandi.datacenter.list()
     vms = dict([(vm_['id'], vm_) for vm_ in gandi.iaas.list()])
