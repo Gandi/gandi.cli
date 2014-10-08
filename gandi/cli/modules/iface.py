@@ -2,6 +2,7 @@
 
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
+from gandi.cli.modules.vlan import Vlan
 
 
 class Iface(GandiModule):
@@ -57,7 +58,7 @@ class Iface(GandiModule):
             'bandwidth': bandwidth,
         }
         if vlan:
-            iface_params['vlan'] = vlan
+            iface_params['vlan'] = Vlan.usable_id(vlan)
 
         result = cls.call('hosting.iface.create', iface_params)
 
