@@ -63,7 +63,7 @@ def info(gandi, resource):
         help="Network bandwidth in bit/s used to create the VM's first "
              "network interface.")
 @click.option('--vlan', default=None, type=click.STRING,
-              help='Attach the newly created disk to the vlan.')
+              help='Attach the newly created iface to the vlan.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
