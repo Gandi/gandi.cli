@@ -64,12 +64,14 @@ def info(gandi, resource):
              "network interface.")
 @click.option('--vlan', default=None, type=click.STRING,
               help='Attach the newly created iface to the vlan.')
+@click.option('--vm', default=None, type=click.STRING,
+              help='Attach the newly created iface to the vm.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
-def create(gandi, ip_version, datacenter, bandwidth, vlan, background):
+def create(gandi, ip_version, datacenter, bandwidth, vlan, vm, background):
     """ Create a new iface """
-    result = gandi.iface.create(ip_version, datacenter, bandwidth, vlan,
+    result = gandi.iface.create(ip_version, datacenter, bandwidth, vlan, vm,
                                 background)
 
     if not result:

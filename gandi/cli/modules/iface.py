@@ -3,6 +3,7 @@
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
 from gandi.cli.modules.vlan import Vlan
+from gandi.cli.modules.iaas import Iaas
 
 
 class Iface(GandiModule):
@@ -45,7 +46,13 @@ class Iface(GandiModule):
         return qry_id
 
     @classmethod
-    def create(cls, ip_version, datacenter, bandwidth, vlan, background):
+    def _attach(cls, iface_id, vm_id):
+        """ Attach an iface to a vm. """
+        oper = cls.call('hosting.vm.iface_attach', vm_id, iface_id)
+        return oper
+
+    @classmethod
+    def create(cls, ip_version, datacenter, bandwidth, vlan, vm, background):
         """ Create a new iface """
         if not background and not cls.intty():
             background = True
@@ -62,13 +69,25 @@ class Iface(GandiModule):
 
         result = cls.call('hosting.iface.create', iface_params)
 
-        if not background:
-            # interactive mode, run a progress bar
-            cls.echo('Creating your iface.')
-            cls.display_progress(result)
-            cls.echo('Your iface has been created.')
+        if background and not vm:
+            return result
 
-        return result
+        # interactive mode, run a progress bar
+        cls.echo('Creating your iface.')
+        cls.display_progress(result)
+        cls.echo('Your iface has been created.')
+
+        if not vm:
+            return
+
+        vm_id = Iaas.usable_id(vm)
+        result = cls._attach(result['iface_id'], vm_id)
+
+        if background:
+            return result
+
+        cls.echo('Attaching your iface.')
+        cls.display_progress(result)
 
     @classmethod
     def _detach(cls, iface_id):
@@ -79,7 +98,7 @@ class Iface(GandiModule):
         if vm_id:
             cls.echo('The iface is still attached to the vm %s.' % vm_id)
             cls.echo('Will detach it.')
-            opers.append(cls.call('hosting.vm.disk_detach', vm_id, iface_id))
+            opers.append(cls.call('hosting.vm.iface_detach', vm_id, iface_id))
         return opers
 
     @classmethod
