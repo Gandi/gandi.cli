@@ -85,7 +85,7 @@ def delete(gandi, background, force, resource):
 @cli.command()
 @click.option('--name', required=True, help='Name of the vlan.')
 @option('--datacenter', type=DATACENTER, default='LU',
-        help='Datacenter where the PaaS will be spawned.')
+        help='Datacenter where the vlan will be spawned.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
