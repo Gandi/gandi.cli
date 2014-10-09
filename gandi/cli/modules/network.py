@@ -29,6 +29,14 @@ class Vlan(GandiModule):
         return cls.call('hosting.vlan.list', options)
 
     @classmethod
+    def resource_list(cls):
+        """ Get the possible list of resources (name, id). """
+        items = cls.list()
+        ret = [vlan['name'] for vlan in items]
+        ret.extend([str(vlan['id']) for paas in items])
+        return ret
+
+    @classmethod
     def _info(cls, vlan_id):
         """ Get information about a vlan."""
         return cls.call('hosting.vlan.info', vlan_id)
