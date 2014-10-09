@@ -34,7 +34,7 @@ def list(gandi, vm, vlan):
 @click.argument('resource')
 @pass_gandi
 def info(gandi, resource):
-    """Display information about a iface.
+    """Display information about an iface.
 
     Resource can be an iface ID
     """
@@ -55,7 +55,7 @@ def info(gandi, resource):
 
 
 @cli.command()
-@option('--datacenter', type=DATACENTER, default='LU',
+@option('--datacenter', type=DATACENTER, default='LU', required=True,
         help='Datacenter where the iface will be spawned.')
 @option('--ip-version', type=IntChoice(['4', '6']), default='4',
         help='Version of created IP.')
