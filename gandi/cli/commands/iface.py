@@ -60,8 +60,7 @@ def info(gandi, resource):
 @option('--ip-version', type=IntChoice(['4', '6']), default='4',
         help='Version of created IP.')
 @option('--bandwidth', type=click.INT, default=102400,
-        help="Network bandwidth in bit/s used to create the VM's first "
-             "network interface.")
+        help='Network bandwidth in bit/s to be used for this iface.')
 @click.option('--vlan', default=None, type=click.STRING,
               help='Attach the newly created iface to the vlan.')
 @click.option('--vm', default=None, type=click.STRING,
