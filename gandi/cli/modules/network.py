@@ -33,7 +33,7 @@ class Vlan(GandiModule):
         """ Get the possible list of resources (name, id). """
         items = cls.list()
         ret = [vlan['name'] for vlan in items]
-        ret.extend([str(vlan['id']) for paas in items])
+        ret.extend([str(vlan['id']) for vlan in items])
         return ret
 
     @classmethod
