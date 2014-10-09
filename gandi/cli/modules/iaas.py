@@ -35,6 +35,14 @@ class Iaas(GandiModule, SshkeyHelper):
         return cls.call('hosting.vm.list', options)
 
     @classmethod
+    def resource_list(cls):
+        """ Get the possible list of resources (hostname, id). """
+        items = cls.list()
+        ret = [vm['hostname'] for vm in items]
+        ret.extend([str(vm['id']) for vm in items])
+        return ret
+
+    @classmethod
     def info(cls, id):
         """Display information about a virtual machine."""
         return cls.call('hosting.vm.info', cls.usable_id(id))
