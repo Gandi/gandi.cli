@@ -58,12 +58,12 @@ def delete(gandi, background, force, resource):
     """
     output_keys = ['id', 'type', 'step']
 
-    vlan_list = gandi.vlan.list()
-    vlan_namelist = [vlan['name'] for vlan in vlan_list]
+    possible_resources = gandi.vlan.resource_list()
     for item in resource:
-        if item not in vlan_namelist:
+        if item not in possible_resources:
             gandi.echo('Sorry vlan %s does not exist' % item)
-            gandi.echo('Please use one of the following: %s' % vlan_namelist)
+            gandi.echo('Please use one of the following: %s' %
+                       possible_resources)
             return
 
     if not force:
