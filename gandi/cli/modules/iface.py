@@ -14,6 +14,7 @@ class Iface(GandiModule):
     $ gandi iface info
     $ gandi iface create
     $ gandi iface delete
+    $ gandi iface update
 
     """
 
@@ -129,3 +130,42 @@ class Iface(GandiModule):
 
         cls.echo('Deleting your iface.')
         cls.display_progress(opers)
+
+    @classmethod
+    def update(cls, id, bandwidth, vm, background):
+        """ Update this iface. """
+        if not background and not cls.intty():
+            background = True
+
+        iface_params = {}
+        iface_id = cls.usable_id(id)
+
+        if bandwidth:
+            iface_params['bandwidth'] = bandwidth
+
+        if iface_params:
+            result = cls.call('hosting.iface.update', iface_id, iface_params)
+            if background:
+                return result
+
+            # interactive mode, run a progress bar
+            cls.echo('Updating your iface %s.' % id)
+            cls.display_progress(result)
+
+        if not vm:
+            return
+
+        vm_id = Iaas.usable_id(vm)
+
+        opers = cls._detach(iface_id)
+        if opers:
+            cls.echo('Detaching iface.')
+            cls.display_progress(opers)
+
+        result = cls._attach(iface_id, vm_id)
+
+        if background:
+            return result
+
+        cls.echo('Attaching your iface.')
+        cls.display_progress(result)

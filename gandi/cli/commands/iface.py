@@ -120,3 +120,34 @@ def delete(gandi, background, force, resource):
             output_generic(gandi, oper, output_keys)
 
     return opers
+
+
+@cli.command()
+@click.option('--bandwidth', type=click.INT, default=None,
+              help='Network bandwidth in bit/s to be used for this iface.')
+@click.option('--vm', default=None, type=click.STRING,
+              help='Attach iface to the vm, if already attached, will detach.')
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.argument('resource')
+@pass_gandi
+def update(gandi, resource, bandwidth, vm, background):
+    """ Update an iface.
+
+    Resource can be an iface ID
+    """
+    if vm:
+        iface = gandi.iface.info(resource)
+        vm_id = iface.get('vm_id')
+        if vm_id:
+            gandi.echo('The iface is still attached to the vm %s.' % vm_id)
+            proceed = click.confirm('Are you sure to detach this iface ?')
+            if not proceed:
+                return
+
+    result = gandi.iface.update(resource, bandwidth, vm, background)
+
+    if not result:
+        return
+
+    return result
