@@ -368,6 +368,7 @@ def images(gandi, label, datacenter):
 
     return result
 
+
 @cli.command()
 @click.option('--vm', default=None,
               help='Output available kernels for given vm.')
