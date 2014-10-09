@@ -219,7 +219,7 @@ class Paas(GandiModule, SshkeyHelper):
                 return
 
             init_git = cls.execute('git clone ssh+git://%s/%s.git' %
-                                 (paas_access, vhost))
+                                   (paas_access, vhost))
             if not init_git:
                 cls.echo('An error has occured during git clone of instance.')
                 return

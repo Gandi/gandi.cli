@@ -81,7 +81,8 @@ def check_size(ctx, param, value):
 
 
 @cli.command()
-@click.option('--cmdline', type=click.STRING, default=None, help='Kernel cmdline.')
+@click.option('--cmdline', type=click.STRING, default=None,
+              help='Kernel cmdline.')
 @click.option('--kernel', type=KERNEL, default=None, help='Kernel for disk.')
 @click.option('--name', type=click.STRING, default=None, help='Disk name.')
 @click.option('--size', default=None, type=click.INT, help='Disk size.',
