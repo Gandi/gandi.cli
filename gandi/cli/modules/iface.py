@@ -12,6 +12,8 @@ class Iface(GandiModule):
 
     $ gandi iface list
     $ gandi iface info
+    $ gandi iface create
+    $ gandi iface delete
 
     """
 
