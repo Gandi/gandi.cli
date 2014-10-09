@@ -180,7 +180,7 @@ Details:
 
 * ``gandi iface delete resource`` delete an iface after asking for user validation. If iface is attached to a vm it will be detached first. Possible option is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting. Deletion can be done as background process using the option ``--background`` (or ``--bg``).
 
-* ``gandi iface info resource`` show information about specific iface.
+* ``gandi iface info resource`` show information about specific iface. Possible option is ``--iface`` to show the ifaces attached to the vlan.
 
 * ``gandi iface list`` show all the ifaces created in Gandi hosting for the account. Possible options to filter the list are : ``--vm`` show the virtual machines by which the iface is used, ``--vlan`` show the virtual network by which the iface is used.
 

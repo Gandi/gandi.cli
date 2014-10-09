@@ -3,7 +3,7 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_vlan, output_generic
+from gandi.cli.core.utils import output_vlan, output_generic, output_iface
 from gandi.cli.core.params import option, pass_gandi, DATACENTER
 
 
@@ -29,9 +29,10 @@ def list(gandi, datacenter, id):
 
 
 @cli.command()
+@click.option('--iface', help='Display ifaces.', is_flag=True)
 @click.argument('resource')
 @pass_gandi
-def info(gandi, resource):
+def info(gandi, resource, iface):
     """Display information about a vlan."""
     output_keys = ['name', 'state', 'dc']
 
@@ -39,6 +40,14 @@ def info(gandi, resource):
 
     vlan = gandi.vlan.info(resource)
     output_vlan(gandi, vlan, datacenters, output_keys)
+
+    if iface:
+        output_keys = ['id', 'bandwidth', 'type', 'state', 'vm']
+        vms = dict([(vm_['id'], vm_) for vm_ in gandi.iaas.list()])
+        ifaces = gandi.vlan.ifaces(resource)
+        for iface in ifaces:
+            gandi.separator_line()
+            output_iface(gandi, iface, datacenters, vms, output_keys)
 
     return vlan
 

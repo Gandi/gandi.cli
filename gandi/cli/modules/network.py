@@ -38,6 +38,15 @@ class Vlan(GandiModule):
         return ret
 
     @classmethod
+    def ifaces(cls, name):
+        """ Get vlan attached ifaces. """
+        ifaces = Iface.list({'vlan_id': cls.usable_id(name)})
+        ret = []
+        for iface in ifaces:
+            ret.append(Iface.info(iface['id']))
+        return ret
+
+    @classmethod
     def _info(cls, vlan_id):
         """ Get information about a vlan."""
         return cls.call('hosting.vlan.info', vlan_id)
