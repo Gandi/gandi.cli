@@ -95,10 +95,13 @@ def check_size(ctx, param, value):
               help='Detach this disk from curently attached VM.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False).')
 @pass_gandi
 @click.argument('resource')
 def update(gandi, resource, cmdline, kernel, name, size,
-           snapshotprofile, vm, detach, background):
+           snapshotprofile, vm, detach, background, force):
     """ Update a disk.
 
     Resource can be a disk name, or ID
@@ -114,6 +117,15 @@ def update(gandi, resource, cmdline, kernel, name, size,
     if vm and detach:
         gandi.echo('--vm can not be used with --detach.')
         return
+
+    disk_info = gandi.disk.info(resource)
+    attached = 'vms_id' in disk_info
+    if vm and attached and not force:
+        gandi.echo('This is disk is still attached')
+        proceed = click.confirm('Are you sure to detach %s?' % resource)
+
+        if not proceed:
+            return
 
     result = gandi.disk.update(resource, name, size, snapshotprofile,
                                background, cmdline, kernel, vm, detach)
