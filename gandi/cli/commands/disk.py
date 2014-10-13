@@ -89,12 +89,16 @@ def check_size(ctx, param, value):
               callback=check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE)
+@click.option('--vm', type=click.STRING, default=None,
+              help='VM to attach this disk.')
+@click.option('--detach', default=False, is_flag=True,
+              help='Detach this disk from curently attached VM.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
 @click.argument('resource')
 def update(gandi, resource, cmdline, kernel, name, size,
-           snapshotprofile, background):
+           snapshotprofile, vm, detach, background):
     """ Update a disk.
 
     Resource can be a disk name, or ID
@@ -107,8 +111,12 @@ def update(gandi, resource, cmdline, kernel, name, size,
         gandi.echo('  gandi snapshotprofile list')
         return
 
+    if vm and detach:
+        gandi.echo('--vm can not be used with --detach.')
+        return
+
     result = gandi.disk.update(resource, name, size, snapshotprofile,
-                               background, cmdline, kernel)
+                               background, cmdline, kernel, vm, detach)
     if background:
         gandi.pretty_echo(result)
 
