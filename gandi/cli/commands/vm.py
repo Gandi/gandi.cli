@@ -139,11 +139,12 @@ def delete(gandi, background, force, resource):
     output_keys = ['id', 'type', 'step']
 
     iaas_list = gandi.iaas.list()
-    iaas_namelist = [vm['hostname'] for vm in iaas_list]
+    possible_resources = gandi.iaas.resource_list()
     for item in resource:
-        if item not in iaas_namelist:
+        if item not in possible_resources:
             gandi.echo('Sorry virtual machine %s does not exist' % item)
-            gandi.echo('Please use one of the following: %s' % iaas_namelist)
+            gandi.echo('Please use one of the following: %s' %
+                       possible_resources)
             return
 
     if not force:
@@ -366,6 +367,7 @@ def images(gandi, label, datacenter):
         output_image(gandi, disk, datacenters, output_keys)
 
     return result
+
 
 @cli.command()
 @click.option('--vm', default=None,

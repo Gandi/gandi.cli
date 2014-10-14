@@ -15,7 +15,7 @@ from subprocess import check_call, CalledProcessError
 import click
 from click.exceptions import UsageError
 
-from .client import XMLRPCClient, APICallFailed
+from .client import XMLRPCClient, APICallFailed, DryRunException
 from .conf import GandiConfig
 
 
@@ -75,15 +75,22 @@ class GandiModule(GandiConfig):
         for arg in args:
             cls.debug('with params: %r' % arg)
         try:
-            return api.request(apikey, method, *args)
+            return api.request(apikey, method, *args,
+                               **{'dry_run': kwargs.get('dry_run', False)})
         except APICallFailed as err:
             if kwargs.get('safe'):
                 return []
-            error = UsageError(err.errors)
-            setattr(error, 'code', err.code)
             if err.code == 510150:
                 cls.echo("Invalid API key, please use 'gandi setup' command.")
                 sys.exit(1)
+            if isinstance(err, DryRunException):
+                for msg in err.dry_run:
+                    # TODO use trads with %s
+                    cls.echo(msg['reason'])
+                    cls.echo('\t' + ' '.join(msg['attr']))
+                sys.exit(1)
+            error = UsageError(err.errors)
+            setattr(error, 'code', err.code)
             raise error
 
     @classmethod

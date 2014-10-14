@@ -38,18 +38,7 @@ class Vhost(GandiModule):
         params = {'paas_id': paas_id,
                   'vhost': vhost,
                   'zone_alter': alter_zone}
-        try:
-            result = cls.call('paas.vhost.create', params)
-        except UsageError as err:
-            if err.code == 580142:
-                params['--dry-run'] = True
-                result = cls.call('paas.vhost.create', params)
-                for msg in result:
-                    # TODO use trads with %s
-                    cls.echo(msg['reason'])
-                    cls.echo('\t' + '  '.join(msg['attr']))
-                return
-            raise
+        result = cls.call('paas.vhost.create', params, dry_run=True)
 
         if background:
             return result
