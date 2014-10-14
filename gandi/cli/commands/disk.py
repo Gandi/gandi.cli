@@ -5,7 +5,7 @@ import click
 from gandi.cli.core.cli import cli, compatcallback
 from gandi.cli.core.utils import output_disk, output_generic, randomstring
 from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE,
-                                   KERNEL, option)
+                                   KERNEL, SIZE, option)
 
 
 @cli.command()
@@ -85,7 +85,10 @@ def check_size(ctx, param, value):
               help='Kernel cmdline.')
 @click.option('--kernel', type=KERNEL, default=None, help='Kernel for disk.')
 @click.option('--name', type=click.STRING, default=None, help='Disk name.')
-@click.option('--size', default=None, type=click.INT, help='Disk size.',
+@click.option('--size', default=None, metavar='SIZE[M|G|T]', type=SIZE,
+              help=('Disk size. A size suffix (M for megabytes up to T for '
+                    'terabytes) is optional, megabytes is the default if no '
+                    'suffix is present.'),
               callback=check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE)
@@ -144,7 +147,10 @@ def delete(gandi, resource, force, background):
 @click.option('--name', type=click.STRING, default=None, help='Disk name.')
 @click.option('--vm', default=None, type=click.STRING,
               help='Attach the newly created disk to the vm.')
-@click.option('--size', default=3072, type=click.INT, help='Disk size.',
+@click.option('--size', default=3072, metavar='SIZE[M|G|T]', type=SIZE,
+              help=('Disk size. A size suffix (M for megabytes up to T for '
+                    'terabytes) is optional, megabytes is the default if no '
+                    'suffix is present.'),
               callback=check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE)
