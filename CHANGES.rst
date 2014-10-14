@@ -1,6 +1,39 @@
 Changelog
 =========
 
+0.10
+----
+
+* Add new dependency to request library, for certificate
+  validation during xmlrpc calls.
+* New command 'gandi vm kernels' to list available kernels,
+  can also be used to filter by vm to know which kernel is
+  compatible.
+* New parameters --cmdline and --kernels for command
+  'gandi disk update' to enable updating of cmdline
+  and/or kernel.
+* New parameter --size for command 'gandi vm create'
+  to specify disk size during vm creation.
+* Handle max_memory setting in command 'gandi vm update'
+  when updating memory. New parameter --reboot added to
+  accept a VM reboot for non-live update.
+* Update command 'gandi vm images' to also display usable
+  disks as image for vm creation.
+* Security: validate server certificate using request as
+  xmlrpc transport.
+* Security: restrict configuration file rights to owner only.
+* Refactor code of custom parameters, to only query API when
+  needed, improving overall speed of all commands.
+* Fixes bug with sshkey parameter for 'gandi paas create'
+  and 'gandi paas update' commands.
+* When an API call fail, we can call again using dry-run flag
+  to get more explicit errors. Used by 'gandi vhost create'
+  command.
+* Allow Gandi CLI to load custom modules using
+  'GANDICLI_PATH' environment variable, was previously only
+  done by commands.
+
+
 0.9
 ---
 

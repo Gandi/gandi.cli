@@ -1,5 +1,5 @@
 Name: gandicli
-Version: 0.9
+Version: 0.10
 Release: 1%{?dist}
 Summary: Gandi CLI as a service
 Group: System Management
@@ -21,7 +21,7 @@ administrate and deploy your gandi resources
 %{__python2} setup.py build
 
 %install
-%{__python2} setup.py install --skip-build --root $RPM_BUILD_ROOT 
+%{__python2} setup.py install --skip-build --root $RPM_BUILD_ROOT
 rst2man --no-generator gandicli.man.rst | gzip -9 > gandi.1.gz
 install -d -m 0755 %{buildroot}/usr/share/man/man1
 install -m 0644 gandi.1.gz %{buildroot}/usr/share/man/man1
