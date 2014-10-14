@@ -235,6 +235,28 @@ class EmailParamType(click.ParamType):
             self.fail('%s is not a valid email address' % value, param, ctx)
 
 
+class SizeParamType(click.ParamType):
+    name = 'size'
+    suffixes = {'M': 0,
+                'G': 1,
+                'T': 2}
+
+    def convert(self, value, param, ctx):
+        suffix = ''
+        for i, c in enumerate(value):
+            if not c.isdigit():
+                suffix = value[i:]
+                value = value[:i]
+                break
+        try:
+            mul = self.suffixes[suffix] if suffix else 0
+            return int(value) * (1 << (mul * 10))
+        except ValueError:
+            self.fail("%r is not an integer" % (value))
+        except KeyError:
+            self.fail("%r is not a supported suffix" % (suffix))
+
+
 DATACENTER = DatacenterParamType()
 PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
@@ -243,6 +265,7 @@ SNAPSHOTPROFILE = SnapshotParamType()
 CERTIFICATE_PACKAGE = CertificatePackage()
 CERTIFICATE_DCV_METHOD = CertificateDcvMethod()
 EMAIL_TYPE = EmailParamType()
+SIZE = SizeParamType()
 
 
 class GandiOption(click.Option):
