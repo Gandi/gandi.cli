@@ -22,6 +22,11 @@ def list(gandi, domain, zone_id):
         result = gandi.domain.info(domain)
         zone_id = result['zone_id']
 
+    if not zone_id:
+        gandi.echo('No zone records found, domain %s doesn\'t seems to be '
+                   'managed at Gandi.' % domain)
+        return
+
     records = gandi.record.list(zone_id)
     for rec in records:
         gandi.separator_line()
