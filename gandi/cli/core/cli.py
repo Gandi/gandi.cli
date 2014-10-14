@@ -149,13 +149,15 @@ class GandiCLI(click.Group):
         }
 
         if 'GANDICLI_PATH' in os.environ:
-            for path in os.environ.get('GANDICLI_PATH').split(':'):
+            for _path in os.environ.get('GANDICLI_PATH').split(':'):
+                # remove trailing separator if any
+                path = _path.rstrip(os.sep)
                 command_dirs[os.path.basename(path)] = os.path.join(path,
                                                                     'commands')
 
         for module_basename, dir in command_dirs.items():
             for filename in sorted(os.listdir(dir)):
-                if filename.endswith('.py'):
+                if filename.endswith('.py') and '__init__' not in filename:
                     submod = filename[:-3]
                     module_name = module_basename + '.commands.' + submod
                     __import__(module_name, fromlist=[module_name])
