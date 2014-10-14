@@ -257,7 +257,9 @@ class GandiContextHelper(GandiModule):
         }
 
         if 'GANDICLI_PATH' in os.environ:
-            for path in os.environ.get('GANDICLI_PATH').split(':'):
+            for _path in os.environ.get('GANDICLI_PATH').split(':'):
+                # remove trailing separator if any
+                path = _path.rstrip(os.sep)
                 module_dirs[os.path.basename(path)] = os.path.join(path,
                                                                     'modules')
 
