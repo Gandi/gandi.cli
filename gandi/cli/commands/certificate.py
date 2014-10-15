@@ -75,7 +75,7 @@ def list(gandi, id, altnames, csr, cert, all_status, status, dates, limit):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1)
+@click.argument('resource', nargs=-1, required=True)
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--altnames', help='Display altnames.', is_flag=True)
 @click.option('--csr', help='Display CSR.', is_flag=True)
@@ -118,7 +118,7 @@ def info(gandi, resource, id, altnames, csr, cert, all_status):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1)
+@click.argument('resource', nargs=-1, required=True)
 @click.option('-o', '--output', help='The file to write the cert.')
 @click.option('--force', '-f', is_flag=True,
               help='Overwrite the crt file if it exists.')
