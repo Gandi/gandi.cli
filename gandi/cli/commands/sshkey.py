@@ -33,7 +33,7 @@ def list(gandi, id, limit):
 
 
 @cli.command()
-@click.argument('resource', nargs=-1)
+@click.argument('resource', nargs=-1, required=True)
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--value', help='Display value.', is_flag=True)
 @pass_gandi
@@ -82,7 +82,7 @@ def create(gandi, name, value=None, filename=None):
 
 
 @cli.command(options_metavar='')
-@click.argument('resource', nargs=-1)
+@click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def delete(gandi, resource):
     """Delete SSH keys.
