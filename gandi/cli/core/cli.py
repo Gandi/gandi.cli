@@ -167,35 +167,6 @@ class GandiCLI(click.Group):
         ctx.obj = GandiContextHelper(verbose=ctx.obj['verbose'])
         click.Group.invoke(self, ctx)
 
-    def handle_subcommand(self, ctx, args, **extra):
-        """ Override click method to handle namespace commands. """
-        cmd_name = click.utils.make_str(args[0])
-        original_cmd_name = cmd_name
-
-        # Get the command
-        cmd = self.get_command(ctx, cmd_name)
-        if cmd:
-            cmd_name = cmd.name
-
-        # If we can't find the command but there is a normalization
-        # function available, we try with that one.
-        if cmd is None and ctx.token_normalize_func is not None:
-            cmd_name = ctx.token_normalize_func(cmd_name)
-            cmd = self.get_command(ctx, cmd_name)
-
-        # If we don't find the command we want to show an error message
-        # to the user that it was not provided.  However, there is
-        # something else we should do: if the first argument looks like
-        # an option we want to kick off parsing again for arguments to
-        # resolve things like --help which now should go to the main
-        # place.
-        if cmd is None:
-            if click.parser.split_opt(cmd_name)[0]:
-                self.parse_args(ctx, ctx.args)
-            ctx.fail('No such command "%s".' % original_cmd_name)
-
-        return cmd.make_context(cmd_name, args[1:], parent=ctx, **extra)
-
 
 cli = GandiCLI()
 cli.load_commands()
