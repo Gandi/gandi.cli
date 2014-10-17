@@ -101,47 +101,20 @@ class Disk(GandiModule):
 
     @classmethod
     def update(cls, resource, name, size, snapshot_profile,
-               background, cmdline=None, kernel=None, vm=None, detach=False):
+               background, cmdline=None, kernel=None):
         """ Update this disk. """
-        disk_id = cls.usable_id(resource)
-        disk_info = cls._info(disk_id)
-
-        need_detach = disk_info.get('vms_id') and vm or detach
-        need_attach = vm is not None
-        if need_detach:
-            # detach disk
-            detach_op = cls._detach(disk_id)
-            if detach and background:
-                return detach_op
-
-            # interactive mode, run a progress bar
-            cls.echo('Detaching your disk.')
-            cls.display_progress(detach_op)
-
         disk_params = cls.disk_param(name, size, snapshot_profile,
                                      cmdline, kernel)
-        if disk_params:
-            result = cls.call('hosting.disk.update',
-                              cls.usable_id(resource),
-                              disk_params)
 
-            if background and not need_attach:
-                return result
+        result = cls.call('hosting.disk.update',
+                          cls.usable_id(resource),
+                          disk_params)
+        if background:
+            return result
 
-            # interactive mode, run a progress bar
-            cls.echo('Updating your disk.')
-            cls.display_progress(result)
-
-        if need_attach:
-            from gandi.cli.modules.iaas import Iaas as VM
-            vm_id = VM.usable_id(vm)
-            attach_op = cls._attach(disk_id, vm_id)
-            if background:
-                return attach_op
-
-            # interactive mode, run a progress bar
-            cls.echo('Attaching your disk.')
-            cls.display_progress(attach_op)
+        # interactive mode, run a progress bar
+        cls.echo('Updating your disk.')
+        cls.display_progress(result)
 
     @classmethod
     def _detach(cls, disk_id):
@@ -234,7 +207,6 @@ class Disk(GandiModule):
             cls.display_progress(oper)
 
         return oper
-
 
     @classmethod
     def create(cls, name, vm, size, snapshotprofile, datacenter,
