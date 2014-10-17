@@ -107,6 +107,43 @@ def detach(gandi, resource, background, force):
 
 
 @cli.command()
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False).')
+@pass_gandi
+@click.argument('disk', nargs=1, required=True)
+@click.argument('vm', nargs=1, required=True)
+def attach(gandi, disk, vm, background, force):
+    """ Attach disk to vm.
+
+    disk can be a disk name, or ID
+    vm can be a vm name, or ID
+    """
+    if not force:
+        proceed = click.confirm("Are you sure to attach disk '%s' to vm '%s'" %
+                                (disk, vm))
+        if not proceed:
+            return
+
+    disk_info = gandi.disk.info(disk)
+    attached = disk_info.get('vms_id', False)
+    if attached and not force:
+        gandi.echo('This is disk is still attached')
+        proceed = click.confirm('Are you sure to detach %s?' % disk)
+
+        if not proceed:
+            return
+
+    result = gandi.disk.attach(disk, vm, background)
+    if background and result:
+        gandi.pretty_echo(result)
+
+    return result
+
+
+@cli.command()
 @click.option('--cmdline', type=click.STRING, default=None,
               help='Kernel cmdline.')
 @click.option('--kernel', type=KERNEL, default=None, help='Kernel for disk.')
