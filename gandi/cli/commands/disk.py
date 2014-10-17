@@ -81,6 +81,32 @@ def check_size(ctx, param, value):
 
 
 @cli.command()
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False).')
+@pass_gandi
+@click.argument('resource', nargs=-1, required=True)
+def detach(gandi, resource, background, force):
+    """ Detach disks from currectly attached vm.
+
+    Resource can be a disk name, or ID
+    """
+    if not force:
+        proceed = click.confirm('Are you sure to detach %s?' %
+                                ', '.join(resource))
+        if not proceed:
+            return
+
+    result = gandi.disk.detach(resource, background)
+    if background:
+        gandi.pretty_echo(result)
+
+    return result
+
+
+@cli.command()
 @click.option('--cmdline', type=click.STRING, default=None,
               help='Kernel cmdline.')
 @click.option('--kernel', type=KERNEL, default=None, help='Kernel for disk.')
