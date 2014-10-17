@@ -157,6 +157,23 @@ class Disk(GandiModule):
         return opers
 
     @classmethod
+    def detach(cls, resources, background):
+        if not isinstance(resources, (list, tuple)):
+            resources = [resources]
+
+        resources = [cls.usable_id(item) for item in resources]
+
+        opers = []
+        for disk_id in resources:
+            opers.extend(cls._detach(disk_id))
+
+        if opers and not background:
+            cls.echo('Detaching your disk(s).')
+            cls.display_progress(opers)
+
+        return opers
+
+    @classmethod
     def delete(cls, resources, background=False):
         """ Delete this disk."""
         if not isinstance(resources, (list, tuple)):
