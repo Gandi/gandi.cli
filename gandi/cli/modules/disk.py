@@ -207,6 +207,36 @@ class Disk(GandiModule):
         return oper
 
     @classmethod
+    def attach(cls, disk, vm, background):
+        from gandi.cli.modules.iaas import Iaas as VM
+        vm_id = VM.usable_id(vm)
+
+        disk_id = cls.usable_id(disk)
+        disk_info = cls._info(disk_id)
+
+        need_detach = disk_info.get('vms_id')
+        if need_detach:
+            if disk_info.get('vms_id') == [vm_id]:
+                cls.echo('This disk is already attached to this vm.')
+                return
+
+            # detach disk
+            detach_op = cls._detach(disk_id)
+
+            # interactive mode, run a progress bar
+            cls.echo('Detaching your disk.')
+            cls.display_progress(detach_op)
+
+        oper = cls._attach(disk_id, vm_id)
+
+        if oper and not background:
+            cls.echo('Detaching your disk(s).')
+            cls.display_progress(oper)
+
+        return oper
+
+
+    @classmethod
     def create(cls, name, vm, size, snapshotprofile, datacenter,
                background=False):
         """ Create a disk and attach it to a vm. """
