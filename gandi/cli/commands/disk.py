@@ -119,7 +119,7 @@ def update(gandi, resource, cmdline, kernel, name, size,
         return
 
     disk_info = gandi.disk.info(resource)
-    attached = 'vms_id' in disk_info
+    attached = disk_info.get('vms_id', False)
     if vm and attached and not force:
         gandi.echo('This is disk is still attached')
         proceed = click.confirm('Are you sure to detach %s?' % resource)
