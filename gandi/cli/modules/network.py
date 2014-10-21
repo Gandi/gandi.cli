@@ -5,6 +5,66 @@ from gandi.cli.modules.datacenter import Datacenter
 from gandi.cli.modules.iaas import Iaas
 
 
+class Ip(GandiModule):
+    """ Module to handle CLI commands.
+
+    $ gandi ip list
+    $ gandi ip info
+    $ gandi ip create
+    $ gandi ip attach
+    $ gandi ip detach
+    $ gandi ip delete
+
+    """
+
+    @classmethod
+    def list(cls, datacenter=None, type=None):
+        """List ip"""
+        options = {}
+        if datacenter:
+            datacenter_id = int(Datacenter.usable_id(datacenter))
+            options['datacenter_id'] = datacenter_id
+        if type:
+            ifaces = Iface.list({'type': type})
+            options['iface_id'] = [iface['id'] for iface in ifaces]
+
+        return cls.call('hosting.ip.list', options)
+
+    @classmethod
+    def _info(cls, ip_id):
+        """ Get information about an ip."""
+        return cls.call('hosting.ip.info', ip_id)
+
+    @classmethod
+    def info(cls, resource):
+        """ Get information about an up."""
+        return cls._info(cls.usable_id(resource))
+
+    @classmethod
+    def from_ip(cls, ip):
+        """Retrieve ip id associated to an ip."""
+        ips = dict([(ip_['ip'], ip_['id'])
+                    for ip_ in cls.list()])
+        return ips.get(ip)
+
+    @classmethod
+    def usable_id(cls, id):
+        """ Retrieve id from input which can be ip or id."""
+        try:
+            # id is maybe an ip
+            qry_id = cls.from_ip(id)
+            if not qry_id:
+                qry_id = int(id)
+        except Exception as err:
+            qry_id = None
+
+        if not qry_id:
+            msg = 'unknown identifier %s' % id
+            cls.error(msg)
+
+        return qry_id
+
+
 class Vlan(GandiModule):
 
     """ Module to handle CLI commands.
