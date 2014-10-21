@@ -18,16 +18,9 @@ class Ip(GandiModule):
     """
 
     @classmethod
-    def list(cls, datacenter=None, type=None):
+    def list(cls, options=None):
         """List ip"""
-        options = {}
-        if datacenter:
-            datacenter_id = int(Datacenter.usable_id(datacenter))
-            options['datacenter_id'] = datacenter_id
-        if type:
-            ifaces = Iface.list({'type': type})
-            options['iface_id'] = [iface['id'] for iface in ifaces]
-
+        options = options or {}
         return cls.call('hosting.ip.list', options)
 
     @classmethod
