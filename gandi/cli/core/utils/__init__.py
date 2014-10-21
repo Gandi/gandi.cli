@@ -239,6 +239,35 @@ def output_iface(gandi, iface, datacenters, vms, output_keys, justify=10):
         output_line(gandi, 'vlan', vlan.get('name', '-'), justify)
 
 
+def output_ip(gandi, ip, datacenters, vms, ifaces, output_keys, justify=11):
+    """ Helper to output an ip information."""
+    output_generic(gandi, ip, output_keys, justify)
+
+    if 'type' in output_keys:
+        iface = ifaces.get(ip['iface_id'])
+        type_ = 'private' if iface.get('vlan') else 'public'
+        output_line(gandi, 'type', type_, justify)
+        if type_ == 'private':
+            output_line(gandi, 'vlan', iface['vlan']['name'], justify)
+
+    if 'vm' in output_keys:
+        iface = ifaces.get(ip['iface_id'])
+        vm_id = iface.get('vm_id')
+        if vm_id:
+            vm_name = vms.get(vm_id, {}).get('hostname')
+            if vm_name:
+                output_line(gandi, 'vm', vm_name, justify)
+
+    if 'dc' in output_keys:
+        for dc in datacenters:
+            if dc['id'] == ip.get('datacenter_id',
+                                     ip.get('datacenter', {}).get('id')):
+                dc_name = dc['iso']
+                break
+
+        output_line(gandi, 'datacenter', dc_name, justify)
+
+
 def randomstring(prefix=None):
     """ Helper to generate a random string, used for temporary hostnames."""
     if not prefix:
