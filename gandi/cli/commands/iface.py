@@ -71,7 +71,7 @@ def info(gandi, resource):
 def create(gandi, ip_version, datacenter, bandwidth, vlan, vm, background):
     """ Create a new iface """
     result = gandi.iface.create(ip_version, datacenter, bandwidth, vlan, vm,
-                                background)
+                                None, background)
 
     if not result:
         return

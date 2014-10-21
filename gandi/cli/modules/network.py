@@ -245,7 +245,8 @@ class Iface(GandiModule):
         return oper
 
     @classmethod
-    def create(cls, ip_version, datacenter, bandwidth, vlan, vm, background):
+    def create(cls, ip_version, datacenter, bandwidth, vlan, vm, ip,
+               background):
         """ Create a new iface """
         if not background and not cls.intty():
             background = True
@@ -259,6 +260,8 @@ class Iface(GandiModule):
         }
         if vlan:
             iface_params['vlan'] = Vlan.usable_id(vlan)
+            if ip:
+                iface_params['ip'] = ip
 
         result = cls.call('hosting.iface.create', iface_params)
 
