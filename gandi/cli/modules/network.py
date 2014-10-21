@@ -1,5 +1,8 @@
 """ Iface and vlan commands module. """
 
+import click
+from click.exceptions import UsageError
+
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.datacenter import Datacenter
 from gandi.cli.modules.iaas import Iaas
@@ -32,6 +35,57 @@ class Ip(GandiModule):
     def info(cls, resource):
         """ Get information about an up."""
         return cls._info(cls.usable_id(resource))
+
+    @classmethod
+    def attach(cls, ip, vm, vlan, bandwidth, background=False, force=False):
+        """ Attach """
+        ip_ = None
+        iface = None
+        vlan_ = None
+        try:
+            ip_ = cls.info(ip)
+        except UsageError as err:
+            pass
+
+        # if public ip asked and it does not exists
+        if not ip_ and not vlan:
+            msg = 'public ip must already exists (%s)' % ip
+            cls.error(msg)
+
+        vm_ = Iaas.info(vm)
+
+        if ip_ and vlan:
+            iface = Iface.info(ip_['iface_id'])
+            vlan_ = Vlan.info(vlan)
+
+            # we want an ip in another vlan, the found one is not the good one
+            if iface['vlan_id'] != vlan_['id']:
+                ip_ = None
+
+        if ip_:
+            # if the ip exists and is attached, we have to detach it
+            if not iface:
+                iface = Iface.info(ip_['iface_id'])
+
+            if iface.get('vm_id'):
+                if not force:
+                    proceed = click.confirm('Are you sure you want to detach'
+                                            ' %s from vm %s' %
+                                            (ip, iface['vm_id']))
+                    if not proceed:
+                        return
+
+                detach = Iface._detach(iface['id'])
+                cls.display_progress(detach)
+
+            # then we should attach the ip to the vm
+            attach = Iface._attach(iface['id'], vm_['id'])
+            if not background:
+                cls.display_progress(attach)
+        else:
+            # create a new private ip and attach it
+            result = Iface.create('4', vm_['datacenter_id'], bandwidth, vlan,
+                                  vm, ip, background)
 
     @classmethod
     def from_ip(cls, ip):
