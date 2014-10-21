@@ -184,6 +184,21 @@ class CertificateDcvMethod(click.Choice):
         pass
 
 
+class IpType(click.Choice):
+    """ Choice parameter to filter on ip types.
+
+    * 'private' will only retrieve private ips
+    * 'public' will only retrieve public ips
+    """
+
+    name = 'ip type'
+    choices = ['private', 'public']
+
+    def __init__(self):
+        """ Initialize choices list. """
+        pass
+
+
 class StringConstraint(click.types.StringParamType):
 
     """ Check that provided string matches constraints."""
@@ -243,6 +258,7 @@ SNAPSHOTPROFILE = SnapshotParamType()
 CERTIFICATE_PACKAGE = CertificatePackage()
 CERTIFICATE_DCV_METHOD = CertificateDcvMethod()
 EMAIL_TYPE = EmailParamType()
+IP_TYPE = IpType()
 
 
 class GandiOption(click.Option):
