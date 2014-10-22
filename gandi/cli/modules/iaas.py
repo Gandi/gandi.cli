@@ -296,6 +296,7 @@ class Iaas(GandiModule, SshkeyHelper):
         if identity:
             cmd.extend(('-i', identity,))
 
+        ip_addr = None
         for iface in vm_info['ifaces']:
             for ip in iface['ips']:
                 ip_addr = ip['ip']
@@ -303,6 +304,10 @@ class Iaas(GandiModule, SshkeyHelper):
                     cmd.append('-6')
                 # stop on first access found
                 break
+
+        if not ip_addr:
+            cls.echo('No IP address found for vm %s, aborting.' % vm_id)
+            return
 
         cmd.append('%s@%s' % (login, ip_addr,))
 
