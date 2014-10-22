@@ -51,6 +51,7 @@ def output_vm(gandi, vm, datacenters, output_keys, justify=10):
 
     if 'ip' in output_keys:
         for iface in vm['ifaces']:
+            gandi.separator_line()
             output_line(gandi, 'bandwidth', iface['bandwidth'], justify)
 
             for ip in iface['ips']:
