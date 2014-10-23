@@ -112,12 +112,19 @@ def create(gandi, name, datacenter, background):
 
 
 @cli.command()
-@click.option('--name', required=True, help='Name of the vlan.')
+@click.option('--name', help='Name of the vlan.')
+@click.option('--gateway', help='Gateway of the vlan.')
 @click.argument('resource')
 @pass_gandi
-def update(gandi, resource, name):
+def update(gandi, resource, name, gateway):
     """ Update a vlan """
-    result = gandi.vlan.update(resource, name)
+    params = {}
+    if name:
+        params['name'] = name
+    if gateway:
+        params['gateway'] = gateway
+
+    result = gandi.vlan.update(resource, params)
 
     if not result:
         return

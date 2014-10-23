@@ -211,15 +211,10 @@ class Vlan(GandiModule):
         return result
 
     @classmethod
-    def update(cls, id, name):
+    def update(cls, id, params):
         """Update an existing vlan."""
-        vlan_params = {
-            'name': name,
-        }
-
         cls.echo('Updating your vlan.')
-        result = cls.call('hosting.vlan.update', cls.usable_id(id),
-                          vlan_params)
+        result = cls.call('hosting.vlan.update', cls.usable_id(id), params)
         return result
 
     @classmethod
