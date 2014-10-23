@@ -11,12 +11,18 @@ from gandi.cli.core.params import option, pass_gandi, DATACENTER
 @click.option('--datacenter', type=DATACENTER, default=None,
               help='Filter by datacenter.')
 @click.option('--id', help='Display ids.', is_flag=True)
+@click.option('--subnet', help='Display subnets.', is_flag=True)
+@click.option('--gateway', help='Display gateway.', is_flag=True)
 @pass_gandi
-def list(gandi, datacenter, id):
+def list(gandi, datacenter, id, subnet, gateway):
     """List vlans."""
     output_keys = ['name', 'state', 'dc']
     if id:
         output_keys.append('id')
+    if subnet:
+        output_keys.append('subnet')
+    if gateway:
+        output_keys.append('gateway')
 
     datacenters = gandi.datacenter.list()
 
