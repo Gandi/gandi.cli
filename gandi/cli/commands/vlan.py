@@ -34,7 +34,7 @@ def list(gandi, datacenter, id):
 @pass_gandi
 def info(gandi, resource, iface):
     """Display information about a vlan."""
-    output_keys = ['name', 'state', 'dc']
+    output_keys = ['name', 'state', 'dc', 'subnet', 'gateway']
 
     datacenters = gandi.datacenter.list()
 
