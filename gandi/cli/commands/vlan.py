@@ -3,7 +3,8 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_vlan, output_generic, output_iface
+from gandi.cli.core.utils import (output_vlan, output_generic, output_iface,
+                                  output_ip, output_line)
 from gandi.cli.core.params import option, pass_gandi, DATACENTER
 
 
@@ -35,25 +36,49 @@ def list(gandi, datacenter, id, subnet, gateway):
 
 
 @cli.command()
-@click.option('--iface', help='Display ifaces.', is_flag=True)
+@click.option('--ip', help='Display ips.', is_flag=True)
 @click.argument('resource')
 @pass_gandi
-def info(gandi, resource, iface):
+def info(gandi, resource, ip):
     """Display information about a vlan."""
     output_keys = ['name', 'state', 'dc', 'subnet', 'gateway']
 
     datacenters = gandi.datacenter.list()
 
     vlan = gandi.vlan.info(resource)
-    output_vlan(gandi, vlan, datacenters, output_keys)
 
-    if iface:
-        output_keys = ['id', 'bandwidth', 'type', 'state', 'vm']
+    gateway = vlan['gateway']
+    if ip:
+        gateway_exists = False
+
         vms = dict([(vm_['id'], vm_) for vm_ in gandi.iaas.list()])
         ifaces = gandi.vlan.ifaces(resource)
+
+        for iface in ifaces:
+            for ip in iface['ips']:
+                if gateway == ip['ip']:
+                    gateway_exists = True
+
+        if gateway_exists:
+            vlan.pop('gateway')
+        else:
+            vlan['gateway'] = ("%s don't exists" % gateway if gateway
+                               else 'none')
+
+        output_vlan(gandi, vlan, datacenters, output_keys, justify=11)
+
+        output_keys = ['vm', 'bandwidth']
         for iface in ifaces:
             gandi.separator_line()
-            output_iface(gandi, iface, datacenters, vms, output_keys)
+            output_iface(gandi, iface, datacenters, vms, output_keys,
+                         justify=11)
+            for ip in iface['ips']:
+                output_ip(gandi, ip, None, None, None, ['ip'])
+                if gateway == ip['ip']:
+                    output_line(gandi, 'gateway', 'true', justify=11)
+
+    else:
+        output_vlan(gandi, vlan, datacenters, output_keys, justify=11)
 
     return vlan
 
