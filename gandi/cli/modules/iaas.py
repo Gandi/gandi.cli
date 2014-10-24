@@ -186,7 +186,7 @@ class Iaas(GandiModule, SshkeyHelper):
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
                login, password, hostname, image, run, background, sshkey,
-               size):
+               size, vlan):
         """Create a new virtual machine."""
         if not background and not cls.intty():
             background = True
@@ -239,7 +239,7 @@ class Iaas(GandiModule, SshkeyHelper):
         cls.echo('* Configuration used: %d cores, %dMb memory, %s, '
                  'image %s, hostname: %s' % (cores, memory, ip_summary, image,
                                              hostname))
-        if background:
+        if background and not vlan:
             return result
 
         # interactive mode, run a progress bar
@@ -247,14 +247,21 @@ class Iaas(GandiModule, SshkeyHelper):
         cls.display_progress(result)
         cls.echo('Your Virtual Machine %s has been created.' % hostname)
 
-        if 'ssh_key' not in vm_params and 'keys' not in vm_params:
-            return
-
         vm_id = None
         for oper in result:
             if oper.get('vm_id'):
                 vm_id = oper.get('vm_id')
                 break
+
+        if vlan:
+            from gandi.cli.modules.network import Ip
+            attach = Ip.attach(None, vm_id, vlan, bandwidth,
+                               background)
+            if background:
+                return result
+
+        if 'ssh_key' not in vm_params and 'keys' not in vm_params:
+            return
 
         if vm_id:
             time.sleep(5)

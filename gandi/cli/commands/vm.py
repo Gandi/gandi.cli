@@ -184,7 +184,7 @@ def delete(gandi, background, force, resource):
         help='Quantity of RAM in Megabytes to allocate.')
 @option('--cores', type=click.INT, default=1,
         help='Number of cpu.')
-@option('--ip-version', type=IntChoice(['4', '6']), default='4',
+@option('--ip-version', type=IntChoice(['4', '6']), default=None,
         help='Version of created IP.')
 @option('--bandwidth', type=click.INT, default=102400,
         help="Network bandwidth in bit/s used to create the VM's first "
@@ -209,9 +209,10 @@ def delete(gandi, background, force, resource):
         help='Authorize ssh authentication for the given ssh key.')
 @click.option('--size', type=click.INT, default=None,
               help="System disk size in MiB.")
+@click.option('--vlan', default=None, help='A vlan to use with this vm.')
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
-           password, hostname, image, run, background, sshkey, size):
+           password, hostname, image, run, background, sshkey, size, vlan):
     """Create a new virtual machine.
 
     you can specify a configuration entry named 'sshkey' containing
@@ -233,6 +234,9 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
+    if not ip_version:
+        ip_version = '6' if vlan else '4'
+
     # Display a short summary for creation
     if login:
         user_summary = 'root and %s users' % login
@@ -249,7 +253,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                                bandwidth, login, pwd, hostname,
                                image, run,
                                background,
-                               sshkey, size)
+                               sshkey, size, vlan)
     if background:
         gandi.pretty_echo(result)
 
