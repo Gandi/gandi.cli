@@ -9,7 +9,7 @@ except ImportError:
     import xmlrpc.client as xmlrpclib
 
 from gandi.cli import __version__
-from gandi.cli.core.utils.xmlrpc import RequestsTransport
+from gandi.cli.core.utils.xmlrpc import RequestsTransport, requests
 
 
 class APICallFailed(Exception):
@@ -55,7 +55,7 @@ class XMLRPCClient(object):
         try:
             func = getattr(self.endpoint, method)
             return func(apikey, *args)
-        except socket.error:
+        except (socket.error, requests.exceptions.ConnectionError):
             msg = 'Gandi API service is unreachable'
             raise APICallFailed(msg)
         except xmlrpclib.Fault as err:

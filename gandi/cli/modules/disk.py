@@ -130,6 +130,23 @@ class Disk(GandiModule):
         return opers
 
     @classmethod
+    def detach(cls, resources, background):
+        if not isinstance(resources, (list, tuple)):
+            resources = [resources]
+
+        resources = [cls.usable_id(item) for item in resources]
+
+        opers = []
+        for disk_id in resources:
+            opers.extend(cls._detach(disk_id))
+
+        if opers and not background:
+            cls.echo('Detaching your disk(s).')
+            cls.display_progress(opers)
+
+        return opers
+
+    @classmethod
     def delete(cls, resources, background=False):
         """ Delete this disk."""
         if not isinstance(resources, (list, tuple)):
@@ -160,6 +177,35 @@ class Disk(GandiModule):
     def _attach(cls, disk_id, vm_id):
         """ Attach a disk to a vm. """
         oper = cls.call('hosting.vm.disk_attach', vm_id, disk_id)
+        return oper
+
+    @classmethod
+    def attach(cls, disk, vm, background):
+        from gandi.cli.modules.iaas import Iaas as VM
+        vm_id = VM.usable_id(vm)
+
+        disk_id = cls.usable_id(disk)
+        disk_info = cls._info(disk_id)
+
+        need_detach = disk_info.get('vms_id')
+        if need_detach:
+            if disk_info.get('vms_id') == [vm_id]:
+                cls.echo('This disk is already attached to this vm.')
+                return
+
+            # detach disk
+            detach_op = cls._detach(disk_id)
+
+            # interactive mode, run a progress bar
+            cls.echo('Detaching your disk.')
+            cls.display_progress(detach_op)
+
+        oper = cls._attach(disk_id, vm_id)
+
+        if oper and not background:
+            cls.echo('Detaching your disk(s).')
+            cls.display_progress(oper)
+
         return oper
 
     @classmethod

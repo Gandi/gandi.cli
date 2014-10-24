@@ -15,7 +15,7 @@ with open(os.path.join(here, 'gandi', 'cli', '__init__.py')) as v_file:
     version = re.compile(r".*__version__ = '(.*?)'",
                          re.S).match(v_file.read()).group(1)
 
-requires = ['pyyaml', 'click<=3.1', 'requests', 'IPy']
+requires = ['pyyaml', 'click<=4.0', 'requests', 'IPy']
 
 
 setup(name='gandi.cli',

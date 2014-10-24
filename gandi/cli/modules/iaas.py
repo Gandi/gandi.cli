@@ -303,6 +303,7 @@ class Iaas(GandiModule, SshkeyHelper):
         if identity:
             cmd.extend(('-i', identity,))
 
+        ip_addr = None
         for iface in vm_info['ifaces']:
             if iface['type'] == 'private':
                 continue
@@ -312,6 +313,10 @@ class Iaas(GandiModule, SshkeyHelper):
                     cmd.append('-6')
                 # stop on first access found
                 break
+
+        if not ip_addr:
+            cls.echo('No IP address found for vm %s, aborting.' % vm_id)
+            return
 
         cmd.append('%s@%s' % (login, ip_addr,))
 
@@ -330,7 +335,7 @@ class Iaas(GandiModule, SshkeyHelper):
         if not vm_info['console']:
             # first activate console
             cls.update(id, memory=None, cores=None, console=True,
-                       password=None, background=False)
+                       password=None, background=False, max_memory=None)
         # now we can connect
         # retrieve ip of vm
         vm_info = cls.info(id)

@@ -156,7 +156,7 @@ Details:
 
 * ``gandi deploy virtualhost.domain.tld1`` push the files in the current directory to the virtualhost setup on a Gandi Simple Hosting instance.
 
-* ``gandi disk create`` create a new virtual disk. Possible options are ``--name TEXT`` for the label of the virtual disk, ``--size INTEGER`` for the new size of the disk, ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``, ``--vm TEXT`` to attach the newly create virtual disk to an existing virtual machine instance, ``--snapshotprofile 1|2|3|7`` to select a profile of snapshot to apply to the disk for keeping multiple version of data in a timeline. The operation can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi disk create`` create a new virtual disk. Possible options are ``--name TEXT`` for the label of the virtual disk, ``--size SIZE[M|G|T]`` for the new size of the disk, ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``, ``--vm TEXT`` to attach the newly create virtual disk to an existing virtual machine instance, ``--snapshotprofile 1|2|3|7`` to select a profile of snapshot to apply to the disk for keeping multiple version of data in a timeline. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi disk delete resource`` delete a virtual disk identified as resource. Possible option is ``--force`` (or ``-f``) to bypass the validation question; useful in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
@@ -164,11 +164,15 @@ Details:
 
   ``gandi disk list`` show a list of virtual disk. Possible options to filter the list are : ``--only-data`` and ``--only-snapshot`` which limit the list to regular disk and to snapshots, ``--type`` add the type of the virtual disk, ``--id`` add the integer id of each virtual disk, ``--vm`` show the virtual machines by which the disk are used, ``--snapshotprofile`` show the profile of data retention associated and ``--limit INTEGER`` show only a limit amount of disks.
 
-* ``gandi disk update resource`` modify the options of a virtual disk. Possible options are ``--kernel KERNEL`` to setup or update disk kernel, ``--cmdline TEXT`` to change kernel cmdline, ``--name TEXT`` for the label of the virtual disk, ``--size INTEGER`` for the new size of the disk, ``--snapshotprofile TEXT`` to select a profile of snapshot to apply to the disk for keeping multiple version of data in a timeline. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi disk update resource`` modify the options of a virtual disk. Possible options are ``--kernel KERNEL`` to setup or update disk kernel, ``--cmdline TEXT`` to change kernel cmdline, ``--name TEXT`` for the label of the virtual disk, ``--size SIZE[M|G|T]`` for the new size of the disk, ``--snapshotprofile TEXT`` to select a profile of snapshot to apply to the disk for keeping multiple version of data in a timeline. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+
+* ``gandi disk attach disk vm`` attach the given disk to the given vm, if the disk is currently attached, it will start by detaching it. Possible option is ``--force`` to skip all questions about detaching and attaching. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+
+* ``gandi disk detach disk`` detach the disk from the vm it is currently attached. Possible option is ``--force`` to skip all questions about detaching. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi docker`` will setup ssh forwarding towards a gandi VM, remotely feeding a docker unix socket. This, for example, can be used for zeroconf access to scripted temporary build VMs. The ``--vm`` option alters the ``dockervm`` configuration parameter and can be used to set the VM used for future docker connections. ``dockervm`` can also be set locally for per-project vms (See ``gandi config``). *NOTE*: passing option parameters to docker require the usage of the POSIX argument parsing ``--`` separator. *NOTE*: a local docker client is required for this command to operate.
 
-* ``gandi domain create`` helps register a domain. Options are ``--domain domain.tld`` for the domain you want to get, ``--duration INTEGER RANGE`` for the registration period, ``--owner TEXT``, ``--admin TEXT``, ``--tech TEXTE``, ``--bill TEXT`` for the four contacts to pass to the creation process. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi domain create`` helps register a domain. Options are ``--domain domain.tld`` for the domain you want to get, ``--duration INTEGER RANGE`` for the registration period, ``--owner TEXT``, ``--admin TEXT``, ``--tech TEXT``, ``--bill TEXT`` for the four contacts to pass to the creation process. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi domain info domain.tld`` show information about the specific domain ``domain.tld`` : owner, admin, billing and technical contacts, fully qualified domain name, nameservers, associated zone, associated tags and more.
 
@@ -230,7 +234,7 @@ Details:
 
 * ``gandi snapshotprofile list`` show the list of all profile for virtual disk snapshot. Possible options are ``--only-paas`` and ``--only-vm`` to filter the output and show only the subset of profile for the Simple Hosting or the Gandi Hosting.
 
-* ``gandi sshkey create --name label`` add a SSH key identified by ``label`` which could be used for authentification. Possible option are ``--value TEXT``  with the content of the SSH public key or ``--sshkey FILENAME`` with the path to a file containing the SSH public key.
+* ``gandi sshkey create --name label`` add a SSH key identified by ``label`` which could be used for authentification. Possible option are ``--value TEXT``  with the content of the SSH public key or ``--filename FILENAME`` with the path to a file containing the SSH public key.
 
 * ``gandi sshkey delete resource`` remove a SSH key. Resource can be a name or the specific id.
 

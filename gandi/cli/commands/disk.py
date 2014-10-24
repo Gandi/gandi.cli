@@ -5,7 +5,7 @@ import click
 from gandi.cli.core.cli import cli, compatcallback
 from gandi.cli.core.utils import output_disk, output_generic, randomstring
 from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE,
-                                   KERNEL, option)
+                                   KERNEL, SIZE, option)
 
 
 @cli.command()
@@ -81,11 +81,77 @@ def check_size(ctx, param, value):
 
 
 @cli.command()
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False).')
+@pass_gandi
+@click.argument('resource', nargs=-1, required=True)
+def detach(gandi, resource, background, force):
+    """ Detach disks from currectly attached vm.
+
+    Resource can be a disk name, or ID
+    """
+    if not force:
+        proceed = click.confirm('Are you sure to detach %s?' %
+                                ', '.join(resource))
+        if not proceed:
+            return
+
+    result = gandi.disk.detach(resource, background)
+    if background:
+        gandi.pretty_echo(result)
+
+    return result
+
+
+@cli.command()
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False).')
+@pass_gandi
+@click.argument('disk', nargs=1, required=True)
+@click.argument('vm', nargs=1, required=True)
+def attach(gandi, disk, vm, background, force):
+    """ Attach disk to vm.
+
+    disk can be a disk name, or ID
+    vm can be a vm name, or ID
+    """
+    if not force:
+        proceed = click.confirm("Are you sure to attach disk '%s' to vm '%s'" %
+                                (disk, vm))
+        if not proceed:
+            return
+
+    disk_info = gandi.disk.info(disk)
+    attached = disk_info.get('vms_id', False)
+    if attached and not force:
+        gandi.echo('This is disk is still attached')
+        proceed = click.confirm('Are you sure to detach %s?' % disk)
+
+        if not proceed:
+            return
+
+    result = gandi.disk.attach(disk, vm, background)
+    if background and result:
+        gandi.pretty_echo(result)
+
+    return result
+
+
+@cli.command()
 @click.option('--cmdline', type=click.STRING, default=None,
               help='Kernel cmdline.')
 @click.option('--kernel', type=KERNEL, default=None, help='Kernel for disk.')
 @click.option('--name', type=click.STRING, default=None, help='Disk name.')
-@click.option('--size', default=None, type=click.INT, help='Disk size.',
+@click.option('--size', default=None, metavar='SIZE[M|G|T]', type=SIZE,
+              help=('Disk size. A size suffix (M for megabytes up to T for '
+                    'terabytes) is optional, megabytes is the default if no '
+                    'suffix is present.'),
               callback=check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE)
@@ -144,7 +210,10 @@ def delete(gandi, resource, force, background):
 @click.option('--name', type=click.STRING, default=None, help='Disk name.')
 @click.option('--vm', default=None, type=click.STRING,
               help='Attach the newly created disk to the vm.')
-@click.option('--size', default=3072, type=click.INT, help='Disk size.',
+@click.option('--size', default=3072, metavar='SIZE[M|G|T]', type=SIZE,
+              help=('Disk size. A size suffix (M for megabytes up to T for '
+                    'terabytes) is optional, megabytes is the default if no '
+                    'suffix is present.'),
               callback=check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE)

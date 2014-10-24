@@ -53,6 +53,7 @@ def info(gandi, resource):
     datacenters = gandi.datacenter.list()
     ret = []
     for item in resource:
+        gandi.separator_line()
         vm = gandi.iaas.info(item)
         output_vm(gandi, vm, datacenters, output_keys, 14)
         ret.append(vm)
