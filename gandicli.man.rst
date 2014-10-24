@@ -69,6 +69,8 @@ Namespaces:
 *  disk info               Display information about a disk.
 *  disk list               List disks.
 *  disk update             Update a disk.
+*  disk attach             Attach a disk to a vm.
+*  disk detach             Detach a disk from a vm.
 *  docker                  Manage docker instances.
 *  domain create           Buy a domain.
 *  domain info             Display information about a domain.
