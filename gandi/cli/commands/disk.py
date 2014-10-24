@@ -220,7 +220,7 @@ def delete(gandi, resource, force, background):
 @click.option('--source', default=None, type=DISK_IMAGE,
               help='Create a disk from a disk or a snapshot.')
 @option('--datacenter', type=DATACENTER, default='LU',
-        help='Datacenter where the VM will be spawned.')
+        help='Datacenter where the disk will be created.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
