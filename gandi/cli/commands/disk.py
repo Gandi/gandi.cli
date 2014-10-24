@@ -5,7 +5,7 @@ import click
 from gandi.cli.core.cli import cli, compatcallback
 from gandi.cli.core.utils import output_disk, output_generic, randomstring
 from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE,
-                                   KERNEL, SIZE, option)
+                                   KERNEL, SIZE, option, DISK_IMAGE)
 
 
 @cli.command()
@@ -210,19 +210,22 @@ def delete(gandi, resource, force, background):
 @click.option('--name', type=click.STRING, default=None, help='Disk name.')
 @click.option('--vm', default=None, type=click.STRING,
               help='Attach the newly created disk to the vm.')
-@click.option('--size', default=3072, metavar='SIZE[M|G|T]', type=SIZE,
+@click.option('--size', default='3072', metavar='SIZE[M|G|T]', type=SIZE,
               help=('Disk size. A size suffix (M for megabytes up to T for '
                     'terabytes) is optional, megabytes is the default if no '
                     'suffix is present.'),
               callback=check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE)
+@click.option('--source', default=None, type=DISK_IMAGE,
+              help='Create a disk from a disk or a snapshot.')
 @option('--datacenter', type=DATACENTER, default='LU',
         help='Datacenter where the VM will be spawned.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
-def create(gandi, name, vm, size, snapshotprofile, datacenter, background):
+def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
+        background):
     """ Create a new disk. """
     try:
         snapshotprofile = int(snapshotprofile) if snapshotprofile else None
@@ -235,7 +238,7 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, background):
     name = name or randomstring()
 
     result = gandi.disk.create(name, vm, size, snapshotprofile, datacenter,
-                               background)
+                               source, background)
 
     if background:
         gandi.pretty_echo(result)

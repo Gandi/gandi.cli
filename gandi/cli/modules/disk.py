@@ -2,7 +2,7 @@
 
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import DuplicateResults
-from .iaas import Iaas, Datacenter
+from .iaas import Iaas, Datacenter, Image
 
 
 class Disk(GandiModule):
@@ -210,12 +210,16 @@ class Disk(GandiModule):
 
     @classmethod
     def create(cls, name, vm, size, snapshotprofile, datacenter,
-               background=False):
+               source, background=False):
         """ Create a disk and attach it to a vm. """
         disk_params = cls.disk_param(name, size, snapshotprofile)
         disk_params['datacenter_id'] = int(Datacenter.usable_id(datacenter))
 
-        result = cls.call('hosting.disk.create', disk_params)
+        if source:
+            disk_id = int(Image.usable_id(source, disk_params['datacenter_id']))
+            result = cls.call('hosting.disk.create_from', disk_params, disk_id)
+        else:
+            result = cls.call('hosting.disk.create', disk_params)
 
         if background and not vm:
             return result
