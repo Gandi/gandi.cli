@@ -212,6 +212,8 @@ class Disk(GandiModule):
     def create(cls, name, vm, size, snapshotprofile, datacenter,
                source, background=False):
         """ Create a disk and attach it to a vm. """
+        if source:
+            size = None
         disk_params = cls.disk_param(name, size, snapshotprofile)
         disk_params['datacenter_id'] = int(Datacenter.usable_id(datacenter))
 
