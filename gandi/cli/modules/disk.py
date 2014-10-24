@@ -60,6 +60,9 @@ class Disk(GandiModule):
             datacenter_id = int(Datacenter.usable_id(datacenter))
             options['datacenter_id'] = datacenter_id
 
+        disk_count = cls.safe_call('hosting.disk.count', options)
+        options['items_per_page'] = disk_count
+
         # implement a filter by label as API doesn't handle it
         images = cls.safe_call('hosting.disk.list', options)
         if not label:
