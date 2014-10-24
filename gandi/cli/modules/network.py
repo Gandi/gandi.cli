@@ -91,13 +91,7 @@ class Ip(GandiModule):
             return result
 
     @classmethod
-    def detach(cls, resource, background=False, force=False):
-        try:
-            ip_ = cls.info(resource)
-        except UsageError as err:
-            cls.error("Can't find this ip %s" % resource)
-
-        iface = Iface.info(ip_['iface_id'])
+    def _detach(cls, ip_, iface, background=False, force=False):
         detach = Iface._detach(iface['id'])
         if background:
             return detach
@@ -106,6 +100,34 @@ class Ip(GandiModule):
             cls.display_progress(detach)
 
         return detach
+
+    @classmethod
+    def detach(cls, resource, background=False, force=False):
+        try:
+            ip_ = cls.info(resource)
+        except UsageError as err:
+            cls.error("Can't find this ip %s" % resource)
+
+        iface = Iface.info(ip_['iface_id'])
+        return cls._detach(ip_, background, force)
+
+    @classmethod
+    def delete(cls, resource, background=False, force=False):
+        try:
+            ip_ = cls.info(resource)
+        except UsageError as err:
+            cls.error("Can't find this ip %s" % resource)
+
+        iface = Iface.info(ip_['iface_id'])
+        if iface.get('vm'):
+            cls._detach(ip_, iface, False, force)
+
+        delete = Iface.delete(iface['id'], background)
+        if background:
+            return delete
+
+        cls.display_progress(delete)
+        return delete
 
     @classmethod
     def from_ip(cls, ip):
@@ -393,6 +415,7 @@ class Iface(GandiModule):
 
         cls.echo('Deleting your iface.')
         cls.display_progress(opers)
+        return opers
 
     @classmethod
     def update(cls, id, bandwidth, vm, background):
