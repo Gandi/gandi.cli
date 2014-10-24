@@ -260,6 +260,7 @@ class SizeParamType(click.ParamType):
 DATACENTER = DatacenterParamType()
 PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
+DISK_MAXLIST = 500
 KERNEL = KernelParamType()
 SNAPSHOTPROFILE = SnapshotParamType()
 CERTIFICATE_PACKAGE = CertificatePackage()

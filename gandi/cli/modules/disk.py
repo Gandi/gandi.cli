@@ -2,6 +2,7 @@
 
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import DuplicateResults
+from gandi.cli.core.params import DISK_MAXLIST
 from .iaas import Iaas, Datacenter, Image
 
 
@@ -55,13 +56,12 @@ class Disk(GandiModule):
     @classmethod
     def list_create(cls, datacenter=None, label=None):
         """List available disks for vm creation."""
-        options = {}
+        options = {
+            'items_per_page': DISK_MAXLIST
+        }
         if datacenter:
             datacenter_id = int(Datacenter.usable_id(datacenter))
             options['datacenter_id'] = datacenter_id
-
-        disk_count = cls.safe_call('hosting.disk.count', options)
-        options['items_per_page'] = disk_count
 
         # implement a filter by label as API doesn't handle it
         images = cls.safe_call('hosting.disk.list', options)
