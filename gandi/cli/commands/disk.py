@@ -210,7 +210,7 @@ def delete(gandi, resource, force, background):
 @click.option('--name', type=click.STRING, default=None, help='Disk name.')
 @click.option('--vm', default=None, type=click.STRING,
               help='Attach the newly created disk to the vm.')
-@click.option('--size', default=3072, metavar='SIZE[M|G|T]', type=SIZE,
+@click.option('--size', default='3072', metavar='SIZE[M|G|T]', type=SIZE,
               help=('Disk size. A size suffix (M for megabytes up to T for '
                     'terabytes) is optional, megabytes is the default if no '
                     'suffix is present.'),
