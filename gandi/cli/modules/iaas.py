@@ -297,6 +297,8 @@ class Iaas(GandiModule, SshkeyHelper):
             cmd.extend(('-i', identity,))
 
         for iface in vm_info['ifaces']:
+            if iface['type'] == 'private':
+                continue
             for ip in iface['ips']:
                 ip_addr = ip['ip']
                 if ip['version'] == 6:
