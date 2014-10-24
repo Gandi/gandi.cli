@@ -82,10 +82,13 @@ class Ip(GandiModule):
             attach = Iface._attach(iface['id'], vm_['id'])
             if not background:
                 cls.display_progress(attach)
+
+            return attach
         else:
             # create a new private ip and attach it
             result = Iface.create('4', vm_['datacenter_id'], bandwidth, vlan,
                                   vm, ip, background)
+            return result
 
     @classmethod
     def from_ip(cls, ip):
@@ -333,6 +336,7 @@ class Iface(GandiModule):
 
         cls.echo('Attaching your iface.')
         cls.display_progress(result)
+        return result
 
     @classmethod
     def _detach(cls, iface_id):
