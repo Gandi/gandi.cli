@@ -1,6 +1,7 @@
 """ Vlan namespace commands. """
 
 import click
+from IPy import IP
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (output_vlan, output_generic, output_iface,
@@ -145,15 +146,54 @@ def create(gandi, name, datacenter, background):
 @cli.command()
 @click.option('--name', help='Name of the vlan.')
 @click.option('--gateway', help='Gateway of the vlan.')
+@click.option('--create', default=False, is_flag=True,
+              help='If gateway is a vm and does not have any ip in the good '
+                   'vlan, we will start by putting an ip in the vlan.')
+@option('--bandwidth', type=click.INT, default=102400,
+        help="Network bandwidth in bit/s used to create the VM's ip in this "
+             'vlan.')
 @click.argument('resource')
 @pass_gandi
-def update(gandi, resource, name, gateway):
-    """ Update a vlan """
+def update(gandi, resource, name, gateway, create, bandwidth):
+    """ Update a vlan
+
+    ``gateway`` can be a vm name or id, or an ip.
+    """
     params = {}
     if name:
         params['name'] = name
-    if gateway:
-        params['gateway'] = gateway
+
+    vlan_id = gandi.vlan.usable_id(resource)
+
+    try:
+        if gateway:
+            IP(gateway)
+            params['gateway'] = gateway
+    except ValueError:
+        vm = gandi.iaas.info(gateway)
+        ips = [ip for sublist in
+               [[ip['ip'] for ip in iface['ips'] if ip['version'] == 4]
+                for iface in vm['ifaces']
+                if iface['vlan'] and iface['vlan'].get('id') == vlan_id]
+               for ip in sublist]
+
+        if len(ips) > 1:
+            gandi.echo("This vm has two ips in the vlan, don't know which one"
+                       ' to choose (%s)' % (', '.join(ips)))
+            return
+
+        if not ips and not create:
+            gandi.echo("Can't find '%s' in '%s' vlan" % (gateway, resource))
+            return
+
+        if not ips and create:
+            gandi.echo('Will create a new ip in this vlan for vm %s' % gateway)
+            oper = gandi.ip.attach(None, vm['id'], resource, bandwidth)
+            iface_id = oper['iface_id']
+            iface = gandi.iface.info(iface_id)
+            ips = [ip['ip'] for ip in iface['ips'] if ip['version'] == 4]
+
+        params['gateway'] = ips[0]
 
     result = gandi.vlan.update(resource, params)
 
