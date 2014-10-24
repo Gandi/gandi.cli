@@ -140,7 +140,6 @@ def delete(gandi, background, force, resource):
     """
     output_keys = ['id', 'type', 'step']
 
-    iaas_list = gandi.iaas.list()
     possible_resources = gandi.iaas.resource_list()
     for item in resource:
         if item not in possible_resources:
@@ -157,6 +156,7 @@ def delete(gandi, background, force, resource):
         if not proceed:
             return
 
+    iaas_list = gandi.iaas.list()
     stop_opers = []
     for item in resource:
         vm = next((vm for (index, vm) in enumerate(iaas_list)
