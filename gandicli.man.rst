@@ -81,11 +81,6 @@ Namespaces:
 *  ip attach               Attach an ip to a vm.
 *  ip detach               Detach an ip from a vm.
 *  ip delete               Delete an ip.
-*  iface create            Create a new iface
-*  iface delete            Delete an iface.
-*  iface info              Display information about an iface.
-*  iface list              List ifaces.
-*  iface update            Update an iface.
 *  mail create             Create a mailbox.
 *  mail delete             Delete a mailbox.
 *  mail info               Display information about a mailbox.
@@ -196,16 +191,6 @@ Details:
 * ``gandi ip detach`` detach an ip from a vm. It only takes one parameter, the ``ip``. Possible options are ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
 
 * ``gandi ip delete`` delete an ip. If the ip is still attached, it will detach it before deleting it. Possible options are ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
-
-* ``gandi iface create`` create a new iface. Mandatory option is ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``. Possible options are ``--ip-version 4|6`` for version of created IP, ``--bandwidth INTEGER`` to set network bandwidth in bits/s to be used for this iface, ``--vlan TEXT`` to attach the newly create iface to an existing vlan, ``--vm TEXT`` to attach the newly create iface to an existing virtual machine instance.  The operation can be done as background process using the option ``--background`` (or ``--bg``).
-
-* ``gandi iface delete resource`` delete an iface after asking for user validation. If iface is attached to a vm it will be detached first. Possible option is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting. Deletion can be done as background process using the option ``--background`` (or ``--bg``).
-
-* ``gandi iface info resource`` show information about specific iface. Possible option is ``--iface`` to show the ifaces attached to the vlan.
-
-* ``gandi iface list`` show all the ifaces created in Gandi hosting for the account. Possible options to filter the list are : ``--vm`` show the virtual machines by which the iface is used, ``--vlan`` show the virtual network by which the iface is used.
-
-* ``gandi iface update resource`` update specific iface. Possible options are ``--bandwidth INTEGER`` to set network bandwidth in bits/s to be used for this iface, ``--vm TEXT`` to attach the iface to an existing virtual machine instance.  The operation can be done as background process using the option ``--background`` (or ``--bg``). *NOTE*: if iface is already attached to another virtual machine instance, you will be prompted for confirmation before detaching it and attaching to the new virtual machine.
 
 * ``gandi mail create login@domain.tld`` create a new mailbox. Possible options are ``-q, --quota INTEGER`` to define a quota for this mailbox, ``-f, --fallback TEXT`` to define a fallback addresse, ``-a, --alias TEXT`` to add an alias for this mailbox, this last option can be used multiple times.
 
