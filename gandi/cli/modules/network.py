@@ -91,6 +91,23 @@ class Ip(GandiModule):
             return result
 
     @classmethod
+    def detach(cls, resource, background=False, force=False):
+        try:
+            ip_ = cls.info(resource)
+        except UsageError as err:
+            cls.error("Can't find this ip %s" % resource)
+
+        iface = Iface.info(ip_['iface_id'])
+        detach = Iface._detach(iface['id'])
+        if background:
+            return detach
+
+        if detach:
+            cls.display_progress(detach)
+
+        return detach
+
+    @classmethod
     def from_ip(cls, ip):
         """Retrieve ip id associated to an ip."""
         ips = dict([(ip_['ip'], ip_['id'])

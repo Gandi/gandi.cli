@@ -110,3 +110,24 @@ def attach(gandi, ip, vm, vlan, bandwidth, background, force):
     vm can be a vm id or name.
     """
     return gandi.ip.attach(ip, vm, vlan, bandwidth, background, force)
+
+
+@cli.command()
+@click.argument('ip')
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False).')
+@pass_gandi
+def detach(gandi, resource, background, force):
+    """Detach an ip from it's currently attached vm.
+
+    resource can be an ip id or ip.
+    """
+    if not force:
+        proceed = click.confirm('Are you sure to detach ip %s?' % resource)
+        if not proceed:
+            return
+
+    return gandi.ip.detach(resource, background, force)
