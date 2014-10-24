@@ -76,6 +76,11 @@ Namespaces:
 *  domain info             Display information about a domain.
 *  domain list             List domains.
 *  help                    Display help for a command.
+*  ip list                 List all ips.
+*  ip info                 Display information about an ip.
+*  ip attach               Attach an ip to a vm.
+*  ip detach               Detach an ip from a vm.
+*  ip delete               Delete an ip.
 *  iface create            Create a new iface
 *  iface delete            Delete an iface.
 *  iface info              Display information about an iface.
@@ -181,6 +186,16 @@ Details:
 * ``gandi domain list`` show all the domains in the Gandi account. Possible option is ``--limit INTEGER`` which will show a subset of the list.
 
 * ``gandi help command`` display help for command, if command is a namespace it will display list of available commands for this namespace.
+
+* ``gandi ip list`` show all the ip created in Gandi hosting for the account. Possible options to filter the list are : ``--attached`` to only show attached ips, ``--detached`` to only show detached ips, and ``--type`` (being in ``public`` or ``private``) to only show public or private ips. Possible options to get more details are : ``--version`` to get the ip version, ``--reverse`` to get the ip reverse, and ``--vm`` to get the attached vm if any.
+
+* ``gandi ip info`` show information about specific ip.
+
+* ``gandi ip attach`` attach an ip to a vm. It takes two parameters, ``ip`` the wanted ip, and ``vm`` the vm to attach, ``ip`` must exists if it's public, but can be a free and still non existing ip in case it's a private (in that case ``--vlan`` must be defined). If the ip is already attached, it will be detached from the previous vm before being attached to the given one. Possible options are ``--vlan`` to specify which private vlan should be used, ``--bandwidth`` to set the bandwidth in case a private ip is created, ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
+
+* ``gandi ip detach`` detach an ip from a vm. It only takes one parameter, the ``ip``. Possible options are ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
+
+* ``gandi ip delete`` delete an ip. If the ip is still attached, it will detach it before deleting it. Possible options are ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
 
 * ``gandi iface create`` create a new iface. Mandatory option is ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``. Possible options are ``--ip-version 4|6`` for version of created IP, ``--bandwidth INTEGER`` to set network bandwidth in bits/s to be used for this iface, ``--vlan TEXT`` to attach the newly create iface to an existing vlan, ``--vm TEXT`` to attach the newly create iface to an existing virtual machine instance.  The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
