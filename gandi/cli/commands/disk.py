@@ -187,13 +187,15 @@ def update(gandi, resource, cmdline, kernel, name, size,
                    ' without prompting. (default=False).')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='run command in background mode (default=False).')
-@click.argument('resource', required=True)
+@click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def delete(gandi, resource, force, background):
     """ Delete a disk. """
     output_keys = ['name', 'disk_id', 'state', 'date_creation']
+
     if not force:
-        proceed = click.confirm('Are you sure to delete disk %s?' % resource)
+        disk_info = "'%s'" % ', '.join(resource)
+        proceed = click.confirm('Are you sure to delete disk %s?' % disk_info)
 
         if not proceed:
             return
