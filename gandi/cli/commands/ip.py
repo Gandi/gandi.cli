@@ -113,7 +113,27 @@ def attach(gandi, ip, vm, vlan, bandwidth, background, force):
 
 
 @cli.command()
-@click.argument('ip')
+@option('--datacenter', type=DATACENTER, default='LU',
+        help='Datacenter where the ip will be created.')
+@option('--bandwidth', type=click.INT, default=102400,
+        help="Network bandwidth in bit/s used to create the VM's first "
+             "network interface.")
+@option('--ip-version', type=IntChoice(['4', '6']), default='4',
+        help='Version of created IP.')
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.argument('vm')
+@pass_gandi
+def create(gandi, vm, datacenter, bandwidth, ip_version, background):
+    """Create a public ip
+
+    vm can be a vm id or name.
+    """
+    return gandi.ip.create(ip_version, datacenter, bandwidth, vm, background)
+
+
+@cli.command()
+@click.argument('resource')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
