@@ -252,3 +252,13 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
         gandi.pretty_echo(result)
 
     return result
+
+@cli.command()
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.argument('resource', required=True)
+@pass_gandi
+def rollback(gandi, resource, background):
+    """ Rollback a disk from a snapshot. """
+    result = gandi.disk.rollback(resource, background)
+    return result

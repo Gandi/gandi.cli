@@ -244,3 +244,16 @@ class Disk(GandiModule):
 
         cls.echo('Attaching your disk.')
         cls.display_progress(result)
+
+    @classmethod
+    def rollback(cls, resource, background=False):
+        """ Rollback a disk from a snapshot. """
+        disk_id = cls.usable_id(resource)
+        result = cls.call('hosting.disk.rollback_from', disk_id)
+
+        if background:
+            return result
+
+        cls.echo('Disk rollback in progress.')
+        cls.display_progress(result)
+        return result
