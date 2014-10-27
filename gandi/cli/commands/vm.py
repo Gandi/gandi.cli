@@ -323,15 +323,16 @@ def console(gandi, resource):
 @click.option('--identity', '-i', default=None,
               help='Use specified path for ssh key')
 @click.argument('resource')
+@click.argument('args', nargs=-1)
 @pass_gandi
-def ssh(gandi, resource, login, identity, wipe_key):
+def ssh(gandi, resource, login, identity, wipe_key, args):
     """Spawn an SSH session to virtual machine.
 
     Resource can be a Hostname or an ID
     """
     if '@' in resource:
         (login, resource) = resource.split('@', 1)
-    gandi.iaas.ssh(resource, login, identity, wipe_key)
+    gandi.iaas.ssh(resource, login, identity, wipe_key, args)
 
 
 @cli.command()
