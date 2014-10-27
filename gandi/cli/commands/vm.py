@@ -38,7 +38,7 @@ def list(gandi, state, id, limit):
     return result
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def info(gandi, resource):
