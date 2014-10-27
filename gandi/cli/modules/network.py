@@ -113,7 +113,7 @@ class Ip(GandiModule):
             cls.error("Can't find this ip %s" % resource)
 
         iface = Iface.info(ip_['iface_id'])
-        return cls._detach(ip_, background, force)
+        return cls._detach(ip_, iface, background, force)
 
     @classmethod
     def delete(cls, resource, background=False, force=False):
