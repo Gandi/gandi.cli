@@ -55,7 +55,7 @@ def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
 
 
 @cli.command()
-@click.argument('resource')
+@click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def info(gandi, resource):
     """ Display information about a disk.
@@ -65,12 +65,17 @@ def info(gandi, resource):
     output_keys = ['name', 'state', 'size', 'type', 'id', 'dc', 'vm',
                    'profile']
 
-    disk = gandi.disk.info(resource)
     vms = dict([(vm['id'], vm) for vm in gandi.iaas.list()])
     datacenters = gandi.datacenter.list()
-    output_disk(gandi, disk, datacenters, vms, [], output_keys)
 
-    return disk
+    result = []
+    for item in resource:
+        gandi.separator_line()
+        disk = gandi.disk.info(item)
+        output_disk(gandi, disk, datacenters, vms, [], output_keys)
+        result.append(disk)
+
+    return result
 
 
 @compatcallback
