@@ -30,11 +30,10 @@ def list(gandi, state, id, limit):
     if id:
         output_keys.append('id')
 
-    datacenters = gandi.datacenter.list()
     result = gandi.iaas.list(options)
     for vm in result:
         gandi.separator_line()
-        output_vm(gandi, vm, datacenters, output_keys)
+        output_vm(gandi, vm, [], output_keys)
 
     return result
 
