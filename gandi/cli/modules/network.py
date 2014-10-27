@@ -68,6 +68,10 @@ class Ip(GandiModule):
                 iface = Iface.info(ip_['iface_id'])
 
             if iface.get('vm_id'):
+                if iface['vm_id'] == vm_['id']:
+                    cls.echo('This ip is already attached to this vm.')
+                    return
+
                 if not force:
                     proceed = click.confirm('Are you sure you want to detach'
                                             ' %s from vm %s' %
