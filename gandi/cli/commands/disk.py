@@ -67,7 +67,8 @@ def info(gandi, resource):
 
     disk = gandi.disk.info(resource)
     vms = dict([(vm['id'], vm) for vm in gandi.iaas.list()])
-    output_disk(gandi, disk, [], vms, [], output_keys)
+    datacenters = gandi.datacenter.list()
+    output_disk(gandi, disk, datacenters, vms, [], output_keys)
 
     return disk
 
