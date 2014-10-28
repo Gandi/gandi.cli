@@ -258,7 +258,8 @@ class Iaas(GandiModule, SshkeyHelper):
 
         if vm_id:
             time.sleep(5)
-            cls.ssh(oper['vm_id'], login='root', identity=None, wipe_key=True)
+            cls.ssh_keyscan(oper['vm_id'])
+            cls.ssh(oper['vm_id'], login='root', identity=None)
 
     @classmethod
     def from_hostname(cls, hostname):
@@ -298,7 +299,18 @@ class Iaas(GandiModule, SshkeyHelper):
                 return ip['version'], ip['ip']
 
     @classmethod
-    def ssh(cls, vm_id, login, identity, wipe_key=False):
+    def ssh_keyscan(cls, vm_id):
+        """Wipe this old key and learn the new one from a freshly
+        created vm. This is a security risk for this VM, however
+        we dont have another way to learn the key yet, so do this
+        for the user."""
+        cls.echo('Wiping old key and learning the new one')
+        version, ip_addr = cls.vm_ip(vm_id)
+        cls.execute('ssh-keygen -R "%s"' % ip_addr)
+        cls.execute('ssh-keyscan "%s" >> ~/.ssh/known_hosts' % ip_addr)
+
+    @classmethod
+    def ssh(cls, vm_id, login, identity):
         """Spawn an ssh session to virtual machine."""
         cmd = ['ssh']
         if identity:
@@ -311,11 +323,6 @@ class Iaas(GandiModule, SshkeyHelper):
         cmd.append('%s@%s' % (login, ip_addr,))
 
         cls.echo('Requesting access using: %s ...' % ' '.join(cmd))
-        # XXX: we must remove ssh key entry in case we use the same ip
-        # as it's recyclable
-        if wipe_key:
-            cls.execute('ssh-keygen -R "%s"' % ip_addr)
-
         cls.execute(cmd, False)
 
     @classmethod

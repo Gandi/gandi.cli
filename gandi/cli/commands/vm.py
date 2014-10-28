@@ -331,7 +331,9 @@ def ssh(gandi, resource, login, identity, wipe_key):
     """
     if '@' in resource:
         (login, resource) = resource.split('@', 1)
-    gandi.iaas.ssh(resource, login, identity, wipe_key)
+    if wipe_key:
+        gandi.iaas.ssh_keyscan(resource)
+    gandi.iaas.ssh(resource, login, identity)
 
 
 @cli.command()
