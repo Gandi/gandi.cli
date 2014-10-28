@@ -288,21 +288,25 @@ class Iaas(GandiModule, SshkeyHelper):
         return qry_id
 
     @classmethod
-    def ssh(cls, vm_id, login, identity, wipe_key=False):
-        """Spawn an ssh session to virtual machine."""
+    def vm_ip(cls, vm_id):
+        """Return the first usable ip address for this vm.
+        Returns a (version, ip) tuple."""
         vm_info = cls.info(vm_id)
 
+        for iface in vm_info['ifaces']:
+            for ip in iface['ips']:
+                return ip['version'], ip['ip']
+
+    @classmethod
+    def ssh(cls, vm_id, login, identity, wipe_key=False):
+        """Spawn an ssh session to virtual machine."""
         cmd = ['ssh']
         if identity:
             cmd.extend(('-i', identity,))
 
-        for iface in vm_info['ifaces']:
-            for ip in iface['ips']:
-                ip_addr = ip['ip']
-                if ip['version'] == 6:
-                    cmd.append('-6')
-                # stop on first access found
-                break
+        version, ip_addr = cls.vm_ip(vm_id)
+        if version == 6:
+            cmd.append('-6')
 
         cmd.append('%s@%s' % (login, ip_addr,))
 
