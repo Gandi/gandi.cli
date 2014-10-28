@@ -64,13 +64,14 @@ Namespaces:
 *  config                  Configure default values.
 *  datacenters             List available datacenters.
 *  deploy                  Deploy code on a remote vhost.
+*  disk attach             Attach a disk to a vm.
 *  disk create             Create a new disk.
 *  disk delete             Delete a disk.
+*  disk detach             Detach a disk from a vm.
 *  disk info               Display information about a disk.
 *  disk list               List disks.
+*  disk rollback           Rollback a disk from a snapshot.
 *  disk update             Update a disk.
-*  disk attach             Attach a disk to a vm.
-*  disk detach             Detach a disk from a vm.
 *  docker                  Manage docker instances.
 *  domain create           Buy a domain.
 *  domain info             Display information about a domain.
@@ -161,6 +162,8 @@ Details:
 * ``gandi disk attach disk vm`` attach the given disk to the given vm, if the disk is currently attached, it will start by detaching it. Possible option is ``--force`` to skip all questions about detaching and attaching. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi disk detach disk`` detach the disk from the vm it is currently attached. Possible option is ``--force`` to skip all questions about detaching. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+
+* ``gandi disk rollback resource`` will rollback a disk from a snapshot. This modification can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi docker`` will setup ssh forwarding towards a gandi VM, remotely feeding a docker unix socket. This, for example, can be used for zeroconf access to scripted temporary build VMs. The ``--vm`` option alters the ``dockervm`` configuration parameter and can be used to set the VM used for future docker connections. ``dockervm`` can also be set locally for per-project vms (See ``gandi config``). *NOTE*: passing option parameters to docker require the usage of the POSIX argument parsing ``--`` separator. *NOTE*: a local docker client is required for this command to operate.
 
