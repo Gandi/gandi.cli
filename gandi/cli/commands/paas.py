@@ -47,7 +47,7 @@ def list(gandi, state, id, vhosts, type, limit):
     return result
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.argument('resource')
 @pass_gandi
 def info(gandi, resource):
@@ -69,7 +69,7 @@ def info(gandi, resource):
     return paas
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.argument('vhost', required=False)
 @pass_gandi
 def clone(gandi, vhost):
@@ -85,7 +85,7 @@ def clone(gandi, vhost):
         gandi.execute('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
 
 
-@cli.command(root=True, options_metavar='')
+@cli.command(root=True)
 @click.argument('vhost', required=False)
 @pass_gandi
 def deploy(gandi, vhost):
@@ -281,7 +281,7 @@ def restart(gandi, resource, background, force):
     return opers
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @pass_gandi
 def types(gandi):
     """List types PaaS instances."""

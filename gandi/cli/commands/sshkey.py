@@ -81,7 +81,7 @@ def create(gandi, name, value=None, filename=None):
     return output_sshkey(gandi, ret, output_keys)
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def delete(gandi, resource):

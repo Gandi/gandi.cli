@@ -300,7 +300,7 @@ def update(gandi, resource, memory, cores, console, password, background,
     return result
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.argument('resource')
 @pass_gandi
 def console(gandi, resource):

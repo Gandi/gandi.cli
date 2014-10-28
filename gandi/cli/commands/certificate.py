@@ -9,7 +9,7 @@ from gandi.cli.core.params import (pass_gandi, IntChoice,
                                    CERTIFICATE_PACKAGE, CERTIFICATE_DCV_METHOD)
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @pass_gandi
 def packages(gandi):
     """ List certificate packages. """

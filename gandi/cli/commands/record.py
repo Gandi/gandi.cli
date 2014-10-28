@@ -9,7 +9,7 @@ from gandi.cli.core.utils import (
 from gandi.cli.core.params import pass_gandi, StringConstraint
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.option('--zone-id', '-z', default=None, type=click.INT,
               help='Zone ID to use, if not set default zone will be used.')
 @click.argument('domain', required=True)
@@ -35,7 +35,7 @@ def list(gandi, domain, zone_id):
     return records
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.option('--zone-id', '-z', default=None, type=click.INT,
               help='Zone ID to use, if not set, default zone will be used.')
 @click.option('--name', default=None, required=True,
