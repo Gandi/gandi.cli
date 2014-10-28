@@ -310,6 +310,21 @@ class Iaas(GandiModule, SshkeyHelper):
         cls.execute('ssh-keyscan "%s" >> ~/.ssh/known_hosts' % ip_addr)
 
     @classmethod
+    def scp(cls, vm_id, login, identity, local_file, remote_file):
+        """Copy file to remote VM."""
+        cmd = ['scp']
+        if identity:
+            cmd.extend(('-i', identity,))
+
+        version, ip_addr = cls.vm_ip(vm_id)
+        if version == 6:
+            ip_addr = '[%s]' % ip_addr
+
+        cmd.extend(local_file, '%s@%s:%s' % 
+                   (login, ip_addr, remote_file))
+        cls.execute(cmd)
+
+    @classmethod
     def ssh(cls, vm_id, login, identity):
         """Spawn an ssh session to virtual machine."""
         cmd = ['ssh']
