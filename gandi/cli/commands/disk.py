@@ -233,7 +233,7 @@ def delete(gandi, resource, force, background):
               help='Run command in background mode (default=False).')
 @pass_gandi
 def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
-        background):
+           background):
     """ Create a new disk. """
     try:
         snapshotprofile = int(snapshotprofile) if snapshotprofile else None
@@ -252,6 +252,7 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
         gandi.pretty_echo(result)
 
     return result
+
 
 @cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
