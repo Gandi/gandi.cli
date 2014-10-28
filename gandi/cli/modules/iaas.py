@@ -325,7 +325,7 @@ class Iaas(GandiModule, SshkeyHelper):
         cls.execute(cmd)
 
     @classmethod
-    def ssh(cls, vm_id, login, identity):
+    def ssh(cls, vm_id, login, identity, wipe_key=False, args=None):
         """Spawn an ssh session to virtual machine."""
         cmd = ['ssh']
         if identity:
@@ -336,6 +336,9 @@ class Iaas(GandiModule, SshkeyHelper):
             cmd.append('-6')
 
         cmd.append('%s@%s' % (login, ip_addr,))
+
+        if args:
+            cmd.extend(args)
 
         cls.echo('Requesting access using: %s ...' % ' '.join(cmd))
         cls.execute(cmd, False)
