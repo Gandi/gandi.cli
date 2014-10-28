@@ -186,7 +186,7 @@ class Iaas(GandiModule, SshkeyHelper):
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
                login, password, hostname, image, run, background, sshkey,
-               size):
+               size, script):
         """Create a new virtual machine."""
         if not background and not cls.intty():
             background = True
@@ -259,7 +259,11 @@ class Iaas(GandiModule, SshkeyHelper):
         if vm_id:
             time.sleep(5)
             cls.ssh_keyscan(oper['vm_id'])
-            cls.ssh(oper['vm_id'], login='root', identity=None)
+            if script:
+                cls.scp(oper['vm_id'], 'root', None,
+                        script, '/var/tmp/gscript')
+            cls.ssh(oper['vm_id'], 'root', None, 
+                    script and ['/var/tmp/gscript'])
 
     @classmethod
     def from_hostname(cls, hostname):
@@ -320,12 +324,13 @@ class Iaas(GandiModule, SshkeyHelper):
         if version == 6:
             ip_addr = '[%s]' % ip_addr
 
-        cmd.extend(local_file, '%s@%s:%s' % 
-                   (login, ip_addr, remote_file))
-        cls.execute(cmd)
+        cmd.extend((local_file, '%s@%s:%s' % 
+                   (login, ip_addr, remote_file),))
+        cls.echo('Running %s' % ' '.join(cmd))
+        cls.execute(cmd, False)
 
     @classmethod
-    def ssh(cls, vm_id, login, identity, wipe_key=False, args=None):
+    def ssh(cls, vm_id, login, identity, args=None):
         """Spawn an ssh session to virtual machine."""
         cmd = ['ssh']
         if identity:
