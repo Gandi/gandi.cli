@@ -30,9 +30,10 @@ def list(gandi, limit, id, names):
         paas_names = gandi.paas.list_names()
 
     result = gandi.vhost.list(options)
-    for vhost in result:
+    for num, vhost in enumerate(result):
         paas = paas_names.get(vhost['paas_id'])
-        gandi.separator_line()
+        if num:
+            gandi.separator_line()
         output_vhost(gandi, vhost, paas, output_keys)
 
     return result
@@ -57,10 +58,11 @@ def info(gandi, resource, id):
 
     ret = []
     paas = None
-    for item in resource:
+    for num, item in enumerate(resource):
         vhost = gandi.vhost.info(item)
         paas = paas_names.get(vhost['paas_id'])
-        gandi.separator_line()
+        if num:
+            gandi.separator_line()
         ret.append(output_vhost(gandi, vhost, paas, output_keys))
 
     return ret

@@ -28,8 +28,9 @@ def list(gandi, domain, zone_id):
         return
 
     records = gandi.record.list(zone_id)
-    for rec in records:
-        gandi.separator_line()
+    for num, rec in enumerate(records):
+        if num:
+            gandi.separator_line()
         output_generic(gandi, rec, output_keys, justify=12)
 
     return records

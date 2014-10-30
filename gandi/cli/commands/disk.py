@@ -47,8 +47,9 @@ def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
     result = gandi.disk.list(options)
     vms = dict([(vm_['id'], vm_) for vm_ in gandi.iaas.list()])
 
-    for disk in result:
-        gandi.separator_line()
+    for num, disk in enumerate(result):
+        if num:
+            gandi.separator_line()
         output_disk(gandi, disk, [], vms, profiles, output_keys)
 
     return result
@@ -69,8 +70,9 @@ def info(gandi, resource):
     datacenters = gandi.datacenter.list()
 
     result = []
-    for item in resource:
-        gandi.separator_line()
+    for num, item in enumerate(resource):
+        if num:
+            gandi.separator_line()
         disk = gandi.disk.info(item)
         output_disk(gandi, disk, datacenters, vms, [], output_keys)
         result.append(disk)

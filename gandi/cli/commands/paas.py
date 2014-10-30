@@ -33,14 +33,15 @@ def list(gandi, state, id, vhosts, type, limit):
 
     paas_hosts = {}
     result = gandi.paas.list(options)
-    for paas in result:
+    for num, paas in enumerate(result):
         paas_hosts[paas['id']] = []
         if vhosts:
             list_vhost = gandi.vhost.list({'paas_id': paas['id']})
             for host in list_vhost:
                 paas_hosts[paas['id']].append(host['name'])
 
-        gandi.separator_line()
+        if num:
+            gandi.separator_line()
         output_paas(gandi, paas, [], paas_hosts[paas['id']],
                     output_keys)
 

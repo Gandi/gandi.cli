@@ -31,8 +31,9 @@ def list(gandi, state, id, limit):
         output_keys.append('id')
 
     result = gandi.iaas.list(options)
-    for vm in result:
-        gandi.separator_line()
+    for num, vm in enumerate(result):
+        if num:
+            gandi.separator_line()
         output_vm(gandi, vm, [], output_keys)
 
     return result
@@ -51,8 +52,9 @@ def info(gandi, resource):
 
     datacenters = gandi.datacenter.list()
     ret = []
-    for item in resource:
-        gandi.separator_line()
+    for num, item in enumerate(resource):
+        if num:
+            gandi.separator_line()
         vm = gandi.iaas.info(item)
         output_vm(gandi, vm, datacenters, output_keys, 14)
         ret.append(vm)
@@ -358,8 +360,9 @@ def images(gandi, label, datacenter):
 
     datacenters = gandi.datacenter.list()
     result = gandi.image.list(datacenter, label)
-    for image in result:
-        gandi.separator_line()
+    for num, image in enumerate(result):
+        if num:
+            gandi.separator_line()
         output_image(gandi, image, datacenters, output_keys)
 
     # also display usable disks
@@ -388,8 +391,9 @@ def kernels(gandi, vm, datacenter, flavor, match):
 
     dc_list = gandi.datacenter.filtered_list(datacenter, vm)
 
-    for dc in dc_list:
-        gandi.echo('\n')
+    for num, dc in enumerate(dc_list):
+        if num:
+            gandi.echo('\n')
         output_datacenter(gandi, dc)
         kmap = gandi.kernel.list(dc['id'], flavor, match)
         for _flavor in kmap:
@@ -407,8 +411,9 @@ def datacenters(gandi, id):
         output_keys.append('id')
 
     result = gandi.datacenter.list()
-    for dc in result:
-        gandi.separator_line()
+    for num, dc in enumerate(result):
+        if num:
+            gandi.separator_line()
         output_generic(gandi, dc, output_keys)
 
     return result

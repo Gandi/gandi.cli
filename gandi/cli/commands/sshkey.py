@@ -25,8 +25,9 @@ def list(gandi, id, limit):
         output_keys.append('id')
 
     result = gandi.sshkey.list(options)
-    for sshkey in result:
-        gandi.separator_line()
+    for num, sshkey in enumerate(result):
+        if num:
+            gandi.separator_line()
         output_sshkey(gandi, sshkey, output_keys)
 
     return result
