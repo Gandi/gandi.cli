@@ -58,8 +58,8 @@ def info(gandi, resource):
         vm = gandi.iaas.info(item)
         output_vm(gandi, vm, datacenters, output_keys, 14)
         ret.append(vm)
-        for disk in vm['disks']:
-            gandi.separator_line()
+        for num, disk in enumerate(vm['disks']):
+            gandi.echo('')
             disk_out_keys = ['label', 'kernel_version', 'name', 'size']
             output_image(gandi, disk, datacenters, disk_out_keys, 14)
 
