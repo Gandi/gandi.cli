@@ -26,7 +26,7 @@ class GandiConfig(object):
     """
 
     _conffiles = {}
-    home_config = os.environ.get('GANDI_CONFIG', 
+    home_config = os.environ.get('GANDI_CONFIG',
                                  '~/.config/gandi/config.yaml')
     local_config = '.gandi.config.yaml'
 
