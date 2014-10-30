@@ -240,7 +240,7 @@ Details:
 
 * ``gandi vm info resource`` show details of a specific operation.
 
-* ``gandi vm ssh resource`` open a ssh connection on the virtual machine and give you a shell access. The ``-i TEXT`` option (or ``--identity TEXT``) refers to a local ssh key, as used in the ssh command. The ``-l TEXT``, ``--login TEXT`` or ``user@host`` form specifies remote username in the same way. Using ``--wipe-key``, previous entry for that host is discarded from the known_hosts file first.
+* ``gandi vm ssh resource [args]`` open a ssh connection on the virtual machine and give you a shell access. The ``-i TEXT`` option (or ``--identity TEXT``) refers to a local ssh key, as used in the ssh command. The ``-l TEXT``, ``--login TEXT`` or ``user@host`` form specifies remote username in the same way. Using ``--wipe-key``, previous entry for that host is discarded from the known_hosts file first. You can add arguments (be sure to prefix options with the POSIX argument parsing ``--`` separator) and commands to ssh, as used in the ssh command.
 
 * ``gandi vm start resource`` allow to start a virtual machine (a resource can either be a hostname as defined in the creation process or the id of the virtual machine). This operation can be done as background process using the option ``--background`` (or ``--bg``).
 
@@ -251,10 +251,15 @@ Details:
 * ``gandi vm update resource`` allow to change the quantity of memory (using ``--memory INTEGER``), the number of virtual CPU (using ``--cores INTEGER``), enable the virtual console which allow to get a shell to the virtual machine even without network interfaces on the virtual machine (using ``--console``) or change the root password (using ``--password``). All these modification can be done as background process using the option ``--background`` (or ``--bg``). *NOTE*: Because of the cost of page table setup, a maximum memory limit has to be given for some kernels, limiting dynamic updates. You cannot online resize a VM memory crossing this value, and the ``--reboot`` option allows you to acknowledge the required reboot.
 
 
+ENVIRONMENT
+===========
+
+The GANDI_CONFIG environment variable can be used to override the global configuration file.
+
 FILES
 =====
 
-Configuration file is $HOME/.config/gandi/config.yaml
+Configuration file is $HOME/.config/gandi/config.yaml, overriden by the GANDI_CONFIG environment variable as described above.
 
 AUTHORS
 =======
