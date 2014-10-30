@@ -176,6 +176,8 @@ class Disk(GandiModule):
         cls.echo('Deleting your disk.')
         cls.display_progress(opers)
 
+        return opers
+
     @classmethod
     def _attach(cls, disk_id, vm_id):
         """ Attach a disk to a vm. """
