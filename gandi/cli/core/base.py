@@ -59,11 +59,18 @@ class GandiModule(GandiConfig):
     @classmethod
     def call(cls, method, *args, **kwargs):
         """ Call a remote api method and return the result."""
+        empty_key = kwargs.pop('empty_key', False)
         try:
             api = cls.get_api_connector()
             apikey = cls.get('api.key')
+            if not apikey and not empty_key:
+                cls.echo("No apikey found, please use 'gandi setup' "
+                         "command")
+                sys.exit(1)
         except MissingConfiguration:
-            if not kwargs.get('safe'):
+            if api and empty_key:
+                apikey = ''
+            elif not kwargs.get('safe'):
                 cls.echo("No configuration found, please use 'gandi setup' "
                          "command")
                 sys.exit(1)
