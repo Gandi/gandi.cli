@@ -75,7 +75,7 @@ class GandiModule(GandiConfig):
         for arg in args:
             cls.debug('with params: %r' % arg)
         try:
-            return api.request(apikey, method, *args,
+            return api.request(method, apikey, *args,
                                **{'dry_run': kwargs.get('dry_run', False)})
         except APICallFailed as err:
             if kwargs.get('safe'):
