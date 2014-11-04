@@ -62,6 +62,7 @@ Namespaces:
 *  certificate resend-dcv  Resend the DCV mail for a pending certificate.
 *  certificate update      Update a certificate CSR.
 *  config                  Configure default values.
+*  contact create          Create a new contact in interactive mode.
 *  datacenters             List available datacenters.
 *  deploy                  Deploy code on a remote vhost.
 *  disk attach             Attach a disk to a vm.
@@ -144,6 +145,8 @@ Details:
 * ``certificate update resource`` modify the options of a certificate. Possible options are ``--csr TEXT``, ``--private-key TEXT`` could be either the content of a certificate request and a private key or a path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``--organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--altnames LIST`` to change all the alternative names (comma separated text without space), ``--dcv-method TEXT`` with domain validation process method in email, dns, file, auto. Note that a resource can be a CN entry or an integer id.
 
 * ``gandi config key value`` configure value in the configuration file. With no option, configuration setting is stored in the local directory, which makes it suitable for code repositories. Using the ``-g`` flag, the change is stored in the global configuration file.
+
+* ``gandi contact create`` create a new contact in interactive mode.
 
 * ``gandi datacenters`` list all the datacenters of the Gandi.net platform. Possible option is ``--id`` to obtain the id of the datacenter. Most of the time you will be able to use the datacenter name as parameter to the methods.
 
