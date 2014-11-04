@@ -1,6 +1,7 @@
 """ VM commands module. """
 
 import math
+import socket
 import time
 
 from gandi.cli.core.base import GandiModule
@@ -257,7 +258,7 @@ class Iaas(GandiModule, SshkeyHelper):
                 break
 
         if vm_id:
-            time.sleep(5)
+            cls.wait_for_sshd(oper['vm_id'])
             cls.ssh_keyscan(oper['vm_id'])
             if script:
                 cls.scp(oper['vm_id'], 'root', None,
@@ -301,6 +302,25 @@ class Iaas(GandiModule, SshkeyHelper):
         for iface in vm_info['ifaces']:
             for ip in iface['ips']:
                 return ip['version'], ip['ip']
+
+    @classmethod
+    def wait_for_sshd(cls, vm_id):
+        """Insist on having the vm booted and sshd
+        listening"""
+        cls.echo('Waiting for the vm to come online')
+        version, ip_addr = cls.vm_ip(vm_id)
+        give_up = time.time() + 120
+        while time.time() < give_up:
+            try:
+                sd = socket.socket(socket.AF_INET, socket.SOCK_STREAM,
+                                   socket.IPPROTO_TCP)
+                sd.settimeout(5)
+                sd.connect((ip_addr, 22))
+                buf = sd.recv(1024)
+                return
+            except Exception, e:
+                pass
+        raise Exception('VM did not spin up')
 
     @classmethod
     def ssh_keyscan(cls, vm_id):
