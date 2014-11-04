@@ -51,6 +51,9 @@ class XMLRPCClient(object):
     def request(self, method, apikey, *args, **kwargs):
         """ Make a xml-rpc call to remote API. """
         dry_run = kwargs.get('dry_run', False)
+        return_dry_run = kwargs.get('return_dry_run', False)
+        if return_dry_run:
+            args[-1]['--dry-run'] = True
 
         try:
             func = getattr(self.endpoint, method)

@@ -83,7 +83,9 @@ class GandiModule(GandiConfig):
             cls.debug('with params: %r' % arg)
         try:
             return api.request(method, apikey, *args,
-                               **{'dry_run': kwargs.get('dry_run', False)})
+                               **{'dry_run': kwargs.get('dry_run', False),
+                                  'return_dry_run':
+                                        kwargs.get('return_dry_run', False)})
         except APICallFailed as err:
             if kwargs.get('safe'):
                 return []
@@ -91,11 +93,14 @@ class GandiModule(GandiConfig):
                 cls.echo("Invalid API key, please use 'gandi setup' command.")
                 sys.exit(1)
             if isinstance(err, DryRunException):
-                for msg in err.dry_run:
-                    # TODO use trads with %s
-                    cls.echo(msg['reason'])
-                    cls.echo('\t' + ' '.join(msg['attr']))
-                sys.exit(1)
+                if kwargs.get('return_dry_run', False):
+                    return err.dry_run
+                else:
+                    for msg in err.dry_run:
+                        # TODO use trads with %s
+                        cls.echo(msg['reason'])
+                        cls.echo('\t' + ' '.join(msg['attr']))
+                    sys.exit(1)
             error = UsageError(err.errors)
             setattr(error, 'code', err.code)
             raise error
