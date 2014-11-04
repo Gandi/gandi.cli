@@ -379,14 +379,7 @@ class Iaas(GandiModule, SshkeyHelper):
         # now we can connect
         # retrieve ip of vm
         vm_info = cls.info(id)
-        for iface in vm_info['ifaces']:
-            for ip in iface['ips']:
-                if ip['version'] == 4:
-                    ip_addr = ip['ip']
-                else:
-                    ip_addr = ip['ip']
-                # stop on first access found
-                break
+        version, ip_addr = cls.vm_ip(id)
 
         console_url = vm_info.get('console_url', 'console.gandi.net')
         access = 'ssh %s@%s' % (ip_addr, console_url)
