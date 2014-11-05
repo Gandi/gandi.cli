@@ -1,3 +1,38 @@
+gandicli (0.11) unstable; urgency=medium
+
+  * New command 'gandi disk detach' to detach disks from
+  currently attached vm.
+  * New command 'gandi disk attach' to attach disk to a
+    vm.
+  * New command 'gandi disk rollback' to perform a rollback
+    from a snapshot.
+  * New parameter --source for command 'gandi disk create'
+    to allow creation of a new disk from an existing disk
+    or snapshot.
+  * New parameter --script for command 'gandi vm create'
+    to allow upload of a local script on freshly created vm
+    to be run after creation is completed.
+  * Update parameter --size of 'gandi disk create/update'
+    command to accept optionnal suffix: M,G,T (from megabytes
+    up to terabytes).
+  * Update command 'gandi vm ssh' to accept args to be passed
+    to launched ssh command.
+  * Fixes bug with 'gandi vm create' command and image
+    parameter, which failed when having more than 100 disks
+    in account.
+  * Fixes bug with 'gandi paas info' command to display
+    ftp_server url.
+  * Fixes bug with 'gandi record list' command when requesting
+    a domain not managed at Gandi.
+  * Rename --sshkey parameter of 'gandi sshkey create' command
+    to --filename.
+  * Prettify output of list/info commands.
+  * GANDI_CONFIG environment variable can be used to override
+    the global configuration file.
+  * Bump click requirement version to <= 4.
+
+ -- Dejan Filipovic <sayoun@gandi.net>  Wed, 05 Nov 2014 10:24:11 +0100
+
 gandicli (0.10) unstable; urgency=medium
 
   * Add new dependency to request library, for certificate
