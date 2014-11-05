@@ -312,7 +312,10 @@ class Iaas(GandiModule, SshkeyHelper):
         give_up = time.time() + 120
         while time.time() < give_up:
             try:
-                sd = socket.socket(socket.AF_INET, socket.SOCK_STREAM,
+                inet = socket.AF_INET
+                if version == 6:
+                    inet = socket.AF_INET6
+                sd = socket.socket(inet, socket.SOCK_STREAM,
                                    socket.IPPROTO_TCP)
                 sd.settimeout(5)
                 sd.connect((ip_addr, 22))
