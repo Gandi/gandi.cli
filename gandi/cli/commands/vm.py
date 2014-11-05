@@ -211,9 +211,12 @@ def delete(gandi, background, force, resource):
         help='Authorize ssh authentication for the given ssh key.')
 @click.option('--size', type=click.INT, default=None,
               help="System disk size in MiB.")
+@click.option('--script', default=None,
+              help='Local script to upload and run on the VM after creation.'
+                   'Instead of spawning an ssh session')
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
-           password, hostname, image, run, background, sshkey, size):
+           password, hostname, image, run, background, sshkey, size, script):
     """Create a new virtual machine.
 
     you can specify a configuration entry named 'sshkey' containing
@@ -251,7 +254,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                                bandwidth, login, pwd, hostname,
                                image, run,
                                background,
-                               sshkey, size)
+                               sshkey, size, script)
     if background:
         gandi.pretty_echo(result)
 
@@ -335,7 +338,9 @@ def ssh(gandi, resource, login, identity, wipe_key, args):
     """
     if '@' in resource:
         (login, resource) = resource.split('@', 1)
-    gandi.iaas.ssh(resource, login, identity, wipe_key, args)
+    if wipe_key:
+        gandi.iaas.ssh_keyscan(resource)
+    gandi.iaas.ssh(resource, login, identity, args)
 
 
 @cli.command()
