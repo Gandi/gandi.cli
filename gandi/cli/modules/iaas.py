@@ -320,7 +320,7 @@ class Iaas(GandiModule, SshkeyHelper):
                 return
             except Exception:
                 pass
-        raise Exception('VM did not spin up')
+        cls.error('VM did not spin up')
 
     @classmethod
     def ssh_keyscan(cls, vm_id):
