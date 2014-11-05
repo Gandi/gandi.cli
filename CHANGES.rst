@@ -1,6 +1,25 @@
 Changelog
 =========
 
+
+0.11
+----
+
+* New command 'gandi disk detach' to detach disks from
+  currently attached vm.
+* New command 'gandi disk attach' to attach disk to a
+  vm.
+* New command 'gandi disk rollback' to perform a rollback
+  from a snapshot.
+* New parameter --source for command 'gandi disk create'
+  to allow creation of a new disk from an existing disk
+  or snapshot.
+* Fixes bug with 'gandi vm create' command and image
+  parameter, which failed when having more than 100 disks
+  in account.
+* Prettify output of list/info commands.
+
+
 0.10
 ----
 
