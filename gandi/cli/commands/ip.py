@@ -118,18 +118,34 @@ def attach(gandi, ip, vm, vlan, bandwidth, background, force):
 @option('--bandwidth', type=click.INT, default=102400,
         help="Network bandwidth in bit/s used to create the VM's first "
              "network interface.")
-@option('--ip-version', type=IntChoice(['4', '6']), default='4',
+@option('--ip-version', type=IntChoice(['4', '6']), default=4,
         help='Version of created IP.')
+@click.option('--vlan', help='The vlan to which attach this ip if any.')
+@click.option('--ip', help='The ip if you try to create a private ip.')
+@click.option('--attach', help='The vm you want to attach if any.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
-@click.argument('vm')
 @pass_gandi
-def create(gandi, vm, datacenter, bandwidth, ip_version, background):
-    """Create a public ip
-
-    vm can be a vm id or name.
+def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
+           background):
+    """Create a public or private ip
     """
-    return gandi.ip.create(ip_version, datacenter, bandwidth, vm, background)
+    if ip_version != 4 and vlan:
+        click.echo('You must have an --ip-version to 4 when having a vlan.')
+        return
+
+    vm_ = gandi.iaas.info(attach) if attach else None
+
+    if not datacenter:
+        if vm_:
+            datacenter = vm_['datacenter_id']
+        else:
+            click.echo('The vm you want to attach is not in %s datacenter.'
+                       % datacenter)
+            return
+
+    return gandi.ip.create(ip_version, datacenter, bandwidth, attach,
+                           vlan, ip, background)
 
 
 @cli.command()

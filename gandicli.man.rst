@@ -79,7 +79,7 @@ Namespaces:
 *  help                    Display help for a command.
 *  ip list                 List all ips.
 *  ip info                 Display information about an ip.
-*  ip create               Create a new public ip.
+*  ip create               Create a new ip.
 *  ip attach               Attach an ip to a vm.
 *  ip detach               Detach an ip from a vm.
 *  ip delete               Delete an ip.
@@ -190,7 +190,7 @@ Details:
 
 * ``gandi ip info`` show information about specific ip.
 
-* ``gandi ip create`` create new public ip. Possible options are ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``, ``--ip-version 4|6`` for version of created IP, ``--bandwidth INTEGER`` to set network bandwidth in bits/s on first network interface created, ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
+* ``gandi ip create`` create new ip. Possible options are ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters`` if ``--attach`` is specified this option is useless, ``--ip-version 4|6`` for version of created IP, ``--bandwidth INTEGER`` to set network bandwidth in bits/s on first network interface created, ``--vlan`` to specify which private vlan should be used, ``--ip`` to specify an ip in the vlan, ``--attach`` to attach this new ip to a vm, and ``--background`` (or ``--bg``) to process in background.
 
 * ``gandi ip attach`` attach an ip to a vm. It takes two parameters, ``ip`` the wanted ip, and ``vm`` the vm to attach, ``ip`` must exists if it's public, but can be a free and still non existing ip in case it's a private (in that case ``--vlan`` must be defined). If the ip is already attached, it will be detached from the previous vm before being attached to the given one. Possible options are ``--vlan`` to specify which private vlan should be used, ``--bandwidth`` to set the bandwidth in case a private ip is created, ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
 

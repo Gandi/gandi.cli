@@ -37,10 +37,10 @@ class Ip(GandiModule):
         return cls._info(cls.usable_id(resource))
 
     @classmethod
-    def create(cls, ip_version, datacenter, bandwidth, vm=None,
-               background=False):
+    def create(cls, ip_version, datacenter, bandwidth, vm=None, vlan=None,
+               ip=None, background=False):
         """ Create a public ip and attach it if vm is given. """
-        return Iface.create(ip_version, datacenter, bandwidth, None, vm, None,
+        return Iface.create(ip_version, datacenter, bandwidth, vlan, vm, ip,
                             background)
 
     @classmethod
