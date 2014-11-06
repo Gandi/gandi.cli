@@ -93,23 +93,19 @@ def info(gandi, resource):
 @cli.command()
 @click.argument('ip')
 @click.argument('vm')
-@click.option('--vlan', default=None, help='A vlan to use for private ip.')
-@option('--bandwidth', type=click.INT, default=102400,
-        help="Network bandwidth in bit/s used to create the VM's first "
-             "network interface.")
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')
 @pass_gandi
-def attach(gandi, ip, vm, vlan, bandwidth, background, force):
+def attach(gandi, ip, vm, background, force):
     """Attach an ip to a vm.
 
     ip can be an ip id or ip
     vm can be a vm id or name.
     """
-    return gandi.ip.attach(ip, vm, vlan, bandwidth, background, force)
+    return gandi.ip.attach(ip, vm, background, force)
 
 
 @cli.command()

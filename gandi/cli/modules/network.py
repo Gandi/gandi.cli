@@ -44,62 +44,35 @@ class Ip(GandiModule):
                             background)
 
     @classmethod
-    def attach(cls, ip, vm, vlan, bandwidth, background=False, force=False):
+    def attach(cls, ip, vm, background=False, force=False):
         """ Attach """
-        ip_ = None
-        iface = None
-        vlan_ = None
-        try:
-            ip_ = cls.info(ip)
-        except UsageError as err:
-            pass
-
-        # if public ip asked and it does not exists
-        if not ip_ and not vlan:
-            msg = 'public ip must already exists (%s)' % ip
-            cls.error(msg)
-
+        ip_ = cls.info(ip)
         vm_ = Iaas.info(vm)
 
-        if ip_ and vlan:
-            iface = Iface.info(ip_['iface_id'])
-            vlan_ = Vlan.info(vlan)
+        # if the ip exists and is attached, we have to detach it
+        iface = Iface.info(ip_['iface_id'])
 
-            # we want an ip in another vlan, the found one is not the good one
-            if iface['vlan_id'] != vlan_['id']:
-                ip_ = None
+        if iface.get('vm_id'):
+            if iface['vm_id'] == vm_['id']:
+                cls.echo('This ip is already attached to this vm.')
+                return
 
-        if ip_:
-            # if the ip exists and is attached, we have to detach it
-            if not iface:
-                iface = Iface.info(ip_['iface_id'])
-
-            if iface.get('vm_id'):
-                if iface['vm_id'] == vm_['id']:
-                    cls.echo('This ip is already attached to this vm.')
+            if not force:
+                proceed = click.confirm('Are you sure you want to detach'
+                                        ' %s from vm %s' %
+                                        (ip, iface['vm_id']))
+                if not proceed:
                     return
 
-                if not force:
-                    proceed = click.confirm('Are you sure you want to detach'
-                                            ' %s from vm %s' %
-                                            (ip, iface['vm_id']))
-                    if not proceed:
-                        return
+            detach = Iface._detach(iface['id'])
+            cls.display_progress(detach)
 
-                detach = Iface._detach(iface['id'])
-                cls.display_progress(detach)
+        # then we should attach the ip to the vm
+        attach = Iface._attach(iface['id'], vm_['id'])
+        if not background:
+            cls.display_progress(attach)
 
-            # then we should attach the ip to the vm
-            attach = Iface._attach(iface['id'], vm_['id'])
-            if not background:
-                cls.display_progress(attach)
-
-            return attach
-        else:
-            # create a new private ip and attach it
-            result = Iface.create('4', vm_['datacenter_id'], bandwidth, vlan,
-                                  vm, ip, background)
-            return result
+        return attach
 
     @classmethod
     def _detach(cls, ip_, iface, background=False, force=False):
