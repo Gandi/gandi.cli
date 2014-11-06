@@ -30,16 +30,16 @@ def list(gandi, state, id, limit):
     if id:
         output_keys.append('id')
 
-    datacenters = gandi.datacenter.list()
     result = gandi.iaas.list(options)
-    for vm in result:
-        gandi.separator_line()
-        output_vm(gandi, vm, datacenters, output_keys)
+    for num, vm in enumerate(result):
+        if num:
+            gandi.separator_line()
+        output_vm(gandi, vm, [], output_keys)
 
     return result
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def info(gandi, resource):
@@ -52,13 +52,14 @@ def info(gandi, resource):
 
     datacenters = gandi.datacenter.list()
     ret = []
-    for item in resource:
-        gandi.separator_line()
+    for num, item in enumerate(resource):
+        if num:
+            gandi.separator_line()
         vm = gandi.iaas.info(item)
         output_vm(gandi, vm, datacenters, output_keys, 14)
         ret.append(vm)
-        for disk in vm['disks']:
-            gandi.separator_line()
+        for num, disk in enumerate(vm['disks']):
+            gandi.echo('')
             disk_out_keys = ['label', 'kernel_version', 'name', 'size']
             output_image(gandi, disk, datacenters, disk_out_keys, 14)
 
@@ -140,7 +141,6 @@ def delete(gandi, background, force, resource):
     """
     output_keys = ['id', 'type', 'step']
 
-    iaas_list = gandi.iaas.list()
     possible_resources = gandi.iaas.resource_list()
     for item in resource:
         if item not in possible_resources:
@@ -157,6 +157,7 @@ def delete(gandi, background, force, resource):
         if not proceed:
             return
 
+    iaas_list = gandi.iaas.list()
     stop_opers = []
     for item in resource:
         vm = next((vm for (index, vm) in enumerate(iaas_list)
@@ -211,9 +212,13 @@ def delete(gandi, background, force, resource):
 @click.option('--size', type=click.INT, default=None,
               help="System disk size in MiB.")
 @click.option('--vlan', default=None, help='A vlan to use with this vm.')
+@click.option('--script', default=None,
+              help='Local script to upload and run on the VM after creation.'
+                   'Instead of spawning an ssh session')
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
-           password, hostname, image, run, background, sshkey, size, vlan):
+           password, hostname, image, run, background, sshkey, size, vlan,
+           script):
     """Create a new virtual machine.
 
     you can specify a configuration entry named 'sshkey' containing
@@ -254,7 +259,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                                bandwidth, login, pwd, hostname,
                                image, run,
                                background,
-                               sshkey, size, vlan)
+                               sshkey, size, vlan, script)
     if background:
         gandi.pretty_echo(result)
 
@@ -305,7 +310,7 @@ def update(gandi, resource, memory, cores, console, password, background,
     return result
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.argument('resource')
 @pass_gandi
 def console(gandi, resource):
@@ -329,15 +334,18 @@ def console(gandi, resource):
 @click.option('--identity', '-i', default=None,
               help='Use specified path for ssh key')
 @click.argument('resource')
+@click.argument('args', nargs=-1)
 @pass_gandi
-def ssh(gandi, resource, login, identity, wipe_key):
+def ssh(gandi, resource, login, identity, wipe_key, args):
     """Spawn an SSH session to virtual machine.
 
     Resource can be a Hostname or an ID
     """
     if '@' in resource:
         (login, resource) = resource.split('@', 1)
-    gandi.iaas.ssh(resource, login, identity, wipe_key)
+    if wipe_key:
+        gandi.iaas.ssh_keyscan(resource)
+    gandi.iaas.ssh(resource, login, identity, args)
 
 
 @cli.command()
@@ -362,8 +370,9 @@ def images(gandi, label, datacenter):
 
     datacenters = gandi.datacenter.list()
     result = gandi.image.list(datacenter, label)
-    for image in result:
-        gandi.separator_line()
+    for num, image in enumerate(result):
+        if num:
+            gandi.separator_line()
         output_image(gandi, image, datacenters, output_keys)
 
     # also display usable disks
@@ -392,8 +401,9 @@ def kernels(gandi, vm, datacenter, flavor, match):
 
     dc_list = gandi.datacenter.filtered_list(datacenter, vm)
 
-    for dc in dc_list:
-        gandi.echo('\n')
+    for num, dc in enumerate(dc_list):
+        if num:
+            gandi.echo('\n')
         output_datacenter(gandi, dc)
         kmap = gandi.kernel.list(dc['id'], flavor, match)
         for _flavor in kmap:
@@ -411,8 +421,9 @@ def datacenters(gandi, id):
         output_keys.append('id')
 
     result = gandi.datacenter.list()
-    for dc in result:
-        gandi.separator_line()
+    for num, dc in enumerate(result):
+        if num:
+            gandi.separator_line()
         output_generic(gandi, dc, output_keys)
 
     return result

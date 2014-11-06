@@ -26,7 +26,8 @@ class GandiConfig(object):
     """
 
     _conffiles = {}
-    home_config = '~/.config/gandi/config.yaml'
+    home_config = os.environ.get('GANDI_CONFIG',
+                                 '~/.config/gandi/config.yaml')
     local_config = '.gandi.config.yaml'
 
     apienvs = {
@@ -217,7 +218,7 @@ class GandiConfig(object):
                 if os.path.exists(sshkey_file):
                     config['sshkey'] = [sshkey_file]
 
-            directory = os.path.expanduser("~/.config/gandi")
+            directory = os.path.expanduser(os.path.dirname(config_file))
             if not os.path.exists(directory):
                 mkpath(directory, 0o700)
 

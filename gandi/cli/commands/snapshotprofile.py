@@ -22,8 +22,9 @@ def list(gandi, only_paas, only_vm):
     output_keys = ['id', 'name', 'kept_total', 'target']
     result = gandi.snapshotprofile.list({}, target=target)
 
-    for profile in result:
-        gandi.separator_line()
+    for num, profile in enumerate(result):
+        if num:
+            gandi.separator_line()
         output_snapshot_profile(gandi, profile, output_keys)
 
     return result

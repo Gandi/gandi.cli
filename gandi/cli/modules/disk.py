@@ -2,6 +2,7 @@
 
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import DuplicateResults
+from gandi.cli.core.params import DISK_MAXLIST
 from .iaas import Iaas, Datacenter, Image
 
 
@@ -55,7 +56,9 @@ class Disk(GandiModule):
     @classmethod
     def list_create(cls, datacenter=None, label=None):
         """List available disks for vm creation."""
-        options = {}
+        options = {
+            'items_per_page': DISK_MAXLIST
+        }
         if datacenter:
             datacenter_id = int(Datacenter.usable_id(datacenter))
             options['datacenter_id'] = datacenter_id
@@ -173,6 +176,8 @@ class Disk(GandiModule):
         cls.echo('Deleting your disk.')
         cls.display_progress(opers)
 
+        return opers
+
     @classmethod
     def _attach(cls, disk_id, vm_id):
         """ Attach a disk to a vm. """
@@ -212,6 +217,8 @@ class Disk(GandiModule):
     def create(cls, name, vm, size, snapshotprofile, datacenter,
                source, background=False):
         """ Create a disk and attach it to a vm. """
+        if source:
+            size = None
         disk_params = cls.disk_param(name, size, snapshotprofile)
         disk_params['datacenter_id'] = int(Datacenter.usable_id(datacenter))
 
@@ -239,3 +246,16 @@ class Disk(GandiModule):
 
         cls.echo('Attaching your disk.')
         cls.display_progress(result)
+
+    @classmethod
+    def rollback(cls, resource, background=False):
+        """ Rollback a disk from a snapshot. """
+        disk_id = cls.usable_id(resource)
+        result = cls.call('hosting.disk.rollback_from', disk_id)
+
+        if background:
+            return result
+
+        cls.echo('Disk rollback in progress.')
+        cls.display_progress(result)
+        return result

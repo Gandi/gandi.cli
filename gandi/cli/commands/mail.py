@@ -7,7 +7,7 @@ from gandi.cli.core.utils import output_generic, output_list
 from gandi.cli.core.params import pass_gandi, EMAIL_TYPE
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.option('--limit', help='Limit number of results.',
               default=100, show_default=True)
 @click.argument('domain', metavar='domain.tld')
@@ -20,7 +20,7 @@ def list(gandi, domain, limit):
     return mailboxes
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
 def info(gandi, email):
@@ -34,7 +34,7 @@ def info(gandi, email):
     return mailbox
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.option('--quota', '-q', help='Set quota on mailbox. 0 is unlimited.',
               default=None, type=click.INT)
 @click.option('--fallback', '-f', help='Add fallback address.',
@@ -61,7 +61,7 @@ def create(gandi, email, quota, fallback, alias):
     return result
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')
@@ -118,7 +118,7 @@ def update(gandi, email, password, quota, fallback, alias_add, alias_del):
     return result
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,

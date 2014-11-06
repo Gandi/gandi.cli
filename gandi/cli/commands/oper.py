@@ -21,14 +21,15 @@ def list(gandi, limit):
     }
 
     result = gandi.oper.list(options)
-    for oper in result:
-        gandi.separator_line()
+    for num, oper in enumerate(result):
+        if num:
+            gandi.separator_line()
         output_generic(gandi, oper, output_keys)
 
     return result
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.argument('id', type=click.INT)
 @pass_gandi
 def info(gandi, id):

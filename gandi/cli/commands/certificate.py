@@ -9,7 +9,7 @@ from gandi.cli.core.params import (pass_gandi, IntChoice,
                                    CERTIFICATE_PACKAGE, CERTIFICATE_DCV_METHOD)
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @pass_gandi
 def packages(gandi):
     """ List certificate packages. """
@@ -67,8 +67,9 @@ def list(gandi, id, altnames, csr, cert, all_status, status, dates, limit):
         output_keys.append('cert')
 
     result = gandi.certificate.list(options)
-    for cert in result:
-        gandi.separator_line()
+    for num, cert in enumerate(result):
+        if num:
+            gandi.separator_line()
         output_cert(gandi, cert, output_keys)
 
     return result
@@ -106,11 +107,12 @@ def info(gandi, resource, id, altnames, csr, cert, all_status):
         ids.extend(gandi.certificate.usable_ids(res))
 
     result = []
-    for id_ in set(ids):
+    for num, id_ in enumerate(set(ids)):
         cert = gandi.certificate.info(id_)
         if not all_status and cert['status'] not in ['valid', 'pending']:
             continue
-        gandi.separator_line()
+        if num:
+            gandi.separator_line()
         output_cert(gandi, cert, output_keys)
         result.append(cert)
 

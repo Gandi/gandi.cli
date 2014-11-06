@@ -1,6 +1,7 @@
 """ VM commands module. """
 
 import math
+import socket
 import time
 
 from gandi.cli.core.base import GandiModule
@@ -186,7 +187,7 @@ class Iaas(GandiModule, SshkeyHelper):
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
                login, password, hostname, image, run, background, sshkey,
-               size, vlan):
+               size, vlan, script):
         """Create a new virtual machine."""
         if not background and not cls.intty():
             background = True
@@ -232,9 +233,8 @@ class Iaas(GandiModule, SshkeyHelper):
         result = cls.call('hosting.vm.create_from', vm_params, disk_params,
                           sys_disk_id_)
 
-        if ip_version == 4:
-            ip_summary = 'ip v4+v6'
-        else:
+        ip_summary = 'ip v4+v6'
+        if ip_version == 6:
             ip_summary = 'ip v6'
         cls.echo('* Configuration used: %d cores, %dMb memory, %s, '
                  'image %s, hostname: %s' % (cores, memory, ip_summary, image,
@@ -264,8 +264,13 @@ class Iaas(GandiModule, SshkeyHelper):
             return
 
         if vm_id:
-            time.sleep(5)
-            cls.ssh(oper['vm_id'], login='root', identity=None, wipe_key=True)
+            cls.wait_for_sshd(oper['vm_id'])
+            cls.ssh_keyscan(oper['vm_id'])
+            if script:
+                cls.scp(oper['vm_id'], 'root', None,
+                        script, '/var/tmp/gscript')
+            cls.ssh(oper['vm_id'], 'root', None,
+                    script and ['/var/tmp/gscript'])
 
     @classmethod
     def from_hostname(cls, hostname):
@@ -295,24 +300,76 @@ class Iaas(GandiModule, SshkeyHelper):
         return qry_id
 
     @classmethod
-    def ssh(cls, vm_id, login, identity, wipe_key=False):
-        """Spawn an ssh session to virtual machine."""
+    def vm_ip(cls, vm_id):
+        """Return the first usable ip address for this vm.
+        Returns a (version, ip) tuple."""
         vm_info = cls.info(vm_id)
 
-        cmd = ['ssh']
-        if identity:
-            cmd.extend(('-i', identity,))
-
-        ip_addr = None
         for iface in vm_info['ifaces']:
             if iface['type'] == 'private':
                 continue
             for ip in iface['ips']:
-                ip_addr = ip['ip']
-                if ip['version'] == 6:
-                    cmd.append('-6')
-                # stop on first access found
-                break
+                return ip['version'], ip['ip']
+
+    @classmethod
+    def wait_for_sshd(cls, vm_id):
+        """Insist on having the vm booted and sshd
+        listening"""
+        cls.echo('Waiting for the vm to come online')
+        version, ip_addr = cls.vm_ip(vm_id)
+        give_up = time.time() + 120
+        while time.time() < give_up:
+            try:
+                inet = socket.AF_INET
+                if version == 6:
+                    inet = socket.AF_INET6
+                sd = socket.socket(inet, socket.SOCK_STREAM,
+                                   socket.IPPROTO_TCP)
+                sd.settimeout(5)
+                sd.connect((ip_addr, 22))
+                sd.recv(1024)
+                return
+            except Exception:
+                pass
+        cls.error('VM did not spin up')
+
+    @classmethod
+    def ssh_keyscan(cls, vm_id):
+        """Wipe this old key and learn the new one from a freshly
+        created vm. This is a security risk for this VM, however
+        we dont have another way to learn the key yet, so do this
+        for the user."""
+        cls.echo('Wiping old key and learning the new one')
+        version, ip_addr = cls.vm_ip(vm_id)
+        cls.execute('ssh-keygen -R "%s"' % ip_addr)
+        cls.execute('ssh-keyscan "%s" >> ~/.ssh/known_hosts' % ip_addr)
+
+    @classmethod
+    def scp(cls, vm_id, login, identity, local_file, remote_file):
+        """Copy file to remote VM."""
+        cmd = ['scp']
+        if identity:
+            cmd.extend(('-i', identity,))
+
+        version, ip_addr = cls.vm_ip(vm_id)
+        if version == 6:
+            ip_addr = '[%s]' % ip_addr
+
+        cmd.extend((local_file, '%s@%s:%s' %
+                   (login, ip_addr, remote_file),))
+        cls.echo('Running %s' % ' '.join(cmd))
+        cls.execute(cmd, False)
+
+    @classmethod
+    def ssh(cls, vm_id, login, identity, args=None):
+        """Spawn an ssh session to virtual machine."""
+        cmd = ['ssh']
+        if identity:
+            cmd.extend(('-i', identity,))
+
+        version, ip_addr = cls.vm_ip(vm_id)
+        if version == 6:
+            cmd.append('-6')
 
         if not ip_addr:
             cls.echo('No IP address found for vm %s, aborting.' % vm_id)
@@ -320,12 +377,10 @@ class Iaas(GandiModule, SshkeyHelper):
 
         cmd.append('%s@%s' % (login, ip_addr,))
 
-        cls.echo('Requesting access using: %s ...' % ' '.join(cmd))
-        # XXX: we must remove ssh key entry in case we use the same ip
-        # as it's recyclable
-        if wipe_key:
-            cls.execute('ssh-keygen -R "%s"' % ip_addr)
+        if args:
+            cmd.extend(args)
 
+        cls.echo('Requesting access using: %s ...' % ' '.join(cmd))
         cls.execute(cmd, False)
 
     @classmethod
@@ -339,14 +394,7 @@ class Iaas(GandiModule, SshkeyHelper):
         # now we can connect
         # retrieve ip of vm
         vm_info = cls.info(id)
-        for iface in vm_info['ifaces']:
-            for ip in iface['ips']:
-                if ip['version'] == 4:
-                    ip_addr = ip['ip']
-                else:
-                    ip_addr = ip['ip']
-                # stop on first access found
-                break
+        version, ip_addr = cls.vm_ip(id)
 
         console_url = vm_info.get('console_url', 'console.gandi.net')
         access = 'ssh %s@%s' % (ip_addr, console_url)

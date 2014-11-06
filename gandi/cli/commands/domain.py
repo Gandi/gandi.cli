@@ -23,7 +23,7 @@ def list(gandi, limit):
     return domains
 
 
-@cli.command(options_metavar='')
+@cli.command()
 @click.argument('resource')
 @pass_gandi
 def info(gandi, resource):

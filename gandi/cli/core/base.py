@@ -113,7 +113,7 @@ class GandiModule(GandiConfig):
     def echo(cls, message):
         """ Display message. """
         if cls.intty():
-            if message:
+            if message is not None:
                 print(message)
 
     @classmethod

@@ -47,15 +47,16 @@ def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
     result = gandi.disk.list(options)
     vms = dict([(vm_['id'], vm_) for vm_ in gandi.iaas.list()])
 
-    for disk in result:
-        gandi.separator_line()
+    for num, disk in enumerate(result):
+        if num:
+            gandi.separator_line()
         output_disk(gandi, disk, [], vms, profiles, output_keys)
 
     return result
 
 
 @cli.command()
-@click.argument('resource')
+@click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def info(gandi, resource):
     """ Display information about a disk.
@@ -65,11 +66,18 @@ def info(gandi, resource):
     output_keys = ['name', 'state', 'size', 'type', 'id', 'dc', 'vm',
                    'profile']
 
-    disk = gandi.disk.info(resource)
     vms = dict([(vm['id'], vm) for vm in gandi.iaas.list()])
-    output_disk(gandi, disk, [], vms, [], output_keys)
+    datacenters = gandi.datacenter.list()
 
-    return disk
+    result = []
+    for num, item in enumerate(resource):
+        if num:
+            gandi.separator_line()
+        disk = gandi.disk.info(item)
+        output_disk(gandi, disk, datacenters, vms, [], output_keys)
+        result.append(disk)
+
+    return result
 
 
 @compatcallback
@@ -187,13 +195,15 @@ def update(gandi, resource, cmdline, kernel, name, size,
                    ' without prompting. (default=False).')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='run command in background mode (default=False).')
-@click.argument('resource', required=True)
+@click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def delete(gandi, resource, force, background):
     """ Delete a disk. """
     output_keys = ['name', 'disk_id', 'state', 'date_creation']
+
     if not force:
-        proceed = click.confirm('Are you sure to delete disk %s?' % resource)
+        disk_info = "'%s'" % ', '.join(resource)
+        proceed = click.confirm('Are you sure to delete disk %s?' % disk_info)
 
         if not proceed:
             return
@@ -220,12 +230,12 @@ def delete(gandi, resource, force, background):
 @click.option('--source', default=None, type=DISK_IMAGE,
               help='Create a disk from a disk or a snapshot.')
 @option('--datacenter', type=DATACENTER, default='LU',
-        help='Datacenter where the VM will be spawned.')
+        help='Datacenter where the disk will be created.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
 def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
-        background):
+           background):
     """ Create a new disk. """
     try:
         snapshotprofile = int(snapshotprofile) if snapshotprofile else None
@@ -243,4 +253,15 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
     if background:
         gandi.pretty_echo(result)
 
+    return result
+
+
+@cli.command()
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.argument('resource', required=True)
+@pass_gandi
+def rollback(gandi, resource, background):
+    """ Rollback a disk from a snapshot. """
+    result = gandi.disk.rollback(resource, background)
     return result

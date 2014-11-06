@@ -120,33 +120,26 @@ Gandi Server measures consumption by the hour and uses a prepaid credit system. 
 #### 1. Create and access a VM
 
     $ gandi vm create
-    > datacenter: FR
-    > memory: 256
-    > cores: 1
-    > ip_version: 4
-    > bandwidth: 102400
-    > login: admin
-    > hostname: tempo
+    * root user will be created.
+    * SSH key authorization will be used.
+    * No password supplied for vm (required to enable emergency web console access).
+    * Configuration used: 1 cores, 256Mb memory, ip v4+v6, image Debian 7, hostname: temp1415183684
 
 Create a virtual machine with the default configuration and a random hostname.
 
 #### 2. Upgrade a VM
 
-    $ gandi vm update tempo --memory 2024 --cores 2
+    $ gandi vm update temp1415183684 --memory 2048 --cores 2
 
 Set the VM's RAM to 2GB and add a CPU core on the fly.
 
 #### 3. Create a custom VM
 
-    $ gandi vm create --datacenter US --hostname docker --cores 2 --ram 3036GB --disk 10GB --image "Ubuntu 14.04 64 bits" --run "curl -s https://get.docker.io/ubuntu | sh"
-    > datacenter: US
-    > memory: 3036
-    > cores: 2
-    > ip_version: 4
-    > bandwidth: 102400
-    > login: admin
-    > hostname: docker
-    > image: Ubuntu 14.04 64 bits
+    $ gandi vm create --datacenter US --hostname docker --cores 2 --memory 3072 --size 10240 --image "Ubuntu 14.04 64 bits LTS" --run "curl -s https://get.docker.io/ubuntu | sh"
+    * root user will be created.
+    * SSH key authorization will be used.
+    * No password supplied for vm (required to enable emergency web console access).
+    * Configuration used: 2 cores, 3072Mb memory, ip v4+v6, image Ubuntu 14.04 64 bits LTS, hostname: docker
 
 This command will setup the above VM, and install docker by running `curl -s https://get.docker.io/ubuntu | sh` after creation.
 
