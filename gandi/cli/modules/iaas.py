@@ -260,8 +260,15 @@ class Iaas(GandiModule, SshkeyHelper):
             cls.wait_for_sshd(vm_id)
             cls.ssh_keyscan(vm_id)
             if script:
-                cls.scp(vm_id, 'root', None, script, '/var/tmp/gscript')
+                ret = cls.scp(vm_id, 'root', None, script, '/var/tmp/gscript')
+                if not ret:
+                    cls.error('Failed to scp script %s to VM %s (id: %s)' %
+                              (script, hostname, vm_id))
+
             cls.ssh(vm_id, 'root', None, script and ['/var/tmp/gscript'])
+            if not ret and (script and ['/var/tmp/gscript']):
+                cls.error('Failed to execute script %s on VM %s (id: %s)' %
+                          ('/var/tmp/gscript', hostname, vm_id))
 
     @classmethod
     def from_hostname(cls, hostname):
@@ -347,7 +354,7 @@ class Iaas(GandiModule, SshkeyHelper):
         cmd.extend((local_file, '%s@%s:%s' %
                    (login, ip_addr, remote_file),))
         cls.echo('Running %s' % ' '.join(cmd))
-        cls.execute(cmd, False)
+        return cls.execute(cmd, False)
 
     @classmethod
     def ssh(cls, vm_id, login, identity, args=None):
@@ -370,7 +377,7 @@ class Iaas(GandiModule, SshkeyHelper):
             cmd.extend(args)
 
         cls.echo('Requesting access using: %s ...' % ' '.join(cmd))
-        cls.execute(cmd, False)
+        return cls.execute(cmd, False)
 
     @classmethod
     def console(cls, id):
