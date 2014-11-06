@@ -257,13 +257,11 @@ class Iaas(GandiModule, SshkeyHelper):
                 break
 
         if vm_id:
-            cls.wait_for_sshd(oper['vm_id'])
-            cls.ssh_keyscan(oper['vm_id'])
+            cls.wait_for_sshd(vm_id)
+            cls.ssh_keyscan(vm_id)
             if script:
-                cls.scp(oper['vm_id'], 'root', None,
-                        script, '/var/tmp/gscript')
-            cls.ssh(oper['vm_id'], 'root', None,
-                    script and ['/var/tmp/gscript'])
+                cls.scp(vm_id, 'root', None, script, '/var/tmp/gscript')
+            cls.ssh(vm_id, 'root', None, script and ['/var/tmp/gscript'])
 
     @classmethod
     def from_hostname(cls, hostname):
