@@ -261,7 +261,7 @@ class GandiContextHelper(GandiModule):
                 # remove trailing separator if any
                 path = _path.rstrip(os.sep)
                 module_dirs[os.path.basename(path)] = os.path.join(path,
-                                                                    'modules')
+                                                                   'modules')
 
         for module_basename, dir in module_dirs.items():
             for filename in sorted(os.listdir(dir)):
