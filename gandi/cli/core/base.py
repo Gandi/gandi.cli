@@ -59,11 +59,18 @@ class GandiModule(GandiConfig):
     @classmethod
     def call(cls, method, *args, **kwargs):
         """ Call a remote api method and return the result."""
+        empty_key = kwargs.pop('empty_key', False)
         try:
             api = cls.get_api_connector()
             apikey = cls.get('api.key')
+            if not apikey and not empty_key:
+                cls.echo("No apikey found, please use 'gandi setup' "
+                         "command")
+                sys.exit(1)
         except MissingConfiguration:
-            if not kwargs.get('safe'):
+            if api and empty_key:
+                apikey = ''
+            elif not kwargs.get('safe'):
                 cls.echo("No configuration found, please use 'gandi setup' "
                          "command")
                 sys.exit(1)
@@ -75,8 +82,10 @@ class GandiModule(GandiConfig):
         for arg in args:
             cls.debug('with params: %r' % arg)
         try:
-            return api.request(apikey, method, *args,
-                               **{'dry_run': kwargs.get('dry_run', False)})
+            return api.request(method, apikey, *args,
+                               **{'dry_run': kwargs.get('dry_run', False),
+                                  'return_dry_run':
+                                        kwargs.get('return_dry_run', False)})
         except APICallFailed as err:
             if kwargs.get('safe'):
                 return []
@@ -84,11 +93,14 @@ class GandiModule(GandiConfig):
                 cls.echo("Invalid API key, please use 'gandi setup' command.")
                 sys.exit(1)
             if isinstance(err, DryRunException):
-                for msg in err.dry_run:
-                    # TODO use trads with %s
-                    cls.echo(msg['reason'])
-                    cls.echo('\t' + ' '.join(msg['attr']))
-                sys.exit(1)
+                if kwargs.get('return_dry_run', False):
+                    return err.dry_run
+                else:
+                    for msg in err.dry_run:
+                        # TODO use trads with %s
+                        cls.echo(msg['reason'])
+                        cls.echo('\t' + ' '.join(msg['attr']))
+                    sys.exit(1)
             error = UsageError(err.errors)
             setattr(error, 'code', err.code)
             raise error
