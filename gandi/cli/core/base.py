@@ -10,7 +10,7 @@ import sys
 import time
 import os.path
 from datetime import datetime
-from subprocess import check_call, CalledProcessError
+from subprocess import check_call, check_output, CalledProcessError
 
 import click
 from click.exceptions import UsageError
@@ -158,6 +158,14 @@ class GandiModule(GandiConfig):
             return True
         except CalledProcessError:
             return False
+
+    @classmethod
+    def exec_output(cls, command, shell=True):
+        """ Return execution output """
+        try:
+            return check_output(command, shell=shell)
+        except CalledProcessError:
+            return None
 
     @classmethod
     def update_progress(cls, progress, starttime):
