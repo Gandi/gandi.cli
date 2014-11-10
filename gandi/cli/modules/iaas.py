@@ -265,7 +265,7 @@ class Iaas(GandiModule, SshkeyHelper):
                     cls.error('Failed to scp script %s to VM %s (id: %s)' %
                               (script, hostname, vm_id))
 
-            cls.ssh(vm_id, 'root', None, script and ['/var/tmp/gscript'])
+            ret = cls.ssh(vm_id, 'root', None, script and ['/var/tmp/gscript'])
             if not ret and (script and ['/var/tmp/gscript']):
                 cls.error('Failed to execute script %s on VM %s (id: %s)' %
                           ('/var/tmp/gscript', hostname, vm_id))
