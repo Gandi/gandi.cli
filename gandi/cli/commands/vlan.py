@@ -29,8 +29,9 @@ def list(gandi, datacenter, id, subnet, gateway):
     datacenters = gandi.datacenter.list()
 
     vlans = gandi.vlan.list(datacenter)
-    for vlan in vlans:
-        gandi.separator_line()
+    for num, vlan in enumerate(vlans):
+        if num:
+            gandi.separator_line()
         output_vlan(gandi, vlan, datacenters, output_keys)
 
     return vlans

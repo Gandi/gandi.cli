@@ -58,8 +58,9 @@ def list(gandi, datacenter, type, attached, detached, version, reverse, vm):
     vms = dict([(vm['id'], vm)
                 for vm in gandi.iaas.list(datacenter)])
 
-    for ip_ in ips:
-        gandi.separator_line()
+    for num, ip_ in enumerate(ips):
+        if num:
+            gandi.separator_line()
         output_ip(gandi, ip_, datacenters, vms, ifaces, output_keys)
 
     return ips
