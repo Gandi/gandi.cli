@@ -239,6 +239,8 @@ class Iaas(GandiModule, SshkeyHelper):
         cls.echo('* Configuration used: %d cores, %dMb memory, %s, '
                  'image %s, hostname: %s' % (cores, memory, ip_summary, image,
                                              hostname))
+
+        # background mode, bail out now (skip interactive part)
         if background:
             return result
 
