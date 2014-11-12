@@ -15,7 +15,6 @@ class FdPipe:
     """Connect two pairs of file objects"""
 
     def __init__(self, in0, out0, in1, out1):
-        flags = select.POLLERR | select.POLLIN | select.POLLHUP
         self.poller = select.poll()
         self.fd_map = {
             out0.fileno(): in1.fileno(),
@@ -50,7 +49,7 @@ class FdPipe:
             if not self.out_buf[outfd]:
                 self.select_for_read(outfd)
                 del self.out_buf[outfd]
-        elif fd in el:
+        elif outfd in el:
             raise Exception('could not flush fd')
 
     def queue_write(self, outfd, data):
@@ -145,7 +144,7 @@ def new_port():
             s.bind(('127.0.0.1', i))
             s.close()
             return i
-        except socket.error as e:
+        except socket.error:
             pass
     raise Exception('No local port available')
 
@@ -153,8 +152,9 @@ def new_port():
 def _ssh_master_cmd(addr, user, command, local_key=None):
     """Exit or check ssh mux"""
     ssh_call = ['ssh', '-qNfL%d:127.0.0.1:12042' % find_port(addr, user),
-        '-o', 'ControlPath=~/.ssh/unixpipe_%%r@%%h_%d' % find_port(addr, user),
-        '-O', command, '%s@%s' % (user, addr,)]
+                '-o', 'ControlPath=~/.ssh/unixpipe_%%r@%%h_%d' %
+                       find_port(addr, user),
+                '-O', command, '%s@%s' % (user, addr,)]
 
     if local_key:
         ssh_call.insert(1, local_key)
@@ -178,17 +178,17 @@ def setup(addr, user, remote_path, local_key=None):
         scp(addr, user, __file__, '~/unixpipe', local_key)
 
         ssh_call = ['ssh', '-fL%d:127.0.0.1:12042' % port,
-            '-o', 'ExitOnForwardFailure=yes',
-            '-o', 'ControlPath=~/.ssh/unixpipe_%%r@%%h_%d' % port,
-            '-o', 'ControlMaster=auto',
-            '%s@%s' % (user, addr,), 'python', '~/unixpipe',
-                'server', remote_path]
+                    '-o', 'ExitOnForwardFailure=yes',
+                    '-o', 'ControlPath=~/.ssh/unixpipe_%%r@%%h_%d' % port,
+                    '-o', 'ControlMaster=auto',
+                    '%s@%s' % (user, addr,), 'python', '~/unixpipe',
+                    'server', remote_path]
         if local_key:
             ssh_call.insert(1, local_key)
             ssh_call.insert(1, '-i')
 
         subprocess.call(ssh_call)
-        #XXX Sleep is a bad way to wait for the tunnel endpoint
+        # XXX Sleep is a bad way to wait for the tunnel endpoint
         time.sleep(1)
 
     return port

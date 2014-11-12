@@ -223,7 +223,8 @@ class Disk(GandiModule):
         disk_params['datacenter_id'] = int(Datacenter.usable_id(datacenter))
 
         if source:
-            disk_id = int(Image.usable_id(source, disk_params['datacenter_id']))
+            disk_id = int(Image.usable_id(source,
+                                          disk_params['datacenter_id']))
             result = cls.call('hosting.disk.create_from', disk_params, disk_id)
         else:
             result = cls.call('hosting.disk.create', disk_params)
