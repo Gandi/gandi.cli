@@ -50,37 +50,37 @@ def info(gandi, resource, ip):
     vlan = gandi.vlan.info(resource)
 
     gateway = vlan['gateway']
-    if ip:
-        gateway_exists = False
-
-        vms = dict([(vm_['id'], vm_) for vm_ in gandi.iaas.list()])
-        ifaces = gandi.vlan.ifaces(resource)
-
-        for iface in ifaces:
-            for ip in iface['ips']:
-                if gateway == ip['ip']:
-                    gateway_exists = True
-
-        if gateway_exists:
-            vlan.pop('gateway')
-        else:
-            vlan['gateway'] = ("%s don't exists" % gateway if gateway
-                               else 'none')
-
+    if not ip:
         output_vlan(gandi, vlan, datacenters, output_keys, justify=11)
+        return vlan
 
-        output_keys = ['vm', 'bandwidth']
-        for iface in ifaces:
-            gandi.separator_line()
-            output_iface(gandi, iface, datacenters, vms, output_keys,
-                         justify=11)
-            for ip in iface['ips']:
-                output_ip(gandi, ip, None, None, None, ['ip'])
-                if gateway == ip['ip']:
-                    output_line(gandi, 'gateway', 'true', justify=11)
+    gateway_exists = False
 
+    vms = dict([(vm_['id'], vm_) for vm_ in gandi.iaas.list()])
+    ifaces = gandi.vlan.ifaces(resource)
+
+    for iface in ifaces:
+        for ip in iface['ips']:
+            if gateway == ip['ip']:
+                gateway_exists = True
+
+    if gateway_exists:
+        vlan.pop('gateway')
     else:
-        output_vlan(gandi, vlan, datacenters, output_keys, justify=11)
+        vlan['gateway'] = ("%s don't exists" % gateway if gateway
+                           else 'none')
+
+    output_vlan(gandi, vlan, datacenters, output_keys, justify=11)
+
+    output_keys = ['vm', 'bandwidth']
+    for iface in ifaces:
+        gandi.separator_line()
+        output_iface(gandi, iface, datacenters, vms, output_keys,
+                     justify=11)
+        for ip in iface['ips']:
+            output_ip(gandi, ip, None, None, None, ['ip'])
+            if gateway == ip['ip']:
+                output_line(gandi, 'gateway', 'true', justify=11)
 
     return vlan
 
