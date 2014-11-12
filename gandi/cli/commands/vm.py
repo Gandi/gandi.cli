@@ -241,7 +241,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                            confirmation_prompt=True)
 
     if not ip_version:
-        ip_version = '6' if vlan else '4'
+        ip_version = 6 if vlan else 4
 
     # Display a short summary for creation
     if login:
