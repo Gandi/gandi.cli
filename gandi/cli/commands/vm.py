@@ -261,7 +261,8 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                                background,
                                sshkey, size, vlan, script)
     if background:
-        gandi.pretty_echo(result)
+        gandi.echo('* IAAS backend is now creating your VM and its '
+                   'associated resources in the background.')
 
     return result
 
