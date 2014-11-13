@@ -50,6 +50,7 @@ def info(gandi, resource):
     output_keys = ['hostname', 'state', 'cores', 'memory', 'console',
                    'datacenter', 'ip']
 
+    resource = tuple(set(resource))
     datacenters = gandi.datacenter.list()
     ret = []
     for num, item in enumerate(resource):
@@ -78,6 +79,7 @@ def stop(gandi, background, resource):
     """
     output_keys = ['id', 'type', 'step']
 
+    resource = tuple(set(resource))
     opers = gandi.iaas.stop(resource, background)
     if background:
         for oper in opers:
@@ -98,6 +100,7 @@ def start(gandi, background, resource):
     """
     output_keys = ['id', 'type', 'step']
 
+    resource = tuple(set(resource))
     opers = gandi.iaas.start(resource, background)
     if background:
         for oper in opers:
@@ -118,6 +121,7 @@ def reboot(gandi, background, resource):
     """
     output_keys = ['id', 'type', 'step']
 
+    resource = tuple(set(resource))
     opers = gandi.iaas.reboot(resource, background)
     if background:
         for oper in opers:
@@ -141,6 +145,7 @@ def delete(gandi, background, force, resource):
     """
     output_keys = ['id', 'type', 'step']
 
+    resource = tuple(set(resource))
     possible_resources = gandi.iaas.resource_list()
     for item in resource:
         if item not in possible_resources:
