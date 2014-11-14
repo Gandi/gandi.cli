@@ -5,7 +5,7 @@ import time
 import webbrowser
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_generic, randomstring
+from gandi.cli.core.utils import randomstring
 from gandi.cli.core.params import pass_gandi
 
 
@@ -112,7 +112,7 @@ def create(gandi):
     if caller:
         gandi.echo('You already have an apikey defined, if you want to use the'
                    ' newly created contact, use the env var : ')
-        gandi.echo('export APIKEY=%s' % apikey)
+        gandi.echo('export API_KEY=%s' % apikey)
     else:
         gandi.echo('Will save your apikey into the config file.')
         gandi.configure(True, 'api.key', apikey)
