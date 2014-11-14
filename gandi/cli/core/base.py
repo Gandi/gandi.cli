@@ -59,6 +59,7 @@ class GandiModule(GandiConfig):
     @classmethod
     def call(cls, method, *args, **kwargs):
         """ Call a remote api method and return the result."""
+        api = None
         empty_key = kwargs.pop('empty_key', False)
         try:
             api = cls.get_api_connector()
