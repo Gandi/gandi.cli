@@ -1,6 +1,7 @@
 """ VM commands module. """
 
 import math
+import os
 import socket
 import time
 
@@ -267,7 +268,7 @@ class Iaas(GandiModule, SshkeyHelper):
                     cls.error('Failed to scp script %s to VM %s (id: %s)' %
                               (script, hostname, vm_id))
 
-            cls.ssh(vm_id, 'root', None, script and ['/var/tmp/gscript'])
+            ret = cls.ssh(vm_id, 'root', None, script and ['/var/tmp/gscript'])
             if not ret and (script and ['/var/tmp/gscript']):
                 cls.error('Failed to execute script %s on VM %s (id: %s)' %
                           ('/var/tmp/gscript', hostname, vm_id))
@@ -340,7 +341,14 @@ class Iaas(GandiModule, SshkeyHelper):
         cls.echo('Wiping old key and learning the new one')
         version, ip_addr = cls.vm_ip(vm_id)
         cls.execute('ssh-keygen -R "%s"' % ip_addr)
-        cls.execute('ssh-keyscan "%s" >> ~/.ssh/known_hosts' % ip_addr)
+
+        for _ in xrange(5):
+            output = cls.exec_output('ssh-keyscan "%s"' % ip_addr)
+            if output:
+                with open(os.path.expanduser('~/.ssh/known_hosts'), 'a') as f:
+                    f.write(output)
+                return True
+            time.sleep(.5)
 
     @classmethod
     def scp(cls, vm_id, login, identity, local_file, remote_file):
@@ -356,7 +364,12 @@ class Iaas(GandiModule, SshkeyHelper):
         cmd.extend((local_file, '%s@%s:%s' %
                    (login, ip_addr, remote_file),))
         cls.echo('Running %s' % ' '.join(cmd))
-        return cls.execute(cmd, False)
+        for _ in xrange(5):
+            ret = cls.execute(cmd, False)
+            if ret:
+                break
+            time.sleep(.5)
+        return ret
 
     @classmethod
     def ssh(cls, vm_id, login, identity, args=None):
