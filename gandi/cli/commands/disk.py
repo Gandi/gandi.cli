@@ -131,7 +131,6 @@ def attach(gandi, disk, vm, background, force):
     disk can be a disk name, or ID
     vm can be a vm name, or ID
     """
-    resource = tuple(set(resource))
     if not force:
         proceed = click.confirm("Are you sure to attach disk '%s' to vm '%s'" %
                                 (disk, vm))

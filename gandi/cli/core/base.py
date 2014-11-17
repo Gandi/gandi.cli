@@ -232,7 +232,7 @@ class GandiModule(GandiConfig):
                 if op_step in cls._op_scores:
                     op_score += cls._op_scores[op_step]
                 else:
-                    msg = 'step %s unknown, exiting creation' % op_step
+                    msg = 'step %s unknown, exiting' % op_step
                     cls.error(msg)
 
             cls.update_progress(float(op_score) / count_operations,
