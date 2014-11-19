@@ -208,7 +208,7 @@ class Disk(GandiModule):
         oper = cls._attach(disk_id, vm_id)
 
         if oper and not background:
-            cls.echo('Detaching your disk(s).')
+            cls.echo('Attaching your disk(s).')
             cls.display_progress(oper)
 
         return oper
