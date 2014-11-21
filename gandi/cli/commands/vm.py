@@ -191,8 +191,8 @@ def delete(gandi, background, force, resource):
         help='Quantity of RAM in Megabytes to allocate.')
 @option('--cores', type=click.INT, default=1,
         help='Number of cpu.')
-@option('--ip-version', type=IntChoice(['4', '6']), default=None,
-        help='Version of created IP.')
+@click.option('--ip-version', type=IntChoice(['4', '6']), default=None,
+              help='Version of created IP.')
 @option('--bandwidth', type=click.INT, default=102400,
         help="Network bandwidth in bit/s used to create the VM's first "
              "network interface.")
@@ -217,12 +217,13 @@ def delete(gandi, background, force, resource):
 @click.option('--size', type=click.INT, default=None,
               help="System disk size in MiB.")
 @click.option('--vlan', default=None, help='A vlan to use with this vm.')
+@click.option('--ip', default=None, help='An ip in the vlan for this vm.')
 @click.option('--script', default=None,
               help='Local script to upload and run on the VM after creation.'
                    'Instead of spawning an ssh session')
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
-           password, hostname, image, run, background, sshkey, size, vlan,
+           password, hostname, image, run, background, sshkey, size, vlan, ip,
            script):
     """Create a new virtual machine.
 
@@ -245,8 +246,21 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
+    if ip and not vlan:
+        gandi.echo("--ip can't be used without --vlan.")
+        return
+
     if not ip_version:
-        ip_version = 6 if vlan else 4
+        if script:
+            gandi.echo("--script can't be used with a private ip only vm.")
+            return
+
+        if not vlan:
+            gandi.echo('You must give an --ip-version or a --vlan.')
+            return
+
+        gandi.echo("* Private only ip vm (can't enable emergency web console "
+                   'access).')
 
     # Display a short summary for creation
     if login:
@@ -264,7 +278,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                                bandwidth, login, pwd, hostname,
                                image, run,
                                background,
-                               sshkey, size, vlan, script)
+                               sshkey, size, vlan, ip, script)
     if background:
         gandi.echo('* IAAS backend is now creating your VM and its '
                    'associated resources in the background.')

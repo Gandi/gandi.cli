@@ -194,8 +194,9 @@ class Iaas(GandiModule, SshkeyHelper):
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
                login, password, hostname, image, run, background, sshkey,
-               size, vlan, script):
+               size, vlan, ip, script):
         """Create a new virtual machine."""
+        from gandi.cli.modules.network import Ip, Iface
         if not background and not cls.intty():
             background = True
 
@@ -212,8 +213,6 @@ class Iaas(GandiModule, SshkeyHelper):
             'datacenter_id': datacenter_id_,
             'memory': memory,
             'cores': cores,
-            'ip_version': ip_version,
-            'bandwidth': bandwidth,
         }
 
         if login:
@@ -224,6 +223,10 @@ class Iaas(GandiModule, SshkeyHelper):
 
         if password:
             vm_params['password'] = password
+
+        if ip_version:
+            vm_params['ip_version'] = ip_version
+            vm_params['bandwidth'] = bandwidth
 
         vm_params.update(cls.convert_sshkey(sshkey))
 
@@ -237,18 +240,50 @@ class Iaas(GandiModule, SshkeyHelper):
 
         sys_disk_id_ = int(Image.usable_id(image, datacenter_id_))
 
+        ip_summary = []
+        if ip_version == 4:
+            ip_summary = ['v4', 'v6']
+        elif ip_version == 6:
+            ip_summary = ['v6']
+
+        if vlan:
+            ip_ = None
+            ip_summary.append('private')
+            if ip:
+                try:
+                    ip_ = Ip.info(ip)
+                except Exception as err:
+                    pass
+                else:
+                    if not Ip.check_and_detach(ip_, None, force=False):
+                        return
+            if ip_:
+                iface_id = ip_['iface_id']
+            else:
+                ip_create = Ip.create(4,
+                                      vm_params['datacenter_id'],
+                                      bandwidth,
+                                      None,
+                                      vlan,
+                                      ip)
+
+                iface_id = ip_create['iface_id']
+
+            # if there is a public ip, will attach this one later, else give
+            # the iface to vm.create
+            if not ip_version:
+                vm_params['iface_id'] = iface_id
+
         result = cls.call('hosting.vm.create_from', vm_params, disk_params,
                           sys_disk_id_)
 
-        ip_summary = 'ip v4+v6'
-        if ip_version == 6:
-            ip_summary = 'ip v6'
-        cls.echo('* Configuration used: %d cores, %dMb memory, %s, '
-                 'image %s, hostname: %s' % (cores, memory, ip_summary, image,
+        cls.echo('* Configuration used: %d cores, %dMb memory, ip %s, '
+                 'image %s, hostname: %s' % (cores, memory,
+                                             '+'.join(ip_summary), image,
                                              hostname))
 
         # background mode, bail out now (skip interactive part)
-        if background and not vlan:
+        if background and (not vlan or not ip_version):
             return result
 
         # interactive mode, run a progress bar
@@ -262,17 +297,15 @@ class Iaas(GandiModule, SshkeyHelper):
                 vm_id = oper.get('vm_id')
                 break
 
-        if vlan:
-            from gandi.cli.modules.network import Ip
-            Ip.create(None, datacenter, bandwidth, vm_id, vlan, None,
-                      background)
+        if vlan and ip_version:
+            attach = Iface._attach(iface_id, vm_id)
             if background:
-                return result
+                return attach
 
         if 'ssh_key' not in vm_params and 'keys' not in vm_params:
             return
 
-        if vm_id:
+        if vm_id and ip_version:
             cls.wait_for_sshd(vm_id)
             cls.ssh_keyscan(vm_id)
             if script:
