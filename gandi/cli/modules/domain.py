@@ -58,12 +58,9 @@ class Domain(GandiModule):
     @classmethod
     def from_fqdn(cls, fqdn):
         """Retrieve domain id associated to a FQDN."""
-        result = cls.list({})
-        domains = {}
-        for domain in result:
-            domains[domain['fqdn']] = domain['id']
-
-        return domains.get(fqdn)
+        result = cls.list({'fqdn': fqdn})
+        if len(result) > 0:
+            return result[0]['id']
 
     @classmethod
     def usable_id(cls, id):
