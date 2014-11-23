@@ -67,14 +67,14 @@ class Domain(GandiModule):
 
     @classmethod
     def usable_id(cls, id):
-        """ Retrieve id from input which can be fqdn or id."""
+        """Retrieve id from input which can be fqdn or id."""
+        # Check if it's already an integer.
         try:
-            # id is maybe a fqdn
+            qry_id = int(id)
+        except:
+            # Otherwise, assume it's a FQDN.
+            # This will return `None` if the FQDN is not found.
             qry_id = cls.from_fqdn(id)
-            if not qry_id:
-                qry_id = int(id)
-        except Exception:
-            qry_id = None
 
         if not qry_id:
             msg = 'unknown identifier %s' % id
