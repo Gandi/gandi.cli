@@ -220,7 +220,8 @@ def delete(gandi, resource, force, background):
 
 
 @cli.command()
-@click.option('--name', type=click.STRING, default=None, help='Disk name.')
+@click.option('--name', type=click.STRING, default=None,
+              help='Disk name, will be generated if not provided.')
 @click.option('--vm', default=None, type=click.STRING,
               help='Attach the newly created disk to the vm.')
 @click.option('--size', default='3072', metavar='SIZE[M|G|T]', type=SIZE,
