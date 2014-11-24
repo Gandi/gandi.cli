@@ -264,6 +264,27 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
 
 
 @cli.command()
+@click.option('--name', type=click.STRING, default=None,
+              help='Snapshot name, will be generated if not provided.')
+@click.argument('resource')
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@pass_gandi
+def snapshot(gandi, name, resource, background):
+    """ Create a snapshot on the fly. """
+    name = name or randomstring()
+
+    source_info = gandi.disk.info(resource)
+    datacenter = source_info['datacenter_id']
+    result = gandi.disk.create(name, None, None, None, datacenter, resource,
+                               'snapshot', background)
+
+    if background:
+        gandi.pretty_echo(result)
+    return result
+
+
+@cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', required=True)
