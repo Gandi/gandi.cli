@@ -250,8 +250,11 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
 
     name = name or randomstring()
 
+    disk_type = 'data'
+    if snapshotprofile:
+        disk_type = 'snapshot_auto'
     result = gandi.disk.create(name, vm, size, snapshotprofile, datacenter,
-                               source, background)
+                               source, disk_type, background)
 
     if background:
         gandi.pretty_echo(result)
