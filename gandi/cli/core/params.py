@@ -13,6 +13,8 @@ class GandiChoice(click.Choice):
 
     """ Base class for custom Choice parameters. """
 
+    gandi = None
+
     def __init__(self):
         """ Initialize choices list. """
         self._choices = []
@@ -25,15 +27,19 @@ class GandiChoice(click.Choice):
     def choices(self):
         """ Retrieve choices from API if possible"""
         if not self._choices:
-            gandi = GandiContextHelper()
+            gandi = self.gandi or GandiContextHelper()
             self._choices = self._get_choices(gandi)
             if not self._choices:
-                gandi = GandiContextHelper()
                 gandi.echo("No configuration found, please use 'gandi setup' "
                            "command")
                 sys.exit(1)
 
         return self._choices
+
+    def convert(self, value, param, ctx):
+        """ Internal method to use correct context. """
+        self.gandi = ctx.obj
+        return click.Choice.convert(self, value, param, ctx)
 
 
 class DatacenterParamType(GandiChoice):
@@ -48,6 +54,7 @@ class DatacenterParamType(GandiChoice):
 
     def convert(self, value, param, ctx):
         """ Convert value to uppercase. """
+        self.gandi = ctx.obj
         value = value.upper()
         return click.Choice.convert(self, value, param, ctx)
 
@@ -71,6 +78,7 @@ class IntChoice(click.Choice):
 
     def convert(self, value, param, ctx):
         """ Convert value to int. """
+        self.gandi = ctx.obj
         try:
             value = str(value)
         except Exception:
@@ -92,6 +100,7 @@ class DiskImageParamType(GandiChoice):
 
     def convert(self, value, param, ctx):
         """ Try to find correct disk image regarding version. """
+        self.gandi = ctx.obj
         # Exact match
         if value in self.choices:
             return value
@@ -124,6 +133,7 @@ class KernelParamType(GandiChoice):
 
     def convert(self, value, param, ctx):
         """ Try to find correct kernel regarding version. """
+        self.gandi = ctx.obj
         # Exact match first
         if value in self.choices:
             return value
@@ -149,6 +159,7 @@ class SnapshotParamType(GandiChoice):
 
     def convert(self, value, param, ctx):
         """ Convert value to int. """
+        self.gandi = ctx.obj
         value = click.Choice.convert(self, value, param, ctx)
         return int(value)
 
