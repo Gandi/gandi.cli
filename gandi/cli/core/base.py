@@ -242,7 +242,7 @@ class GandiContextHelper(GandiModule):
 
     _modules = {}
 
-    def __init__(self, verbose=False):
+    def __init__(self, verbose=-1):
         """ Initialize variables and api connection. """
         GandiModule.verbose = verbose
         GandiModule.load_config()

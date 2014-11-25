@@ -63,7 +63,7 @@ class GandiCLI(click.Group):
                          help='Enable or disable verbose mode. Use multiple '
                               'time for higher level of verbosity: -v, -vv',
                          count=True, metavar='',
-                         default=False, callback=set_debug),
+                         default=0, callback=set_debug),
             click.Option(['--version'],
                          help='Display version.',
                          is_flag=True,
