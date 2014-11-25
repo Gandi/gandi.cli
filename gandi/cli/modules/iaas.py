@@ -283,12 +283,11 @@ class Iaas(GandiModule, SshkeyHelper):
     @classmethod
     def from_hostname(cls, hostname):
         """Retrieve virtual machine id associated to a hostname."""
-        result = cls.list()
-        vm_hosts = {}
-        for host in result:
-            vm_hosts[host['hostname']] = host['id']
-
-        return vm_hosts.get(hostname)
+        result = cls.list({'hostname': hostname})
+        if result:
+            return result[0]['id']
+        # No "else" clause - if no VM was found matching this hostname, we
+        # just fall through the default (which effectively returns None).
 
     @classmethod
     def usable_id(cls, id):
