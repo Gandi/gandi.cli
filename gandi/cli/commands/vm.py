@@ -203,7 +203,7 @@ def delete(gandi, background, force, resource):
                    'and the created login.')
 @click.option('--hostname', default=None,
               help='Hostname of the VM, will be generated if not provided.')
-@option('--image', type=DISK_IMAGE, default='Debian 7 64 bits',
+@option('--image', type=DISK_IMAGE, default='Debian 7 64 bits (HVM)',
         help='Disk image used to boot the VM.')
 @click.option('--run', default=None,
               help='Shell command that will run at the first startup of a VM.'
