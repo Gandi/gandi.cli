@@ -18,7 +18,9 @@ class Iaas(GandiModule, SshkeyHelper):
     $ gandi vm console
     $ gandi vm create
     $ gandi vm delete
+    $ gandi vm images
     $ gandi vm info
+    $ gandi vm kernels
     $ gandi vm list
     $ gandi vm reboot
     $ gandi vm ssh
