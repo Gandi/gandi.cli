@@ -264,8 +264,8 @@ class Iaas(GandiModule, SshkeyHelper):
 
         if vlan:
             from gandi.cli.modules.network import Ip
-            attach = Ip.attach(None, vm_id, vlan, bandwidth,
-                               background)
+            Ip.create(None, datacenter, bandwidth, vm_id, vlan, None,
+                      background)
             if background:
                 return result
 
