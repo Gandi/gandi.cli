@@ -32,7 +32,7 @@ See https://docs.docker.com/installation/#installation to install, or use:
     if not vm:
         gandi.echo("""
 No docker vm specified. You can create one:
-    $ gandi vm create --hostname docker --image "Ubuntu 14.04 64 bits LTS" \\
+    $ gandi vm create --hostname docker --image "Ubuntu 14.04 64 bits LTS (HVM)" \\
         --run 'wget -O - https://get.docker.io/ | sh'
 
 Then configure it using:
