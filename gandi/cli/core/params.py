@@ -95,8 +95,9 @@ class DiskImageParamType(GandiChoice):
 
     def _get_choices(self, gandi):
         """ Internal method to get choices list """
-        return ([item['label'] for item in gandi.image.list()] +
-                [item['name'] for item in gandi.disk.list_create()])
+        image_list = [item['label'] for item in gandi.image.list()]
+        disk_list = [item['name'] for item in gandi.disk.list_create()]
+        return sorted(tuple(set(image_list))) + disk_list
 
     def convert(self, value, param, ctx):
         """ Try to find correct disk image regarding version. """

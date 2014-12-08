@@ -18,7 +18,9 @@ class Iaas(GandiModule, SshkeyHelper):
     $ gandi vm console
     $ gandi vm create
     $ gandi vm delete
+    $ gandi vm images
     $ gandi vm info
+    $ gandi vm kernels
     $ gandi vm list
     $ gandi vm reboot
     $ gandi vm ssh
@@ -67,7 +69,8 @@ class Iaas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo('Stopping your Virtual Machine %s.' % item)
+        instance_info = "'%s'" % ', '.join(resources)
+        cls.echo('Stopping your Virtual Machine(s) %s.' % instance_info)
         cls.display_progress(opers)
 
     @classmethod
@@ -88,7 +91,8 @@ class Iaas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo('Starting your Virtual Machine %s.' % item)
+        instance_info = "'%s'" % ', '.join(resources)
+        cls.echo('Starting your Virtual Machine(s) %s.' % instance_info)
         cls.display_progress(opers)
 
     @classmethod
@@ -109,7 +113,8 @@ class Iaas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo('Rebooting your Virtual Machine %s.' % item)
+        instance_info = "'%s'" % ', '.join(resources)
+        cls.echo('Rebooting your Virtual Machine(s) %s.' % instance_info)
         cls.display_progress(opers)
 
     @classmethod
@@ -133,7 +138,8 @@ class Iaas(GandiModule, SshkeyHelper):
             return opers
 
         # interactive mode, run a progress bar
-        cls.echo('Deleting your Virtual Machine %s.' % item)
+        instance_info = "'%s'" % ', '.join(resources)
+        cls.echo('Deleting your Virtual Machine(s) %s.' % instance_info)
         if opers:
             cls.display_progress(opers)
 

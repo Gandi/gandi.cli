@@ -12,8 +12,12 @@ class Disk(GandiModule):
 
     $ gandi disk create
     $ gandi disk delete
+    $ gandi disk attach
+    $ gandi disk detach
     $ gandi disk info
     $ gandi disk list
+    $ gandi disk rollback
+    $ gandi disk snapshot
     $ gandi disk update
 
     """
