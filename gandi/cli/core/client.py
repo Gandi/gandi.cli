@@ -14,7 +14,7 @@ from gandi.cli.core.utils.xmlrpc import RequestsTransport, requests
 
 class APICallFailed(Exception):
 
-    """ Raise when an error occured during an API call. """
+    """ Raise when an error occurred during an API call. """
 
     def __init__(self, errors, code=None):
         """ Initialize exception. """
@@ -66,5 +66,5 @@ class XMLRPCClient(object):
                 raise DryRunException(msg, err.faultCode, ret)
             raise APICallFailed(msg, err.faultCode)
         except TypeError as err:
-            msg = 'An unknown error as occured: %s' % err
+            msg = 'An unknown error has occurred: %s' % err
             raise APICallFailed(msg)

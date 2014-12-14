@@ -95,7 +95,7 @@ class GandiModule(GandiConfig):
 
     @classmethod
     def safe_call(cls, method, *args):
-        """ Call a remote api method but don't raise if an error occured."""
+        """ Call a remote api method but don't raise if an error occurred."""
         return cls.call(method, *args, safe=True)
 
     @classmethod
