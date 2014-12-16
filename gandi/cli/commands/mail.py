@@ -67,7 +67,7 @@ def create(gandi, email, quota, fallback, alias):
                    ' without prompting. (default=False).')
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
-def delete(gandi, email, force, alias):
+def delete(gandi, email, force):
     """Delete a mailbox."""
     login, domain = email
 
