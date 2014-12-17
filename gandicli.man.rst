@@ -51,6 +51,7 @@ COMMAND-LINE OPTIONS
 
 Namespaces:
 
+*  account info            Display information about hosting account.
 *  api                     Display information about API used.
 *  certificate change-dcv  Change the DCV for a pending certificate.
 *  certificate create      Create a new certificate.
@@ -134,6 +135,8 @@ Namespaces:
 
 
 Details:
+
+* ``gandi account info`` display information about the hosting account currently in use.
 
 * ``gandi api`` display information about the Gandi.net API.
 
