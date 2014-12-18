@@ -211,8 +211,9 @@ class Paas(GandiModule, SshkeyHelper):
         if 'dev' in paas['console']:
             git_server = 'git.hosting.dev.gandi.net'
         paas_access = '%s@%s' % (paas['user'], git_server)
+        current_path = os.getcwd()
+        repo_path = os.path.join(current_path, vhost)
         if created:
-            repo_path = os.path.join(os.getcwd(), vhost)
             if os.path.exists(repo_path):
                 cls.echo('%s already exists, please remove it before cloning' %
                          repo_path)
@@ -230,8 +231,7 @@ class Paas(GandiModule, SshkeyHelper):
             return
 
         # go into directory to save configuration file in this directory
-        current_path = os.getcwd()
-        os.chdir(os.path.join(current_path, vhost))
+        os.chdir(repo_path)
         cls.configure(False, 'paas.user', paas['user'])
         cls.configure(False, 'paas.name', paas['name'])
         cls.configure(False, 'paas.deploy_git_host', '%s.git' % vhost)
