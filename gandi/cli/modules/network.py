@@ -230,7 +230,8 @@ class Vlan(GandiModule):
             cls.display_progress(opers)
 
     @classmethod
-    def create(cls, name, datacenter, background):
+    def create(cls, name, datacenter, subnet=None, gateway=None,
+               background=False):
         """Create a new vlan."""
         if not background and not cls.intty():
             background = True
@@ -241,6 +242,12 @@ class Vlan(GandiModule):
             'name': name,
             'datacenter_id': datacenter_id_,
         }
+
+        if subnet:
+            vlan_params['subnet'] = subnet
+        if gateway:
+            vlan_params['gateway'] = gateway
+
         result = cls.call('hosting.vlan.create', vlan_params)
 
         if not background:

@@ -128,12 +128,14 @@ def delete(gandi, background, force, resource):
 @click.option('--name', required=True, help='Name of the vlan.')
 @option('--datacenter', type=DATACENTER, default='LU',
         help='Datacenter where the vlan will be spawned.')
+@click.option('--subnet', help='The vlan subnet.')
+@click.option('--gateway', help='The vlan gateway.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
-def create(gandi, name, datacenter, background):
+def create(gandi, name, datacenter, subnet, gateway, background):
     """ Create a new vlan """
-    result = gandi.vlan.create(name, datacenter, background)
+    result = gandi.vlan.create(name, datacenter, subnet, gateway, background)
 
     if not result:
         return
