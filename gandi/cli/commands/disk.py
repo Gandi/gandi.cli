@@ -64,7 +64,7 @@ def info(gandi, resource):
     Resource can be a disk name or ID
     """
     output_keys = ['name', 'state', 'size', 'type', 'id', 'dc', 'vm',
-                   'profile']
+                   'profile', 'kernel']
 
     resource = tuple(set(resource))
     vms = dict([(vm['id'], vm) for vm in gandi.iaas.list()])

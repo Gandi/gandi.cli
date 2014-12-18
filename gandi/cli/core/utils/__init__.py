@@ -110,6 +110,9 @@ def output_disk(gandi, disk, datacenters, vms, profiles, output_keys,
     """ Helper to output a disk."""
     output_generic(gandi, disk, output_keys, justify)
 
+    if 'kernel' in output_keys and disk.get('kernel_version'):
+        output_line(gandi, 'kernel', disk['kernel_version'], justify)
+
     if 'dc' in output_keys:
         dc_name = None
         for dc in datacenters:
