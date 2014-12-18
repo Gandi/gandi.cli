@@ -225,7 +225,7 @@ class Paas(GandiModule, SshkeyHelper):
                 return
         else:
             cls.echo('You should init your git repo when the paas is created, '
-                     'type : ')
+                     'type:')
             cls.echo('gandi paas clone %s' % vhost)
             return
 
