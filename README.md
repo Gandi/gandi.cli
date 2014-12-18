@@ -57,6 +57,7 @@ Recommended tools
 1. To get started, you can create a [free Gandi account](https://www.gandi.net/contact/create) and get your Gandi Handle
 2. [Generate your Production API Token](https://www.gandi.net/admin/api_key) from the account admin section
 3. You may also want to [top-up your prepaid account](https://www.gandi.net/prepaid)
+4. To manipulate VM's, you also need to [purchase credits](https://www.gandi.net/credit/buy) (you can use funds from your prepaid account)
 
 Then run the setup
 
