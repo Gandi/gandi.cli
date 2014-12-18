@@ -44,28 +44,33 @@ class Ip(GandiModule):
                             background)
 
     @classmethod
-    def attach(cls, ip, vm, background=False, force=False):
-        """ Attach """
-        ip_ = cls.info(ip)
-        vm_ = Iaas.info(vm)
-
+    def check_and_detach(cls, ip_, vm_=None, force=False):
         # if the ip exists and is attached, we have to detach it
         iface = Iface.info(ip_['iface_id'])
 
         if iface.get('vm_id'):
-            if iface['vm_id'] == vm_['id']:
+            if vm_id and iface['vm_id'] == vm_['id']:
                 cls.echo('This ip is already attached to this vm.')
-                return
+                return False
 
             if not force:
                 proceed = click.confirm('Are you sure you want to detach'
                                         ' %s from vm %s' %
                                         (ip, iface['vm_id']))
                 if not proceed:
-                    return
+                    return False
 
             detach = Iface._detach(iface['id'])
             cls.display_progress(detach)
+        return True
+
+    @classmethod
+    def attach(cls, ip, vm, background=False, force=False):
+        """ Attach """
+        vm_ = Iaas.info(vm)
+        ip_ = cls.info(ip)
+        if not cls.check_and_detach(ip_, vm_, force):
+            return
 
         # then we should attach the ip to the vm
         attach = Iface._attach(iface['id'], vm_['id'])
@@ -359,7 +364,7 @@ class Iface(GandiModule):
         cls.echo('Your iface has been created.')
 
         if not vm:
-            return
+            return result
 
         vm_id = Iaas.usable_id(vm)
         result = cls._attach(result['iface_id'], vm_id)
