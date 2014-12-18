@@ -184,7 +184,8 @@ class Paas(GandiModule, SshkeyHelper):
         cls.execute(access)
 
     @classmethod
-    def init_conf(cls, id, vhost=None, created=True, vhosts=None):
+    def init_conf(cls, id, vhost=None, created=True, vhosts=None,
+                  background=False):
         """ Initialize local configuration with PaaS information. """
         paas = Paas.info(cls.usable_id(id))
         cls.debug('save PaaS instance information to local configuration')
@@ -200,7 +201,7 @@ class Paas(GandiModule, SshkeyHelper):
                 return
 
         for vhost in vhosts:
-            Vhost.init_vhost(vhost, created, paas=paas)
+            Vhost.create(paas, vhost, True, background)
 
     @classmethod
     def usable_id(cls, id):
