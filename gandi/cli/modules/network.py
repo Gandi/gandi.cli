@@ -49,7 +49,7 @@ class Ip(GandiModule):
         iface = Iface.info(ip_['iface_id'])
 
         if iface.get('vm_id'):
-            if vm_id and iface['vm_id'] == vm_['id']:
+            if vm_ and iface['vm_id'] == vm_.get('id'):
                 cls.echo('This ip is already attached to this vm.')
                 return False
 
