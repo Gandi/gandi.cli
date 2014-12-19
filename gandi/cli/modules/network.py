@@ -56,7 +56,7 @@ class Ip(GandiModule):
             if not force:
                 proceed = click.confirm('Are you sure you want to detach'
                                         ' %s from vm %s' %
-                                        (ip, iface['vm_id']))
+                                        (ip_['ip'], iface['vm_id']))
                 if not proceed:
                     return False
 
