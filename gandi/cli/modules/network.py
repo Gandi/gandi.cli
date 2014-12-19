@@ -73,7 +73,7 @@ class Ip(GandiModule):
             return
 
         # then we should attach the ip to the vm
-        attach = Iface._attach(iface['id'], vm_['id'])
+        attach = Iface._attach(ip_['iface_id'], vm_['id'])
         if not background:
             cls.display_progress(attach)
 
