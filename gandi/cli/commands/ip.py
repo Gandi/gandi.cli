@@ -131,6 +131,10 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
         click.echo('You must have an --ip-version to 4 when having a vlan.')
         return
 
+    if ip and not vlan:
+        click.echo('You must have a --vlan when giving an --ip.')
+        return
+
     vm_ = gandi.iaas.info(attach) if attach else None
 
     if not datacenter:
