@@ -137,6 +137,13 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
 
     vm_ = gandi.iaas.info(attach) if attach else None
 
+    if datacenter and vm_:
+        dc_id = gandi.datacenter.usable_id(datacenter)
+        if dc_id != vm_['datacenter_id']:
+            click.echo('The datacenter you give is not the same the vm you'
+                       ' want to attach.')
+            return
+
     if not datacenter:
         if vm_:
             datacenter = vm_['datacenter_id']
