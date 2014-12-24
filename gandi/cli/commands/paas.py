@@ -186,7 +186,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
 
     to know which PaaS instance type to use as type
 
-    $ gandi types
+    $ gandi paas types
 
     """
     if not name:
