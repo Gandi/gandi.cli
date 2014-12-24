@@ -47,6 +47,7 @@ class Vhost(GandiModule):
         cls.display_progress(result)
         cls.echo('Your vhost %s has been created.' % vhost)
 
+        Paas.init_vhost(vhost, created=not background, id=paas_id)
         return result
 
     @classmethod
