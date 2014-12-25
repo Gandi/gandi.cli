@@ -69,15 +69,15 @@ def info(gandi, resource, id):
 
 
 @cli.command()
-@click.option('--vhost', help='Vhost fqdn.', required=True)
 @click.option('--paas', required=True,
               help='PaaS instance on which to create it.')
 @click.option('--alter-zone', help='Will update the domain zone.',
               is_flag=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
+@click.argument('vhost', required=True)
 @pass_gandi
-def create(gandi, vhost, paas, alter_zone, background):
+def create(gandi, paas, alter_zone, background, vhost):
     """ Create a new vhost. """
     result = gandi.vhost.create(paas, vhost, alter_zone, background)
 
