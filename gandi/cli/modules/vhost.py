@@ -6,6 +6,15 @@ from gandi.cli.modules.paas import Paas
 from gandi.cli.core.base import GandiModule
 
 
+class PaasAccess:
+    git_remote = None
+    ssh_remote = None
+
+    def __init__(self, git_remote=None, ssh_remote=None):
+        self.git_remote = git_remote
+        self.ssh_remote = ssh_remote
+
+
 class Vhost(GandiModule):
 
     """ Module to handle CLI commands.
@@ -67,8 +76,8 @@ class Vhost(GandiModule):
         cls.display_progress(opers)
 
     @classmethod
-    def git_remote(cls, vhost):
-        """Return remote for given vhost"""
+    def get_remote(cls, vhost):
+        """Return remote information for given vhost"""
         paas = Paas.info(vhost)
         git_server = paas['git_server']
         # hack for dev
@@ -82,13 +91,13 @@ class Vhost(GandiModule):
         else:
             remote = 'ssh+git://%s/%s.git' % (paas_access, vhost)
 
-        return remote
+        return PaasAccess(git_remote=remote, ssh_remote=paas_access)
 
     @classmethod
     def attach(cls, vhost):
         """Attach a vhost to a remote from the local
         repository"""
-        remote = cls.git_remote(vhost)
+        remote = cls.get_remote(vhost).git_remote
 
         return cls.execute('git remote add %s %s' % (vhost, remote,))
 
@@ -96,11 +105,11 @@ class Vhost(GandiModule):
     def clone(cls, vhost, directory=None):
         """Clone this vhost in a local git repository"""
 
-        remote = cls.git_remote(vhost)
+        remote = cls.get_remote(vhost)
 
         if not directory:
             directory = vhost
 
-        git_command = 'git clone %s %s' % (remote, directory)
+        git_command = 'git clone %s %s' % (remote.git_remote, directory)
 
         return cls.execute(git_command)
