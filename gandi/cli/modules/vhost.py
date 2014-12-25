@@ -113,3 +113,37 @@ class Vhost(GandiModule):
         git_command = 'git clone %s %s' % (remote.git_remote, directory)
 
         return cls.execute(git_command)
+
+    @classmethod
+    def find_vhost(cls):
+        """Take first linked vhost from this repository"""
+        for host in cls.exec_output('git remote').split('\n'):
+            if host == 'origin':
+                continue
+            try:
+                return cls.get_remote(host)
+            except Exception, e:
+                pass
+        cls.echo('Please attach a vhost to this repository first')
+
+    @classmethod
+    def deploy(cls, vhost, gitref):
+        """Deploy this repository and gitref to the instance"""
+
+        if vhost:
+            remote = cls.get_remote(vhost)
+        else:
+            remote = cls.find_vhost()
+
+        if not remote:
+            return
+
+        if not gitref:
+            gitref = 'master'
+
+        cls.echo('Deploying %s to %s' % (gitref, vhost))
+
+        deploy_cmd = 'deploy %s %s' % (vhost, gitref)
+        ssh_cmd = "ssh %s '%s'" % (remote.ssh_remote, deploy_cmd)
+
+        return cls.execute(ssh_cmd)

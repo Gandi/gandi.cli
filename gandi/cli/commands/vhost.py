@@ -129,3 +129,12 @@ def clone(gandi, resource, directory):
 def attach(gandi, resource):
     """ Add a remote for a vhost to the local git repository """
     return gandi.vhost.attach(resource)
+
+@cli.command(root=True)
+@click.argument('resource', required=False)
+@click.argument('gitref', required=False)
+@pass_gandi
+def deploy(gandi, resource, gitref):
+    """Deploy code on a remote vhost."""
+
+    return gandi.vhost.deploy(resource, gitref)
