@@ -80,7 +80,7 @@ class Vhost(GandiModule):
         if 'php' not in paas['type']:
             remote = 'ssh+git://%s/default.git' % paas_access
         else:
-            remote = 'ssh+git://%s/%s' % (paas_access, vhost)
+            remote = 'ssh+git://%s/%s.git' % (paas_access, vhost)
 
         return remote
 
