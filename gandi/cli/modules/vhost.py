@@ -113,7 +113,8 @@ class Vhost(GandiModule):
         if not directory:
             directory = vhost
 
-        git_command = 'git clone %s %s' % (remote.git_remote, directory)
+        git_command = 'git clone -o %s %s %s' % (vhost,
+             remote.git_remote, directory)
 
         return cls.execute(git_command)
 
