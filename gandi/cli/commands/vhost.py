@@ -114,3 +114,11 @@ def delete(gandi, resource, force, background):
             output_generic(gandi, oper, output_keys)
 
     return opers
+
+@cli.command()
+@click.argument('resource', required=True)
+@click.argument('directory', default=None, required=False)
+@pass_gandi
+def clone(gandi, resource, directory):
+    """ Clone this vhost in a local directory """
+    return gandi.vhost.clone(resource, directory)

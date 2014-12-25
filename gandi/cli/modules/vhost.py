@@ -65,3 +65,26 @@ class Vhost(GandiModule):
 
         cls.echo('Deleting your vhost.')
         cls.display_progress(opers)
+
+    @classmethod
+    def clone(cls, vhost, directory=None):
+        """Clone this vhost in a local git repository"""
+        paas = Paas.info(vhost)
+        git_server = paas['git_server']
+        # hack for dev
+        if 'dev' in paas['console']:
+            git_server = 'git.hosting.dev.gandi.net'
+
+        paas_access = '%s@%s' % (paas['user'], git_server)
+
+        if 'php' not in paas['type']:
+            git_url = 'ssh+git://%s/default.git' % paas_access
+        else:
+            git_url = 'ssh+git://%s/%s' % (paas_access, vhost)
+
+        if not directory:
+            directory = vhost
+
+        git_command = 'git clone %s %s' % (git_url, directory)
+
+        return cls.execute(git_command)
