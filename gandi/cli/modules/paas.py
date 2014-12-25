@@ -150,7 +150,6 @@ class Paas(GandiModule, SshkeyHelper):
             cls.display_progress(result)
             cls.echo('Your PaaS instance %s has been created.' % name)
 
-        cls.init_conf(name, created=not background, vhosts=vhosts)
         return result
 
     @classmethod
@@ -237,25 +236,6 @@ class Paas(GandiModule, SshkeyHelper):
         cls.configure(False, 'paas.deploy_git_host', '%s.git' % vhost)
         cls.configure(False, 'paas.access', paas_access)
         os.chdir(current_path)
-
-    @classmethod
-    def init_conf(cls, id, vhost=None, created=True, vhosts=None):
-        """ Initialize local configuration with PaaS information. """
-        paas = Paas.info(cls.usable_id(id))
-        cls.debug('save PaaS instance information to local configuration')
-
-        if vhost and not vhosts:
-            vhosts = [vhost]
-        if not vhosts:
-            if 'php' not in paas['type']:
-                vhost = 'default'
-            elif paas['vhosts']:
-                vhosts = [vht['name'] for vht in paas['vhosts']]
-            else:
-                return
-
-        for vhost in vhosts:
-            cls.init_vhost(vhost, created, paas=paas)
 
     @classmethod
     def usable_id(cls, id):
