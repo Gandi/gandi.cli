@@ -7,12 +7,14 @@ from gandi.cli.core.base import GandiModule
 
 
 class PaasAccess:
+    vhost = None
     git_remote = None
     ssh_remote = None
 
-    def __init__(self, git_remote=None, ssh_remote=None):
+    def __init__(self, vhost=None, git_remote=None, ssh_remote=None):
         self.git_remote = git_remote
         self.ssh_remote = ssh_remote
+        self.vhost = vhost
 
 
 class Vhost(GandiModule):
@@ -87,11 +89,12 @@ class Vhost(GandiModule):
         paas_access = '%s@%s' % (paas['user'], git_server)
 
         if 'php' not in paas['type']:
-            remote = 'ssh+git://%s/default.git' % paas_access
-        else:
-            remote = 'ssh+git://%s/%s.git' % (paas_access, vhost)
+            vhost = 'default'
 
-        return PaasAccess(git_remote=remote, ssh_remote=paas_access)
+        remote = 'ssh+git://%s/%s.git' % (paas_access, vhost)
+
+        return PaasAccess(vhost=vhost, git_remote=remote, 
+                ssh_remote=paas_access)
 
     @classmethod
     def attach(cls, vhost):
@@ -141,9 +144,9 @@ class Vhost(GandiModule):
         if not gitref:
             gitref = 'master'
 
-        cls.echo('Deploying %s to %s' % (gitref, vhost))
+        cls.echo('Deploying %s to %s' % (gitref, remote.vhost))
 
-        deploy_cmd = 'deploy %s %s' % (vhost, gitref)
+        deploy_cmd = 'deploy %s %s' % (remote.vhost, gitref)
         ssh_cmd = "ssh %s '%s'" % (remote.ssh_remote, deploy_cmd)
 
         return cls.execute(ssh_cmd)
