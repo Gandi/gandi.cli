@@ -67,8 +67,8 @@ class Vhost(GandiModule):
         cls.display_progress(opers)
 
     @classmethod
-    def clone(cls, vhost, directory=None):
-        """Clone this vhost in a local git repository"""
+    def git_remote(cls, vhost):
+        """Return remote for given vhost"""
         paas = Paas.info(vhost)
         git_server = paas['git_server']
         # hack for dev
@@ -78,13 +78,29 @@ class Vhost(GandiModule):
         paas_access = '%s@%s' % (paas['user'], git_server)
 
         if 'php' not in paas['type']:
-            git_url = 'ssh+git://%s/default.git' % paas_access
+            remote = 'ssh+git://%s/default.git' % paas_access
         else:
-            git_url = 'ssh+git://%s/%s' % (paas_access, vhost)
+            remote = 'ssh+git://%s/%s' % (paas_access, vhost)
+
+        return remote
+
+    @classmethod
+    def attach(cls, vhost):
+        """Attach a vhost to a remote from the local
+        repository"""
+        remote = cls.git_remote(vhost)
+
+        return cls.execute('git remote add %s %s' % (vhost, remote,))
+
+    @classmethod
+    def clone(cls, vhost, directory=None):
+        """Clone this vhost in a local git repository"""
+
+        remote = cls.git_remote(vhost)
 
         if not directory:
             directory = vhost
 
-        git_command = 'git clone %s %s' % (git_url, directory)
+        git_command = 'git clone %s %s' % (remote, directory)
 
         return cls.execute(git_command)

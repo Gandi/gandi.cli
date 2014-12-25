@@ -122,3 +122,10 @@ def delete(gandi, resource, force, background):
 def clone(gandi, resource, directory):
     """ Clone this vhost in a local directory """
     return gandi.vhost.clone(resource, directory)
+
+@cli.command()
+@click.argument('resource', required=True)
+@pass_gandi
+def attach(gandi, resource):
+    """ Add a remote for a vhost to the local git repository """
+    return gandi.vhost.attach(resource)
