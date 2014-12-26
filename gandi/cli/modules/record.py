@@ -50,3 +50,31 @@ class Record(GandiModule):
         Zone.set(zone_id, new_version_id)
 
         return new_version_id
+
+    @classmethod
+    def delete(cls, zone_id, record):
+        """Delete a record for a zone"""
+        cls.echo('Creating new zone record')
+        new_version_id = Zone.new(zone_id)
+
+        cls.echo('Deleting zone record')
+        cls.call('domain.zone.record.delete', zone_id, new_version_id, record)
+
+        cls.echo('Activation of new zone version')
+        Zone.set(zone_id, new_version_id)
+
+        return new_version_id
+
+    @classmethod
+    def update(cls, zone_id, records):
+        """Update records for a zone"""
+        cls.echo('Creating new zone file')
+        new_version_id = Zone.new(zone_id)
+
+        cls.echo('Updating zone records')
+        cls.call('domain.zone.record.set', zone_id, new_version_id, records)
+
+        cls.echo('Activation of new zone version')
+        Zone.set(zone_id, new_version_id)
+
+        return new_version_id

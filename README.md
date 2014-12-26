@@ -110,6 +110,11 @@ You can use the information of Gandi handles associated to Contacts in your acco
 
     $ gandi domain info example.com
 
+#### 5. List NS records of a domain
+    $ gandi record list example.com
+
+You can use `--output` to extract your zone records in a file, then edit it and use `gandi record update example.com -f file` to update it easily.
+
 ### Creating a Virtual Machine
 
 Gandi Server offers powerful Xen- and Linux-based virtual machines since 2007.
