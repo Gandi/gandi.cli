@@ -64,9 +64,65 @@ def create(gandi, domain, zone_id, name, type, value, ttl):
         result = gandi.domain.info(domain)
         zone_id = result['zone_id']
 
+    if not zone_id:
+        gandi.echo('No zone records found, domain %s doesn\'t seems to be '
+                   'managed at Gandi.' % domain)
+        return
+
     record = {'type': type, 'name': name, 'value': value}
     if ttl:
         record['ttl'] = ttl
 
     result = gandi.record.create(zone_id, record)
+    return result
+
+
+@cli.command()
+@click.option('--zone-id', '-z', default=None, type=click.INT,
+              help='Zone ID tu use, if not set, default zone will be used.')
+@click.option('--name', default=None,
+              help='Relative name of the record to delete.')
+@click.option('--type', default=None,
+              type=click.Choice(['A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT',
+                                 'WKS', 'SRV', 'LOC', 'SPF']),
+              help='DNS record type')
+@click.option('--value', default=None,
+              type=StringConstraint(minlen=1, maxlen=1024))
+@click.argument('domain', required=True)
+@pass_gandi
+def delete(gandi, domain, zone_id, name, type, value):
+    """Delete a record entry for a domain"""
+    if not zone_id:
+        result = gandi.domain.info(domain)
+        zone_id = result['zone_id']
+
+    if not zone_id:
+        gandi.echo('No zone records found, domain %s doesn\'t seems to be '
+                   'managed at Gandi.' % domain)
+        return
+
+    record = {'name': name, 'type': type, 'value': value}
+    result = gandi.record.delete(zone_id, record)
+    return result
+
+
+@cli.command()
+@click.option('--zone-id', '-z', default=None, type=click.INT,
+              help='Zone ID tu use, if not set, default zone will be used.')
+@click.option('--file', '-f', type=click.File('r'),
+              required=True, help='Filename of the zone file.')
+@click.argument('domain', required=True)
+@pass_gandi
+def update(gandi, domain, zone_id, file):
+    """Update all records entries for a domain from a file"""
+    if not zone_id:
+        result = gandi.domain.info(domain)
+        zone_id = result['zone_id']
+
+    if not zone_id:
+        gandi.echo('No zone records found, domain %s doesn\'t seems to be '
+                   'managed at Gandi.' % domain)
+
+    records = file.read()
+    result = gandi.record.update(zone_id, records)
     return result
