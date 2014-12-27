@@ -143,7 +143,7 @@ def output_snapshot_profile(gandi, profile, output_keys, justify=13):
             output_generic(gandi, schedule, schedule_keys, justify)
 
 
-def check_domain_available(ctx, domain):
+def check_domain_available(ctx, param, domain):
     """ Helper to check if a domain is available."""
     gandi = ctx.obj
     result = gandi.call('domain.available', [domain])
