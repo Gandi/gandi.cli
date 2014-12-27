@@ -152,7 +152,7 @@ def check_domain_available(ctx, param, domain):
         result = gandi.call('domain.available', [domain])
 
     if result[domain] == 'unavailable':
-        gandi.echo('%s is not available' % domain)
+        raise click.ClickException('%s is not available' % domain)
         return
 
     return domain
