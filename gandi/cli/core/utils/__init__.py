@@ -161,24 +161,30 @@ def check_domain_available(ctx, pointless_click_placeholder, domain):
     """ Helper to check if a domain is available."""
     # pointless_click_placeholder is to prevent Click compatibility warning
     gandi = ctx.obj
+    if domain is None:
+        domain = click.prompt("Enter the domain name you want to register")
+
     result = gandi.call('domain.available', [domain])
     while result[domain] == 'pending':
         time.sleep(1)
         result = gandi.call('domain.available', [domain])
 
     if result[domain] == 'unavailable':
-        gandi.echo('Sorry, the domain %s is not available for registration.' % domain)
-        return
+        gandi.echo("Sorry, the domain {d} is not available for registration. Try another?".format(d=domain))
+        return 
 
-    if result[domain] == 'available':
-        click.confirm('{d} is available, would you like to register it?'.format(d=domain), abort=True)
+    elif result[domain] == 'available':
+        # Prompt user for confirmation in next step
         return domain
 
-    if result[domain] == 'error_invalid':
+    elif result[domain] == 'error_invalid':
         gandi.echo("Sorry, {d} is not a valid domain.".format(d=domain))
+
+    # If we're here, it means we've received a result we haven't accounted for yet
     else:
         gandi.echo(result)
-        return
+
+    return
 
 
 def output_contact_info(gandi, data, output_keys, justify=10):
