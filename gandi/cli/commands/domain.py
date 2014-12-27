@@ -42,7 +42,7 @@ def info(gandi, resource):
 @click.option('--domain', default=None, prompt=True,
               callback=check_domain_available,
               help='Name of the domain.')
-@click.option('--duration', default=1, prompt=True,
+@click.option('--duration', default=1, 
               type=click.IntRange(min=1, max=10),
               help='Registration period in years, between 1 and 10.')
 @click.option('--owner', default=None,
@@ -58,6 +58,11 @@ def info(gandi, resource):
 @pass_gandi
 def create(gandi, domain, duration, owner, admin, tech, bill, background):
     """Buy a domain."""
+
+    # If domain is not available, no need to continue
+    if not domain:
+            return
+
     result = gandi.domain.create(domain, duration, owner, admin, tech, bill,
                                  background)
     if background:
