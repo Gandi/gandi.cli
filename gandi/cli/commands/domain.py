@@ -39,10 +39,9 @@ def info(gandi, resource):
 
 
 @cli.command()
-@click.option('--domain', default=None, prompt=True,
-              callback=check_domain_available,
-              help='Name of the domain.')
-@click.option('--duration', default=1, prompt=True,
+@click.argument('domain', default=None, required=False,
+              callback=check_domain_available)
+@click.option('--duration', default=1, 
               type=click.IntRange(min=1, max=10),
               help='Registration period in years, between 1 and 10.')
 @click.option('--owner', default=None,
@@ -58,8 +57,31 @@ def info(gandi, resource):
 @pass_gandi
 def create(gandi, domain, duration, owner, admin, tech, bill, background):
     """Buy a domain."""
-    result = gandi.domain.create(domain, duration, owner, admin, tech, bill,
-                                 background)
+
+    # If domain is not available, no need to continue
+    if not domain:
+            return
+
+    user_handle = gandi.call('contact.info')['handle']
+    owner_ = owner or user_handle
+    admin_ = admin or user_handle
+    tech_ = tech or user_handle
+    bill_ = bill or user_handle
+
+    msg = """
+The domain {domain} is available. If you continue, registration will be attempted with the following parameters:
+
+        Duration: {d} year(s)
+        Owner:    {o}
+        Admin:    {a}
+        Tech:     {t}
+        Billing:  {b}
+    """.format(domain=domain, d=duration, o=owner_, a=admin_, t=tech_, b=bill_)
+
+    gandi.echo(msg)
+    click.confirm("Your account will be charged. Do you want to continue?", abort=True)
+    result = gandi.domain.create(domain, duration, owner, admin, tech, bill, background)
+
     if background:
         gandi.pretty_echo(result)
 

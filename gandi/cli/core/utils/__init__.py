@@ -4,6 +4,7 @@ Also custom exceptions and method to generate a random string.
 """
 
 import time
+import click
 
 
 class MissingConfiguration(Exception):
@@ -156,20 +157,34 @@ def output_snapshot_profile(gandi, profile, output_keys, justify=13):
             gandi.separator_line()
             output_generic(gandi, schedule, schedule_keys, justify)
 
-
-def check_domain_available(ctx, domain):
+def check_domain_available(ctx, pointless_click_placeholder, domain):
     """ Helper to check if a domain is available."""
+    # pointless_click_placeholder is to prevent Click compatibility warning
     gandi = ctx.obj
+    if domain is None:
+        domain = click.prompt("Enter the domain name you want to register")
+
     result = gandi.call('domain.available', [domain])
     while result[domain] == 'pending':
         time.sleep(1)
         result = gandi.call('domain.available', [domain])
 
     if result[domain] == 'unavailable':
-        gandi.echo('%s is not available' % domain)
-        return
+        gandi.echo("Sorry, the domain {d} is not available for registration. Try another?".format(d=domain))
+        return 
 
-    return domain
+    elif result[domain] == 'available':
+        # Prompt user for confirmation in next step
+        return domain
+
+    elif result[domain] == 'error_invalid':
+        gandi.echo("Sorry, {d} is not a valid domain.".format(d=domain))
+
+    # If we're here, it means we've received a result we haven't accounted for yet
+    else:
+        gandi.echo(result)
+
+    return
 
 
 def output_contact_info(gandi, data, output_keys, justify=10):
