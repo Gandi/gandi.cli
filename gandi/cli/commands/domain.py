@@ -4,7 +4,8 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (
-    output_line, output_generic, check_domain_available, output_contact_info,
+    output_line, output_generic, check_domain_available, 
+    output_contact_info, to_utc,
 )
 from gandi.cli.core.params import pass_gandi
 
@@ -34,12 +35,12 @@ def info(gandi, resource):
     result = gandi.domain.info(resource)
     output_contact_info(gandi, result['contacts'], contact_field, justify=12)
     output_generic(gandi, result, output_keys, justify=12)
-    output_line(gandi, 'created',
-                result['date_registry_creation'].strftime("%Y-%m-%d"),
-                justify=12)
-    output_line(gandi, 'expires',
-                result['date_hold_begin'].strftime("%Y-%m-%d"),
-                justify=12)
+    output_line(gandi, 'created', 
+      to_utc(result['date_registry_creation']).strftime("%Y-%m-%d %H:%M %Z"), 
+      justify=12)
+    output_line(gandi, 'expires', 
+      to_utc(result['date_registry_end']).strftime("%Y-%m-%d %H:%M %Z"), 
+      justify=12)
 
     return result
 

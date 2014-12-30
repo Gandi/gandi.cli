@@ -4,6 +4,11 @@ Also custom exceptions and method to generate a random string.
 """
 
 import time
+try:
+    from pytz import timezone
+except ImportError:
+    print >> sys.stderr, 'pytz is required, please reinstall.'
+    sys.exit(1)
 
 
 class MissingConfiguration(Exception):
@@ -216,3 +221,12 @@ def output_list(gandi, val):
     """Helper to generate a beautiful list."""
     for element in val:
         gandi.echo(element)
+
+def to_utc(datetime):
+    """Helper to transform datetime to utc, either it's naive or not"""
+    utc = timezone('UTC')
+    if datetime.tzinfo:
+        return datetime.astimezone(utc)
+    else:
+        tz = timezone('Europe/Paris')
+        return tz.localize(datetime).astimezone(utc)
