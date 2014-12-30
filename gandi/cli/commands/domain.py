@@ -4,8 +4,8 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (
-    output_line, output_generic, check_domain_available, 
-    output_contact_info, to_utc,
+    output_generic, check_domain_available, output_contact_info,
+    output_line, to_utc,
 )
 from gandi.cli.core.params import pass_gandi
 
