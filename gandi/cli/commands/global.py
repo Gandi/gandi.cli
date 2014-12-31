@@ -44,10 +44,11 @@ def config(gandi, g, key, value):
 @pass_gandi
 def api(gandi):
     """Display information about API used."""
-    output_keys = ['api_version']
+    key_name = 'API version'
 
     result = gandi.api.info()
-    output_generic(gandi, result, output_keys)
+    result[key_name] = result.pop('api_version')
+    output_generic(gandi, result, [key_name])
 
     return result
 
