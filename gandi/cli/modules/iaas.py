@@ -252,7 +252,7 @@ class Iaas(GandiModule, SshkeyHelper):
             if ip:
                 try:
                     ip_ = Ip.info(ip)
-                except Exception as err:
+                except Exception:
                     pass
                 else:
                     if not Ip.check_and_detach(ip_, None, force=False):
