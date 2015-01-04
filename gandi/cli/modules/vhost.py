@@ -1,7 +1,6 @@
 """ Vhost commands module. """
 
 import os
-from click import UsageError
 
 from gandi.cli.core.base import GandiModule
 
