@@ -26,7 +26,7 @@ class DuplicateResults(Exception):
 
 def output_line(gandi, key, val, justify):
     """ Base helper to output a key value using left justify."""
-    msg = ('%%-%ds: %%s' % justify) % (key, val)
+    msg = ('%%-%ds: %%s' % justify) % (key, val or '')
     gandi.echo(msg)
 
 
