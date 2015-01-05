@@ -14,14 +14,13 @@ from gandi.cli.core.params import (pass_gandi, IntChoice,
 def packages(gandi):
     """ List certificate packages. """
     packages = gandi.certificate.package_list()
+    def keyfunc(item):
+        return (item['category']['id'],
+                item['max_domains'],
+                item['name'])
 
-    for package in sorted(packages,
-                          lambda a, b: cmp("%02d%03d%s" % (a['category']['id'],
-                                                           a['max_domains'],
-                                                           a['name']),
-                                           "%02d%03d%s" % (b['category']['id'],
-                                                           b['max_domains'],
-                                                           b['name']))):
+    packages.sort(key=keyfunc)
+    for package in packages:
         gandi.echo(package['name'])
 
     return packages

@@ -342,10 +342,10 @@ class Iaas(GandiModule, SshkeyHelper):
         we dont have another way to learn the key yet, so do this
         for the user."""
         cls.echo('Wiping old key and learning the new one')
-        version, ip_addr = cls.vm_ip(vm_id)
+        _version, ip_addr = cls.vm_ip(vm_id)
         cls.execute('ssh-keygen -R "%s"' % ip_addr)
 
-        for _ in xrange(5):
+        for _ in range(5):
             output = cls.exec_output('ssh-keyscan "%s"' % ip_addr)
             if output:
                 with open(os.path.expanduser('~/.ssh/known_hosts'), 'a') as f:
@@ -367,7 +367,7 @@ class Iaas(GandiModule, SshkeyHelper):
         cmd.extend((local_file, '%s@%s:%s' %
                    (login, ip_addr, remote_file),))
         cls.echo('Running %s' % ' '.join(cmd))
-        for _ in xrange(5):
+        for _ in range(5):
             ret = cls.execute(cmd, False)
             if ret:
                 break
