@@ -51,7 +51,7 @@ class GandiCLI(click.Group):
         def get_version(ctx, param, value):
             if value:
                 print(('Gandi CLI %s\n\n'
-                       'Copyright: © 2014 Gandi S.A.S.\n'
+                       'Copyright: © 2014-2015 Gandi S.A.S.\n'
                        'License: GPL-3' % __version__))
                 ctx.exit()
 

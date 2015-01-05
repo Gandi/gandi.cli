@@ -173,12 +173,19 @@ class GandiModule(GandiConfig):
             return False
 
     @classmethod
-    def exec_output(cls, command, shell=True):
-        """ Return execution output """
+    def exec_output(cls, command, shell=True, encoding='utf-8'):
+        """ Return execution output
+
+        :param encoding: charset used to decode the stdout
+        :type encoding: str
+
+        :return: the return of the command
+        :rtype: unicode string
+        """
         proc = Popen(command, shell=shell, stdout=PIPE)
-        (stdout, _) = proc.communicate()
+        stdout, _stderr = proc.communicate()
         if proc.returncode == 0:
-            return stdout
+            return stdout.decode(encoding)
 
     @classmethod
     def update_progress(cls, progress, starttime):

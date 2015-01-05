@@ -41,7 +41,7 @@ _build
 .settings
 
 # virtual env
-venv
+venv*
 
 conf/.pc
 api/.pc
