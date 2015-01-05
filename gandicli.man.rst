@@ -194,7 +194,7 @@ Details:
 
 * ``gandi help command`` display help for command, if command is a namespace it will display list of available commands for this namespace.
 
-* ``gandi ip list`` show all the ip created in Gandi hosting for the account. Possible options to filter the list are : ``--attached`` to only show attached ips, ``--detached`` to only show detached ips, and ``--type`` (being in ``public`` or ``private``) to only show public or private ips. Possible options to get more details are : ``--version`` to get the ip version, ``--reverse`` to get the ip reverse, and ``--vm`` to get the attached vm if any.
+* ``gandi ip list`` show all the ip created in Gandi hosting for the account. Possible options to filter the list are : ``--attached`` to only show attached ips, ``--detached`` to only show detached ips, and ``--type`` (being in ``public`` or ``private``) to only show public or private ips. Possible options to get more details are : ``--version`` to get the ip version, ``--reverse`` to get the ip reverse, and ``--vm`` to get the attached vm if any, ``--id`` to add the integer id of each ip.
 
 * ``gandi ip info`` show information about specific ip.
 

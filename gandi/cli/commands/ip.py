@@ -13,19 +13,23 @@ from gandi.cli.core.params import (option, pass_gandi, DATACENTER,
               help='Filter by datacenter.')
 @click.option('--type', default=None, type=IP_TYPE,
               help='Filter by type.')
+@click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--attached', help='Only display attached ip.', is_flag=True)
 @click.option('--detached', help='Only display detached ip.', is_flag=True)
 @click.option('--version', help='Display ip version.', is_flag=True)
 @click.option('--reverse', help='Display ip reverse.', is_flag=True)
 @click.option('--vm', help='Display ip vm.', is_flag=True)
 @pass_gandi
-def list(gandi, datacenter, type, attached, detached, version, reverse, vm):
+def list(gandi, datacenter, type, id, attached, detached, version, reverse,
+         vm):
     """List ips."""
     if attached and detached:
         gandi.echo("You can't set --attached and --detached at the same time.")
         return
 
     output_keys = ['ip', 'state', 'dc', 'type']
+    if id:
+        output_keys.append('id')
     if version:
         output_keys.append('version')
     if vm:
