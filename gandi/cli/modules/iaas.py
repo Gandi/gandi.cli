@@ -204,7 +204,7 @@ class Iaas(GandiModule, SshkeyHelper):
 
         if not hostname:
             hostname = randomstring()
-            disk_name = 'sys_%s' % hostname[4:]
+            disk_name = 'sys_%s' % hostname[3:]
         else:
             disk_name = 'sys_%s' % hostname.replace('.', '')
 

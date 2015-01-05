@@ -275,7 +275,7 @@ def output_ip(gandi, ip, datacenters, vms, ifaces, output_keys, justify=11):
 def randomstring(prefix=None):
     """ Helper to generate a random string, used for temporary hostnames."""
     if not prefix:
-        prefix = 'temp'
+        prefix = 'tmp'
     return '%s%s' % (prefix, str(int(time.time())))
 
 
