@@ -191,7 +191,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
 
     """
     if not name:
-        name = randomstring()
+        name = randomstring('vm')
 
     result = gandi.paas.create(name, size, type, quantity, duration,
                                datacenter, vhosts, password,

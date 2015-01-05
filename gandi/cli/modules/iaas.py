@@ -203,8 +203,8 @@ class Iaas(GandiModule, SshkeyHelper):
         datacenter_id_ = int(Datacenter.usable_id(datacenter))
 
         if not hostname:
-            hostname = randomstring()
-            disk_name = 'sys_%s' % hostname[3:]
+            hostname = randomstring('vm')
+            disk_name = 'sys_%s' % hostname[2:]
         else:
             disk_name = 'sys_%s' % hostname.replace('.', '')
 
