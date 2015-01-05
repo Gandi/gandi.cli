@@ -156,9 +156,9 @@ def output_snapshot_profile(gandi, profile, output_keys, justify=13):
             gandi.separator_line()
             output_generic(gandi, schedule, schedule_keys, justify)
 
-
-def check_domain_available(ctx, domain):
+def check_domain_available(ctx, pointless_click_placeholder, domain):
     """ Helper to check if a domain is available."""
+    # pointless_click_placeholder is to prevent Click compatibility warning
     gandi = ctx.obj
     result = gandi.call('domain.available', [domain])
     while result[domain] == 'pending':
@@ -166,7 +166,7 @@ def check_domain_available(ctx, domain):
         result = gandi.call('domain.available', [domain])
 
     if result[domain] == 'unavailable':
-        gandi.echo('%s is not available' % domain)
+        gandi.echo('Sorry, the domain %s is not available for registration.' % domain)
         return
 
     return domain
