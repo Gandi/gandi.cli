@@ -3,6 +3,7 @@
 
 import re
 import os
+import sys
 
 from setuptools import setup, find_packages
 
@@ -15,7 +16,18 @@ with open(os.path.join(here, 'gandi', 'cli', '__init__.py')) as v_file:
     version = re.compile(r".*__version__ = '(.*?)'",
                          re.S).match(v_file.read()).group(1)
 
-requires = ['pyyaml', 'click<=4.0', 'requests']
+requires = ['setuptools', 'pyyaml', 'click<=4.0', 'requests']
+
+
+tests_require = ['nose', 'coverage']
+if sys.version_info < (2, 7):
+    tests_require += ['unittest2', 'importlib']
+
+if sys.version_info < (3, 3):
+    tests_require.append('mock')
+
+extras_require = {'test': tests_require,
+                  }
 
 
 setup(name='gandi.cli',
@@ -38,6 +50,8 @@ setup(name='gandi.cli',
       include_package_data=True,
       zip_safe=False,
       install_requires=requires,
+      tests_require=tests_require,
+      extras_require=extras_require,
       entry_points="""\
 [console_scripts]
 gandi = gandi.cli.__main__:main
