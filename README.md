@@ -24,6 +24,7 @@ Use `$ gandi` to easily create and manage web resources from the command line.
     * [Configuration](#configuration)
     * [Development](#development)
   * [Contributing](#contributing)
+  * [Code status](#code-status)
   * [License](#license)
 
 ## Requirements
@@ -225,6 +226,10 @@ Create a git branch with your new feature or bugfix and either:
 * mail the patch to feedback@gandi.net,
 * send the URL for your branch and we will review/merge it if correct,
 * open a merge request on GitHub
+
+## Code status
+
+[![Build Status](https://travis-ci.org/Gandi/gandi.cli.svg?branch=master)](https://travis-ci.org/Gandi/gandi.cli)
 
 ## License / Copying
 
