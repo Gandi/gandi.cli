@@ -366,4 +366,4 @@ def option(*param_decls, **attrs):
     return decorator
 
 # create a decorator to pass the Gandi object as context to click calls
-pass_gandi = click.make_pass_decorator(GandiContextHelper)
+pass_gandi = click.make_pass_decorator(GandiContextHelper, ensure=True)
