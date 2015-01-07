@@ -137,13 +137,13 @@ Set the VM's RAM to 2GB and add a CPU core on the fly.
 
 #### 3. Create a custom VM
 
-    $ gandi vm create --datacenter US --hostname docker --cores 2 --memory 3072 --size 10240 --image "Ubuntu 14.04 64 bits LTS (HVM)" --run "curl -s https://get.docker.io/ubuntu | sh"
+    $ gandi vm create --datacenter US --hostname docker --cores 2 --memory 3072 --size 10240 --image "Ubuntu 14.04 64 bits LTS (HVM)" --run "curl -sSL https://get.docker.com/ubuntu/ | sh"
     * root user will be created.
     * SSH key authorization will be used.
     * No password supplied for vm (required to enable emergency web console access).
     * Configuration used: 2 cores, 3072Mb memory, ip v4+v6, image Ubuntu 14.04 64 bits LTS, hostname: docker
 
-This command will setup the above VM, and install docker by running `curl -s https://get.docker.io/ubuntu | sh` after creation.
+This command will setup the above VM, and install docker by running `curl -sSL https://get.docker.com/ubuntu/ | sh` after creation.
 
 #### 4. View your ressources
 
