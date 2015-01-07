@@ -7,7 +7,7 @@ from gandi.cli.commands import disk
 
 
 class DiskTestCase(CommandTestCase):
-    
+
     def test_list(self):
 
         result = self.runner.invoke(disk.list, [])

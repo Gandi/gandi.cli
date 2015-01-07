@@ -6,7 +6,7 @@ from ..fixtures.api import Api
 
 
 class CommandTestCase(unittest.TestCase):
-    
+
     def setUp(self):
         self.runner = CliRunner()
         GandiModule._api = Api()

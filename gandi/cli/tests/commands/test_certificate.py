@@ -4,9 +4,9 @@ from .base import CommandTestCase
 
 
 class CertTestCase(CommandTestCase):
-    
+
     def test_packages(self):
-        
+
         result = self.runner.invoke(certificate.packages, [])
 
         #self.assertEqual(result.exit_code, 0)
@@ -32,9 +32,9 @@ cert_bus_20_250_0
         self.assertEqual(result.exit_code, 0)
 
     def test_list(self):
-        
+
         result = self.runner.invoke(certificate.list, [])
-        
+
         self.assertEqual(result.output, """cn           : mydomain.name
 package      : cert_std_1_0_0
 ----------
@@ -45,9 +45,9 @@ package      : cert_bus_20_250_0
 
 
     def test_info(self):
-        
+
         result = self.runner.invoke(certificate.info, ['inter.net'])
-        
+
         self.assertEqual(result.output, """cn           : inter.net
 date_created : 20140904T14:06:26
 date_end     : None
@@ -63,7 +63,7 @@ status       : valid
                                      '--duration', 5,
                                      '--package', 'cert_std_5_0_0'
                                      ])
-        
+
         self.assertEqual(result.output, '')
         self.assertEqual(result.exit_code, 0)
-        
+
