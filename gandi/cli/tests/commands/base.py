@@ -1,7 +1,7 @@
 from click.testing import CliRunner
 
 from gandi.cli.core.base import GandiModule
-from ..compat import mock, unittest
+from ..compat import unittest
 from ..fixtures.api import Api
 
 

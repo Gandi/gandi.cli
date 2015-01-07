@@ -1,5 +1,3 @@
-import sys
-
 from .compat import unittest
 from .compat import mock
 
