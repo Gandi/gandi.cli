@@ -94,7 +94,7 @@ class Ip(GandiModule):
     def detach(cls, resource, background=False, force=False):
         try:
             ip_ = cls.info(resource)
-        except UsageError as err:
+        except UsageError:
             cls.error("Can't find this ip %s" % resource)
 
         iface = Iface.info(ip_['iface_id'])
@@ -104,7 +104,7 @@ class Ip(GandiModule):
     def delete(cls, resource, background=False, force=False):
         try:
             ip_ = cls.info(resource)
-        except UsageError as err:
+        except UsageError:
             cls.error("Can't find this ip %s" % resource)
 
         iface = Iface.info(ip_['iface_id'])
@@ -143,7 +143,7 @@ class Ip(GandiModule):
             qry_id = cls.from_ip(id)
             if not qry_id:
                 qry_id = int(id)
-        except Exception as err:
+        except Exception:
             qry_id = None
 
         if not qry_id:
