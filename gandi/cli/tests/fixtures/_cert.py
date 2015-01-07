@@ -7,30 +7,30 @@ except ImportError:
 def package_list(options):
     return [{'category': {'id': 1, 'name': 'standard'},
              'comodo_id': 287,
-            'id': 1,
-            'max_domains': 1,
-            'min_domains': 1,
-            'name': 'cert_std_1_0_0',
-            'sgc': 0,
-            'trustlogo': 0,
-            'warranty': 0,
-            'wildcard': 0},
-           {'category': {'id': 1, 'name': 'standard'},
-            'comodo_id': 279,
-            'id': 2,
-            'max_domains': 3,
-            'min_domains': 1,
-            'name': 'cert_std_3_0_0',
-            'sgc': 0,
-            'trustlogo': 0,
-            'warranty': 0,
-            'wildcard': 0},
-           {'category': {'id': 1, 'name': 'standard'},
-            'comodo_id': 289,
-            'id': 3,
-            'max_domains': 1,
-            'min_domains': 1,
-            'name': 'cert_std_w_0_0',
+             'id': 1,
+             'max_domains': 1,
+             'min_domains': 1,
+             'name': 'cert_std_1_0_0',
+             'sgc': 0,
+             'trustlogo': 0,
+             'warranty': 0,
+             'wildcard': 0},
+            {'category': {'id': 1, 'name': 'standard'},
+             'comodo_id': 279,
+             'id': 2,
+             'max_domains': 3,
+             'min_domains': 1,
+             'name': 'cert_std_3_0_0',
+             'sgc': 0,
+             'trustlogo': 0,
+             'warranty': 0,
+             'wildcard': 0},
+            {'category': {'id': 1, 'name': 'standard'},
+             'comodo_id': 289,
+             'id': 3,
+             'max_domains': 1,
+             'min_domains': 1,
+             'name': 'cert_std_w_0_0',
              'sgc': 0,
              'trustlogo': 0,
              'warranty': 0,
@@ -185,8 +185,8 @@ def package_list(options):
              'trustlogo': 0,
              'warranty': 250000,
              'wildcard': 0
-             }
-            ]
+            }
+           ]
 
 
 def list(options):
@@ -254,7 +254,7 @@ def list(options):
              'comodo_id': None,
              'joi_country': None,
              'joi_state': None}
-            ]
+           ]
 
 
 def info(id):

@@ -62,7 +62,7 @@ status       : valid
                                     ['--csr', 'dummy_csr',
                                      '--duration', 5,
                                      '--package', 'cert_std_5_0_0'
-                                     ])
+                                    ])
 
         self.assertEqual(result.output, '')
         self.assertEqual(result.exit_code, 0)

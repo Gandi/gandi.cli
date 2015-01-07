@@ -17,5 +17,4 @@ class Api(object):
         except Exception as exc:
             log.exception('Unexpected Exception %s while calling %s' % (exc,
                                                                         method)
-                          )
-
+                         )

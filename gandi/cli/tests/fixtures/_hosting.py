@@ -74,7 +74,7 @@ def disk_list(options):
               'date_created': DateTime('20150103T15:26:52'),
               'snapshot_profile_id': None,
               'can_snapshot': True}
-             ]
+            ]
 
     if 'name' in options:
         disks = dict([(disk['name'], disk) for disk in disks])

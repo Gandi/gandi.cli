@@ -49,7 +49,7 @@ vm        : arch64
         result = self.runner.invoke(disk.detach, ['data'])
         self.assertEqual(result.output.strip(),
                          "Are you sure to detach data? [y/N]:"
-                         )
+                        )
         self.assertEqual(result.exit_code, 0)
 
     def test_detach_forced(self):
