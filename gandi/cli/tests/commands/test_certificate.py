@@ -43,14 +43,13 @@ package      : cert_bus_20_250_0
 """)
         self.assertEqual(result.exit_code, 0)
 
-
     def test_info(self):
 
         result = self.runner.invoke(certificate.info, ['inter.net'])
 
         self.assertEqual(result.output, """cn           : inter.net
 date_created : 20140904T14:06:26
-date_end     : None
+date_end     :
 package      : cert_bus_20_250_0
 status       : valid
 """)
@@ -62,8 +61,7 @@ status       : valid
                                     ['--csr', 'dummy_csr',
                                      '--duration', 5,
                                      '--package', 'cert_std_5_0_0'
-                                    ])
+                                     ])
 
         self.assertEqual(result.output, '')
         self.assertEqual(result.exit_code, 0)
-
