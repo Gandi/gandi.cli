@@ -10,6 +10,9 @@ class CommandTestCase(unittest.TestCase):
     def setUp(self):
         self.runner = CliRunner()
         GandiModule._api = Api()
+        GandiModule._conffiles = {'global': {'api': {'env': 'test',
+                                                     'key': 'apikey0001'}}}
 
     def tearDown(self):
         GandiModule._api = None
+        GandiModule._conffiles = {}
