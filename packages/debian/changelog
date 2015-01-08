@@ -1,3 +1,32 @@
+gandicli (0.12) unstable; urgency=medium
+
+  * New 'ip' namespace with commands for managing public/private ip resources.
+  * New 'vlan' namespace with commands for managing vlans for virtual machines.
+  * New command 'gandi account info' to display information about credits
+    amount for hosting account.
+  * New command 'gandi contact create' to create a new contact.
+  * New command 'gandi disk snapshot' to create a disk snapshot on the fly.
+  * Update 'gandi vm create' command:
+      - enabling creation of vlan and ip assignment for this vlan directly
+        during vm creation.
+      - enabling creation of a private only ip virtual machine.
+      - parameter --ip-version is not read from configuration file anymore,
+        still defaulting to 4.
+  * Update 'gandi paas create' command to allow again the use of password
+    provided on the command line.
+  * Update 'record' namespace to add delete/update commands, with option to
+    export zones to file.
+  * Use different prefix for temporary names based on type of resource.
+  * Switch to use HVM image as default disk image when creating virtual machine.
+  * Add kernel information to output of 'gandi disk list' command.
+  * Fixes bug with paas vhost directory creation.
+  * Fixes bug with 'gandi mail delete' command raising a traceback.
+  * Fixes bug with duplicates entries in commands accepting multiple resources.
+  * Fixes various typos in documentation and help pages.
+  * Add first batch of unittests.
+
+ -- Dejan Filipovic <sayoun@gandi.net>  Thu, 08 Jan 2015 09:58:44 +0100
+
 gandicli (0.11) unstable; urgency=medium
 
   * New command 'gandi disk detach' to detach disks from

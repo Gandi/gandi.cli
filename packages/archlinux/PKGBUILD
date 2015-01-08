@@ -1,6 +1,6 @@
 # Maintainer: Raphaël Doursenaud <rdoursenaud@gpcsolutions.fr>
 pkgname=gandi.cli
-pkgver=0.11
+pkgver=0.12
 pkgrel=1
 pkgdesc="Gandi command line interface"
 arch=('any')
