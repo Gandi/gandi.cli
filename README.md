@@ -227,10 +227,7 @@ Docstrings should follow PEP257 recommendations: http://www.python.org/dev/peps/
 
 ## Contributing
 
-Create a git branch with your new feature or bugfix and either:
-* mail the patch to feedback@gandi.net,
-* send the URL for your branch and we will review/merge it if correct,
-* open a merge request on GitHub
+We <3 contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## Code status
 

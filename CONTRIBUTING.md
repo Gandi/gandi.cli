@@ -5,7 +5,13 @@
 * [Reporting Issues](#reporting-issues)
 * [Improving documentation](#improving-documentation)
 * [Adding features](#adding-features)
+  * [Quickstart](#quickstart)
 * [Contribution Guidelines](#contribution-guidelines)
+  * [Create issues](#create-issues)
+  * [Proposing your changes](#proposing-your-changes)
+  * [Conventions](#conventions)
+  * [Tests](#tests)
+  * [Documentation](#documentation)
 * [Community Guidelines](#docker-community-guidelines)
 
 
@@ -48,15 +54,23 @@ Make your changes, test them, and submit a PR!
 
 ## Contribution Guidelines
 
-### Pull requests are always welcome
+### Create issues
+
+Any major changes should be documented as [a GitHub issue](https://github.com/Gandi/gandi.cli/issues) 
+before you start working on it.
+
+### Proposing your changes
 
 Don't hesitate--we appreciate every contribution, no matter how small.
 
-We'll check out your pull requests in the timeliest manner possible. If we can't accept your PR for some reason, we'll give you feedback and you're encouraged to try again!
+Create a git branch with your new feature or bugfix and either (in order of preference):
 
-### Create issues
+* open a Pull Request on GitHub
+* mail the patch to feedback@gandi.net,
+* send the URL for your branch and we will review/merge it if correct
 
-Any major changes should be documented as [a GitHub issue](https://github.com/Gandi/gandi.cli/issues) before you start working on it.
+We'll check your pull requests in the timeliest manner possible. If we can't accept your PR for some reason, 
+we'll give you feedback and you're encouraged to try again!
 
 ### Conventions
 
@@ -76,8 +90,3 @@ your branch before submitting a pull request. #TODO
 #### Documentation 
 
 Update the documentation when creating or modifying features. 
-
-
-## Community Guidelines
-
-
