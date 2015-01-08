@@ -6,10 +6,11 @@
 * [Improving documentation](#improving-documentation)
 * [Adding features](#adding-features)
   * [Quickstart](#quickstart)
+  * [Code conventions](#code-conventions)
 * [Contribution Guidelines](#contribution-guidelines)
   * [Create issues](#create-issues)
   * [Proposing your changes](#proposing-your-changes)
-  * [Conventions](#conventions)
+  * [Submission conventions](#submission-conventions)
   * [Tests](#tests)
   * [Documentation](#documentation)
 * [Community Guidelines](#docker-community-guidelines)
@@ -52,6 +53,23 @@ Improvements to the Gandi CLI documentation are welcome.
 
 Make your changes, test them, and submit a PR!
 
+### Code conventions
+
+To add a new command to the CLI:
+
+First, check if there's an existing namespace to either add a command or an option to an already existing one.
+
+Each command is composed of 2 python files, located in the commands/ and modules/ directories:
+
+  * `commands/` contains everything that is related to shell arguments, parameter validation, default values,
+  * `modules/` contains code that uses the Gandi API and can be used by other python scripts, or in the python shell,
+  * `packages/` contains packaging code (see [packages/README.rst](packages/README.rst))
+
+Code must follow [PEP8 recommendations](http://www.python.org/dev/peps/pep-0008/).
+
+Docstrings should follow [PEP257 recommendations](http://www.python.org/dev/peps/pep-0257/).
+
+
 ## Contribution Guidelines
 
 ### Create issues
@@ -72,7 +90,7 @@ Create a git branch with your new feature or bugfix and either (in order of pref
 We'll check your pull requests in the timeliest manner possible. If we can't accept your PR for some reason, 
 we'll give you feedback and you're encouraged to try again!
 
-### Conventions
+### Submission conventions
 
 
 Fork the repository and make changes on your fork in a feature branch:
