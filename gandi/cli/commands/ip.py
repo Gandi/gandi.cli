@@ -1,6 +1,7 @@
 """ Ip namespace commands. """
 
 import click
+from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_ip
@@ -194,8 +195,18 @@ def delete(gandi, resource, background, force):
 
     resource can be an ip id or ip.
     """
+    try:
+        ip_ = gandi.ip.info(resource)
+    except UsageError:
+        gandi.error("Can't find this ip %s" % resource)
+
+    iface = gandi.iface.info(ip_['iface_id'])
+    ips = ', '.join([ip['ip'] for ip in iface['ips']])
+    if len(iface['ips']) > 1:
+        click.echo('All these ips (%s) are attached, will delete them all' %
+                 ips)
     if not force:
-        proceed = click.confirm('Are you sure to delete ip %s?' % resource)
+        proceed = click.confirm('Are you sure to delete ip(s) %s' % ips)
         if not proceed:
             return
 

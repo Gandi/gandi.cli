@@ -108,15 +108,6 @@ class Ip(GandiModule):
             cls.error("Can't find this ip %s" % resource)
 
         iface = Iface.info(ip_['iface_id'])
-        if len(iface['ips']) > 1:
-            ips = ', '.join([ip['ip'] for ip in iface['ips']])
-            cls.echo('All these ips (%s) are attached, will delete them all' %
-                     ips)
-            if not force:
-                proceed = click.confirm('Are you sure to delete ips %s' % ips)
-
-                if not proceed:
-                    return
 
         if iface.get('vm'):
             cls._detach(ip_, iface, False, force)
