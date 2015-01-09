@@ -13,7 +13,6 @@
   * [Submission conventions](#submission-conventions)
   * [Tests](#tests)
   * [Documentation](#documentation)
-* [Community Guidelines](#docker-community-guidelines)
 
 
 ## Reporting issues
@@ -23,7 +22,7 @@ A great way to contribute to the project is to send a detailed report when you
 encounter an issue. We always appreciate a well-written, thorough bug report,
 and will thank you for it!
 
-When reporting [issues](https://github.com/docker/docker/issues) on
+When reporting [issues](https://github.com/Gandi/gandi.cli/issues) on
 GitHub please include your host OS (Ubuntu 12.04, Fedora 19, etc).
 Please include:
 
