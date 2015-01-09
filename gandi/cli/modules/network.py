@@ -44,21 +44,13 @@ class Ip(GandiModule):
                             background)
 
     @classmethod
-    def check_and_detach(cls, ip_, vm_=None, force=False):
+    def _check_and_detach(cls, ip_, vm_=None):
         # if the ip exists and is attached, we have to detach it
         iface = Iface.info(ip_['iface_id'])
 
         if iface.get('vm_id'):
             if vm_ and iface['vm_id'] == vm_.get('id'):
-                cls.echo('This ip is already attached to this vm.')
                 return False
-
-            if not force:
-                proceed = click.confirm('Are you sure you want to detach'
-                                        ' %s from vm %s' %
-                                        (ip_['ip'], iface['vm_id']))
-                if not proceed:
-                    return False
 
             detach = Iface._detach(iface['id'])
             cls.display_progress(detach)
@@ -69,7 +61,7 @@ class Ip(GandiModule):
         """ Attach """
         vm_ = Iaas.info(vm)
         ip_ = cls.info(ip)
-        if not cls.check_and_detach(ip_, vm_, force):
+        if not cls._check_and_detach(ip_, vm_):
             return
 
         # then we should attach the ip to the vm

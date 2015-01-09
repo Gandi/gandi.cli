@@ -111,6 +111,25 @@ def attach(gandi, ip, vm, background, force):
     ip can be an ip id or ip
     vm can be a vm id or name.
     """
+    try:
+        ip_ = gandi.ip.info(ip)
+        vm_ = gandi.iaas.info(vm)
+    except UsageError:
+        gandi.error("Can't find this ip %s" % ip)
+
+    iface = gandi.iface.info(ip_['iface_id'])
+    if iface.get('vm_id'):
+        if vm_ and iface['vm_id'] == vm_.get('id'):
+            gandi.echo('This ip is already attached to this vm.')
+            return
+
+        if not force:
+            proceed = click.confirm('Are you sure you want to detach'
+                                    ' %s from vm %s' %
+                                    (ip_['ip'], iface['vm_id']))
+            if not proceed:
+                return
+
     return gandi.ip.attach(ip, vm, background, force)
 
 
