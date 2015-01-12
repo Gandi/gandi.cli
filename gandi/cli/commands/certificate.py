@@ -21,7 +21,19 @@ def packages(gandi):
 
     packages.sort(key=keyfunc)
     for package in packages:
-        gandi.echo(package['name'])
+        params = package['name'].split('_')
+        desc = ''
+        cat = package['category']['name']
+
+        if package['wildcard']:
+            desc = 'wildcard %s certificate' % cat
+        elif package['max_domains'] > 1:
+            desc = ('multi domain %s certificate (max %s)' %
+                    (cat, package['max_domains']))
+        else:
+            desc = 'single domain %s certificate' % cat
+
+        gandi.echo('%s : %s' % (package['name'], desc))
 
     return packages
 
