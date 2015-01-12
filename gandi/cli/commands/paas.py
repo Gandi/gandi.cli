@@ -62,6 +62,10 @@ def info(gandi, resource):
     paas = gandi.paas.info(resource)
     paas_hosts = []
     list_vhost = gandi.vhost.list({'paas_id': paas['id']})
+
+    df = gandi.paas.quota(paas['id'])
+    paas.update({'df': df})
+
     for host in list_vhost:
         paas_hosts.append(host['name'])
 

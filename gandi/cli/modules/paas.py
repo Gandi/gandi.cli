@@ -1,6 +1,7 @@
 """ PaaS commands module. """
 
 from gandi.cli.core.base import GandiModule
+from gandi.cli.modules.metric import Metric
 from gandi.cli.modules.vhost import Vhost
 from gandi.cli.modules.datacenter import Datacenter
 from gandi.cli.modules.sshkey import SshkeyHelper
@@ -36,6 +37,24 @@ class Paas(GandiModule, SshkeyHelper):
     def info(cls, id):
         """Display information about a PaaS instance."""
         return cls.call('paas.info', cls.usable_id(id))
+
+    @classmethod
+    def quota(cls, id):
+        """return disk quota used/free"""
+        sampler = {'unit': 'minutes', 'value': 1, 'function': 'avg'}
+        query = 'vfs.df.bytes.all'
+        metrics = Metric.query(id, 60, query, 'paas', sampler)
+
+        df = {'free': 0, 'used': 0}
+        for metric in metrics:
+            what = metric['size'].pop()
+            # we need the most recent points
+            metric['points'].reverse()
+            for point in metric['points']:
+                if 'value' in point:
+                    df[what] = point['value']
+                    break
+        return df
 
     @classmethod
     def delete(cls, resources, background=False):

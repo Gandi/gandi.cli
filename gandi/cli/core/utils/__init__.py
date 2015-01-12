@@ -84,6 +84,13 @@ def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=11):
         dc_name = paas['datacenter']['iso']
         output_line(gandi, 'datacenter', dc_name, justify)
 
+    if 'df' in paas:
+        df = paas['df']
+        total = df['free'] + df['used']
+        if total:
+            disk_used = '%.1f%%' % (df['used'] * 100  / total)
+            output_line(gandi, 'quota used', disk_used, justify)
+
 
 def output_image(gandi, image, datacenters, output_keys, justify=14):
     """ Helper to output a disk image."""
