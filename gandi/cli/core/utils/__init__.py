@@ -69,9 +69,12 @@ def output_vhost(gandi, vhost, paas, output_keys, justify=14):
         output_line(gandi, 'paas_name', paas, justify)
 
 
-def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=10):
+def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=11):
     """ Helper to output a paas information."""
     output_generic(gandi, paas, output_keys, justify)
+
+    if 'sftp_server' in output_keys:
+        output_line(gandi, 'sftp_server', paas['ftp_server'], justify)
 
     if 'vhost' in output_keys:
         for entry in vhosts:

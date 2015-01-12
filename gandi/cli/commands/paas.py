@@ -57,7 +57,7 @@ def info(gandi, resource):
     Resource can be a vhost, a hostname, or an ID
     """
     output_keys = ['name', 'type', 'size', 'memory', 'console', 'vhost',
-                   'dc', 'ftp_server', 'git_server']
+                   'dc', 'sftp_server', 'git_server']
 
     paas = gandi.paas.info(resource)
     paas_hosts = []
