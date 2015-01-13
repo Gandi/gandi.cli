@@ -218,6 +218,12 @@ def create(gandi, csr, private_key, common_name, country, state, city,
     result = gandi.certificate.create(csr, duration, package, altnames,
                                       dcv_method)
 
+    gandi.echo('The certificate create operation is %s' % result['id'])
+    if common_name:
+        gandi.echo('When the operation is DONE, you can retrieve the .crt'
+                   ' with:')
+        gandi.echo('$ gandi certificate export "%s"' % common_name)
+
     return result
 
 
