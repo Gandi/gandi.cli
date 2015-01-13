@@ -2,6 +2,7 @@
 
 import os
 import click
+import requests
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_cert, output_cert_oper
@@ -135,8 +136,10 @@ def info(gandi, resource, id, altnames, csr, cert, all_status):
 @click.option('-o', '--output', help='The file to write the cert.')
 @click.option('--force', '-f', is_flag=True,
               help='Overwrite the crt file if it exists.')
+@click.option('-i', '--intermediate', is_flag=True,
+              help='Retrieve gandi intermediate certs.')
 @pass_gandi
-def export(gandi, resource, output, force):
+def export(gandi, resource, output, force, intermediate):
     """ Write the certificate to <output> or <fqdn>.crt.
 
     Resource can be a CN or an ID
@@ -160,8 +163,8 @@ def export(gandi, resource, output, force):
                        'exported (%s).' % id_)
             continue
 
-        crt_filename = (output
-                        or cert['cn'].replace('*.', 'wildcard.', 1) + '.crt')
+        cert_filename = cert['cn'].replace('*.', 'wildcard.', 1)
+        crt_filename = output or cert_filename + '.crt'
         if not force and os.path.exists(crt_filename):
             gandi.echo('The file %s already exists.' % crt_filename)
             continue
@@ -171,6 +174,35 @@ def export(gandi, resource, output, force):
             with open(crt_filename, 'w') as crt_file:
                 crt_file.write(crt)
                 gandi.echo('wrote %s' % crt_filename)
+
+        package = cert['package']
+        if 'bus' in package and intermediate:
+            gandi.echo('Business certs do not need intermediates.')
+        elif intermediate:
+            crtf = 'pem'
+            sha_version = cert['sha_version']
+            flavor = package.split('_')[1]
+            extra = ('sgc' if 'SGC' in package
+                           and pro
+                           and sha_version == 1 else 'default')
+
+            if extra == 'sgc':
+                crtf = 'pem'
+
+            inters = gandi.certificate.urls[sha_version][flavor][extra][crtf]
+            if isinstance(inters, basestring):
+                inters = [inters]
+
+            fhandle = open(cert_filename + '.inter.crt', 'w+b')
+            for inter in inters:
+                if inter.startswith('http'):
+                    data = requests.get(inter).text
+                else:
+                    data = inter
+                fhandle.write(data)
+
+            gandi.echo('wrote %s' % cert_filename + '.inter.crt')
+            fhandle.close()
 
         return crt
 
