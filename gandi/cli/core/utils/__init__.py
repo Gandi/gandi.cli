@@ -181,6 +181,16 @@ def output_contact_info(gandi, data, output_keys, justify=10):
             output_line(gandi, key, data[key]['handle'], justify)
 
 
+def output_cert_oper(gandi, oper, justify=12):
+    output_generic(gandi, oper, ['type', 'step'], justify)
+    params = dict(oper['params'])
+    params['fqdns'] = ', '.join(params['fqdns'])
+    output_generic(gandi, params, ['inner_step',
+                                   'package_name',
+                                   'dcv_method',
+                                   'fqdns'], justify)
+
+
 def output_cert(gandi, cert, output_keys, justify=13):
     """Helper to output a certificate information."""
     output = list(output_keys)

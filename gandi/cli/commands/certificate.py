@@ -4,7 +4,7 @@ import os
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_cert
+from gandi.cli.core.utils import output_cert, output_cert_oper
 from gandi.cli.core.params import (pass_gandi, IntChoice,
                                    CERTIFICATE_PACKAGE, CERTIFICATE_DCV_METHOD)
 
@@ -160,7 +160,8 @@ def export(gandi, resource, output, force):
                        'exported (%s).' % id_)
             continue
 
-        crt_filename = output or cert['cn'] + '.crt'
+        crt_filename = (output
+                        or cert['cn'].replace('*.', 'wildcard.', 1) + '.crt')
         if not force and os.path.exists(crt_filename):
             gandi.echo('The file %s already exists.' % crt_filename)
             continue
@@ -236,6 +237,8 @@ def create(gandi, csr, private_key, common_name, country, state, city,
                                       dcv_method)
 
     gandi.echo('The certificate create operation is %s' % result['id'])
+    gandi.echo('You can follow it with:')
+    gandi.echo('$ gandi certificate follow %s' % result['id'])
     if common_name:
         gandi.echo('When the operation is DONE, you can retrieve the .crt'
                    ' with:')
@@ -286,6 +289,20 @@ def update(gandi, resource, csr, private_key, country, state, city,
                                       dcv_method)
 
     return result
+
+
+@cli.command()
+@click.argument('resource', nargs=1, required=True)
+@pass_gandi
+def follow(gandi, resource):
+    """ Get the operation status
+
+    Resource is an operation ID
+    """
+    oper = gandi.oper.info(int(resource))
+    assert(oper['type'].startswith('certificate_'))
+    output_cert_oper(gandi, oper)
+    return oper
 
 
 @cli.command('change-dcv')
