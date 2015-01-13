@@ -195,8 +195,8 @@ def export(gandi, resource, output, force):
 @click.option('-d', '--duration', default=1,
               type=IntChoice(['1', '2', '3', '4', '5']),
               help='The certificate duration in year.')
-@click.option('--package', default='cert_std_1_0_0', type=CERTIFICATE_PACKAGE,
-              help='Certificate package (default=cert_std_1_0_0).')
+@click.option('--package', type=CERTIFICATE_PACKAGE,
+              help='Certificate package.')
 @click.option('--altnames', required=False, multiple=True,
               help='The certificate altnames (comma separated text without '
                    'space).')
@@ -214,6 +214,23 @@ def create(gandi, csr, private_key, common_name, country, state, city,
                                         state, city, organisation, branch)
     if not csr:
         return
+
+    if not common_name:
+        common_name = gandi.certificate.get_common_name(csr)
+
+    if common_name and not package:
+        if '*' in common_name:
+            package = 'cert_std_w_0_0'
+        elif len(altnames) > 9:
+            package = 'cert_std_20_0_0'
+        elif len(altnames) > 4:
+            package = 'cert_std_10_0_0'
+        elif len(altnames) > 2:
+            package = 'cert_std_5_0_0'
+        elif len(altnames):
+            package = 'cert_std_3_0_0'
+        else:
+            package = 'cert_std_1_0_0'
 
     result = gandi.certificate.create(csr, duration, package, altnames,
                                       dcv_method)
