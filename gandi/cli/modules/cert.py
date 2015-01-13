@@ -189,6 +189,18 @@ class Certificate(GandiModule):
         return csr_file
 
     @classmethod
+    def get_common_name(cls, csr):
+        """ Read information from CSR. """
+        from tempfile import NamedTemporaryFile
+        fhandle = NamedTemporaryFile()
+        fhandle.write(csr)
+        fhandle.flush()
+        common_name = cls.exec_output('openssl req -noout -subject -in %s' %
+                                      fhandle.name).split('=')[-1].strip()
+        fhandle.close()
+        return common_name
+
+    @classmethod
     def process_csr(cls, common_name, csr, private_key, country, state, city,
                     organisation, branch):
         """ Create a PK and a CSR if needed."""
