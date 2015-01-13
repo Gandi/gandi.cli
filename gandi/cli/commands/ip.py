@@ -152,11 +152,11 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
     """Create a public or private ip
     """
     if ip_version != 4 and vlan:
-        click.echo('You must have an --ip-version to 4 when having a vlan.')
+        gandi.echo('You must have an --ip-version to 4 when having a vlan.')
         return
 
     if ip and not vlan:
-        click.echo('You must have a --vlan when giving an --ip.')
+        gandi.echo('You must have a --vlan when giving an --ip.')
         return
 
     vm_ = gandi.iaas.info(attach) if attach else None
@@ -164,7 +164,7 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
     if datacenter and vm_:
         dc_id = gandi.datacenter.usable_id(datacenter)
         if dc_id != vm_['datacenter_id']:
-            click.echo('The datacenter you give is not the same the vm you'
+            gandi.echo('The datacenter you give is not the same the vm you'
                        ' want to attach.')
             return
 
@@ -172,7 +172,7 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
         if vm_:
             datacenter = vm_['datacenter_id']
         else:
-            click.echo('The vm you want to attach is not in %s datacenter.'
+            gandi.echo('The vm you want to attach is not in %s datacenter.'
                        % datacenter)
             return
 
@@ -222,7 +222,7 @@ def delete(gandi, resource, background, force):
     iface = gandi.iface.info(ip_['iface_id'])
     ips = ', '.join([ip['ip'] for ip in iface['ips']])
     if len(iface['ips']) > 1:
-        click.echo('All these ips (%s) are attached, will delete them all' %
+        gandi.echo('All these ips (%s) are attached, will delete them all' %
                  ips)
     if not force:
         proceed = click.confirm('Are you sure to delete ip(s) %s' % ips)
