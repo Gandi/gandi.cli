@@ -4,6 +4,13 @@ import os
 import click
 import requests
 
+# define basestring for python3
+try:
+    basestring
+except NameError:
+    basestring = (str,bytes)
+
+
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_cert, output_cert_oper, display_rows
 from gandi.cli.core.params import (pass_gandi, IntChoice,
@@ -202,7 +209,7 @@ def export(gandi, resource, output, force, intermediate):
                     data = requests.get(inter).text
                 else:
                     data = inter
-                fhandle.write(data)
+                fhandle.write(data.encode('latin1'))
 
             gandi.echo('wrote %s' % cert_filename + '.inter.crt')
             fhandle.close()

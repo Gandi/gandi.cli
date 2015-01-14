@@ -272,7 +272,7 @@ class Certificate(GandiModule):
         """ Read information from CSR. """
         from tempfile import NamedTemporaryFile
         fhandle = NamedTemporaryFile()
-        fhandle.write(csr)
+        fhandle.write(csr.encode('latin1'))
         fhandle.flush()
         common_name = cls.exec_output('openssl req -noout -subject -in %s' %
                                       fhandle.name).split('=')[-1].strip()
@@ -309,7 +309,7 @@ class Certificate(GandiModule):
         if crt:
             crt = ('-----BEGIN CERTIFICATE-----\n' +
                    '\n'.join([crt[index * 64:(index + 1) * 64]
-                              for index in range(len(crt) / 64 + 1)]) +
+                              for index in range(int(len(crt) / 64) + 1)]) +
                    '\n-----END CERTIFICATE-----')
         return crt
 
