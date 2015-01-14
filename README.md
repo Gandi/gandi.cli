@@ -5,6 +5,7 @@ Use `$ gandi` to easily create and manage web resources from the command line.
 * `$ gandi domain` to buy and manage your domain names
 * `$ gandi paas` to create and deploy your web applications
 * `$ gandi vm` to spin up and upgrade your virtual machines
+* `$ gandi certificate` to manage your ssl certificates
 * `$ gandi` to list all available commands
 * [Detailed examples](#use-cases)
 * [All commands](#all-commands)
@@ -18,6 +19,7 @@ Use `$ gandi` to easily create and manage web resources from the command line.
     * [Registering a Domain Name](#registering-a-domain-name)
     * [Creating a Virtual Machine](#creating-a-virtual-machine)
     * [Deploying a Web Application](#deploying-a-web-application)
+    * [Creating a SSL Certificate] (#creating-a-ssl-certificate)
   * [Advanced Usage](#advanced-usage)
     * [All Commands](#all-commands)
     * [Build manpage](#build-manpage)
@@ -181,6 +183,69 @@ Plans cover all scales, from small to world-class projects. [Check out the websi
     $ git commit -m 'first commit'
     $ git push gandi master
     $ gandi deploy
+
+
+### Creating a SSL Certificate
+
+Gandi Certificates allow you to apply for a SSL certificate, and to replace and revoke it.
+
+#### 1. Find the package you need
+
+
+    $ gandi certificate packages
+
+The max altname will be determined for you depending on the number of altname you gave, you should only set it if you want your certificate to be updated with more altname in the future.
+
+
+#### 2. Apply for the Certificate
+
+
+WARNING : This command is billable.
+
+The create command will generate a PK/CSR for you if you don't have one.
+
+For a single domain standard certificate :
+
+    $ gandi certificate create --cn "domain.tld"
+
+
+For a wildcard standard certificate :
+
+    $ gandi certificate create --cn "*.domain.tld"
+
+
+For a multi domain standard certificate :
+
+    $ gandi certificate create --cn "*.domain.tld" --altnames "host1.domain.tld" --altnames "host2.domain.tld"
+
+
+You can also give a flavor, for exemple for a single domain business certificate :
+
+    $ gandi certificate create --cn "domain.tld" --flavor "bus"
+
+
+If you have a CSR (you can give the CSR content or the path) :
+
+    $ gandi certificate create --csr /path/to/csr/file
+
+
+#### 3. Follow the Certificate create operation
+
+
+    $ gandi certificate follow <operation_id>
+
+
+#### 4. Get the Certificate
+
+
+As soon as the operation is DONE, you can export the certificate.
+
+    $ gandi certificate export "domain.tld"
+
+
+If you need them you can also retrieve intermediate certificates.
+
+    $ gandi certificate export "domain.tld" --intermediate
 
 
 ## Advanced Usage
