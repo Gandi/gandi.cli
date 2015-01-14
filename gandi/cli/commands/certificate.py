@@ -5,7 +5,7 @@ import click
 import requests
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_cert, output_cert_oper
+from gandi.cli.core.utils import output_cert, output_cert_oper, display_rows
 from gandi.cli.core.params import (pass_gandi, IntChoice,
                                    CERTIFICATE_PACKAGE, CERTIFICATE_DCV_METHOD,
                                    CERTIFICATE_PACKAGE_FLAVOR,
@@ -23,22 +23,23 @@ def packages(gandi):
                 item['name'])
 
     packages.sort(key=keyfunc)
+    ret = [['name', 'description', 'max altname', 'flavor']]
     for package in packages:
         params = package['name'].split('_')
+        cat = params[1]
         desc = ''
-        cat = package['category']['name']
 
         if package['wildcard']:
             desc = 'wildcard %s certificate' % cat
         elif package['max_domains'] > 1:
-            desc = ('multi domain %s certificate (max %s)' %
-                    (cat, package['max_domains']))
+            desc = 'multi domain %s certificate' % cat
         else:
             desc = 'single domain %s certificate' % cat
+        ret.append([package['name'], desc, str(package['max_domains']), cat])
 
-        gandi.echo('%s : %s' % (package['name'], desc))
+    display_rows(gandi, ret)
 
-    return packages
+    return ret
 
 
 @cli.command()
