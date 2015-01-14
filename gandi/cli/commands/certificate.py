@@ -7,7 +7,9 @@ import requests
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_cert, output_cert_oper
 from gandi.cli.core.params import (pass_gandi, IntChoice,
-                                   CERTIFICATE_PACKAGE, CERTIFICATE_DCV_METHOD)
+                                   CERTIFICATE_PACKAGE, CERTIFICATE_DCV_METHOD,
+                                   CERTIFICATE_PACKAGE_FLAVOR,
+                                   CERTIFICATE_PACKAGE_MAX)
 
 
 @cli.command()
@@ -230,6 +232,10 @@ def export(gandi, resource, output, force, intermediate):
               help='The certificate duration in year.')
 @click.option('--package', type=CERTIFICATE_PACKAGE,
               help='Certificate package.')
+@click.option('--flavor', type=CERTIFICATE_PACKAGE_FLAVOR,
+              help='Certificate package flavor (default=std).')
+@click.option('--max-altname', type=CERTIFICATE_PACKAGE_MAX,
+              help='Certificate package max altname number.')
 @click.option('--altnames', required=False, multiple=True,
               help='The certificate altnames (comma separated text without '
                    'space).')
@@ -237,11 +243,17 @@ def export(gandi, resource, output, force, intermediate):
               help='Give the DCV method to use to check domain ownership.')
 @pass_gandi
 def create(gandi, csr, private_key, common_name, country, state, city,
-           organisation, branch, duration, package, altnames, dcv_method):
+           organisation, branch, duration, package, flavor, max_altname,
+           altnames, dcv_method):
     """Create a new certificate."""
     if not (csr or common_name):
         gandi.echo('You need a CSR or a CN to create a certificate.')
         return
+
+    if package and (flavor or max_altname):
+       gandi.echo('Please do not use --package at the same time you use '
+                  '--flavor or --max-altname.')
+       return
 
     csr = gandi.certificate.process_csr(common_name, csr, private_key, country,
                                         state, city, organisation, branch)
