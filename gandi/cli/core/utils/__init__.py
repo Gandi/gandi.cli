@@ -6,6 +6,7 @@ Also custom exceptions and method to generate a random string.
 import time
 
 import click
+from click.formatting import measure_table
 
 class MissingConfiguration(Exception):
 
@@ -23,6 +24,19 @@ class DuplicateResults(Exception):
     def __init__(self, errors):
         """ Initialize exception."""
         self.errors = errors
+
+
+def display_rows(gandi, rows, has_header=True):
+    col_len = measure_table(rows)
+    formatting = ' | '.join(['%-' + str(l) + 's' for l in col_len])
+
+    if has_header:
+        header = rows.pop(0)
+        gandi.echo(formatting % tuple(header))
+        gandi.echo('-+-'.join(['-' * l for l in col_len]))
+
+    for row in rows:
+        gandi.echo(formatting % tuple(row))
 
 
 def output_line(gandi, key, val, justify):
