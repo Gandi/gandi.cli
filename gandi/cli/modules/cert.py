@@ -250,8 +250,8 @@ class Certificate(GandiModule):
         else:
             private_key = common_name.replace('*.', 'wildcard.') + '.key'
             # TODO check if it exists
-            cmd = ('openssl req -new -newkey rsa:2048 -nodes -out %(csr)s '
-                   '-keyout %(key)s -subj "%(subj)s"')
+            cmd = ('openssl req -new -newkey rsa:2048 -sha256 -nodes '
+                   '-out %(csr)s -keyout %(key)s -subj "%(subj)s"')
 
         if private_key.endswith('.crt') or private_key.endswith('.key'):
             csr_file = re.sub('\.(crt|key)$', '.csr', private_key)
