@@ -24,6 +24,7 @@ Use `$ gandi` to easily create and manage web resources from the command line.
     * [Configuration](#configuration)
     * [Development](#development)
   * [Contributing](#contributing)
+  * [Code status](#code-status)
   * [License](#license)
 
 ## Requirements
@@ -141,13 +142,13 @@ Set the VM's RAM to 2GB and add a CPU core on the fly.
 
 #### 3. Create a custom VM
 
-    $ gandi vm create --datacenter US --hostname docker --cores 2 --memory 3072 --size 10240 --image "Ubuntu 14.04 64 bits LTS (HVM)" --run "curl -s https://get.docker.io/ubuntu | sh"
+    $ gandi vm create --datacenter US --hostname docker --cores 2 --memory 3072 --size 10240 --image "Ubuntu 14.04 64 bits LTS (HVM)" --run "curl -sSL https://get.docker.com/ubuntu/ | sh"
     * root user will be created.
     * SSH key authorization will be used.
     * No password supplied for vm (required to enable emergency web console access).
     * Configuration used: 2 cores, 3072Mb memory, ip v4+v6, image Ubuntu 14.04 64 bits LTS, hostname: docker
 
-This command will setup the above VM, and install docker by running `curl -s https://get.docker.io/ubuntu | sh` after creation.
+This command will setup the above VM, and install docker by running `curl -sSL https://get.docker.com/ubuntu/ | sh` after creation.
 
 #### 4. View your ressources
 
@@ -210,26 +211,14 @@ The default variables are:
   * `api.host`       # the URL of the API endpoint to use (i.e OTE or Production)
   * `api.key`        # the relevant API key for the chosen endpoint
 
-### Development
-
-To add a new command to the CLI:
-  * check if there's an existing namespace to either add a command or an option to an already existing one
-  * each command is composed of 2 python files, located in the `commands/` and `modules/` directories
-    * `commands/` contains everything that is related to shell arguments, parameter validation, default values
-    * `modules/` contains code that uses the Gandi API and can be used by other python scripts, or in the python shell.
-    * `packages/` contains packaging code (see `packages/README.rst`)
-
-Code must follow PEP8 recommendations: http://www.python.org/dev/peps/pep-0008/
-
-Docstrings should follow PEP257 recommendations: http://www.python.org/dev/peps/pep-0257/
-
 
 ## Contributing
 
-Create a git branch with your new feature or bugfix and either:
-* mail the patch to feedback@gandi.net,
-* send the URL for your branch and we will review/merge it if correct,
-* open a merge request on GitHub
+We <3 contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+
+## Code status
+
+[![Build Status](https://travis-ci.org/Gandi/gandi.cli.svg?branch=master)](https://travis-ci.org/Gandi/gandi.cli)
 
 ## License / Copying
 

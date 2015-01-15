@@ -79,7 +79,8 @@ def info(gandi, resource, id):
 @pass_gandi
 def create(gandi, vhost, paas, alter_zone, background):
     """ Create a new vhost. """
-    result = gandi.vhost.create(paas, vhost, alter_zone, background)
+    paas_info = gandi.paas.info(paas)
+    result = gandi.vhost.create(paas_info, vhost, alter_zone, background)
 
     if not result:
         return

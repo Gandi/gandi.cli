@@ -249,7 +249,7 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
         gandi.echo('  gandi snapshotprofile list')
         return
 
-    name = name or randomstring()
+    name = name or randomstring('vdi')
 
     disk_type = 'data'
     result = gandi.disk.create(name, vm, size, snapshotprofile, datacenter,
@@ -270,7 +270,7 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
 @pass_gandi
 def snapshot(gandi, name, resource, background):
     """ Create a snapshot on the fly. """
-    name = name or randomstring()
+    name = name or randomstring('snp')
 
     source_info = gandi.disk.info(resource)
     datacenter = source_info['datacenter_id']

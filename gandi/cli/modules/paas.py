@@ -1,22 +1,9 @@
 """ PaaS commands module. """
 
-import os
 from gandi.cli.core.base import GandiModule
+from gandi.cli.modules.vhost import Vhost
 from gandi.cli.modules.datacenter import Datacenter
 from gandi.cli.modules.sshkey import SshkeyHelper
-
-
-class Vhost(GandiModule):
-
-    """ Helper class to retrieve list of vhosts. """
-
-    @classmethod
-    def list(cls, options=None):
-        """List virtual hosts."""
-        if not options:
-            options = {}
-
-        return cls.call('paas.vhost.list', options)
 
 
 class Paas(GandiModule, SshkeyHelper):
@@ -197,49 +184,8 @@ class Paas(GandiModule, SshkeyHelper):
         cls.execute(access)
 
     @classmethod
-    def init_vhost(cls, vhost, created=True, id=None, paas=None):
-        """Initialize vhost directory and create a local configuration file."""
-        assert id or paas
-        if not paas:
-            paas = Paas.info(cls.usable_id(id))
-
-        if 'php' not in paas['type']:
-            vhost = 'default'
-
-        git_server = paas['git_server']
-        # hack for dev
-        if 'dev' in paas['console']:
-            git_server = 'git.hosting.dev.gandi.net'
-        paas_access = '%s@%s' % (paas['user'], git_server)
-        if created:
-            repo_path = os.path.join(os.getcwd(), vhost)
-            if os.path.exists(repo_path):
-                cls.echo('%s already exists, please remove it before cloning' %
-                         repo_path)
-                return
-
-            init_git = cls.execute('git clone ssh+git://%s/%s.git' %
-                                   (paas_access, vhost))
-            if not init_git:
-                cls.echo('An error has occurred during git clone of instance.')
-                return
-        else:
-            cls.echo('You should init your git repo when the paas is created, '
-                     'type : ')
-            cls.echo('gandi paas clone %s' % vhost)
-            return
-
-        # go into directory to save configuration file in this directory
-        current_path = os.getcwd()
-        os.chdir(os.path.join(current_path, vhost))
-        cls.configure(False, 'paas.user', paas['user'])
-        cls.configure(False, 'paas.name', paas['name'])
-        cls.configure(False, 'paas.deploy_git_host', '%s.git' % vhost)
-        cls.configure(False, 'paas.access', paas_access)
-        os.chdir(current_path)
-
-    @classmethod
-    def init_conf(cls, id, vhost=None, created=True, vhosts=None):
+    def init_conf(cls, id, vhost=None, created=True, vhosts=None,
+                  background=False):
         """ Initialize local configuration with PaaS information. """
         paas = Paas.info(cls.usable_id(id))
         cls.debug('save PaaS instance information to local configuration')
@@ -255,7 +201,7 @@ class Paas(GandiModule, SshkeyHelper):
                 return
 
         for vhost in vhosts:
-            cls.init_vhost(vhost, created, paas=paas)
+            Vhost.create(paas, vhost, True, background)
 
     @classmethod
     def usable_id(cls, id):

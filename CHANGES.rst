@@ -1,6 +1,34 @@
 Changelog
 =========
 
+0.12
+----
+
+* New 'ip' namespace with commands for managing public/private ip resources.
+* New 'vlan' namespace with commands for managing vlans for virtual machines.
+* New command 'gandi account info' to display information about credits
+  amount for hosting account.
+* New command 'gandi contact create' to create a new contact.
+* New command 'gandi disk snapshot' to create a disk snapshot on the fly.
+* Update 'gandi vm create' command:
+    - enabling creation of vlan and ip assignment for this vlan directly
+      during vm creation.
+    - enabling creation of a private only ip virtual machine.
+    - parameter --ip-version is not read from configuration file anymore,
+      still defaulting to 4.
+* Update 'gandi paas create' command to allow again the use of password provided
+  on the command line.
+* Update 'record' namespace to add delete/update commands, with option to export
+  zones to file.
+* Use different prefix for temporary names based on type of resource.
+* Switch to use HVM image as default disk image when creating virtual machine.
+* Add kernel information to output of 'gandi disk list' command.
+* Fixes bug with paas vhost directory creation.
+* Fixes bug with 'gandi mail delete' command raising a traceback.
+* Fixes bug with duplicates entries in commands accepting multiple resources.
+* Fixes various typos in documentation and help pages.
+* Add first batch of unittests.
+
 
 0.11
 ----
@@ -26,7 +54,7 @@ Changelog
   parameter, which failed when having more than 100 disks
   in account.
 * Fixes bug with 'gandi paas info' command to display
-  ftp_server url.
+  sftp_server url.
 * Fixes bug with 'gandi record list' command when requesting
   a domain not managed at Gandi.
 * Rename --sshkey parameter of 'gandi sshkey create' command

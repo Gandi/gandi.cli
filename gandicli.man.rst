@@ -51,6 +51,7 @@ COMMAND-LINE OPTIONS
 
 Namespaces:
 
+*  account info            Display information about hosting account.
 *  api                     Display information about API used.
 *  certificate change-dcv  Change the DCV for a pending certificate.
 *  certificate create      Create a new certificate.
@@ -62,6 +63,7 @@ Namespaces:
 *  certificate resend-dcv  Resend the DCV mail for a pending certificate.
 *  certificate update      Update a certificate CSR.
 *  config                  Configure default values.
+*  contact create          Create a new contact in interactive mode.
 *  datacenters             List available datacenters.
 *  deploy                  Deploy code on a remote vhost.
 *  disk attach             Attach a disk to a vm.
@@ -77,6 +79,12 @@ Namespaces:
 *  domain info             Display information about a domain.
 *  domain list             List domains.
 *  help                    Display help for a command.
+*  ip list                 List all ips.
+*  ip info                 Display information about an ip.
+*  ip create               Create a new ip.
+*  ip attach               Attach an ip to a vm.
+*  ip detach               Detach an ip from a vm.
+*  ip delete               Delete an ip.
 *  mail create             Create a mailbox.
 *  mail delete             Delete a mailbox.
 *  mail info               Display information about a mailbox.
@@ -107,6 +115,11 @@ Namespaces:
 *  vhost delete            Delete a vhost.
 *  vhost info              Display information about a vhost.
 *  vhost list              List vhosts.
+*  vlan create             Create a new vlan
+*  vlan delete             Delete a vlan.
+*  vlan info               Display information about a vlan.
+*  vlan list               List vlans.
+*  vlan update             Update a vlan
 *  vm console              Open a console to virtual machine.
 *  vm create               Create a new virtual machine.
 *  vm delete               Delete a virtual machine.
@@ -122,6 +135,8 @@ Namespaces:
 
 
 Details:
+
+* ``gandi account info`` display information about the hosting account currently in use.
 
 * ``gandi api`` display information about the Gandi.net API.
 
@@ -144,6 +159,8 @@ Details:
 * ``certificate update resource`` modify the options of a certificate. Possible options are ``--csr TEXT``, ``--private-key TEXT`` could be either the content of a certificate request and a private key or a path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``--organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--altnames LIST`` to change all the alternative names (comma separated text without space), ``--dcv-method TEXT`` with domain validation process method in email, dns, file, auto. Note that a resource can be a CN entry or an integer id.
 
 * ``gandi config key value`` configure value in the configuration file. With no option, configuration setting is stored in the local directory, which makes it suitable for code repositories. Using the ``-g`` flag, the change is stored in the global configuration file.
+
+* ``gandi contact create`` create a new contact in interactive mode.
 
 * ``gandi datacenters`` list all the datacenters of the Gandi.net platform. Possible option is ``--id`` to obtain the id of the datacenter. Most of the time you will be able to use the datacenter name as parameter to the methods.
 
@@ -176,6 +193,18 @@ Details:
 * ``gandi domain list`` show all the domains in the Gandi account. Possible option is ``--limit INTEGER`` which will show a subset of the list.
 
 * ``gandi help command`` display help for command, if command is a namespace it will display list of available commands for this namespace.
+
+* ``gandi ip list`` show all the ip created in Gandi hosting for the account. Possible options to filter the list are : ``--attached`` to only show attached ips, ``--detached`` to only show detached ips, and ``--type`` (being in ``public`` or ``private``) to only show public or private ips. Possible options to get more details are : ``--version`` to get the ip version, ``--reverse`` to get the ip reverse, and ``--vm`` to get the attached vm if any, ``--id`` to add the integer id of each ip.
+
+* ``gandi ip info`` show information about specific ip.
+
+* ``gandi ip create`` create new ip. Possible options are ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters`` if ``--attach`` is specified this option is useless, ``--ip-version 4|6`` for version of created IP, ``--bandwidth INTEGER`` to set network bandwidth in bits/s on first network interface created, ``--vlan`` to specify which private vlan should be used, ``--ip`` to specify an ip in the vlan, ``--attach`` to attach this new ip to a vm, and ``--background`` (or ``--bg``) to process in background.
+
+* ``gandi ip attach`` attach an ip to a vm. It takes two parameters, ``ip`` the wanted ip, and ``vm`` the vm to attach, ``ip`` the ip to attach. If the ip is already attached, it will be detached from the previous vm before being attached to the given one. Possible options are ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
+
+* ``gandi ip detach`` detach an ip from a vm. It only takes one parameter, the ``ip``. Possible options are ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
+
+* ``gandi ip delete`` delete an ip. If the ip is still attached, it will detach it before deleting it. Possible options are ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
 
 * ``gandi mail create login@domain.tld`` create a new mailbox. Possible options are ``-q, --quota INTEGER`` to define a quota for this mailbox, ``-f, --fallback TEXT`` to define a fallback addresse, ``-a, --alias TEXT`` to add an alias for this mailbox, this last option can be used multiple times.
 
@@ -237,9 +266,19 @@ Details:
 
 * ``gandi vhost list`` show all the virtual host defined in Simple Hosting. Possible option are ``--names`` which add the name of the Simple Hosting instance on which the virtual host is setup, ``--ids`` which show the integer identificator and ``--limit INTEGER`` which show a subset of the full list of virtual host.
 
+*  ``gandi vlan create`` add a new vlan. Mandatory options are ``--name TEXT`` for the label of the vlan, ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``. Possible options are ``--subnet`` to set a subnet and ``--gateway`` to set the gateway. The operation can be done as background process using the option ``--background`` (or ``--bg``).
+
+*  ``gandi vlan delete resource`` delete a vlan after asking for user validation. Possible option is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting. Deletion can be done as background process using the option ``--background`` (or ``--bg``).
+
+*  ``gandi vlan info resource`` show details of a specific vlan.
+
+*  ``gandi vlan list`` show all the vlan created in Gandi hosting for the account. Possible options are ``--id`` to obtain the id of each vlan, ``--datacenter FR|US|LU`` which filter by geograhical datacenter.
+
+*  ``gandi vlan update`` update a vlan. Mandatory options are ``--name TEXT`` for the label of the vlan.
+
 * ``gandi vm console resource`` open a console on the virtual machine and give you a shell access.
 
-* ``gandi vm create`` create a new virtual machine. Possible options are ``--hostname TEXT`` for the hostname of the machine (if not present, will be autogenerated), ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``, ``--memory INTEGER`` for quantity of memory, ``--cores INTEGER`` for number of virtual CPU, ``--ip-version 4|6`` for version of created IP, ``--bandwidth INTEGER`` to set network bandwidth in bits/s on first network interface created, ``--login TEXT`` to define login to created on virtual machine, ``--image TEXT`` for the disk image to be used to boot the virtual machine as listed by ``gandi vm images``, ``--sshkey TEXT`` to specifiy name of a SSH key, ``--password`` will prompt for a password to set for the created login, ``--run TEXT`` to specify shell command that will run at the first boot of virtual machine. The operation can be done as background process using the option ``--background`` (or ``--bg``). You can specify the virtual machine system disk size with the ``--size`` parameter (unit MiB). If not run in background, this command will spawn an ssh session to the created virtual machine. You can use the ``--script`` option to upload, then run a script on the VM after creation, rather than having an ssh session open to it. Be sure to provide an executable file as an argument to the ``--script`` option.
+* ``gandi vm create`` create a new virtual machine. Possible options are ``--hostname TEXT`` for the hostname of the machine (if not present, will be autogenerated), ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``, ``--memory INTEGER`` for quantity of memory, ``--cores INTEGER`` for number of virtual CPU, ``--ip-version 4|6`` for version of created IP, it can be omitted if ``--vlan`` is given, ``--vlan`` to set the vm on the specified vlan and ``--ip`` to set the ip in that vlan, ``--bandwidth INTEGER`` to set network bandwidth in bits/s on first network interface created, ``--login TEXT`` to define login to created on virtual machine, ``--image TEXT`` for the disk image to be used to boot the virtual machine as listed by ``gandi vm images``, ``--sshkey TEXT`` to specifiy name of a SSH key, ``--password`` will prompt for a password to set for the created login, ``--run TEXT`` to specify shell command that will run at the first boot of virtual machine. The operation can be done as background process using the option ``--background`` (or ``--bg``). You can specify the virtual machine system disk size with the ``--size`` parameter (unit MiB). If not run in background, this command will spawn an ssh session to the created virtual machine. You can use the ``--script`` option to upload, then run a script on the VM after creation, rather than having an ssh session open to it. Be sure to provide an executable file as an argument to the ``--script`` option.
 
 * ``gandi vm delete resource`` destroy a virtual machine, its main disk and its first virtual network interface. This operation can be done as background process using the option ``--background`` (or ``--bg``). Another possible parameter is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting.
 

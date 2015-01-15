@@ -10,6 +10,6 @@ X-Python-Version: >= 2.6
 
 Package: gandicli
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-pkg-resources
+Depends: ${misc:Depends}, ${python:Depends}, python-pkg-resources, python-ipy
 Description: commandline client for Gandi.net
  tool in commandline to access Gandi.net services
