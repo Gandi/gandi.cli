@@ -1,4 +1,4 @@
-__gandi_commands() 
+__gandi_commands()
 {
     gandi help | egrep '^  [a-z]' | awk '{print $1}' \
         | sort -u
@@ -14,7 +14,7 @@ __gandi_subcommands()
             return
             ;;
         deploy)
-            gandi vhost list | grep ^name | awk '{print $3}'
+            gandi vhost list | awk '/^name/ {print $3}'
             return
             ;;
     esac
@@ -34,18 +34,18 @@ __gandi_resources()
             ;;
     esac
 
-    case $cmd in 
+    case $cmd in
         vm)
-            gandi vm list | grep ^hostname | awk '{print $3}'
+            gandi vm list | awk '/^hostname/ {print $3}'
             ;;
         domain)
             gandi domain list
             ;;
         disk)
-            gandi disk list | grep ^name | awk '{print $3}'
+            gandi disk list | awk '/^name/ {print $3}'
             ;;
         oper)
-            gandi oper list | grep ^id | awk '{print $3}'
+            gandi oper list | awk '/^id/ {print $3}'
             ;;
     esac
 }
