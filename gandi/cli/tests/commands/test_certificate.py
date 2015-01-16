@@ -12,7 +12,7 @@ class CertTestCase(CommandTestCase):
         #self.assertEqual(result.exit_code, 0)
         wanted = (
 """/!\ "gandi certificate packages" is deprecated.
-Please use "gandi certificate plan".
+Please use "gandi certificate plans".
 Description            | Name               | Max altnames | Type
 -----------------------+--------------------+--------------+-----
 Standard Single Domain | cert_std_1_0_0     | 1            | std 
@@ -21,9 +21,9 @@ Standard Multi Domain  | cert_std_3_0_0     | 3            | std
 Standard Multi Domain  | cert_std_5_0_0     | 5            | std 
 Standard Multi Domain  | cert_std_10_0_0    | 10           | std 
 Standard Multi Domain  | cert_std_20_0_0    | 20           | std 
+Pro Single Domain      | cert_pro_1_10_0    | 1            | pro 
 Pro Single Domain      | cert_pro_1_100_0   | 1            | pro 
 Pro Single Domain      | cert_pro_1_100_SGC | 1            | pro 
-Pro Single Domain      | cert_pro_1_10_0    | 1            | pro 
 Pro Single Domain      | cert_pro_1_250_0   | 1            | pro 
 Pro Wildcard           | cert_pro_w_250_0   | 1            | pro 
 Pro Wildcard           | cert_pro_w_250_SGC | 1            | pro 

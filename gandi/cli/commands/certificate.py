@@ -10,6 +10,7 @@ try:
 except NameError:
     basestring = (str,bytes)
 
+type_list = list
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_cert, output_cert_oper, display_rows
@@ -26,15 +27,15 @@ def packages(gandi):
     /!\\ deprecated call.
     """
     gandi.echo('/!\ "gandi certificate packages" is deprecated.')
-    gandi.echo('Please use "gandi certificate plan".')
-    return _plan(gandi, with_name=True)
+    gandi.echo('Please use "gandi certificate plans".')
+    return _plans(gandi, with_name=True)
 
 
 @cli.command()
 @pass_gandi
-def plan(gandi):
+def plans(gandi):
     """ List certificate plans. """
-    return _plan(gandi)
+    return _plans(gandi)
 
 
 def package_desc(gandi, package):
@@ -53,27 +54,37 @@ def package_desc(gandi, package):
     return ' '.join([word.capitalize() for word in desc.split(' ')])
 
 
-def _plan(gandi, with_name=False):
+def _plans(gandi, with_name=False):
     packages = gandi.certificate.package_list()
     def keyfunc(item):
         return (item['category']['id'],
                 item['max_domains'],
+                item['warranty'],
                 item['name'])
 
     packages.sort(key=keyfunc)
     labels = ['Description', 'Max altnames', 'Type']
     if with_name:
         labels.insert(1, 'Name')
+    else:
+        labels.append('Warranty')
     ret = [labels]
 
     for package in packages:
         params = package['name'].split('_')
         cat = package['name'].split('_')[1]
+        warranty = str(int(package['name'].split('_')[3]) * 1000)
+        if len(warranty) > 3:
+            warranty = type_list(warranty)
+            warranty.insert(len(warranty) - 3, ',')
+            warranty = ''.join(warranty)
 
         desc = package_desc(gandi, package)
         line = [desc, str(package['max_domains']), cat]
         if with_name:
             line.insert(1, package['name'])
+        else:
+            line.append(warranty)
         ret.append(line)
 
     display_rows(gandi, ret)
