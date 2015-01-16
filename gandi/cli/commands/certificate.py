@@ -17,7 +17,8 @@ from gandi.cli.core.utils import output_cert, output_cert_oper, display_rows
 from gandi.cli.core.params import (pass_gandi, IntChoice,
                                    CERTIFICATE_PACKAGE, CERTIFICATE_DCV_METHOD,
                                    CERTIFICATE_PACKAGE_TYPE,
-                                   CERTIFICATE_PACKAGE_MAX)
+                                   CERTIFICATE_PACKAGE_MAX,
+                                   CERTIFICATE_PACKAGE_WARRANTY)
 
 
 @cli.command()
@@ -289,6 +290,8 @@ def export(gandi, resource, output, force, intermediate):
               help='Certificate package type (default=std).')
 @click.option('--max-altname', type=CERTIFICATE_PACKAGE_MAX,
               help='Certificate package max altname number.')
+@click.option('--warranty', type=CERTIFICATE_PACKAGE_WARRANTY,
+              help='Certificate warranty, only good for pro certificates.')
 @click.option('--altnames', required=False, multiple=True,
               help='The certificate altnames (comma separated text without '
                    'space).')
@@ -297,16 +300,20 @@ def export(gandi, resource, output, force, intermediate):
 @pass_gandi
 def create(gandi, csr, private_key, common_name, country, state, city,
            organisation, branch, duration, package, type, max_altname,
-           altnames, dcv_method):
+           warranty, altnames, dcv_method):
     """Create a new certificate."""
     if not (csr or common_name):
         gandi.echo('You need a CSR or a CN to create a certificate.')
         return
 
-    if package and (type or max_altname):
+    if package and (type or max_altname or warranty):
        gandi.echo('Please do not use --package at the same time you use '
-                  '--type or --max-altname.')
+                  '--type, --max-altname or --warranty.')
        return
+
+    if type and warranty and type != 'pro':
+        gandi.echo('The warranty can only be specified for pro certificates.')
+        return
 
     csr = gandi.certificate.process_csr(common_name, csr, private_key, country,
                                         state, city, organisation, branch)
@@ -324,7 +331,7 @@ def create(gandi, csr, private_key, common_name, country, state, city,
         gandi.echo('/!\ Using --package is deprecated, please replace it by '
                    '--type (in std, pro or bus) and --max-altname to set '
                    'the max number of altnames.')
-    elif type or max_altname:
+    elif type or max_altname or warranty:
         type = type or 'std'
 
         if max_altname:
@@ -346,6 +353,9 @@ def create(gandi, csr, private_key, common_name, country, state, city,
                     return
 
         pack_filter = 'cert_%s_%s_' % (type, max_altname)
+        if warranty:
+            pack_filter += '%s_' % (warranty)
+
         packages = [item['name']
                     for item in gandi.certificate.package_list()
                     if item['name'].startswith(pack_filter)]
