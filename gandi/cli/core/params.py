@@ -176,15 +176,15 @@ class CertificatePackage(GandiChoice):
         return [item['name'] for item in gandi.certificate.package_list()]
 
 
-class CertificatePackageFlavor(CertificatePackage):
+class CertificatePackageType(CertificatePackage):
 
-    """ Choice parameter to select an available certificate package flavor. """
+    """ Choice parameter to select an available certificate package type. """
 
-    name = 'certificate package flavor'
+    name = 'certificate package type'
 
     def _get_choices(self, gandi):
         """ Internal method to get choices list """
-        packages = super(CertificatePackageFlavor, self)._get_choices(gandi)
+        packages = super(CertificatePackageType, self)._get_choices(gandi)
         return list(set([pack.split('_')[1] for pack in packages]))
 
 
@@ -326,7 +326,7 @@ DISK_MAXLIST = 500
 KERNEL = KernelParamType()
 SNAPSHOTPROFILE = SnapshotParamType()
 CERTIFICATE_PACKAGE = CertificatePackage()
-CERTIFICATE_PACKAGE_FLAVOR = CertificatePackageFlavor()
+CERTIFICATE_PACKAGE_TYPE = CertificatePackageType()
 CERTIFICATE_PACKAGE_MAX = CertificatePackageMax()
 CERTIFICATE_DCV_METHOD = CertificateDcvMethod()
 EMAIL_TYPE = EmailParamType()

@@ -149,6 +149,15 @@ class Certificate(GandiModule):
                 return []
             raise
 
+    __packages__ = None
+    @classmethod
+    def package_get(cls, package_name):
+        if not cls.__packages__:
+            cls.__packages__ = dict([(pkg['name'], pkg)
+                                     for pkg in cls.package_list()])
+
+        return cls.__packages__.get(package_name)
+
     @classmethod
     def list(cls, options=None):
         """ List certificates."""

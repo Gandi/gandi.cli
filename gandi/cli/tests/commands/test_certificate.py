@@ -11,27 +11,30 @@ class CertTestCase(CommandTestCase):
 
         #self.assertEqual(result.exit_code, 0)
         wanted = (
-"""name               | description                   | max altname | flavor
--------------------+-------------------------------+-------------+-------
-cert_std_1_0_0     | single domain std certificate | 1           | std   
-cert_std_w_0_0     | wildcard std certificate      | 1           | std   
-cert_std_3_0_0     | multi domain std certificate  | 3           | std   
-cert_std_5_0_0     | multi domain std certificate  | 5           | std   
-cert_std_10_0_0    | multi domain std certificate  | 10          | std   
-cert_std_20_0_0    | multi domain std certificate  | 20          | std   
-cert_pro_1_100_0   | single domain pro certificate | 1           | pro   
-cert_pro_1_100_SGC | single domain pro certificate | 1           | pro   
-cert_pro_1_10_0    | single domain pro certificate | 1           | pro   
-cert_pro_1_250_0   | single domain pro certificate | 1           | pro   
-cert_pro_w_250_0   | wildcard pro certificate      | 1           | pro   
-cert_pro_w_250_SGC | wildcard pro certificate      | 1           | pro   
-cert_bus_1_250_0   | single domain bus certificate | 1           | bus   
-cert_bus_1_250_SGC | single domain bus certificate | 1           | bus   
-cert_bus_3_250_0   | multi domain bus certificate  | 3           | bus   
-cert_bus_5_250_0   | multi domain bus certificate  | 5           | bus   
-cert_bus_10_250_0  | multi domain bus certificate  | 10          | bus   
-cert_bus_20_250_0  | multi domain bus certificate  | 20          | bus   
+"""/!\ "gandi certificate packages" is deprecated.
+Please use "gandi certificate plan".
+Description            | Name               | Max altnames | Type
+-----------------------+--------------------+--------------+-----
+Standard Single Domain | cert_std_1_0_0     | 1            | std 
+Standard Wildcard      | cert_std_w_0_0     | 1            | std 
+Standard Multi Domain  | cert_std_3_0_0     | 3            | std 
+Standard Multi Domain  | cert_std_5_0_0     | 5            | std 
+Standard Multi Domain  | cert_std_10_0_0    | 10           | std 
+Standard Multi Domain  | cert_std_20_0_0    | 20           | std 
+Pro Single Domain      | cert_pro_1_100_0   | 1            | pro 
+Pro Single Domain      | cert_pro_1_100_SGC | 1            | pro 
+Pro Single Domain      | cert_pro_1_10_0    | 1            | pro 
+Pro Single Domain      | cert_pro_1_250_0   | 1            | pro 
+Pro Wildcard           | cert_pro_w_250_0   | 1            | pro 
+Pro Wildcard           | cert_pro_w_250_SGC | 1            | pro 
+Business Single Domain | cert_bus_1_250_0   | 1            | bus 
+Business Single Domain | cert_bus_1_250_SGC | 1            | bus 
+Business Multi Domain  | cert_bus_3_250_0   | 3            | bus 
+Business Multi Domain  | cert_bus_5_250_0   | 5            | bus 
+Business Multi Domain  | cert_bus_10_250_0  | 10           | bus 
+Business Multi Domain  | cert_bus_20_250_0  | 20           | bus 
 """)
+
         self.assertEqual(result.output, wanted)
 
         self.assertEqual(result.exit_code, 0)
@@ -41,10 +44,10 @@ cert_bus_20_250_0  | multi domain bus certificate  | 20          | bus
         result = self.runner.invoke(certificate.list, [])
 
         self.assertEqual(result.output, """cn           : mydomain.name
-package      : cert_std_1_0_0
+plan         : Standard Single Domain
 ----------
 cn           : inter.net
-package      : cert_bus_20_250_0
+plan         : Business Multi Domain
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -55,7 +58,7 @@ package      : cert_bus_20_250_0
         self.assertEqual(result.output, """cn           : inter.net
 date_created : 20140904T14:06:26
 date_end     :
-package      : cert_bus_20_250_0
+plan         : Business Multi Domain
 status       : valid
 """)
         self.assertEqual(result.exit_code, 0)
