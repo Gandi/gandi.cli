@@ -130,7 +130,7 @@ Gandi Server measures consumption by the hour and uses a prepaid credit system. 
     * root user will be created.
     * SSH key authorization will be used.
     * No password supplied for vm (required to enable emergency web console access).
-    * Configuration used: 1 cores, 256Mb memory, ip v4+v6, image Debian 7, hostname: temp1415183684
+    * Configuration used: 1 cores, 256Mb memory, ip v4+v6, image Debian 7, hostname: temp1415183684, datacenter: LU
 
 Create a virtual machine with the default configuration and a random hostname.
 
@@ -146,7 +146,7 @@ Set the VM's RAM to 2GB and add a CPU core on the fly.
     * root user will be created.
     * SSH key authorization will be used.
     * No password supplied for vm (required to enable emergency web console access).
-    * Configuration used: 2 cores, 3072Mb memory, ip v4+v6, image Ubuntu 14.04 64 bits LTS, hostname: docker
+    * Configuration used: 2 cores, 3072Mb memory, ip v4+v6, image Ubuntu 14.04 64 bits LTS, hostname: docker, datacenter: LU
 
 This command will setup the above VM, and install docker by running `curl -sSL https://get.docker.com/ubuntu/ | sh` after creation.
 

@@ -278,9 +278,9 @@ class Iaas(GandiModule, SshkeyHelper):
                           sys_disk_id_)
 
         cls.echo('* Configuration used: %d cores, %dMb memory, ip %s, '
-                 'image %s, hostname: %s' % (cores, memory,
-                                             '+'.join(ip_summary), image,
-                                             hostname))
+                 'image %s, hostname: %s, datacenter: %s' %
+                 (cores, memory, '+'.join(ip_summary), image, hostname,
+                  datacenter))
 
         # background mode, bail out now (skip interactive part)
         if background and (not vlan or not ip_version):
