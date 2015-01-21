@@ -176,6 +176,59 @@ class CertificatePackage(GandiChoice):
         return [item['name'] for item in gandi.certificate.package_list()]
 
 
+class CertificatePackageType(CertificatePackage):
+
+    """ Choice parameter to select an available certificate package type. """
+
+    name = 'certificate package type'
+
+    def _get_choices(self, gandi):
+        """ Internal method to get choices list """
+        packages = super(CertificatePackageType, self)._get_choices(gandi)
+        return list(set([pack.split('_')[1] for pack in packages]))
+
+
+class CertificatePackageMax(CertificatePackage):
+
+    """
+    Choice parameter to select an available certificate package max altname.
+    """
+
+    name = 'certificate package max'
+
+    def _get_choices(self, gandi):
+        """ Internal method to get choices list """
+        packages = super(CertificatePackageMax, self)._get_choices(gandi)
+        ret = list(set([pack.split('_')[2] for pack in packages]))
+        if 'w' in ret:
+            ret.remove('w')
+        return ret
+
+    def convert(self, value, param, ctx):
+        """ Convert value to int. """
+        self.gandi = ctx.obj
+        value = click.Choice.convert(self, value, param, ctx)
+        return int(value)
+
+
+class CertificatePackageWarranty(CertificatePackage):
+
+    """ Choice parameter to select an available certificate warranty. """
+
+    name = 'certificate package warranty'
+
+    def _get_choices(self, gandi):
+        """ Internal method to get choices list """
+        packages = super(CertificatePackageWarranty, self)._get_choices(gandi)
+        return list(set([pack.split('_')[3] for pack in packages]))
+
+    def convert(self, value, param, ctx):
+        """ Convert value to int. """
+        self.gandi = ctx.obj
+        value = click.Choice.convert(self, value, param, ctx)
+        return int(value)
+
+
 class CertificateDcvMethod(click.Choice):
 
     """ Choice parameter to select a certificate dcv method.
@@ -291,6 +344,9 @@ DISK_MAXLIST = 500
 KERNEL = KernelParamType()
 SNAPSHOTPROFILE = SnapshotParamType()
 CERTIFICATE_PACKAGE = CertificatePackage()
+CERTIFICATE_PACKAGE_TYPE = CertificatePackageType()
+CERTIFICATE_PACKAGE_MAX = CertificatePackageMax()
+CERTIFICATE_PACKAGE_WARRANTY = CertificatePackageWarranty()
 CERTIFICATE_DCV_METHOD = CertificateDcvMethod()
 EMAIL_TYPE = EmailParamType()
 IP_TYPE = IpType()
