@@ -1,0 +1,74 @@
+__gandi_commands()
+{
+    gandi help | egrep '^  [a-z]' | awk '{print $1}' \
+        | sort -u
+}
+
+__gandi_subcommands()
+{
+    local words=$*
+    [ $1 = "gandi" ] || return
+
+    case $2 in
+        config|api|docker|setup|onewordcmd)
+            return
+            ;;
+        deploy)
+            gandi vhost list | awk '/^name/ {print $3}'
+            return
+            ;;
+    esac
+
+    $words --help | awk '{print $2}'
+}
+
+__gandi_resources()
+{
+    local cmd=$1
+
+    case ${COMP_WORDS[$COMP_CWORDS]} in
+        create|list)
+            return
+            ;;
+        *)
+            ;;
+    esac
+
+    case $cmd in
+        vm)
+            gandi vm list | awk '/^hostname/ {print $3}'
+            ;;
+        domain)
+            gandi domain list
+            ;;
+        disk)
+            gandi disk list | awk '/^name/ {print $3}'
+            ;;
+        oper)
+            gandi oper list | awk '/^id/ {print $3}'
+            ;;
+    esac
+}
+
+_gandi()
+{
+    local cur=$2 prev=$3
+    command=${COMP_WORDS[1]}
+
+    local IFS=" "$'\n'
+
+    case $COMP_CWORD in
+        1)
+            COMPREPLY=( $(compgen -W "`__gandi_commands`" -- "$cur") )
+            ;;
+        2)
+            COMPREPLY=( $(compgen -W "`__gandi_subcommands ${COMP_WORDS[@]}`" -- \
+                        "$cur" ) )
+            ;;
+        *)
+            COMPREPLY=( $(compgen -W "`__gandi_resources $command`" -- "$cur") )
+            ;;
+    esac
+}
+
+complete -F _gandi gandi
