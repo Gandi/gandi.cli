@@ -34,7 +34,7 @@ Use `$ gandi` to easily create and manage web resources from the command line.
 
 Recommended tools
 * [pip](https://pip.pypa.io/en/latest/installing.html)
-* [virtualenv](https://virtualenv.pypa.io/en/latest/virtualenv.html#installation)
+* [virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)
 
 ## Installation
 
@@ -211,26 +211,10 @@ The default variables are:
   * `api.host`       # the URL of the API endpoint to use (i.e OTE or Production)
   * `api.key`        # the relevant API key for the chosen endpoint
 
-### Development
-
-To add a new command to the CLI:
-  * check if there's an existing namespace to either add a command or an option to an already existing one
-  * each command is composed of 2 python files, located in the `commands/` and `modules/` directories
-    * `commands/` contains everything that is related to shell arguments, parameter validation, default values
-    * `modules/` contains code that uses the Gandi API and can be used by other python scripts, or in the python shell.
-    * `packages/` contains packaging code (see `packages/README.rst`)
-
-Code must follow PEP8 recommendations: http://www.python.org/dev/peps/pep-0008/
-
-Docstrings should follow PEP257 recommendations: http://www.python.org/dev/peps/pep-0257/
-
 
 ## Contributing
 
-Create a git branch with your new feature or bugfix and either:
-* mail the patch to feedback@gandi.net,
-* send the URL for your branch and we will review/merge it if correct,
-* open a merge request on GitHub
+We <3 contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## Code status
 
