@@ -56,10 +56,12 @@ Namespaces:
 *  certificate change-dcv  Change the DCV for a pending certificate.
 *  certificate create      Create a new certificate.
 *  certificate delete      Revoke the certificate.
+*  certificate follow      Follow the certificate operation run.
 *  certificate export      Write the certificate to <output> or <fqdn>.
 *  certificate info        Display information about a certificate.
 *  certificate list        List certificates.
-*  certificate packages    List certificate packages.
+*  certificate packages    List certificate packages (deprecated).
+*  certificate plans       List certificate plans (replace packages).
 *  certificate resend-dcv  Resend the DCV mail for a pending certificate.
 *  certificate update      Update a certificate CSR.
 *  config                  Configure default values.
@@ -142,17 +144,25 @@ Details:
 
 * ``certificate change-dcv resource`` allow to change the domain validation process for a specific certificate request. Mandatory option is ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
 
+<<<<<<< HEAD
 * ``certificate create`` allow to request the creation of a certificate. If a private key is present as ``--private-key`` and not a CSR, the CSR will be generated. If no CSR or private key are present in the parameters, both are generated. Possible options are ``--csr TEXT`` and ``--private-key TEXT`` which could be the content of a certificate request and a private key or path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``-organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--duration INTEGER`` how many years of validity (up to 5 years), ``--package TEXT`` is the type of certificate as listed by ``gandi certificate packages``, ``--altnames LIST`` is a list of all alternative names and ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
+=======
+* ``certificate create`` allow to request the creation of a certificate. If a private key is present as ``--private-key`` and not a CSR, the CSR will be generated. If no CSR or private key are present in the parameters, both are generated. Possible options are ``--csr TEXT`` and ``--private-key TEXT`` which could be the content of a certificate request and a private key or path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``-organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--duration INTEGER`` how many years of validity (up to 5 years), ``--package TEXT`` is the type of certificate as listed by ``gandi certificate package``, ``--package`` is now deprecated and should be replaced by ``--type``, ``--max-altname`` and ``--warranty``, ``--type`` is the certificate type in std (standard), bus (business) and pro, ``--max-altname`` is the maximum number of altnames that this multi domain certificate will be able to have (by default it's calculated on the number of ``--altnames`` param you have, but you can override it with a bigger value), ``--warranty`` is the value of the financial transaction under warranty (only appliable with Pro certificates), ``--altnames LIST`` is a list of all alternative names and ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
+>>>>>>> stable
 
 * ``certificate delete resource`` delete a certificate. Possible option is ``--force`` (or ``-f``) to bypass the validation question; usefull in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``). Note that a resource can be a cn entry or an integer id.
 
-* ``certificate export resource`` write the selected certificate to a file. Possible option is ``--output TEXT`` for the path of the output file, ``--force`` overwrite any existing file. Note that a resource can be a cn entry or an integer id.
+* ``certificate follow resource`` display the current status of a certificate operation. Resource is an operation id.
+
+* ``certificate export resource`` write the selected certificate to a file. Possible option is ``--output TEXT`` for the path of the output file, ``--force`` overwrite any existing file, ``--intermediate`` will retrieve the needed intermediate certificates. Note that a resource can be a cn entry or an integer id.
 
 * ``certificate info resource`` show detailed view of a specific certificate. Possible options are ``--id``, ``--altnames``, ``--csr``, ``--cert`` which show the integer id, the alternative names, the certificate request and the full certificate, ``--all-status`` show the certificate without regard for its status. Note that a resource can be a cn entry or an integer id.
 
 * ``certificate list`` Possible options are ``--id``, ``--altnames``, ``--csr``, ``--cert`` which show the integer id, the alternative names, the certificate request and the full certificate for each element of the list, ``--all-status`` show certificates without regards to their status, ``--status``, ``--dates`` show the status of the certificate and the creation and expiration dates, ``--limit INTEGER`` show a subset of the list.
 
-* ``certificate packages`` show a full list of all available certificate types.
+* ``certificate packages`` show a full list of all available certificate types, this is depreacted, replace it by ``certificate plans``.
+
+* ``certificate plans`` show a full list of all available certificate plans.
 
 * ``certificate resend-dcv resource`` send the validation email again (only for the 'email' DCV method). Note that a resource can be a cn entry or an integer id.
 
