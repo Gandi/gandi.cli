@@ -61,8 +61,21 @@ def output_account(gandi, account, output_keys, justify=17):
         output_line(gandi, 'credits', None, justify)
         available = account.get('credits')
         output_line(gandi, '        available', available, justify)
-        usage = '%d/h' % account.get('credit_usage', 0)
-        output_line(gandi, '        usage', usage, justify)
+        # sometimes rating is returning nothing
+        usage_str = left_str = 'not available'
+        usage = account.get('credit_usage', 0)
+        if usage:
+            usage_str = '%d/h' % usage
+
+            left = available / usage
+            years, hours = divmod(left, 365 * 24)
+            months, hours = divmod(hours, 31 * 24)
+            days, hours = divmod(hours, 24)
+            left_str = '%d year(s) %d month(s) %d day(s) %d hour(s)' % \
+                       (years, months, days, hours)
+
+        output_line(gandi, '        usage', usage_str, justify)
+        output_line(gandi, '        time left', left_str, justify)
 
 
 def output_vm(gandi, vm, datacenters, output_keys, justify=10):
