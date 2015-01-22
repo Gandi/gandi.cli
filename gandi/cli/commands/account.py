@@ -1,7 +1,7 @@
 """ Account namespace commands. """
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_generic
+from gandi.cli.core.utils import output_account
 from gandi.cli.core.params import pass_gandi
 
 
@@ -10,8 +10,8 @@ from gandi.cli.core.params import pass_gandi
 def info(gandi):
     """Display infromation about hosting account.
     """
-    output_keys = ['handle', 'credits']
+    output_keys = ['handle', 'credit']
 
     account = gandi.account.info()
-    output_generic(gandi, account, output_keys)
+    output_account(gandi, account, output_keys)
     return account

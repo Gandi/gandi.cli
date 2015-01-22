@@ -53,6 +53,16 @@ def output_generic(gandi, data, output_keys, justify=10):
             output_line(gandi, key, data[key], justify)
 
 
+def output_account(gandi, account, output_keys, justify=17):
+    """ Helper to output an account information."""
+    output_generic(gandi, account, output_keys, justify)
+
+    if 'credit' in output_keys:
+        output_line(gandi, 'credits', None, justify)
+        available = account.get('credits')
+        output_line(gandi, '        available', available, justify)
+
+
 def output_vm(gandi, vm, datacenters, output_keys, justify=10):
     """ Helper to output a vm information."""
     output_generic(gandi, vm, output_keys, justify)
