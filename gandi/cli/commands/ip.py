@@ -5,7 +5,7 @@ from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_ip
-from gandi.cli.core.params import (option, pass_gandi, DATACENTER,
+from gandi.cli.core.params import (pass_gandi, DATACENTER,
                                    IP_TYPE, option, IntChoice)
 
 
@@ -40,7 +40,7 @@ def list(gandi, datacenter, type, id, attached, detached, version, reverse,
 
     options = {}
     if datacenter:
-        datacenter_id = int(Datacenter.usable_id(datacenter))
+        datacenter_id = int(gandi.datacenter.usable_id(datacenter))
         options['datacenter_id'] = datacenter_id
 
     iface_options = {}
