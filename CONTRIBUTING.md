@@ -36,7 +36,7 @@ your issue faster.
 
 ## Improving documentation
 
-Improvements to the Gandi CLI documentation are welcome. 
+Improvements to the Gandi CLI documentation are welcome.
 
 ## Adding features
 
@@ -73,7 +73,7 @@ Docstrings should follow [PEP257 recommendations](http://www.python.org/dev/peps
 
 ### Create issues
 
-Any major changes should be documented as [a GitHub issue](https://github.com/Gandi/gandi.cli/issues) 
+Any major changes should be documented as [a GitHub issue](https://github.com/Gandi/gandi.cli/issues)
 before you start working on it.
 
 ### Proposing your changes
@@ -86,7 +86,7 @@ Create a git branch with your new feature or bugfix and either (in order of pref
 * mail the patch to feedback@gandi.net,
 * send the URL for your branch and we will review/merge it if correct
 
-We'll check your pull requests in the timeliest manner possible. If we can't accept your PR for some reason, 
+We'll check your pull requests in the timeliest manner possible. If we can't accept your PR for some reason,
 we'll give you feedback and you're encouraged to try again!
 
 ### Submission conventions
@@ -104,6 +104,6 @@ Fork the repository and make changes on your fork in a feature branch:
 Submit unit tests for your changes. Run the full test suite on
 your branch before submitting a pull request. #TODO
 
-#### Documentation 
+#### Documentation
 
-Update the documentation when creating or modifying features. 
+Update the documentation when creating or modifying features.
