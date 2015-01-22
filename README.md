@@ -19,7 +19,8 @@ Use `$ gandi` to easily create and manage web resources from the command line.
     * [Registering a Domain Name](#registering-a-domain-name)
     * [Creating a Virtual Machine](#creating-a-virtual-machine)
     * [Deploying a Web Application](#deploying-a-web-application)
-    * [Creating a SSL Certificate] (#creating-a-ssl-certificate)
+    * [Creating a SSL Certificate](#creating-a-ssl-certificate)
+    * [Creating a Private VLAN](#creating-a-private-vlan)
   * [Advanced Usage](#advanced-usage)
     * [All Commands](#all-commands)
     * [Build manpage](#build-manpage)
@@ -252,6 +253,50 @@ You can also retrieve intermediate certificates if needed.
     $ gandi certificate export "domain.tld" --intermediate
 
 Find information on how to use your certificate with different servers on [our wiki](http://wiki.gandi.net/en/ssl).
+
+### Creating a private VLAN
+
+You can use Gandi CLI to create and setup your private VLANs. For more detailed information on how VLANs and networking in general works at Gandi, please check out our resources:
+
+    * Tutorial: [Creating a private VLAN with Gandi CLI](http://wiki.gandi.net/en/tutorials/cli/pvlan)
+    * Reference: [VLAN on Gandi Wiki](http://wiki.gandi.net/en/iaas/references/network/pvlan)
+    * Reference: [Networking on Gandi Wiki](http://wiki.gandi.net/en/iaas/references/network)
+
+#### Create a VLAN
+
+    $ gandi vlan create --name my-vlan-in-lu --datacenter LU \
+    --subnet "192.168.1.0/24" --gateway 192.168.1.1
+
+To create a VLAN you need to determine its `name` and `datacenter`.
+
+You can also set the `subnet` at creation time, or a default subnet will be chosen for you. The `gateway` setting is also optional and you can update both of these settings at any moment.
+
+    $ gandi vlan update my-vlan-in-lu --gateway 192.168.1.254
+
+#### Attach an existing VM to a VLAN
+
+To add an existing VM to a VLAN, you can create a private network interface and attach it to the VM.
+
+    $ gandi ip create --vlan my-vlan-in-lu --attach my-existing-vm --ip 192.168.1.254
+
+If you don't specify the IP you want to use, one will be chosen for you from the VLAN's subnet.
+
+#### Create a "Private VM"
+
+In fact there's no such thing as a "Private VM", but you can create a VM and only attach a private interface to it.
+
+    $ gandi vm create --hostname my-private-vm --vlan my-vlan-in-lu --ip 192.168.1.2
+
+Please note that a private VM cannot be accessed through the emergency console. You'll need a public VM that also has a private interface on the same VLAN to gain access.
+
+You can check out [our tutorial](http://wiki.gandi.net/en/tutorials/cli/pvlan) for an example of how to achieve this.
+
+#### More options
+
+    $ gandi vlan --help
+
+Use the `--help` flag for more VLAN management options.
+
 
 ## Advanced Usage
 
