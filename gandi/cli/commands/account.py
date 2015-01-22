@@ -13,5 +13,7 @@ def info(gandi):
     output_keys = ['handle', 'credit']
 
     account = gandi.account.info()
+    creditusage = gandi.account.creditusage()
+    account.update({'credit_usage': creditusage})
     output_account(gandi, account, output_keys)
     return account

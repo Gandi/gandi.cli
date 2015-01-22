@@ -61,6 +61,8 @@ def output_account(gandi, account, output_keys, justify=17):
         output_line(gandi, 'credits', None, justify)
         available = account.get('credits')
         output_line(gandi, '        available', available, justify)
+        usage = '%d/h' % account.get('credit_usage', 0)
+        output_line(gandi, '        usage', usage, justify)
 
 
 def output_vm(gandi, vm, datacenters, output_keys, justify=10):
