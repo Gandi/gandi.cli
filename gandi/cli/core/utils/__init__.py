@@ -8,6 +8,7 @@ import time
 import click
 from click.formatting import measure_table
 
+
 class MissingConfiguration(Exception):
 
     """ Raise when configuration if missing. """
