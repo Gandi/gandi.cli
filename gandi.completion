@@ -38,11 +38,11 @@ __gandi_resources()
         vm)
             gandi vm list | awk '/^hostname/ {print $3}'
             ;;
+        vhost|paas|disk)
+            gandi $cmd list | awk '/^name/ {print $3}'
+            ;;
         domain)
             gandi domain list
-            ;;
-        disk)
-            gandi disk list | awk '/^name/ {print $3}'
             ;;
         oper)
             gandi oper list | awk '/^id/ {print $3}'
