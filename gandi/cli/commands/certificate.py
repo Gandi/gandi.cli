@@ -2,29 +2,95 @@
 
 import os
 import click
+import requests
+
+# define basestring for python3
+try:
+    basestring
+except NameError:
+    basestring = (str,bytes)
+
+type_list = list
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_cert
+from gandi.cli.core.utils import output_cert, output_cert_oper, display_rows
 from gandi.cli.core.params import (pass_gandi, IntChoice,
-                                   CERTIFICATE_PACKAGE, CERTIFICATE_DCV_METHOD)
+                                   CERTIFICATE_PACKAGE, CERTIFICATE_DCV_METHOD,
+                                   CERTIFICATE_PACKAGE_TYPE,
+                                   CERTIFICATE_PACKAGE_MAX,
+                                   CERTIFICATE_PACKAGE_WARRANTY)
 
 
 @cli.command()
 @pass_gandi
 def packages(gandi):
-    """ List certificate packages. """
+    """ List certificate packages.
+    /!\\ deprecated call.
+    """
+    gandi.echo('/!\ "gandi certificate packages" is deprecated.')
+    gandi.echo('Please use "gandi certificate plans".')
+    return _plans(gandi, with_name=True)
+
+
+@cli.command()
+@pass_gandi
+def plans(gandi):
+    """ List certificate plans. """
+    return _plans(gandi)
+
+
+def package_desc(gandi, package):
+    if isinstance(package, basestring):
+        package = gandi.certificate.package_get(package)
+        if not package:
+            return ''
+
+    type_ = package['category']['name']
+    if package['wildcard']:
+        desc = '%s wildcard' % type_
+    elif package['max_domains'] > 1:
+        desc = '%s multi domain' % type_
+    else:
+        desc = '%s single domain' % type_
+    return ' '.join([word.capitalize() for word in desc.split(' ')])
+
+
+def _plans(gandi, with_name=False):
     packages = gandi.certificate.package_list()
+    def keyfunc(item):
+        return (item['category']['id'],
+                item['max_domains'],
+                item['warranty'],
+                item['name'])
 
-    for package in sorted(packages,
-                          lambda a, b: cmp("%02d%03d%s" % (a['category']['id'],
-                                                           a['max_domains'],
-                                                           a['name']),
-                                           "%02d%03d%s" % (b['category']['id'],
-                                                           b['max_domains'],
-                                                           b['name']))):
-        gandi.echo(package['name'])
+    packages.sort(key=keyfunc)
+    labels = ['Description', 'Max altnames', 'Type']
+    if with_name:
+        labels.insert(1, 'Name')
+    else:
+        labels.append('Warranty')
+    ret = [labels]
 
-    return packages
+    for package in packages:
+        params = package['name'].split('_')
+        cat = package['name'].split('_')[1]
+        warranty = str(int(package['name'].split('_')[3]) * 1000)
+        if len(warranty) > 3:
+            warranty = type_list(warranty)
+            warranty.insert(len(warranty) - 3, ',')
+            warranty = ''.join(warranty)
+
+        desc = package_desc(gandi, package)
+        line = [desc, str(package['max_domains']), cat]
+        if with_name:
+            line.insert(1, package['name'])
+        else:
+            line.append(warranty)
+        ret.append(line)
+
+    display_rows(gandi, ret)
+
+    return ret
 
 
 @cli.command()
@@ -46,7 +112,7 @@ def list(gandi, id, altnames, csr, cert, all_status, status, dates, limit):
     if not all_status:
         options['status'] = ['valid', 'pending']
 
-    output_keys = ['cn', 'package']
+    output_keys = ['cn', 'plan']
 
     if id:
         output_keys.append('id')
@@ -70,6 +136,7 @@ def list(gandi, id, altnames, csr, cert, all_status, status, dates, limit):
     for num, cert in enumerate(result):
         if num:
             gandi.separator_line()
+        cert['plan'] = package_desc(gandi, cert['package'])
         output_cert(gandi, cert, output_keys)
 
     return result
@@ -88,7 +155,7 @@ def info(gandi, resource, id, altnames, csr, cert, all_status):
 
     Resource can be a CN or an ID
     """
-    output_keys = ['cn', 'date_created', 'date_end', 'package', 'status']
+    output_keys = ['cn', 'date_created', 'date_end', 'plan', 'status']
 
     if id:
         output_keys.append('id')
@@ -113,6 +180,7 @@ def info(gandi, resource, id, altnames, csr, cert, all_status):
             continue
         if num:
             gandi.separator_line()
+        cert['plan'] = package_desc(gandi, cert['package'])
         output_cert(gandi, cert, output_keys)
         result.append(cert)
 
@@ -124,8 +192,10 @@ def info(gandi, resource, id, altnames, csr, cert, all_status):
 @click.option('-o', '--output', help='The file to write the cert.')
 @click.option('--force', '-f', is_flag=True,
               help='Overwrite the crt file if it exists.')
+@click.option('-i', '--intermediate', is_flag=True,
+              help='Retrieve gandi intermediate certs.')
 @pass_gandi
-def export(gandi, resource, output, force):
+def export(gandi, resource, output, force, intermediate):
     """ Write the certificate to <output> or <fqdn>.crt.
 
     Resource can be a CN or an ID
@@ -149,7 +219,8 @@ def export(gandi, resource, output, force):
                        'exported (%s).' % id_)
             continue
 
-        crt_filename = output or cert['cn'] + '.crt'
+        cert_filename = cert['cn'].replace('*.', 'wildcard.', 1)
+        crt_filename = output or cert_filename + '.crt'
         if not force and os.path.exists(crt_filename):
             gandi.echo('The file %s already exists.' % crt_filename)
             continue
@@ -159,6 +230,35 @@ def export(gandi, resource, output, force):
             with open(crt_filename, 'w') as crt_file:
                 crt_file.write(crt)
                 gandi.echo('wrote %s' % crt_filename)
+
+        package = cert['package']
+        if 'bus' in package and intermediate:
+            gandi.echo('Business certs do not need intermediates.')
+        elif intermediate:
+            crtf = 'pem'
+            sha_version = cert['sha_version']
+            type_ = package.split('_')[1]
+            extra = ('sgc' if 'SGC' in package
+                           and pro
+                           and sha_version == 1 else 'default')
+
+            if extra == 'sgc':
+                crtf = 'pem'
+
+            inters = gandi.certificate.urls[sha_version][type_][extra][crtf]
+            if isinstance(inters, basestring):
+                inters = [inters]
+
+            fhandle = open(cert_filename + '.inter.crt', 'w+b')
+            for inter in inters:
+                if inter.startswith('http'):
+                    data = requests.get(inter).text
+                else:
+                    data = inter
+                fhandle.write(data.encode('latin1'))
+
+            gandi.echo('wrote %s' % cert_filename + '.inter.crt')
+            fhandle.close()
 
         return crt
 
@@ -184,8 +284,14 @@ def export(gandi, resource, output, force):
 @click.option('-d', '--duration', default=1,
               type=IntChoice(['1', '2', '3', '4', '5']),
               help='The certificate duration in year.')
-@click.option('--package', default='cert_std_1_0_0', type=CERTIFICATE_PACKAGE,
-              help='Certificate package (default=cert_std_1_0_0).')
+@click.option('--package', type=CERTIFICATE_PACKAGE,
+              help='Certificate package.')
+@click.option('--type', type=CERTIFICATE_PACKAGE_TYPE,
+              help='Certificate package type (default=std).')
+@click.option('--max-altname', type=CERTIFICATE_PACKAGE_MAX,
+              help='Certificate package max altname number.')
+@click.option('--warranty', type=CERTIFICATE_PACKAGE_WARRANTY,
+              help='Certificate warranty, only good for pro certificates.')
 @click.option('--altnames', required=False, multiple=True,
               help='The certificate altnames (comma separated text without '
                    'space).')
@@ -193,10 +299,20 @@ def export(gandi, resource, output, force):
               help='Give the DCV method to use to check domain ownership.')
 @pass_gandi
 def create(gandi, csr, private_key, common_name, country, state, city,
-           organisation, branch, duration, package, altnames, dcv_method):
+           organisation, branch, duration, package, type, max_altname,
+           warranty, altnames, dcv_method):
     """Create a new certificate."""
     if not (csr or common_name):
         gandi.echo('You need a CSR or a CN to create a certificate.')
+        return
+
+    if package and (type or max_altname or warranty):
+       gandi.echo('Please do not use --package at the same time you use '
+                  '--type, --max-altname or --warranty.')
+       return
+
+    if type and warranty and type != 'pro':
+        gandi.echo('The warranty can only be specified for pro certificates.')
         return
 
     csr = gandi.certificate.process_csr(common_name, csr, private_key, country,
@@ -204,8 +320,63 @@ def create(gandi, csr, private_key, common_name, country, state, city,
     if not csr:
         return
 
+    if not common_name:
+        common_name = gandi.certificate.get_common_name(csr)
+
+    if '*' in common_name and altnames and len(altnames) > 1:
+        gandi.echo("You can't have a wildcard with multidomain certificate.")
+        return
+
+    if package:
+        gandi.echo('/!\ Using --package is deprecated, please replace it by '
+                   '--type (in std, pro or bus) and --max-altname to set '
+                   'the max number of altnames.')
+    elif type or max_altname or warranty:
+        type = type or 'std'
+
+        if max_altname:
+            if max_altname < len(altnames):
+                gandi.echo('You choose --max-altname %s but you have more '
+                           'altnames (%s)' % (max_altname, len(altnames)))
+                return
+        else:
+            if '*' in common_name:
+                max_altname = 'w'
+            else:
+                for max_ in [1, 3, 5, 10, 20]:
+                    if len(altnames) < max_:
+                        max_altname = max_
+                        break
+
+                if not max_altname:
+                    gandi.echo('Too many altnames, max is 20.')
+                    return
+
+        pack_filter = 'cert_%s_%s_' % (type, max_altname)
+        if warranty:
+            pack_filter += '%s_' % (warranty)
+
+        packages = [item['name']
+                    for item in gandi.certificate.package_list()
+                    if item['name'].startswith(pack_filter)]
+
+        if not packages:
+            gandi.echo("Can't find any plan with your params.")
+            gandi.echo('Please call : "gandi certificate plans".')
+            return
+
+        package = packages[0]
+
     result = gandi.certificate.create(csr, duration, package, altnames,
                                       dcv_method)
+
+    gandi.echo('The certificate create operation is %s' % result['id'])
+    gandi.echo('You can follow it with:')
+    gandi.echo('$ gandi certificate follow %s' % result['id'])
+    if common_name:
+        gandi.echo('When the operation is DONE, you can retrieve the .crt'
+                   ' with:')
+        gandi.echo('$ gandi certificate export "%s"' % common_name)
 
     return result
 
@@ -252,6 +423,20 @@ def update(gandi, resource, csr, private_key, country, state, city,
                                       dcv_method)
 
     return result
+
+
+@cli.command()
+@click.argument('resource', nargs=1, required=True)
+@pass_gandi
+def follow(gandi, resource):
+    """ Get the operation status
+
+    Resource is an operation ID
+    """
+    oper = gandi.oper.info(int(resource))
+    assert(oper['type'].startswith('certificate_'))
+    output_cert_oper(gandi, oper)
+    return oper
 
 
 @cli.command('change-dcv')

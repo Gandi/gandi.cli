@@ -80,7 +80,8 @@ def clone(gandi, vhost):
         gandi.error('missing VHOST parameter')
 
     if vhost and not paas_access:
-        gandi.paas.init_vhost(vhost, id=vhost)
+        paas_info = gandi.paas.info(vhost)
+        gandi.vhost.init_vhost(vhost, paas=paas_info)
     else:
         paas_access = gandi.get('paas.access')
         gandi.execute('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
@@ -142,9 +143,7 @@ def delete(gandi, background, force, resource):
         help='Datacenter where the PaaS will be spawned.')
 @click.option('--vhosts', default=None, multiple=True,
               help='List of virtual hosts to be linked to the instance.')
-@click.option('--password', prompt=True, hide_input=True,
-              confirmation_prompt=True, required=True,
-              help='Password of the PaaS instance.')
+@click.option('--password', help='Use command-line supplied password.')
 @click.option('--snapshotprofile', default=None,
               help='Set a snapshot profile associated to this paas disk.')
 @click.option('--bg', '--background', default=False, is_flag=True,
@@ -167,11 +166,15 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
 
     to know which PaaS instance type to use as type
 
-    $ gandi types
+    $ gandi paas types
 
     """
+    if not password:
+        password = click.prompt('password', hide_input=True,
+            confirmation_prompt=True)
+
     if not name:
-        name = randomstring()
+        name = randomstring('vm')
 
     result = gandi.paas.create(name, size, type, quantity, duration,
                                datacenter, vhosts, password,

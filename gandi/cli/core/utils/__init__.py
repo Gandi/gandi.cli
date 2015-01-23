@@ -5,6 +5,8 @@ Also custom exceptions and method to generate a random string.
 
 import time
 
+import click
+from click.formatting import measure_table
 
 class MissingConfiguration(Exception):
 
@@ -24,9 +26,22 @@ class DuplicateResults(Exception):
         self.errors = errors
 
 
+def display_rows(gandi, rows, has_header=True):
+    col_len = measure_table(rows)
+    formatting = ' | '.join(['%-' + str(l) + 's' for l in col_len])
+
+    if has_header:
+        header = rows.pop(0)
+        gandi.echo(formatting % tuple(header))
+        gandi.echo('-+-'.join(['-' * l for l in col_len]))
+
+    for row in rows:
+        gandi.echo(formatting % tuple(row))
+
+
 def output_line(gandi, key, val, justify):
     """ Base helper to output a key value using left justify."""
-    msg = ('%%-%ds: %%s' % justify) % (key, val)
+    msg = ('%%-%ds:%%s' % justify) % (key, (' %s' % val) if val else '')
     gandi.echo(msg)
 
 
@@ -51,6 +66,7 @@ def output_vm(gandi, vm, datacenters, output_keys, justify=10):
 
     if 'ip' in output_keys:
         for iface in vm['ifaces']:
+            gandi.separator_line()
             output_line(gandi, 'bandwidth', iface['bandwidth'], justify)
 
             for ip in iface['ips']:
@@ -157,7 +173,7 @@ def output_snapshot_profile(gandi, profile, output_keys, justify=13):
             output_generic(gandi, schedule, schedule_keys, justify)
 
 
-def check_domain_available(ctx, domain):
+def check_domain_available(ctx, param, domain):
     """ Helper to check if a domain is available."""
     gandi = ctx.obj
     result = gandi.call('domain.available', [domain])
@@ -166,7 +182,7 @@ def check_domain_available(ctx, domain):
         result = gandi.call('domain.available', [domain])
 
     if result[domain] == 'unavailable':
-        gandi.echo('%s is not available' % domain)
+        raise click.ClickException('%s is not available' % domain)
         return
 
     return domain
@@ -177,6 +193,16 @@ def output_contact_info(gandi, data, output_keys, justify=10):
     for key in output_keys:
         if data[key]:
             output_line(gandi, key, data[key]['handle'], justify)
+
+
+def output_cert_oper(gandi, oper, justify=12):
+    output_generic(gandi, oper, ['type', 'step'], justify)
+    params = dict(oper['params'])
+    params['fqdns'] = ', '.join(params['fqdns'])
+    output_generic(gandi, params, ['inner_step',
+                                   'package_name',
+                                   'dcv_method',
+                                   'fqdns'], justify)
 
 
 def output_cert(gandi, cert, output_keys, justify=13):
@@ -205,10 +231,76 @@ def output_cert(gandi, cert, output_keys, justify=13):
             output_line(gandi, 'altname', altname, justify)
 
 
+def output_vlan(gandi, vlan, datacenters, output_keys, justify=10):
+    """ Helper to output a vlan information."""
+    output_generic(gandi, vlan, output_keys, justify)
+
+    if 'dc' in output_keys:
+        for dc in datacenters:
+            if dc['id'] == vlan.get('datacenter_id',
+                                    vlan.get('datacenter', {}).get('id')):
+                dc_name = dc['iso']
+                break
+
+        output_line(gandi, 'datacenter', dc_name, justify)
+
+
+def output_iface(gandi, iface, datacenters, vms, output_keys, justify=10):
+    """ Helper to output an iface information."""
+    output_generic(gandi, iface, output_keys, justify)
+
+    if 'vm' in output_keys:
+        vm_name = vms.get(iface['vm_id'], {}).get('hostname')
+        if vm_name:
+            output_line(gandi, 'vm', vm_name, justify)
+
+    if 'dc' in output_keys:
+        for dc in datacenters:
+            if dc['id'] == iface.get('datacenter_id',
+                                     iface.get('datacenter', {}).get('id')):
+                dc_name = dc['iso']
+                break
+
+        output_line(gandi, 'datacenter', dc_name, justify)
+
+    if 'vlan_' in output_keys:
+        vlan = iface.get('vlan') or {}
+        output_line(gandi, 'vlan', vlan.get('name', '-'), justify)
+
+
+def output_ip(gandi, ip, datacenters, vms, ifaces, output_keys, justify=11):
+    """ Helper to output an ip information."""
+    output_generic(gandi, ip, output_keys, justify)
+
+    if 'type' in output_keys:
+        iface = ifaces.get(ip['iface_id'])
+        type_ = 'private' if iface.get('vlan') else 'public'
+        output_line(gandi, 'type', type_, justify)
+        if type_ == 'private':
+            output_line(gandi, 'vlan', iface['vlan']['name'], justify)
+
+    if 'vm' in output_keys:
+        iface = ifaces.get(ip['iface_id'])
+        vm_id = iface.get('vm_id')
+        if vm_id:
+            vm_name = vms.get(vm_id, {}).get('hostname')
+            if vm_name:
+                output_line(gandi, 'vm', vm_name, justify)
+
+    if 'dc' in output_keys:
+        for dc in datacenters:
+            if dc['id'] == ip.get('datacenter_id',
+                                     ip.get('datacenter', {}).get('id')):
+                dc_name = dc['iso']
+                break
+
+        output_line(gandi, 'datacenter', dc_name, justify)
+
+
 def randomstring(prefix=None):
     """ Helper to generate a random string, used for temporary hostnames."""
     if not prefix:
-        prefix = 'temp'
+        prefix = 'tmp'
     return '%s%s' % (prefix, str(int(time.time())))
 
 
