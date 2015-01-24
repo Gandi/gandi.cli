@@ -3,6 +3,7 @@
 import os
 import webbrowser
 
+from gandi.cli.modules.paas import Paas
 from gandi.cli.core.base import GandiModule
 
 

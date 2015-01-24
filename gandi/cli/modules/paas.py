@@ -1,7 +1,6 @@
 """ PaaS commands module. """
 
 from gandi.cli.core.base import GandiModule
-from gandi.cli.modules.vhost import Vhost
 from gandi.cli.modules.datacenter import Datacenter
 from gandi.cli.modules.sshkey import SshkeyHelper
 
@@ -206,12 +205,10 @@ class Paas(GandiModule, SshkeyHelper):
     @classmethod
     def from_vhost(cls, vhost):
         """Retrieve paas instance id associated to a vhost."""
-        result = Vhost().list()
-        paas_hosts = {}
-        for host in result:
-            paas_hosts[host['name']] = host['paas_id']
-
-        return paas_hosts.get(vhost)
+        result = cls.list({'vhost': vhost})
+        if not result:
+            return None
+        return result[0]['id']
 
     @classmethod
     def from_hostname(cls, hostname):
