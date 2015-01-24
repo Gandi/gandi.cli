@@ -1,6 +1,7 @@
 """ Vhost commands module. """
 
 import os
+import webbrowser
 
 from gandi.cli.core.base import GandiModule
 
@@ -9,11 +10,14 @@ class PaasAccess:
     vhost = None
     git_remote = None
     ssh_remote = None
+    url = None
 
-    def __init__(self, vhost=None, git_remote=None, ssh_remote=None):
+    def __init__(self, vhost=None, git_remote=None, ssh_remote=None,
+        url=None):
         self.git_remote = git_remote
         self.ssh_remote = ssh_remote
         self.vhost = vhost
+        self.url = url
 
 
 class Vhost(GandiModule):
@@ -129,9 +133,10 @@ class Vhost(GandiModule):
             vhost = 'default'
 
         remote = 'ssh+git://%s/%s.git' % (paas_access, vhost)
+        url = 'http://%s/' % vhost # How do we SSL ?
 
         return PaasAccess(vhost=vhost, git_remote=remote, 
-                ssh_remote=paas_access)
+                ssh_remote=paas_access, url=url)
 
     @classmethod
     def attach(cls, vhost):
@@ -188,3 +193,17 @@ class Vhost(GandiModule):
         ssh_cmd = "ssh %s '%s'" % (remote.ssh_remote, deploy_cmd)
 
         return cls.execute(ssh_cmd)
+
+    @classmethod
+    def open(cls, vhost):
+        """Open a browser window to this vhost"""
+
+        if vhost:
+            remote = cls.get_remote(vhost)
+        else:
+            remote = cls.find_vhost()
+
+        if not remote:
+            return
+
+        webbrowser.open_new(remote.url)

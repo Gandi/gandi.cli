@@ -139,3 +139,11 @@ def deploy(gandi, resource, gitref):
     """Deploy code on a remote vhost."""
 
     return gandi.vhost.deploy(resource, gitref)
+
+@cli.command(root=True)
+@click.argument('resource', required=False)
+@pass_gandi
+def open(gandi, resource):
+    """Open browser window on vhost"""
+
+    return gandi.vhost.open(resource)
