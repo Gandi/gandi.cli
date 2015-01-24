@@ -130,11 +130,12 @@ class Vhost(GandiModule):
 
         paas_access = '%s@%s' % (paas['user'], git_server)
 
+        url = 'http://%s/' % vhost # How do we SSL ?
+
         if 'php' not in paas['type']:
             vhost = 'default'
 
         remote = 'ssh+git://%s/%s.git' % (paas_access, vhost)
-        url = 'http://%s/' % vhost # How do we SSL ?
 
         return PaasAccess(vhost=vhost, git_remote=remote, 
                 ssh_remote=paas_access, url=url)
