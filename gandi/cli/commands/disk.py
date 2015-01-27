@@ -2,7 +2,7 @@
 
 import click
 
-from gandi.cli.core.cli import cli, compatcallback
+from gandi.cli.core.cli import cli, compatcallback, warn_deprecated
 from gandi.cli.core.utils import output_disk, output_generic, randomstring
 from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE,
                                    KERNEL, SIZE, option, DISK_IMAGE)
@@ -220,8 +220,10 @@ def delete(gandi, resource, force, background):
 
 
 @cli.command()
+@click.argument('name_arg', required=False)
 @click.option('--name', type=click.STRING, default=None,
-              help='Disk name, will be generated if not provided.')
+              help='Disk name, will be generated if not provided.',
+              callback=warn_deprecated)
 @click.option('--vm', default=None, type=click.STRING,
               help='Attach the newly created disk to the vm.')
 @click.option('--size', default='3072', metavar='SIZE[M|G|T]', type=SIZE,
@@ -239,7 +241,7 @@ def delete(gandi, resource, force, background):
               help='Run command in background mode (default=False).')
 @pass_gandi
 def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
-           background):
+           background, name_arg):
     """ Create a new disk. """
     try:
         snapshotprofile = int(snapshotprofile) if snapshotprofile else None
@@ -249,7 +251,7 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
         gandi.echo('  gandi snapshotprofile list')
         return
 
-    name = name or randomstring('vdi')
+    name = name or name_arg or randomstring('vdi')
 
     disk_type = 'data'
     result = gandi.disk.create(name, vm, size, snapshotprofile, datacenter,

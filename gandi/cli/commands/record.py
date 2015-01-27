@@ -57,7 +57,7 @@ def list(gandi, domain, zone_id, output):
 @click.option('--name', default=None, required=True,
               help='Relative name, may contain leading wildcard. '
                    '`@` for empty name')
-@click.option('--type', default=None, required=True,
+@click.option('--type', default='A', required=True,
               type=click.Choice(['A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT',
                                  'WKS', 'SRV', 'LOC', 'SPF']),
               help='DNS record type')
