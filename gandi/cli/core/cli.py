@@ -3,6 +3,7 @@
 
 import os
 import os.path
+import sys
 import inspect
 from functools import update_wrapper
 
@@ -29,6 +30,14 @@ def compatcallback(f):
     if getattr(click, '__version__', '0.0') >= '2.0':
         return f
     return update_wrapper(lambda ctx, value: f(ctx, None, value), f)
+
+
+def warn_deprecated(self, param, value):
+    """ Warn that a parameter is to be deprecated soon """
+    if value:
+        sys.stderr.write('Warning: --%s is soon a deprecated parameter, '
+                         'see documentation\n' % param.name)
+    return value
 
 
 class GandiCLI(click.Group):
