@@ -55,6 +55,7 @@ def info(gandi, resource, stat):
         sampler = {'unit': 'hours', 'value': 1, 'function': 'max'}
         time_range = 3600 * 24
         query_vif = 'vif.bytes.all'
+        query_vbd = 'vbd.bytes.all'
 
     resource = tuple(set(resource))
     datacenters = gandi.datacenter.list()
@@ -72,9 +73,13 @@ def info(gandi, resource, stat):
         if stat is True:
             metrics_vif = gandi.metric.query(vm['id'], time_range, query_vif,
                                              'vm', sampler)
+            metrics_vbd = gandi.metric.query(vm['id'], time_range, query_vbd,
+                                             'vm', sampler)
             gandi.echo('')
             gandi.echo('vm network stats')
             output_metric(gandi, metrics_vif, 'direction', 14)
+            gandi.echo('disk network stats')
+            output_metric(gandi, metrics_vbd, 'direction', 14)
 
     return ret
 
