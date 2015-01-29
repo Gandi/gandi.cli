@@ -5,7 +5,7 @@ import click
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (
     output_vm, output_image, output_generic, output_datacenter,
-    output_kernels
+    output_kernels, output_metric
 )
 from gandi.cli.core.params import (
     pass_gandi, option, IntChoice, DATACENTER, DISK_IMAGE,
@@ -41,14 +41,20 @@ def list(gandi, state, id, limit):
 
 @cli.command()
 @click.argument('resource', nargs=-1, required=True)
+@click.option('--stat', default=False, is_flag=True,
+              help='Display general vm statistic')
 @pass_gandi
-def info(gandi, resource):
+def info(gandi, resource, stat):
     """Display information about a virtual machine.
 
     Resource can be a Hostname or an ID
     """
     output_keys = ['hostname', 'state', 'cores', 'memory', 'console',
                    'datacenter', 'ip']
+    if stat is True:
+        sampler = {'unit': 'hours', 'value': 1, 'function': 'max'}
+        time_range = 3600 * 24
+        query_vif = 'vif.bytes.all'
 
     resource = tuple(set(resource))
     datacenters = gandi.datacenter.list()
@@ -63,6 +69,12 @@ def info(gandi, resource):
             gandi.echo('')
             disk_out_keys = ['label', 'kernel_version', 'name', 'size']
             output_image(gandi, disk, datacenters, disk_out_keys, 14)
+        if stat is True:
+            metrics_vif = gandi.metric.query(vm['id'], time_range, query_vif,
+                                             'vm', sampler)
+            gandi.echo('')
+            gandi.echo('vm network stats')
+            output_metric(gandi, metrics_vif, 'direction', 14)
 
     return ret
 

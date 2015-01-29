@@ -8,6 +8,8 @@ import time
 import click
 from click.formatting import measure_table
 
+from ascii_sparks import sparks
+
 
 class MissingConfiguration(Exception):
 
@@ -99,6 +101,15 @@ def output_vm(gandi, vm, datacenters, output_keys, justify=10):
                 ip_addr = ip['ip']
 
                 output_line(gandi, 'ip%s' % ip['version'], ip_addr, justify)
+
+
+def output_metric(gandi, metrics, key, justify=10):
+    """ Helper to output metrics."""
+    for metric in metrics:
+        key_name = metric[key].pop()
+        values = [point.get('value', 0) for point in metric['points']]
+        graph = sparks(values) if max(values) else ''
+        output_line(gandi, key_name, graph, justify)
 
 
 def output_vhost(gandi, vhost, paas, output_keys, justify=14):

@@ -298,7 +298,7 @@ Details:
 
 * ``gandi vm list`` show all the virtual machine created in Gandi hosting for the account. Possible options are ``--state`` which filter the output according to define virtual machine state, ``--id`` to obtain the id of each virtual machine, ``--limit INTEGER`` which list only a subset of the full list of virtual machines.
 
-* ``gandi vm info resource`` show details of a specific operation.
+* ``gandi vm info resource`` show details of a specific operation. Use ``--stat`` in order to get general statistics of the VM's resources.
 
 * ``gandi vm ssh resource [args]`` open a ssh connection on the virtual machine and give you a shell access. The ``-i TEXT`` option (or ``--identity TEXT``) refers to a local ssh key, as used in the ssh command. The ``-l TEXT``, ``--login TEXT`` or ``user@host`` form specifies remote username in the same way. Using ``--wipe-key``, previous entry for that host is discarded from the known_hosts file first. You can add arguments (be sure to prefix options with the POSIX argument parsing ``--`` separator) and commands to ssh, as used in the ssh command.
 
