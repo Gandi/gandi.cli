@@ -51,6 +51,7 @@ def info(gandi, resource, stat):
     """
     output_keys = ['hostname', 'state', 'cores', 'memory', 'console',
                    'datacenter', 'ip']
+    justify = 14
     if stat is True:
         sampler = {'unit': 'hours', 'value': 1, 'function': 'max'}
         time_range = 3600 * 24
@@ -64,12 +65,12 @@ def info(gandi, resource, stat):
         if num:
             gandi.separator_line()
         vm = gandi.iaas.info(item)
-        output_vm(gandi, vm, datacenters, output_keys, 14)
+        output_vm(gandi, vm, datacenters, output_keys, justify)
         ret.append(vm)
         for num, disk in enumerate(vm['disks']):
             gandi.echo('')
             disk_out_keys = ['label', 'kernel_version', 'name', 'size']
-            output_image(gandi, disk, datacenters, disk_out_keys, 14)
+            output_image(gandi, disk, datacenters, disk_out_keys, justify)
         if stat is True:
             metrics_vif = gandi.metric.query(vm['id'], time_range, query_vif,
                                              'vm', sampler)
@@ -77,9 +78,9 @@ def info(gandi, resource, stat):
                                              'vm', sampler)
             gandi.echo('')
             gandi.echo('vm network stats')
-            output_metric(gandi, metrics_vif, 'direction', 14)
+            output_metric(gandi, metrics_vif, 'direction', justify)
             gandi.echo('disk network stats')
-            output_metric(gandi, metrics_vbd, 'direction', 14)
+            output_metric(gandi, metrics_vbd, 'direction', justify)
 
     return ret
 
