@@ -139,7 +139,7 @@ def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=11):
         df = paas['df']
         total = df['free'] + df['used']
         if total:
-            disk_used = '%.1f%%' % (df['used'] * 100  / total)
+            disk_used = '%.1f%%' % (df['used'] * 100 / total)
             output_line(gandi, 'quota used', disk_used, justify)
 
 
