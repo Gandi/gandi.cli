@@ -31,7 +31,7 @@ def compatcallback(f):
         return f
     return update_wrapper(lambda ctx, value: f(ctx, None, value), f)
 
-
+@compatcallback
 def warn_deprecated(self, param, value):
     """ Warn that a parameter is to be deprecated soon """
     if value:
