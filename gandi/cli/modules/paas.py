@@ -186,13 +186,17 @@ class Paas(GandiModule, SshkeyHelper):
     def usable_id(cls, id):
         """ Retrieve id from input which can be hostname, vhost, id."""
         try:
+            qry_id = int(id)
+        except ValueError:
+            pass
+
+        try:
             # id is maybe a hostname
-            qry_id = cls.from_hostname(id)
+            if not qry_id:
+                qry_id = cls.from_hostname(id)
             if not qry_id:
                 # id is maybe a vhost
                 qry_id = cls.from_vhost(id)
-            if not qry_id:
-                qry_id = int(id)
         except Exception:
             qry_id = None
 
