@@ -8,7 +8,7 @@ from gandi.cli.core.params import pass_gandi
 @cli.command()
 @pass_gandi
 def info(gandi):
-    """Display infromation about hosting account.
+    """Display information about hosting account.
     """
     output_keys = ['handle', 'credit']
 
