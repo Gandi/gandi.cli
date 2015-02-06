@@ -4,6 +4,7 @@ from click.exceptions import ClickException
 
 from .base import CommandTestCase
 from gandi.cli.commands import disk
+from gandi.cli.core.utils.size import disk_check_size
 
 
 class DiskTestCase(CommandTestCase):
@@ -41,7 +42,7 @@ vm        : arch64
         self.assertEqual(result.exit_code, 0)
 
     def test_check_size(self):
-        result = disk.check_size(None, None, 2048)
+        result = disk_check_size(None, None, 2048)
         self.assertEqual(result, 2048)
         self.assertRaises(ClickException, disk.check_size, None, None, 2040)
 

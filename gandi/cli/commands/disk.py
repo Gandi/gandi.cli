@@ -2,8 +2,9 @@
 
 import click
 
-from gandi.cli.core.cli import cli, compatcallback
+from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_disk, output_generic, randomstring
+from gandi.cli.core.utils.size import disk_check_size
 from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE,
                                    KERNEL, SIZE, option, DISK_IMAGE)
 
@@ -81,14 +82,6 @@ def info(gandi, resource):
     return result
 
 
-@compatcallback
-def check_size(ctx, param, value):
-    """ Validation callback for size parameter."""
-    if value and value % 1024:
-        raise click.ClickException('Size must be a multiple of 1024.')
-    return value
-
-
 @cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
@@ -162,7 +155,7 @@ def attach(gandi, disk, vm, background, force):
               help=('Disk size. A size suffix (M for megabytes up to T for '
                     'terabytes) is optional, megabytes is the default if no '
                     'suffix is present.'),
-              callback=check_size)
+              callback=disk_check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE)
 @click.option('--bg', '--background', default=False, is_flag=True,
@@ -228,7 +221,7 @@ def delete(gandi, resource, force, background):
               help=('Disk size. A size suffix (M for megabytes up to T for '
                     'terabytes) is optional, megabytes is the default if no '
                     'suffix is present.'),
-              callback=check_size)
+              callback=disk_check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE)
 @click.option('--source', default=None, type=DISK_IMAGE,
