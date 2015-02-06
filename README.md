@@ -258,9 +258,9 @@ Find information on how to use your certificate with different servers on [our w
 
 You can use Gandi CLI to create and setup your private VLANs. For more detailed information on how VLANs and networking in general works at Gandi, please check out our resources:
 
-    * Tutorial: [Creating a private VLAN with Gandi CLI](http://wiki.gandi.net/en/tutorials/cli/pvlan)
-    * Reference: [VLAN on Gandi Wiki](http://wiki.gandi.net/en/iaas/references/network/pvlan)
-    * Reference: [Networking on Gandi Wiki](http://wiki.gandi.net/en/iaas/references/network)
+* [Creating a private VLAN with Gandi CLI](http://wiki.gandi.net/en/tutorials/cli/pvlan)
+* [VLAN on Gandi Wiki](http://wiki.gandi.net/en/iaas/references/network/pvlan)
+* [Networking on Gandi Wiki](http://wiki.gandi.net/en/iaas/references/network)
 
 #### Create a VLAN
 
