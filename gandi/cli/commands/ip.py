@@ -102,6 +102,17 @@ def info(gandi, resource):
 
 @cli.command()
 @click.argument('ip')
+@click.option('--reverse', help='Update reverse (PTR record) for this IP')
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@pass_gandi
+def update(gandi, ip, reverse, background):
+    if not reverse:
+        return
+    return gandi.ip.update(ip, {'reverse': reverse}, background)
+
+@cli.command()
+@click.argument('ip')
 @click.argument('vm')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
