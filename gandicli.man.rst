@@ -87,6 +87,7 @@ Namespaces:
 *  ip attach               Attach an ip to a vm.
 *  ip detach               Detach an ip from a vm.
 *  ip delete               Delete an ip.
+*  ip update               Update an ip.
 *  mail create             Create a mailbox.
 *  mail delete             Delete a mailbox.
 *  mail info               Display information about a mailbox.
@@ -200,7 +201,7 @@ Details:
 
 * ``gandi help command`` display help for command, if command is a namespace it will display list of available commands for this namespace.
 
-* ``gandi ip list`` show all the ip created in Gandi hosting for the account. Possible options to filter the list are : ``--attached`` to only show attached ips, ``--detached`` to only show detached ips, and ``--type`` (being in ``public`` or ``private``) to only show public or private ips. Possible options to get more details are : ``--version`` to get the ip version, ``--reverse`` to get the ip reverse, and ``--vm`` to get the attached vm if any, ``--id`` to add the integer id of each ip.
+* ``gandi ip list`` show all the ip created in Gandi hosting for the account. Possible options to filter the list are : ``--attached`` to only show attached ips, ``--detached`` to only show detached ips, ``--vlan`` to filter by vlan name, and ``--type`` (being in ``public`` or ``private``) to only show public or private ips. Possible options to get more details are : ``--version`` to get the ip version, ``--reverse`` to get the ip reverse, and ``--vm`` to get the attached vm if any, ``--id`` to add the integer id of each ip.
 
 * ``gandi ip info`` show information about specific ip.
 
@@ -211,6 +212,8 @@ Details:
 * ``gandi ip detach`` detach an ip from a vm. It only takes one parameter, the ``ip``. Possible options are ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
 
 * ``gandi ip delete`` delete an ip. If the ip is still attached, it will detach it before deleting it. Possible options are ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
+
+* ``gandi ip update`` update an ip. The only available parameter is now ``--reverse``, to specify a reverse (PTR record) name for this ip address.
 
 * ``gandi mail create login@domain.tld`` create a new mailbox. Possible options are ``-q, --quota INTEGER`` to define a quota for this mailbox, ``-f, --fallback TEXT`` to define a fallback addresse, ``-a, --alias TEXT`` to add an alias for this mailbox, this last option can be used multiple times.
 
