@@ -83,7 +83,7 @@ def info(gandi, resource):
 
     Resource can be an ip or id.
     """
-    output_keys = ['ip', 'state', 'dc', 'type', 'vm']
+    output_keys = ['ip', 'state', 'dc', 'type', 'vm', 'reverse']
 
     datacenters = gandi.datacenter.list()
 
