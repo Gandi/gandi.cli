@@ -1,6 +1,5 @@
 """ Iface and vlan commands module. """
 
-import click
 from click.exceptions import UsageError
 
 from gandi.cli.core.base import GandiModule
@@ -42,6 +41,16 @@ class Ip(GandiModule):
         """ Create a public ip and attach it if vm is given. """
         return Iface.create(ip_version, datacenter, bandwidth, vlan, vm, ip,
                             background)
+
+    @classmethod
+    def update(cls, resource, params, background=False):
+        """ Update this IP """
+        cls.echo('Updating your IP')
+        result = cls.call('hosting.ip.update', cls.usable_id(resource),
+                          params)
+        if not background:
+            cls.display_progress(result)
+        return result
 
     @classmethod
     def _check_and_detach(cls, ip_, vm_=None):
