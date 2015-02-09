@@ -107,9 +107,11 @@ def info(gandi, resource):
               help='Run command in background mode (default=False).')
 @pass_gandi
 def update(gandi, ip, reverse, background):
+    """Update an ip."""
     if not reverse:
         return
     return gandi.ip.update(ip, {'reverse': reverse}, background)
+
 
 @cli.command()
 @click.argument('ip')
