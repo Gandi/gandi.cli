@@ -19,9 +19,10 @@ from gandi.cli.core.params import (pass_gandi, DATACENTER,
 @click.option('--version', help='Display ip version.', is_flag=True)
 @click.option('--reverse', help='Display ip reverse.', is_flag=True)
 @click.option('--vm', help='Display ip vm.', is_flag=True)
+@click.option('--vlan', default=None, help='Filter by vlan.')
 @pass_gandi
 def list(gandi, datacenter, type, id, attached, detached, version, reverse,
-         vm):
+         vm, vlan):
     """List ips."""
     if attached and detached:
         gandi.echo("You can't set --attached and --detached at the same time.")
@@ -47,6 +48,8 @@ def list(gandi, datacenter, type, id, attached, detached, version, reverse,
     iface_options = {}
     if type:
         iface_options['type'] = type
+    if vlan:
+        iface_options['vlan'] = vlan
     if attached:
         iface_options['state'] = 'used'
     elif detached:
@@ -80,7 +83,7 @@ def info(gandi, resource):
 
     Resource can be an ip or id.
     """
-    output_keys = ['ip', 'state', 'dc', 'type', 'vm']
+    output_keys = ['ip', 'state', 'dc', 'type', 'vm', 'reverse']
 
     datacenters = gandi.datacenter.list()
 
@@ -96,6 +99,17 @@ def info(gandi, resource):
 
     return ip
 
+
+@cli.command()
+@click.argument('ip')
+@click.option('--reverse', help='Update reverse (PTR record) for this IP')
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@pass_gandi
+def update(gandi, ip, reverse, background):
+    if not reverse:
+        return
+    return gandi.ip.update(ip, {'reverse': reverse}, background)
 
 @cli.command()
 @click.argument('ip')
