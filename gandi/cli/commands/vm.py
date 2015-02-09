@@ -7,8 +7,9 @@ from gandi.cli.core.utils import (
     output_vm, output_image, output_generic, output_datacenter,
     output_kernels, output_metric
 )
+from gandi.cli.core.utils.size import disk_check_size
 from gandi.cli.core.params import (
-    pass_gandi, option, IntChoice, DATACENTER, DISK_IMAGE,
+    pass_gandi, option, IntChoice, DATACENTER, DISK_IMAGE, SIZE
 )
 
 
@@ -232,8 +233,11 @@ def delete(gandi, background, force, resource):
               help='Run command in background mode (default=False).')
 @option('--sshkey', multiple=True,
         help='Authorize ssh authentication for the given ssh key.')
-@click.option('--size', type=click.INT, default=None,
-              help="System disk size in MiB.")
+@click.option('--size', default=None, metavar='SIZE[M|G|T]', type=SIZE,
+              help=('Disk size. A size suffix (M for megabytes up to T for '
+                    'terabytes) is optional, megabytes is the default if no '
+                    'suffix is present.'),
+              callback=disk_check_size)
 @click.option('--vlan', default=None, help='A vlan to use with this vm.')
 @click.option('--ip', default=None, help='An ip in the vlan for this vm.')
 @click.option('--script', default=None,
