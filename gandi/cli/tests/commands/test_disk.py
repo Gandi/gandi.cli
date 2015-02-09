@@ -44,13 +44,13 @@ vm        : arch64
     def test_check_size(self):
         result = disk_check_size(None, None, 2048)
         self.assertEqual(result, 2048)
-        self.assertRaises(ClickException, disk.check_size, None, None, 2040)
+        self.assertRaises(ClickException, disk_check_size, None, None, 2040)
 
     def __test_detach(self):
         result = self.runner.invoke(disk.detach, ['data'])
         self.assertEqual(result.output.strip(),
                          "Are you sure to detach data? [y/N]:"
-                        )
+                         )
         self.assertEqual(result.exit_code, 0)
 
     def test_detach_forced(self):
