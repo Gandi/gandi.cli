@@ -114,10 +114,35 @@ You can use the information of Gandi handles associated to Contacts in your acco
 
     $ gandi domain info example.com
 
-#### 5. List NS records of a domain
+#### 5. Manage NS records for your domains
+
+##### Create a new record 
+
+`gandi record create example.com --name www --type A --value 127.0.0.1`
+
+Add a new record to the current zone file of the domain and activate it.
+
+##### List your records
+
     $ gandi record list example.com
 
-You can use `--output` to extract your zone records in a file, then edit it and use `gandi record update example.com -f file` to update it easily.
+You can show records set for a domain in a zone file using `gandi record list example.com`. Use `--format` parameter to change the output formating.
+
+##### Update a record 
+
+    $ gandi record update example.com --record "@ 3600 IN A 127.0.0.1" --new-record "@ 3600 IN A 0.0.0.0"
+
+This command is useful to update only one record at the time. The pattern to use is 'name TTL CLASS TYPE value', you can list your records easyly with `gandi record list example.com --format text` to copy and past the record to replace.
+
+##### Update many records quickly
+
+You can use `gandi record list example.com --format text > file.zone` to extract your zone records in a file, then edit it and use `gandi record update example.com -f file.zone` to update the entire zone file easily. 
+
+##### Delete records
+
+    $ gandi record delete jauneau.eu --value 127.0.0.1
+
+Delete records corresponding to the parameters. If there is many record with a value '127.0.0.1', all of them would be deleted.
 
 ### Creating a Virtual Machine
 
