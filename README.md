@@ -118,7 +118,7 @@ You can use the information of Gandi handles associated to Contacts in your acco
 
 ##### Create a new record 
 
-`gandi record create example.com --name www --type A --value 127.0.0.1`
+    $ gandi record create example.com --name www --type A --value 127.0.0.1
 
 Add a new record to the current zone file of the domain and activate it.
 
@@ -136,7 +136,9 @@ This command is useful to update only one record at the time. The pattern to use
 
 ##### Update many records quickly
 
-You can use `gandi record list example.com --format text > file.zone` to extract your zone records in a file, then edit it and use `gandi record update example.com -f file.zone` to update the entire zone file easily. 
+    $ gandi record list example.com --format text > file.zone
+
+You can use this command to extract your zone records in a file, then edit it and use `gandi record update example.com -f file.zone` to update the entire zone file easily. 
 
 ##### Delete records
 
