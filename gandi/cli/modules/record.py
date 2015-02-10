@@ -66,7 +66,7 @@ class Record(GandiModule):
         return new_version_id
 
     @classmethod
-    def update(cls, zone_id, records):
+    def zone_update(cls, zone_id, records):
         """Update records for a zone"""
         cls.echo('Creating new zone file')
         new_version_id = Zone.new(zone_id)
@@ -78,3 +78,32 @@ class Record(GandiModule):
         Zone.set(zone_id, new_version_id)
 
         return new_version_id
+
+    @classmethod
+    def update(cls, zone_id, old_record, new_record):
+        """Update a record in a zone file"""
+        cls.echo('Creating new zone file')
+        new_version_id = Zone.new(zone_id)
+
+        new_record = new_record.split(' ', 4)
+        params_newrecord = {'name': new_record[0], 'ttl': int(new_record[1]),
+                            'type': new_record[3], 'value': new_record[4]}
+
+        old_record = old_record.split(' ', 4)
+        params = {'name': old_record[0], 'ttl': int(old_record[1]),
+                  'type': old_record[3], 'value': old_record[4]}
+        record = cls.call('domain.zone.record.list', zone_id, new_version_id,
+                          params)
+
+        if record:
+            cls.echo('Updating zone records')
+            cls.call('domain.zone.record.update', zone_id, new_version_id,
+                     {'id': int(record[0]['id'])}, params_newrecord)
+            cls.echo('Activation of new zone version')
+            Zone.set(zone_id, new_version_id)
+            return new_version_id
+        else:
+            cls.echo('The record to update does not exist. Check records'
+                     ' already created with `gandi record list example.com'
+                     ' --output`')
+            return False
