@@ -120,31 +120,40 @@ You can use the information of Gandi handles associated to Contacts in your acco
 
     $ gandi record create example.com --name www --type A --value 127.0.0.1
 
-Add a new record to the current zone file of the domain and activate it.
+Add a new record to the domain's current zone file and activate it.
 
 ##### List your records
 
     $ gandi record list example.com
 
-You can show records set for a domain in a zone file using `gandi record list example.com`. Use `--format` parameter to change the output formating.
+List a domain's zone file records. You can use the `--format` parameter to change the output format to `text` or `json`.
 
-##### Update a record 
+##### Update one record 
 
     $ gandi record update example.com --record "@ 3600 IN A 127.0.0.1" --new-record "@ 3600 IN A 0.0.0.0"
 
-This command is useful to update only one record at the time. The pattern to use is 'name TTL CLASS TYPE value', you can list your records easyly with `gandi record list example.com --format text` to copy and past the record to replace.
+This command is useful to update only one record at the time. The pattern to use is `name TTL CLASS TYPE value`. 
 
-##### Update many records quickly
+You can easily check or copy-paste the values you need to replace using the `--format text` parameter:
+
+    $ gandi record list example.com --format text 
+
+
+##### Update many records
 
     $ gandi record list example.com --format text > file.zone
 
-You can use this command to extract your zone records in a file, then edit it and use `gandi record update example.com -f file.zone` to update the entire zone file easily. 
+Use this command to extract your zone records into a file called `file.zone` (or something else).
+
+Simply edit the file to your liking and then update the entire zone file with it.
+
+    $ gandi record update example.com -f file.zone
 
 ##### Delete records
 
     $ gandi record delete example.com --value 127.0.0.1
 
-Delete records corresponding to the parameters. If there is many record with a value '127.0.0.1', all of them would be deleted.
+Delete all records that match the given parameters from a domain's zone file. In this example, if there were many records with '127.0.0.1' as their value, all of them would be deleted.
 
 ### Creating a Virtual Machine
 
