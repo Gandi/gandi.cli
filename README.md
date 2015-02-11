@@ -142,7 +142,7 @@ You can use this command to extract your zone records in a file, then edit it an
 
 ##### Delete records
 
-    $ gandi record delete jauneau.eu --value 127.0.0.1
+    $ gandi record delete example.com --value 127.0.0.1
 
 Delete records corresponding to the parameters. If there is many record with a value '127.0.0.1', all of them would be deleted.
 
