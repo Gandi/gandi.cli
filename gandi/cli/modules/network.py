@@ -44,6 +44,16 @@ class Ip(GandiModule):
                             background)
 
     @classmethod
+    def update(cls, resource, params, background=False):
+        """ Update this IP """
+        cls.echo('Updating your IP')
+        result = cls.call('hosting.ip.update', cls.usable_id(resource),
+                          params)
+        if not background:
+            cls.display_progress(result)
+        return result
+
+    @classmethod
     def check_and_detach(cls, ip_, vm_=None, force=False):
         # if the ip exists and is attached, we have to detach it
         iface = Iface.info(ip_['iface_id'])
