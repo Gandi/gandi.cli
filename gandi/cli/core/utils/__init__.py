@@ -6,6 +6,7 @@ Also custom exceptions and method to generate a random string.
 import time
 
 import click
+import json
 from click.formatting import measure_table
 
 from ascii_sparks import sparks
@@ -355,3 +356,30 @@ def output_list(gandi, val):
     """Helper to generate a beautiful list."""
     for element in val:
         gandi.echo(element)
+
+
+def date_handler(obj):
+    """ Serialize date for json output """
+    return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+
+
+def output_json(gandi, format, value):
+    """ Helper to show json output """
+    if format == 'json':
+        gandi.echo(json.dumps(value, default=date_handler))
+    elif format == 'pretty-json':
+        gandi.echo(json.dumps(value, default=date_handler, sort_keys=True,
+                   indent=2, separators=(',', ': ')))
+
+
+def output_sub_line(gandi, key, val, justify):
+    """ Base helper to output a key value using left justify."""
+    msg = ('\t%%-%ds:%%s' % justify) % (key, (' %s' % val) if val else '')
+    gandi.echo(msg)
+
+
+def output_sub_generic(gandi, data, output_keys, justify=10):
+    """ Generic helper to output info from a data dict."""
+    for key in output_keys:
+        if key in data:
+            output_sub_line(gandi, key, data[key], justify)

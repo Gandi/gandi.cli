@@ -144,6 +144,12 @@ class GandiModule(GandiConfig):
             cls.echo(sep * size)
 
     @classmethod
+    def separator_sub_line(cls, sep='-', size=10):
+        """ Display a separator line. """
+        if cls.intty():
+            cls.echo("\t" + sep * size)
+
+    @classmethod
     def debug(cls, message):
         """ Display debug message if verbose level allows it. """
         if cls.verbose > 1:

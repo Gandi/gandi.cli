@@ -337,6 +337,67 @@ class SizeParamType(click.ParamType):
             self.fail("%r is not a supported suffix" % (suffix))
 
 
+class BackendParamType(click.ParamType):
+
+    """
+
+    Check the validity of the server ip and port and return a dict
+    ['ip', 'port'].
+
+    """
+
+    name = 'backend'
+
+    def convert(self, value, param, ctx):
+        """ Validate value using regexp. """
+        rxp = "^(((([1]?\d)?\d|2[0-4]\d|25[0-5])\.){3}(([1]?\d)?\d|2[0-4]\d|"\
+              "25[0-5]))|([\da-fA-F]{1,4}(\:[\da-fA-F]{1,4}){7})|(([\da-fA-F]"\
+              "{1,4}:){0,5}::([\da-fA-F]{1,4}:)"\
+              "{0,5}[\da-fA-F]{1,4})$"
+        regex = re.compile(rxp, re.I)
+        backend = {}
+        if value.count(':') == 0:
+            # port is not set
+            backend['ip'] = value
+        elif value.count(':') == 7:
+            # it's an ipv6 without port
+            backend['ip'] = value
+        elif value.count(':') == 8:
+            # it's an ipv6 with port
+            backend['ip'] = value.rsplit(':', 1)[0]
+            backend['port'] = int(value.rsplit(':', 1)[1])
+        else:
+            backend['ip'] = value.split(':')[0]
+            backend['port'] = int(value.split(':')[1])
+        try:
+            if regex.match(backend['ip']):
+                return backend
+            else:
+                self.fail('%s is not a valid ip address' %
+                          backend['ip'], param, ctx)
+        except ValueError:
+            self.fail('%s is not a valid ip address' % backend['ip'], param,
+                      ctx)
+
+
+class WebAccNameParamType(GandiChoice):
+    """ Choice a webaccelerator """
+
+    name = 'webacc list'
+
+    def _get_choices(self, gandi):
+        """ Internal method to get choice list """
+        return [str(item['name']) for item in gandi.webacc.list()]
+
+
+class WebAccVhostParamType(GandiChoice):
+    """ Retrieve vhost on a webaccelerator """
+    name = 'webacc vhost list'
+
+    def _get_choices(seld, gandi):
+        """ Internal method to get choice list """
+        return [str(item['name']) for item in gandi.webacc.vhost_list()]
+
 DATACENTER = DatacenterParamType()
 PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
@@ -351,6 +412,9 @@ CERTIFICATE_DCV_METHOD = CertificateDcvMethod()
 EMAIL_TYPE = EmailParamType()
 IP_TYPE = IpType()
 SIZE = SizeParamType()
+BACKEND = BackendParamType()
+WEBACC_NAME = WebAccNameParamType()
+WEBACC_VHOST_NAME = WebAccVhostParamType()
 
 
 class GandiOption(click.Option):
