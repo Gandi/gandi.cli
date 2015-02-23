@@ -146,7 +146,7 @@ def create(gandi, name, datacenter, backend, port, vhost, algorithm,
 def delete(gandi, webacc, vhost, backend, port):
     """ Delete a webaccelerator, a vhost or a backend """
     if webacc:
-        result = gandi.webacc.delete(resource)
+        result = gandi.webacc.delete(webacc)
     if backend:
         backends = backend
         for backend in backends:
