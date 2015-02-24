@@ -198,8 +198,7 @@ class Paas(GandiModule, SshkeyHelper):
             if not qry_id:
                 # id is maybe a vhost
                 qry_id = cls.from_vhost(id)
-        except Exception, e:
-            print 'Got %s' % e
+        except Exception as e:
             qry_id = None
 
         if not qry_id:

@@ -130,7 +130,7 @@ class Vhost(GandiModule):
                 continue
             try:
                 return cls.get_remote(host)
-            except Exception, e:
+            except Exception as e:
                 pass
         cls.echo('Please attach a vhost to this repository first')
 
