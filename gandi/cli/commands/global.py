@@ -3,7 +3,7 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_generic
+from gandi.cli.core.utils import output_generic, output_line
 from gandi.cli.core.params import pass_gandi
 
 
@@ -68,3 +68,20 @@ def help(ctx, command):
         click.echo(cmd.get_help(ctx))
     else:
         click.echo(cli.get_help(ctx))
+
+
+@cli.command()
+@click.argument('service', required=False)
+@pass_gandi
+def status(gandi, service):
+    """Display current status from status.gandi.net."""
+
+    descs = gandi.status.descriptions()
+    services = gandi.status.services()
+    for serv in services:
+        if service and serv['name'].lower() == service.lower():
+            output_line(gandi, serv['name'], descs[serv['status']], 10)
+            break
+        output_line(gandi, serv['name'], descs[serv['status']], 10)
+
+    return services
