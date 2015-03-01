@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """ XML-RPC connection helper. """
 
+import sys
+import json
 import socket
 
 try:
@@ -8,8 +10,14 @@ try:
 except ImportError:
     import xmlrpc.client as xmlrpclib
 
+try:
+    import requests
+except ImportError:
+    print >> sys.stderr, 'python requests is required, please reinstall.'
+    sys.exit(1)
+
 from gandi.cli import __version__
-from gandi.cli.core.utils.xmlrpc import RequestsTransport, requests
+from gandi.cli.core.utils.xmlrpc import RequestsTransport
 
 
 class APICallFailed(Exception):
@@ -69,5 +77,29 @@ class XMLRPCClient(object):
                 raise DryRunException(msg, err.faultCode, ret)
             raise APICallFailed(msg, err.faultCode)
         except TypeError as err:
+            msg = 'An unknown error has occurred: %s' % err
+            raise APICallFailed(msg)
+
+
+class JsonClient(object):
+
+    """ Class wrapper for JSON calls. """
+
+    @classmethod
+    def request(cls, url, data=None):
+        """ Make a json call to remote API. """
+        user_agent = 'gandi.cli/%s' % __version__
+
+        headers = {'User-Agent': user_agent,
+                   'Content-Type': 'application/json; charset=utf-8'}
+        try:
+            response = requests.get(url, data=json.dumps(data),
+                                    headers=headers)
+            response.raise_for_status()
+            return json.loads(response.content)
+        except (socket.error, requests.exceptions.ConnectionError):
+            msg = 'Remote API service is unreachable'
+            raise APICallFailed(msg)
+        except Exception as err:
             msg = 'An unknown error has occurred: %s' % err
             raise APICallFailed(msg)
