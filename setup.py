@@ -18,7 +18,7 @@ with open(os.path.join(here, 'gandi', 'cli', '__init__.py')) as v_file:
 
 requires = ['setuptools', 'pyyaml', 'click<=4.0', 'requests', 'IPy']
 
-tests_require = ['nose', 'coverage']
+tests_require = ['nose', 'coverage', 'tox']
 if sys.version_info < (2, 7):
     tests_require += ['unittest2', 'importlib']
 
