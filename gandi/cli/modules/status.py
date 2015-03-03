@@ -21,11 +21,6 @@ class Status(GandiModule):
         return descs
 
     @classmethod
-    def info(cls):
-        """Retrieve status for status.gandi.net."""
-        return cls.json_call('%s/status' % cls.base_url)
-
-    @classmethod
     def services(cls):
         """Retrieve services statuses for status.gandi.net."""
         return cls.json_call('%s/services' % cls.base_url)
