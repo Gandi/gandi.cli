@@ -128,7 +128,7 @@ class GandiCLI(click.Group):
             namespace = f.__module__.rsplit('.', 1)[1]
             name = args[0] if args else kwargs.get('name', f.__name__.lower())
             # XXX: hack for handling commands without namespaces (root)
-            if namespace == 'global' or 'root' in kwargs:
+            if namespace == 'root' or 'root' in kwargs:
                 new_name = '%s' % name
                 kwargs.pop('root', None)
             else:
