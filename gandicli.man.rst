@@ -114,6 +114,7 @@ Namespaces:
 *  sshkey delete           Delete SSH keys.
 *  sshkey info             Display information about an SSH key.
 *  sshkey list             List SSH keys.
+*  status                  Display current status from status.gandi.net.
 *  vhost create            Create a new vhost.
 *  vhost delete            Delete a vhost.
 *  vhost info              Display information about a vhost.
@@ -266,6 +267,8 @@ Details:
 * ``gandi sshkey info resource`` show details of an SSH key: name and fingeprint. Possible option are ``--id`` which also show the id of theSSH key and ``--value`` which show the content of the SSH key.
 
 * ``gandi sshkey list`` show all the SSH keys registered. Possible option are ``--id`` which add numeric identificator and ``--limit INTEGER`` which show only a subset of the SSH keys.
+
+* ``gandi status`` shows the current status for all services as seen on status.gandi.net. Possible option is to provide a service name to the command to retrieve only the status of this service.
 
 * ``gandi vhost create`` add a virtual host. Mandatory options are ``--vhost TEXT`` for the fully qualified domain name (FQDN like host.domain.tld) and ``--paas TEXT`` for the Simple Hosting instance on which it will create the virtual host, ``--alter-zone`` will update the domain zone. Creation can be done as background process using the option ``--background`` (or ``--bg``).
 
