@@ -77,11 +77,12 @@ def status(gandi, service):
     """Display current status from status.gandi.net."""
 
     descs = gandi.status.descriptions()
-    services = gandi.status.services()
-    for serv in services:
-        if service and serv['name'].lower() == service.lower():
-            output_line(gandi, serv['name'], descs[serv['status']], 10)
-            break
+    needed = services = gandi.status.services()
+    if service:
+        needed = [serv for serv in services
+                  if serv['name'].lower() == service.lower()]
+
+    for serv in needed:
         output_line(gandi, serv['name'], descs[serv['status']], 10)
 
     return services

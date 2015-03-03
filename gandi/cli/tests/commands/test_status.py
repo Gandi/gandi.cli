@@ -77,10 +77,10 @@ Email     : All services are up and running
     def test_status_service(self):
         self._mock_http_request()
 
-        result = self.runner.invoke(root.status, ['iaas'])
+        result = self.runner.invoke(root.status, ['ssl'])
 
         wanted = ("""\
-IAAS      : All services are up and running
+SSL       : All services are up and running
 """)
 
         self.assertEqual(result.output, wanted)
