@@ -2,6 +2,7 @@
 
 import os
 import click
+import json
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (
@@ -15,9 +16,11 @@ from gandi.cli.core.params import pass_gandi, StringConstraint
               help='Zone ID to use, if not set default zone will be used.')
 @click.option('--output', '-o', is_flag=True,
               help='Write the records into a file.')
+@click.option('--format', '-f', type=click.Choice(['text', 'json']),
+              help='Choose the output format', required=False)
 @click.argument('domain', required=True)
 @pass_gandi
-def list(gandi, domain, zone_id, output):
+def list(gandi, domain, zone_id, output, format):
     """List DNS zone records for a domain."""
     output_keys = ['name', 'type', 'value', 'ttl']
 
@@ -28,25 +31,36 @@ def list(gandi, domain, zone_id, output):
     if not zone_id:
         gandi.echo('No zone records found, domain %s doesn\'t seems to be '
                    'managed at Gandi.' % domain)
-        return
 
     records = gandi.record.list(zone_id)
-    if not output:
+
+    if not output and not format:
         for num, rec in enumerate(records):
             if num:
                 gandi.separator_line()
             output_generic(gandi, rec, output_keys, justify=12)
-    else:
+    elif output:
         zone_filename = domain + "_" + str(zone_id)
         if os.path.exists(zone_filename):
             open(zone_filename, 'w').close()
         for record in records:
+            format_record = ('%s %s IN %s %s' %
+                             (record['name'], record['ttl'],
+                              record['type'], record['value']))
             with open(zone_filename, 'ab') as zone_file:
-                zone_file.write('%s %s IN %s %s\n' %
-                                (record['name'], record['ttl'],
-                                 record['type'], record['value']))
-
+                zone_file.write(format_record + '\n')
         gandi.echo('Your zone file have been writen in %s' % zone_filename)
+    elif format:
+        if format == 'text':
+            for record in records:
+                format_record = ('%s %s IN %s %s' %
+                                 (record['name'], record['ttl'],
+                                  record['type'], record['value']))
+                gandi.echo(format_record)
+        if format == 'json':
+                format_record = json.dumps(records, sort_keys=True,
+                                           indent=4, separators=(',', ': '))
+                gandi.echo(format_record)
 
     return records
 
@@ -125,19 +139,29 @@ def delete(gandi, domain, zone_id, name, type, value):
 @click.option('--zone-id', '-z', default=None, type=click.INT,
               help='Zone ID tu use, if not set, default zone will be used.')
 @click.option('--file', '-f', type=click.File('r'),
-              required=True, help='Filename of the zone file.')
+              required=False, help='Filename of the zone file.')
+@click.option('--record', '-r', default=None, required=False,
+              help="'name TTL IN TYPE [A, AAAA, MX, TXT, SPF] value'")
+@click.option('--new-record', default=None, required=False,
+              help="'name TTL IN TYPE [A, AAAA, MX, TXT, SPF] value'")
 @click.argument('domain', required=True)
 @pass_gandi
-def update(gandi, domain, zone_id, file):
-    """Update all records entries for a domain from a file"""
+def update(gandi, domain, zone_id, file, record, new_record):
+    """Update records entries for a domain from a file"""
     if not zone_id:
         result = gandi.domain.info(domain)
         zone_id = result['zone_id']
 
     if not zone_id:
-        gandi.echo('No zone records found, domain %s doesn\'t seems to be '
-                   'managed at Gandi.' % domain)
-
-    records = file.read()
-    result = gandi.record.update(zone_id, records)
-    return result
+        gandi.echo('No zone records found, domain %s doesn\'t seems to be'
+                   ' managed at Gandi.' % domain)
+    if file:
+        records = file.read()
+        result = gandi.record.zone_update(zone_id, records)
+        return result
+    elif record and new_record:
+        result = gandi.record.update(zone_id, record, new_record)
+        return result
+    else:
+        gandi.echo('You must indicate a zone file or a record.'
+                   ' Use `gandi record update --help` for more information')
