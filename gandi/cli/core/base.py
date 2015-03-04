@@ -15,7 +15,7 @@ from subprocess import check_call, Popen, PIPE, CalledProcessError
 import click
 from click.exceptions import UsageError
 
-from .client import XMLRPCClient, APICallFailed, DryRunException
+from .client import XMLRPCClient, APICallFailed, DryRunException, JsonClient
 from .conf import GandiConfig
 
 
@@ -110,6 +110,11 @@ class GandiModule(GandiConfig):
     def safe_call(cls, method, *args):
         """ Call a remote api method but don't raise if an error occurred."""
         return cls.call(method, *args, safe=True)
+
+    @classmethod
+    def json_call(cls, url):
+        """ Call a remote api using json format """
+        return JsonClient.request(url)
 
     @classmethod
     def intty(cls):
