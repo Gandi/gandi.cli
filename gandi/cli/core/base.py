@@ -114,6 +114,8 @@ class GandiModule(GandiConfig):
     @classmethod
     def json_call(cls, url):
         """ Call a remote api using json format """
+        # make the call
+        cls.debug('calling url: %s' % url)
         return JsonClient.request(url)
 
     @classmethod
