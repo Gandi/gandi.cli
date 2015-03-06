@@ -84,5 +84,14 @@ def status(gandi, service):
 
     for serv in needed:
         output_line(gandi, serv['name'], descs[serv['status']], 10)
+        if serv['status'] == 'STORMY':
+            filters = {
+                'category': 'Incident',
+                'services': serv['name'],
+                'current': True,
+            }
+            events = gandi.status.events(filters)
+            for event in events:
+                gandi.echo('\t%s' % event['title'])
 
     return services
