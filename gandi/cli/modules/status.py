@@ -42,7 +42,7 @@ class Status(GandiModule):
                 continue
             # don't parse the timezone without dateutil
             ev_start = datetime.strptime(event['date_start'][:-6], dtformat)
-            if ev_start < now and not event['date_end']:
+            if (ev_start < now) and not event['date_end']:
                 current_events.append(event)
 
-        return events
+        return current_events if current_events else events
