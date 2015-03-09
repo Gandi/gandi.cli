@@ -14,17 +14,21 @@ from gandi.cli.core.params import (
 
 @cli.command()
 @click.option('--state', default=None, help='Filter results by state.')
+@click.option('--datacenter', default=None, type=DATACENTER,
+              help='Filter results by datacenter.')
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @pass_gandi
-def list(gandi, state, id, limit):
+def list(gandi, state, id, limit, datacenter):
     """List virtual machines."""
     options = {
         'items_per_page': limit,
     }
     if state:
         options['state'] = state
+    if datacenter:
+        options['datacenter_id'] = gandi.datacenter.usable_id(datacenter)
 
     output_keys = ['hostname', 'state']
     if id:

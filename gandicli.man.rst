@@ -295,7 +295,7 @@ Details:
 
 * ``gandi vm kernel pattern`` list all the available kernels whos name contains the pattern. Possible options are ``--flavor TEXT`` to filter given kernel flavors, ``--vm TEXT`` to only show kernels available for a given vm, ``--datacenter FR|US|LU`` to specify a given datacenter.
 
-* ``gandi vm list`` show all the virtual machine created in Gandi hosting for the account. Possible options are ``--state`` which filter the output according to define virtual machine state, ``--id`` to obtain the id of each virtual machine, ``--limit INTEGER`` which list only a subset of the full list of virtual machines.
+* ``gandi vm list`` show all the virtual machine created in Gandi hosting for the account. Possible options are ``--state`` which filter the output according to define virtual machine state, ``--datacenter`` which filter the output according to virtual machine datacenter, ``--id`` to obtain the id of each virtual machine, ``--limit INTEGER`` which list only a subset of the full list of virtual machines.
 
 * ``gandi vm info resource`` show details of a specific operation.
 
