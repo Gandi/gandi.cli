@@ -383,3 +383,13 @@ def output_sub_generic(gandi, data, output_keys, justify=10):
     for key in output_keys:
         if key in data:
             output_sub_line(gandi, key, data[key], justify)
+
+
+def output_event(gandi, service, event, justify=10):
+    """ Helper to output an event information."""
+    service_detail = event['title']
+    if 'id' in event:
+        event_url = 'https://status.gandi.net/timeline/events/%d' % event['id']
+        service_detail = '%s - %s' % (event['title'], event_url)
+
+    output_line(gandi, service, service_detail, justify)
