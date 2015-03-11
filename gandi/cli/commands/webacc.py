@@ -100,7 +100,7 @@ def info(gandi, resource, format):
 
 @cli.command()
 @click.option('--datacenter', '-dc', type=DATACENTER,
-              help="Datacenter where the webaccelerator will be created")
+              help="Datacenter where the webaccelerator will be created", required=True)
 @click.option('--backend', '-b', type=BACKEND, multiple=True,
               help="Backend to add in the webaccelerator, use ip:port")
 @click.option('--port', '-p', type=click.INT, required=False,

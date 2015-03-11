@@ -41,11 +41,13 @@ class Webacc(GandiModule):
             'name': name,
             'lb': {'algorithm': algorithm},
             'override': True,
-            'servers': backends,
-            'vhosts': vhosts,
             'ssl_enable': ssl_enable,
             'zone_alter': zone_alter
         }
+        if vhosts:
+            params['vhosts'] = vhosts
+        if backends:
+            params['servers'] = backends
         cls.echo(params)
         result = cls.call('hosting.rproxy.create', params)
         cls.echo('Creating your webaccelerator %s' % params['name'])
