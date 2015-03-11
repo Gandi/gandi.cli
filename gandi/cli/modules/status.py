@@ -28,21 +28,17 @@ class Status(GandiModule):
 
     @classmethod
     def events(cls, filters):
-        """Retrieve events details for status.gandi.net."""
+        """Retrieve events details from status.gandi.net."""
         current = filters.pop('current', False)
+        current_params = []
+        if current:
+            dtformat = '%Y-%m-%d%%20%H:%M'
+            now = datetime.utcnow().strftime(dtformat)
+            current_params = ['date_start__lt=%s' % now,
+                              'estimate_date_end=null']
         filter_url = '&'.join(['%s=%s' % (key, val)
-                               for key, val in filters.iteritems()])
-        events = cls.json_call('%s/events?%s' % (cls.base_url, filter_url))
-        now = datetime.utcnow()
-        dtformat = '%Y-%m-%dT%H:%M:%S'
-        current_events = []
-        for event in events:
-            if not current:
-                current_events.append(event)
-                continue
-            # don't parse the timezone without dateutil
-            ev_start = datetime.strptime(event['date_start'][:-6], dtformat)
-            if (ev_start < now) and not event['date_end']:
-                current_events.append(event)
+                               for key, val in filters.iteritems()]
+                              + current_params)
 
-        return current_events if current_events else events
+        events = cls.json_call('%s/events?%s' % (cls.base_url, filter_url))
+        return events
