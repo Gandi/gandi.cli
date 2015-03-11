@@ -116,7 +116,11 @@ class GandiModule(GandiConfig):
         """ Call a remote api using json format """
         # make the call
         cls.debug('calling url: %s' % url)
-        return JsonClient.request(url)
+        try:
+            return JsonClient.request(url)
+        except APICallFailed as err:
+            cls.echo('An error occured during call: %s' % err.errors)
+            sys.exit(1)
 
     @classmethod
     def intty(cls):
