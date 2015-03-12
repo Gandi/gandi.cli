@@ -48,12 +48,34 @@ class Webacc(GandiModule):
             params['vhosts'] = vhosts
         if backends:
             params['servers'] = backends
-        cls.echo(params)
-        result = cls.call('hosting.rproxy.create', params)
-        cls.echo('Creating your webaccelerator %s' % params['name'])
-        cls.display_progress(result)
-        cls.echo('Your webaccelerator have been created')
-        return result
+        try:
+            result = cls.call('hosting.rproxy.create', params)
+            cls.echo('Creating your webaccelerator %s' % params['name'])
+            cls.display_progress(result)
+            cls.echo('Your webaccelerator have been created')
+            return result
+        except Exception as err:
+            if err.code == 580142:
+                for vhost in params['vhosts']:
+                    dns_entry = cls.call('hosting.rproxy.vhost.get_dns_entries',
+                                     {'datacenter': datacenter_id_,
+                                      'vhost': vhost})
+                    txt_record = "%s 3600 IN TXT \"%s=%s\"" % (dns_entry['key'],
+                                                               dns_entry['key'],
+                                                               dns_entry['txt'])
+
+                    cname_record = "%s 3600 IN CNAME %s" % (dns_entry['key'],
+                                                        dns_entry['cname'])
+
+                    cls.echo('The domain don\'t use Gandi DNS or you have not'
+                             ' sufficient right to alter the zone file. '
+                             'Edit your zone file adding this TXT and CNAME '
+                            'record and try again :')
+                    cls.echo(txt_record)
+                    cls.echo(cname_record)
+                    cls.separator_line('-', 4)
+            else:
+                cls.echo(err)
 
     @classmethod
     def delete(cls, name):
