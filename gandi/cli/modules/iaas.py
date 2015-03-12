@@ -229,7 +229,8 @@ class Iaas(GandiModule, SshkeyHelper):
             vm_params['bandwidth'] = bandwidth
 
         if script:
-            vm_params['script'] = open(script).read()
+            with open(script) as fd:
+                vm_params['script'] = fd.read()
 
         vm_params.update(cls.convert_sshkey(sshkey))
 
