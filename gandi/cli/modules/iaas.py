@@ -228,6 +228,9 @@ class Iaas(GandiModule, SshkeyHelper):
             vm_params['ip_version'] = ip_version
             vm_params['bandwidth'] = bandwidth
 
+        if script:
+            vm_params['script'] = open(script).read()
+
         vm_params.update(cls.convert_sshkey(sshkey))
 
         # XXX: name of disk is limited to 15 chars in ext2fs, ext3fs
@@ -308,16 +311,7 @@ class Iaas(GandiModule, SshkeyHelper):
         if vm_id and ip_version:
             cls.wait_for_sshd(vm_id)
             cls.ssh_keyscan(vm_id)
-            if script:
-                ret = cls.scp(vm_id, 'root', None, script, '/var/tmp/gscript')
-                if not ret:
-                    cls.error('Failed to scp script %s to VM %s (id: %s)' %
-                              (script, hostname, vm_id))
-
-            ret = cls.ssh(vm_id, 'root', None, script and ['/var/tmp/gscript'])
-            if not ret and (script and ['/var/tmp/gscript']):
-                cls.error('Failed to execute script %s on VM %s (id: %s)' %
-                          ('/var/tmp/gscript', hostname, vm_id))
+            cls.ssh(vm_id, 'root', None)
 
     @classmethod
     def from_hostname(cls, hostname):
