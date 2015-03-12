@@ -67,10 +67,10 @@ class Webacc(GandiModule):
                     cname_record = "%s 3600 IN CNAME %s" % (dns_entry['key'],
                                                         dns_entry['cname'])
 
-                    cls.echo('The domain don\'t use Gandi DNS or you have not'
+                    cls.echo('The domain %s don\'t use Gandi DNS or you have not'
                              ' sufficient right to alter the zone file. '
                              'Edit your zone file adding this TXT and CNAME '
-                            'record and try again :')
+                            'record and try again :' % vhost)
                     cls.echo(txt_record)
                     cls.echo(cname_record)
                     cls.separator_line('-', 4)
@@ -78,12 +78,31 @@ class Webacc(GandiModule):
                 cls.echo(err)
 
     @classmethod
+    def update(cls, resource, new_name, algorithm, ssl_enable, ssl_disable):
+        """ Update a webaccelerator"""
+        params = {}
+        if new_name:
+            params['name'] = new_name
+        if algorithm:
+            params['lb'] = {'algorithm': algorithm}
+        if ssl_enable:
+            params['ssl_enable'] = ssl_enable
+        if ssl_disable:
+            params['ssl_enable'] = False
+
+        result = cls.call('hosting.rproxy.update', cls.usable_id(resource), params)
+        cls.echo('Updating your webaccelerator')
+        cls.display_progress(result)
+        cls.echo('The webaccelerator have been udated')
+        return result
+
+    @classmethod
     def delete(cls, name):
         """ Delete a webaccelerator """
         result = cls.call('hosting.rproxy.delete', cls.usable_id(name))
-        cls.echo('Deleting your rproxy named %s' % name)
+        cls.echo('Deleting your webaccelerator named %s' % name)
         cls.display_progress(result)
-        cls.echo('Rproxy have been deleted')
+        cls.echo('Webaccelerator have been deleted')
         return result
 
     @classmethod

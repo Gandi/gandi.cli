@@ -135,6 +135,21 @@ def create(gandi, name, datacenter, backend, port, vhost, algorithm,
 
 
 @cli.command()
+@click.option('--name', '-n', help="The name of the webaccelerator")
+@click.option('--algorithm', type=click.Choice(['client-ip', 'round-robin']),
+              help="Choose the loadbalancer algorithm")
+@click.option('--ssl-enable', is_flag=True,
+              help="Activate SSL support on the webaccelerator")
+@click.option('--ssl-disable', is_flag=True,
+              help="Deactivate SSL support on the webaccelerator")
+@click.argument('resource', required=True)
+@pass_gandi
+def update(gandi, resource, name, algorithm, ssl_enable, ssl_disable):
+    """Update a webaccelerator"""
+    result = gandi.webacc.update(resource, name, algorithm, ssl_enable, ssl_disable)
+    return result
+
+@cli.command()
 @click.option('--vhost', '-v', help="Remove vhosts in the webaccelerator",
               multiple=True, type=WEBACC_VHOST_NAME)
 @click.option('--backend', '-b', help="Remove backends in the webaccelerator",
