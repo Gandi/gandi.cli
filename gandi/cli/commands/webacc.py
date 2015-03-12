@@ -40,10 +40,14 @@ def list(gandi, limit, format):
                     gandi.echo('')
                 gandi.echo('Backends :')
                 for server in webacc['servers']:
-                    ip = gandi.ip.info(server['ip'])
-                    iface = gandi.iface.info(ip['iface_id'])
-                    server['name'] = gandi.iaas.info(iface['vm_id'])['hostname']
-                    output_servers = ['name', 'ip', 'port', 'state']
+                    try:
+                        ip = gandi.ip.info(server['ip'])
+                        iface = gandi.iface.info(ip['iface_id'])
+                        server['name'] = gandi.iaas.info(iface['vm_id'])['hostname']
+                        output_servers = ['name', 'ip', 'port', 'state']
+                    except:
+                        click.secho('\tThe backend with ip address %s is no longer exist.\n\tYou should remove it.' % server['ip'], fg='red')
+                        output_servers = ['ip', 'port', 'state']
                     output_sub_generic(gandi, server, output_servers,
                                        justify=14)
                     gandi.echo('')
@@ -82,10 +86,14 @@ def info(gandi, resource, format):
             gandi.echo('')
         gandi.echo('Backends :')
         for server in result['servers']:
-            ip = gandi.ip.info(server['ip'])
-            iface = gandi.iface.info(ip['iface_id'])
-            server['name'] = gandi.iaas.info(iface['vm_id'])['hostname']
-            output_servers = ['name', 'ip', 'port', 'state']
+            try:
+                ip = gandi.ip.info(server['ip'])
+                iface = gandi.iface.info(ip['iface_id'])
+                server['name'] = gandi.iaas.info(iface['vm_id'])['hostname']
+                output_servers = ['name', 'ip', 'port', 'state']
+            except:
+                output_servers = ['ip', 'port', 'state']
+                click.secho('\tThe backend with ip address %s is no longer exist.' % server['ip'], fg='red')
             output_sub_generic(gandi, server, output_servers, justify=14)
             gandi.echo('')
         gandi.echo('Probe :')
