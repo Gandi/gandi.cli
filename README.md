@@ -370,6 +370,7 @@ We <3 contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution gui
 ## Code status
 
 [![Build Status](https://travis-ci.org/Gandi/gandi.cli.svg?branch=master)](https://travis-ci.org/Gandi/gandi.cli)
+[![Coverage Status](https://coveralls.io/repos/Gandi/gandi.cli/badge.svg?branch=master)](https://coveralls.io/r/Gandi/gandi.cli?branch=master)
 
 ## License / Copying
 
