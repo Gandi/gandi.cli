@@ -1,6 +1,7 @@
 """ Status commands module. """
 
-from datetime import datetime
+import urllib
+
 from gandi.cli.core.base import GandiModule
 
 
@@ -34,13 +35,8 @@ class Status(GandiModule):
         current = filters.pop('current', False)
         current_params = []
         if current:
-            dtformat = '%Y-%m-%d%%20%H:%M'
-            now = datetime.utcnow().strftime(dtformat)
-            current_params = ['date_start__lt=%s' % now,
-                              'estimate_date_end=null']
-        filter_url = '&'.join(['%s=%s' % (key, val)
-                               for key, val in filters.iteritems()]
-                              + current_params)
+            current_params = [('current', 'true')]
 
+        filter_url = urllib.urlencode(filters.items() + current_params)
         events = cls.json_call('%s/events?%s' % (cls.base_url, filter_url))
         return events
