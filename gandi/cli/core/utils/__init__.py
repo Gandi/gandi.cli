@@ -246,11 +246,11 @@ def output_contact_info(gandi, data, output_keys, justify=10):
 def output_cert_oper(gandi, oper, justify=12):
     output_generic(gandi, oper, ['type', 'step'], justify)
     params = dict(oper['params'])
-    params['fqdns'] = ', '.join(params['fqdns'])
-    output_generic(gandi, params, ['inner_step',
-                                   'package_name',
-                                   'dcv_method',
-                                   'fqdns'], justify)
+    params['fqdns'] = ', '.join(params.get('fqdns', []))
+    output = ['inner_step', 'package_name', 'dcv_method']
+    if params['fqdns']:
+        output.append('fqdns')
+    output_generic(gandi, params, output, justify)
 
 
 def output_cert(gandi, cert, output_keys, justify=13):
