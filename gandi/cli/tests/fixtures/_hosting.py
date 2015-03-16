@@ -74,7 +74,7 @@ def disk_list(options):
               'date_created': DateTime('20150103T15:26:52'),
               'snapshot_profile_id': None,
               'can_snapshot': True}
-            ]
+             ]
 
     if 'name' in options:
         disks = dict([(disk['name'], disk) for disk in disks])
@@ -91,40 +91,46 @@ def disk_info(id):
 
 def vm_list(options):
 
-    return [{'cores': 1,
-             'hostname': 'arch64',
-             'datacenter_id': 1,
-             'state': 'running',
-             'id': 80458,
-             'ifaces_id': [65087],
-             'description': None,
-             'date_updated': DateTime('20141008T16:13:59'),
-             'memory': 512,
-             'console': 0,
-             'disks_id': [4204, 4126],
-             'date_created': DateTime('20130601T10:33:53'),
-             'flex_shares': 0,
-             'ai_active': 0,
-             'vm_max_memory': 2048},
-            {'cores': 1,
-             'hostname': 'docker',
-             'datacenter_id': 3,
-             'state': 'running',
-             'id': 128620,
-             'ifaces_id': [126368],
-             'description': None,
-             'date_updated': DateTime('20150103T15:27:57'),
-             'memory': 256,
-             'console': 0,
-             'disks_id': [9184],
-             'date_created': DateTime('20150103T15:26:52'),
-             'flex_shares': 0,
-             'ai_active': 0,
-             'vm_max_memory': 2048}]
+    ret = [{'cores': 1,
+            'hostname': 'arch64',
+            'datacenter_id': 1,
+            'state': 'running',
+            'id': 80458,
+            'ifaces_id': [65087],
+            'description': None,
+            'date_updated': DateTime('20141008T16:13:59'),
+            'memory': 512,
+            'console': 0,
+            'disks_id': [4204, 4126],
+            'date_created': DateTime('20130601T10:33:53'),
+            'flex_shares': 0,
+            'ai_active': 0,
+            'vm_max_memory': 2048},
+           {'cores': 1,
+            'hostname': 'docker',
+            'datacenter_id': 3,
+            'state': 'running',
+            'id': 128620,
+            'ifaces_id': [126368],
+            'description': None,
+            'date_updated': DateTime('20150103T15:27:57'),
+            'memory': 256,
+            'console': 0,
+            'disks_id': [9184],
+            'date_created': DateTime('20150103T15:26:52'),
+            'flex_shares': 0,
+            'ai_active': 0,
+            'vm_max_memory': 2048}]
+
+    options.pop('items_per_page', None)
+
+    for fkey in options:
+        ret = [vm for vm in ret if vm[fkey] == options[fkey]]
+
+    return ret
 
 
 def vm_disk_detach(vm_id, disk_id):
     if vm_id == 80458 and disk_id == 4126:
         return {'id': 200,
                 'step': 'WAIT'}
-
