@@ -94,9 +94,9 @@ Namespaces:
 *  mail list               List mailboxes created on a domain.
 *  mail purge              Purge a mailbox.
 *  mail update             Update a mailbox.
+*  open                    Open a web browser instance to the vhost for current git repository.
 *  oper info               Display information about an operation.
 *  oper list               List operations.
-*  paas clone              Clone a remote vhost in a local git repository.
 *  paas console            Open a console on a PaaS.
 *  paas create             Create a new PaaS instance and initialize associated git repository.
 *  paas delete             Delete a PaaS instance.
@@ -114,6 +114,8 @@ Namespaces:
 *  sshkey delete           Delete SSH keys.
 *  sshkey info             Display information about an SSH key.
 *  sshkey list             List SSH keys.
+*  vhost attach            Attach a vhost to the current git repository.
+*  vhost clone             Clone a remote vhost in a local git repository.
 *  vhost create            Create a new vhost.
 *  vhost delete            Delete a vhost.
 *  vhost info              Display information about a vhost.
@@ -227,11 +229,11 @@ Details:
 
 * ``gandi mail update login@domain.tld`` update mailbox ``login@domain.tld``. Possible options are ``-p, --password`` will prompt for a new password for this mailbox, ``-q, --quota INTEGER`` to define a quota for this mailbox, ``-f, --fallback TEXT`` to define a fallback addresse, ``-a, --alias-add TEXT`` to add an alias for this mailbox, can be used multiple times, ``-d, --alias-del TEXT`` to delete an alias for this mailbox, can be used multiple times.
 
+* ``gandi open [vhost]`` is an helper, opening a browser to the first vhost attached to the current git repository.
+
 * ``gandi oper info id`` show information about the operation ``id``.
 
 * ``gandi oper list`` show all the running operation on your product at Gandi (for example Simple Hosting, domain, hosting). Possible option is ``--limit INTEGER`` which list only a subset of the full list of running operations.
-
-* ``gandi paas clone host.domain.tld`` clone all files of a remote virtual host to a local git repository.
 
 * ``gandi paas console resource`` open a console to the SimpleHosting. Note that resource could be a full qualified domain name or an integer id.
 
@@ -267,7 +269,11 @@ Details:
 
 * ``gandi sshkey list`` show all the SSH keys registered. Possible option are ``--id`` which add numeric identificator and ``--limit INTEGER`` which show only a subset of the SSH keys.
 
-* ``gandi vhost create`` add a virtual host. Mandatory options are ``--vhost TEXT`` for the fully qualified domain name (FQDN like host.domain.tld) and ``--paas TEXT`` for the Simple Hosting instance on which it will create the virtual host, ``--alter-zone`` will update the domain zone. Creation can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi vhost attach host.domain.tld`` attaches a given vhost to the current git repository.
+
+* ``gandi vhost clone host.domain.tld`` clone all files of a remote virtual host to a local git repository.
+
+* ``gandi vhost create vhost.domain.tld`` creates a virtual host. Mandatory option ``--paas TEXT`` specifies the Simple Hosting instance on which it will create the virtual host, optional option ``--alter-zone`` will update the domain zone. Creation can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi vhost delete host.domain.tld`` delete a virtual host after asking for user validation. Possible option is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting. Deletion can be done as background process using the option ``--background`` (or ``--bg``).
 

@@ -3,9 +3,9 @@
 import click
 from IPy import IP
 
-from gandi.cli.core.cli import cli
+from gandi.cli.core.cli import cli, warn_deprecated
 from gandi.cli.core.utils import (output_vlan, output_generic, output_iface,
-                                  output_ip, output_line)
+                                  output_ip, output_line, randomstring)
 from gandi.cli.core.params import option, pass_gandi, DATACENTER
 
 
@@ -125,7 +125,9 @@ def delete(gandi, background, force, resource):
 
 
 @cli.command()
-@click.option('--name', required=True, help='Name of the vlan.')
+@click.argument('name_arg', required=False)
+@click.option('--name', required=False, help='Name of the vlan.',
+              callback=warn_deprecated)
 @option('--datacenter', type=DATACENTER, default='LU',
         help='Datacenter where the vlan will be spawned.')
 @click.option('--subnet', help='The vlan subnet.')
@@ -133,8 +135,9 @@ def delete(gandi, background, force, resource):
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
-def create(gandi, name, datacenter, subnet, gateway, background):
+def create(gandi, name, datacenter, subnet, gateway, background, name_arg):
     """ Create a new vlan """
+    name = name or name_arg or randomstring('vlan')
     result = gandi.vlan.create(name, datacenter, subnet, gateway, background)
 
     if not result:

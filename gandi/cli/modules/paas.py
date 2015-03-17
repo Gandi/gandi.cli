@@ -1,7 +1,6 @@
 """ PaaS commands module. """
 
 from gandi.cli.core.base import GandiModule
-from gandi.cli.modules.vhost import Vhost
 from gandi.cli.modules.datacenter import Datacenter
 from gandi.cli.modules.sshkey import SshkeyHelper
 
@@ -137,7 +136,6 @@ class Paas(GandiModule, SshkeyHelper):
             cls.display_progress(result)
             cls.echo('Your PaaS instance %s has been created.' % name)
 
-        cls.init_conf(name, created=not background, vhosts=vhosts)
         return result
 
     @classmethod
@@ -183,38 +181,24 @@ class Paas(GandiModule, SshkeyHelper):
         access = 'ssh %s' % console_url
         cls.execute(access)
 
-    @classmethod
-    def init_conf(cls, id, vhost=None, created=True, vhosts=None,
-                  background=False):
-        """ Initialize local configuration with PaaS information. """
-        paas = Paas.info(cls.usable_id(id))
-        cls.debug('save PaaS instance information to local configuration')
-
-        if vhost and not vhosts:
-            vhosts = [vhost]
-        if not vhosts:
-            if 'php' not in paas['type']:
-                vhost = 'default'
-            elif paas['vhosts']:
-                vhosts = [vht['name'] for vht in paas['vhosts']]
-            else:
-                return
-
-        for vhost in vhosts:
-            Vhost.create(paas, vhost, True, background)
 
     @classmethod
     def usable_id(cls, id):
         """ Retrieve id from input which can be hostname, vhost, id."""
+        qry_id = None
+        try:
+            qry_id = int(id)
+        except ValueError:
+            pass
+
         try:
             # id is maybe a hostname
-            qry_id = cls.from_hostname(id)
+            if not qry_id:
+                qry_id = cls.from_hostname(id)
             if not qry_id:
                 # id is maybe a vhost
                 qry_id = cls.from_vhost(id)
-            if not qry_id:
-                qry_id = int(id)
-        except Exception:
+        except Exception as e:
             qry_id = None
 
         if not qry_id:
@@ -226,12 +210,10 @@ class Paas(GandiModule, SshkeyHelper):
     @classmethod
     def from_vhost(cls, vhost):
         """Retrieve paas instance id associated to a vhost."""
-        result = Vhost().list()
-        paas_hosts = {}
-        for host in result:
-            paas_hosts[host['name']] = host['paas_id']
-
-        return paas_hosts.get(vhost)
+        result = cls.list({'vhost': vhost})
+        if not result:
+            return None
+        return result[0]['id']
 
     @classmethod
     def from_hostname(cls, hostname):

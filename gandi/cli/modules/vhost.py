@@ -1,8 +1,24 @@
 """ Vhost commands module. """
 
 import os
+import webbrowser
 
+from gandi.cli.modules.paas import Paas
 from gandi.cli.core.base import GandiModule
+
+
+class PaasAccess:
+    vhost = None
+    git_remote = None
+    ssh_remote = None
+    url = None
+
+    def __init__(self, vhost=None, git_remote=None, ssh_remote=None,
+        url=None):
+        self.git_remote = git_remote
+        self.ssh_remote = ssh_remote
+        self.vhost = vhost
+        self.url = url
 
 
 class Vhost(GandiModule):
@@ -15,46 +31,6 @@ class Vhost(GandiModule):
     $ gandi vhost list
 
     """
-    @classmethod
-    def init_vhost(cls, vhost, created=True, id=None, paas=None):
-        """Initialize vhost directory and create a local configuration file."""
-        assert id or paas
-
-        if 'php' not in paas['type']:
-            vhost = 'default'
-
-        git_server = paas['git_server']
-        # hack for dev
-        if 'dev' in paas['console']:
-            git_server = 'git.hosting.dev.gandi.net'
-        paas_access = '%s@%s' % (paas['user'], git_server)
-        current_path = os.getcwd()
-        repo_path = os.path.join(current_path, vhost)
-        if created:
-            if os.path.exists(repo_path):
-                cls.echo('%s already exists, please remove it before cloning' %
-                         repo_path)
-                return
-
-            init_git = cls.execute('git clone ssh+git://%s/%s.git' %
-                                   (paas_access, vhost))
-            if not init_git:
-                cls.echo('An error has occurred during git clone of instance.')
-                return
-        else:
-            cls.echo('You should init your git repo when the paas is created, '
-                     'type:')
-            cls.echo('gandi paas clone %s' % vhost)
-            return
-
-        # go into directory to save configuration file in this directory
-        os.chdir(repo_path)
-        cls.configure(False, 'paas.user', paas['user'])
-        cls.configure(False, 'paas.name', paas['name'])
-        cls.configure(False, 'paas.deploy_git_host', '%s.git' % vhost)
-        cls.configure(False, 'paas.access', paas_access)
-        os.chdir(current_path)
-
     @classmethod
     def list(cls, options=None):
         """ List paas vhosts (in the future it should handle iaas vhosts)."""
@@ -84,7 +60,6 @@ class Vhost(GandiModule):
         cls.display_progress(result)
         cls.echo('Your vhost %s has been created.' % vhost)
 
-        cls.init_vhost(vhost, created=not background, paas=paas_info)
         return result
 
     @classmethod
@@ -103,3 +78,94 @@ class Vhost(GandiModule):
 
         cls.echo('Deleting your vhost.')
         cls.display_progress(opers)
+
+    @classmethod
+    def get_remote(cls, vhost):
+        """Return remote information for given vhost"""
+        paas = Paas.info(vhost)
+        git_server = paas['git_server']
+        # hack for dev
+        if 'dev' in paas['console']:
+            git_server = 'git.hosting.dev.gandi.net'
+
+        paas_access = '%s@%s' % (paas['user'], git_server)
+
+        url = 'http://%s/' % vhost # How do we SSL ?
+
+        if 'php' not in paas['type']:
+            vhost = 'default'
+
+        remote = 'ssh+git://%s/%s.git' % (paas_access, vhost)
+
+        return PaasAccess(vhost=vhost, git_remote=remote, 
+                ssh_remote=paas_access, url=url)
+
+    @classmethod
+    def attach(cls, vhost):
+        """Attach a vhost to a remote from the local
+        repository"""
+        remote = cls.get_remote(vhost).git_remote
+
+        return cls.execute('git remote add %s %s' % (vhost, remote,))
+
+    @classmethod
+    def clone(cls, vhost, directory=None):
+        """Clone this vhost in a local git repository"""
+
+        remote = cls.get_remote(vhost)
+
+        if not directory:
+            directory = vhost
+
+        git_command = 'git clone -o %s %s %s' % (vhost,
+             remote.git_remote, directory)
+
+        return cls.execute(git_command)
+
+    @classmethod
+    def find_vhost(cls):
+        """Take first linked vhost from this repository"""
+        for host in cls.exec_output('git remote').split('\n'):
+            if host == 'origin':
+                continue
+            try:
+                return cls.get_remote(host)
+            except Exception as e:
+                pass
+        cls.echo('Please attach a vhost to this repository first')
+
+    @classmethod
+    def deploy(cls, vhost, gitref):
+        """Deploy this repository and gitref to the instance"""
+
+        if vhost:
+            remote = cls.get_remote(vhost)
+        else:
+            remote = cls.find_vhost()
+
+        if not remote:
+            return
+
+        if not gitref:
+            gitref = 'master'
+
+        cls.echo('Deploying %s to %s' % (gitref, remote.vhost))
+
+        deploy_cmd = 'deploy %s %s' % (remote.vhost, gitref)
+        ssh_cmd = "ssh %s '%s'" % (remote.ssh_remote, deploy_cmd)
+
+        return cls.execute(ssh_cmd)
+
+    @classmethod
+    def open(cls, vhost):
+        """Open a browser window to this vhost"""
+
+        if vhost:
+            remote = cls.get_remote(vhost)
+        else:
+            remote = cls.find_vhost()
+
+        if not remote:
+            return
+
+        webbrowser.open_new(remote.url)

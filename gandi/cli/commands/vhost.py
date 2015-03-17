@@ -69,15 +69,15 @@ def info(gandi, resource, id):
 
 
 @cli.command()
-@click.option('--vhost', help='Vhost fqdn.', required=True)
 @click.option('--paas', required=True,
               help='PaaS instance on which to create it.')
 @click.option('--alter-zone', help='Will update the domain zone.',
               is_flag=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
+@click.argument('vhost', required=True)
 @pass_gandi
-def create(gandi, vhost, paas, alter_zone, background):
+def create(gandi, paas, alter_zone, background, vhost):
     """ Create a new vhost. """
     paas_info = gandi.paas.info(paas)
     result = gandi.vhost.create(paas_info, vhost, alter_zone, background)
@@ -115,3 +115,35 @@ def delete(gandi, resource, force, background):
             output_generic(gandi, oper, output_keys)
 
     return opers
+
+@cli.command()
+@click.argument('resource', required=True)
+@click.argument('directory', default=None, required=False)
+@pass_gandi
+def clone(gandi, resource, directory):
+    """ Clone this vhost in a local directory """
+    return gandi.vhost.clone(resource, directory)
+
+@cli.command()
+@click.argument('resource', required=True)
+@pass_gandi
+def attach(gandi, resource):
+    """ Add a remote for a vhost to the local git repository """
+    return gandi.vhost.attach(resource)
+
+@cli.command(root=True)
+@click.argument('resource', required=False)
+@click.argument('gitref', required=False)
+@pass_gandi
+def deploy(gandi, resource, gitref):
+    """Deploy code on a remote vhost."""
+
+    return gandi.vhost.deploy(resource, gitref)
+
+@cli.command(root=True)
+@click.argument('resource', required=False)
+@pass_gandi
+def open(gandi, resource):
+    """Open browser window on vhost"""
+
+    return gandi.vhost.open(resource)

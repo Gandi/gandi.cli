@@ -2,7 +2,7 @@
 
 import click
 
-from gandi.cli.core.cli import cli
+from gandi.cli.core.cli import cli, warn_deprecated
 from gandi.cli.core.utils import output_paas, output_generic, randomstring
 from gandi.cli.core.params import pass_gandi, DATACENTER, PAAS_TYPE, option
 
@@ -71,41 +71,6 @@ def info(gandi, resource):
 
 
 @cli.command()
-@click.argument('vhost', required=False)
-@pass_gandi
-def clone(gandi, vhost):
-    """Clone a remote vhost in a local git repository."""
-    paas_access = gandi.get('paas.access')
-    if not vhost and not paas_access:
-        gandi.error('missing VHOST parameter')
-
-    if vhost and not paas_access:
-        paas_info = gandi.paas.info(vhost)
-        gandi.vhost.init_vhost(vhost, paas=paas_info)
-    else:
-        paas_access = gandi.get('paas.access')
-        gandi.execute('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
-
-
-@cli.command(root=True)
-@click.argument('vhost', required=False)
-@pass_gandi
-def deploy(gandi, vhost):
-    """Deploy code on a remote vhost."""
-    paas_access = gandi.get('paas.access')
-    if not vhost and not paas_access:
-        gandi.error('missing VHOST parameter')
-
-    if vhost and not paas_access:
-        gandi.paas.init_conf(vhost, vhost=vhost)
-
-    paas_access = gandi.get('paas.access')
-    deploy_git_host = gandi.get('paas.deploy_git_host')
-
-    gandi.execute("ssh %s 'deploy %s'" % (paas_access, deploy_git_host))
-
-
-@cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
@@ -145,9 +110,10 @@ def delete(gandi, background, force, resource):
 
 
 @cli.command()
+@click.argument('name_arg', required=False)
 @click.option('--name', default=None,
               help='Name of the PaaS instance, will be generated if not '
-                   'provided.')
+                   'provided.', callback=warn_deprecated)
 @option('--size', default='s',
         type=click.Choice(['s', 'm', 'x', 'xl', 'xxl']),
         help='Size of the PaaS instance.')
@@ -171,7 +137,7 @@ def delete(gandi, background, force, resource):
         help='Authorize ssh authentication for the given ssh key.')
 @pass_gandi
 def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
-           password, snapshotprofile, background, sshkey):
+           password, snapshotprofile, background, sshkey, name_arg):
     """Create a new PaaS instance and initialize associated git repository.
 
     you can specify a configuration entry named 'sshkey' containing
@@ -192,8 +158,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
         password = click.prompt('password', hide_input=True,
             confirmation_prompt=True)
 
-    if not name:
-        name = randomstring('vm')
+    name = name or name_arg or randomstring('vm')
 
     result = gandi.paas.create(name, size, type, quantity, duration,
                                datacenter, vhosts, password,
