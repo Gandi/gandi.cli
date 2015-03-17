@@ -7,5 +7,8 @@ python:
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
     - 'pip install -e ".[test]"'
+    - 'pip install coveralls'
 script:
     - "python ./setup.py nosetests"
+after_success:
+    - coveralls

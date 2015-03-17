@@ -370,6 +370,7 @@ We <3 contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution gui
 ## Code status
 
 [![Build Status](https://travis-ci.org/Gandi/gandi.cli.svg?branch=master)](https://travis-ci.org/Gandi/gandi.cli)
+[![Coverage Status](https://coveralls.io/repos/Gandi/gandi.cli/badge.svg?branch=master)](https://coveralls.io/r/Gandi/gandi.cli?branch=master)
 [![Pip Version](https://pypip.in/version/gandi.cli/badge.svg)](https://pypi.python.org/pypi/gandi.cli)
 [![Python Version](https://pypip.in/py_versions/gandi.cli/badge.svg)](https://pypi.python.org/pypi/gandi.cli)
 [![Download Stat](https://pypip.in/download/gandi.cli/badge.svg)](https://pypi.python.org/pypi/gandi.cli)
