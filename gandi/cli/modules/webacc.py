@@ -58,19 +58,18 @@ class Webacc(GandiModule):
             if err.code == 580142:
                 for vhost in params['vhosts']:
                     dns_entry = cls.call('hosting.rproxy.vhost.get_dns_entries',
-                                     {'datacenter': datacenter_id_,
-                                      'vhost': vhost})
-                    txt_record = "%s 3600 IN TXT \"%s=%s\"" % (dns_entry['key'],
-                                                               dns_entry['key'],
-                                                               dns_entry['txt'])
+                                         {'datacenter': datacenter_id_,
+                                          'vhost': vhost})
+                    txt_record = "@ 3600 IN TXT \"%s=%s\"" % (dns_entry['key'],
+                                                              dns_entry['txt'])
 
                     cname_record = "%s 3600 IN CNAME %s" % (dns_entry['key'],
-                                                        dns_entry['cname'])
+                                                            dns_entry['cname'])
 
-                    cls.echo('The domain %s don\'t use Gandi DNS or you have not'
-                             ' sufficient right to alter the zone file. '
+                    cls.echo('The domain %s don\'t use Gandi DNS or you have'
+                             ' not sufficient right to alter the zone file. '
                              'Edit your zone file adding this TXT and CNAME '
-                            'record and try again :' % vhost)
+                             'record and try again :' % vhost)
                     cls.echo(txt_record)
                     cls.echo(cname_record)
                     cls.separator_line('-', 4)
@@ -90,7 +89,8 @@ class Webacc(GandiModule):
         if ssl_disable:
             params['ssl_enable'] = False
 
-        result = cls.call('hosting.rproxy.update', cls.usable_id(resource), params)
+        result = cls.call('hosting.rproxy.update', cls.usable_id(resource),
+                          params)
         cls.echo('Updating your webaccelerator')
         cls.display_progress(result)
         cls.echo('The webaccelerator have been udated')
