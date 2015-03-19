@@ -5,18 +5,23 @@ except ImportError:
 
 
 def datacenter_list(options):
-    return [{'iso': 'FR',
-             'name': 'Equinix Paris',
-             'id': 1,
-             'country': 'France'},
-            {'iso': 'US',
-             'name': 'Level3 Baltimore',
-             'id': 2,
-             'country': 'United States of America'},
-            {'iso': 'LU',
-             'name': 'Bissen',
-             'id': 3,
-             'country': 'Luxembourg'}]
+
+    ret = [{'iso': 'FR',
+            'name': 'Equinix Paris',
+            'id': 1,
+            'country': 'France'},
+           {'iso': 'US',
+            'name': 'Level3 Baltimore',
+            'id': 2,
+            'country': 'United States of America'},
+           {'iso': 'LU',
+            'name': 'Bissen',
+            'id': 3,
+            'country': 'Luxembourg'}]
+
+    for fkey in options:
+        ret = [dc for dc in ret if dc[fkey] == options[fkey]]
+    return ret
 
 
 def disk_list(options):
@@ -403,3 +408,48 @@ def metric_query(query):
                if item['resource_id'] == query['resource_id'][0]]
 
     return metrics
+
+
+def disk_list_kernels(dc_id):
+
+    ret = {
+        1: {'linux': ['2.6.18 (deprecated)',
+                      '2.6.27-compat-sysfs (deprecated)',
+                      '2.6.32',
+                      '2.6.27 (deprecated)',
+                      '2.6.32-x86_64',
+                      '2.6.36 (deprecated)',
+                      '2.6.32-x86_64-grsec',
+                      '2.6.36-x86_64 (deprecated)',
+                      '3.2-i386',
+                      '3.2-x86_64',
+                      '3.2-x86_64-grsec',
+                      '3.10-x86_64',
+                      '3.10-i386'],
+            'linux-hvm': ['3.12-x86_64 (hvm)', 'grub', 'raw']},
+        2: {'linux': ['2.6.18 (deprecated)',
+                      '2.6.27-compat-sysfs (deprecated)',
+                      '2.6.32',
+                      '2.6.27 (deprecated)',
+                      '2.6.32-x86_64',
+                      '2.6.36 (deprecated)',
+                      '2.6.32-x86_64-grsec',
+                      '2.6.36-x86_64 (deprecated)',
+                      '3.2-i386',
+                      '3.2-x86_64',
+                      '3.2-x86_64-grsec',
+                      '3.10-x86_64',
+                      '3.10-i386'],
+            'linux-hvm': ['3.12-x86_64 (hvm)', 'grub', 'raw']},
+        3: {'linux': ['2.6.32',
+                      '2.6.27 (deprecated)',
+                      '2.6.32-x86_64',
+                      '2.6.32-x86_64-grsec',
+                      '3.2-i386',
+                      '3.2-x86_64',
+                      '3.2-x86_64-grsec',
+                      '3.10-x86_64',
+                      '3.10-i386'],
+            'linux-hvm': ['3.12-x86_64 (hvm)', 'grub', 'raw']}}
+
+    return ret[dc_id]

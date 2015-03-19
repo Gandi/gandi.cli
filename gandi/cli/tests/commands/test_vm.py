@@ -141,3 +141,224 @@ write         :     ▁    ▁  ▂        ▉▁▁
 """
         self.assertEqual(result.output, expected)
         self.assertEqual(result.exit_code, 0)
+
+    def test_datacenters(self):
+
+        result = self.runner.invoke(vm.datacenters, [])
+
+        self.assertEqual(result.output, """\
+iso       : FR
+name      : Equinix Paris
+country   : France
+----------
+iso       : US
+name      : Level3 Baltimore
+country   : United States of America
+----------
+iso       : LU
+name      : Bissen
+country   : Luxembourg
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_kernels(self):
+
+        result = self.runner.invoke(vm.kernels, [])
+
+        self.assertEqual(result.output, """\
+datacenter    : Equinix Paris
+----------
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
+----------
+flavor        : linux
+version       : 2.6.18 (deprecated)
+version       : 2.6.27-compat-sysfs (deprecated)
+version       : 2.6.32
+version       : 2.6.27 (deprecated)
+version       : 2.6.32-x86_64
+version       : 2.6.36 (deprecated)
+version       : 2.6.32-x86_64-grsec
+version       : 2.6.36-x86_64 (deprecated)
+version       : 3.2-i386
+version       : 3.2-x86_64
+version       : 3.2-x86_64-grsec
+version       : 3.10-x86_64
+version       : 3.10-i386
+
+
+datacenter    : Level3 Baltimore
+----------
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
+----------
+flavor        : linux
+version       : 2.6.18 (deprecated)
+version       : 2.6.27-compat-sysfs (deprecated)
+version       : 2.6.32
+version       : 2.6.27 (deprecated)
+version       : 2.6.32-x86_64
+version       : 2.6.36 (deprecated)
+version       : 2.6.32-x86_64-grsec
+version       : 2.6.36-x86_64 (deprecated)
+version       : 3.2-i386
+version       : 3.2-x86_64
+version       : 3.2-x86_64-grsec
+version       : 3.10-x86_64
+version       : 3.10-i386
+
+
+datacenter    : Bissen
+----------
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
+----------
+flavor        : linux
+version       : 2.6.32
+version       : 2.6.27 (deprecated)
+version       : 2.6.32-x86_64
+version       : 2.6.32-x86_64-grsec
+version       : 3.2-i386
+version       : 3.2-x86_64
+version       : 3.2-x86_64-grsec
+version       : 3.10-x86_64
+version       : 3.10-i386
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_kernels_match(self):
+
+        result = self.runner.invoke(vm.kernels, ['3.10'])
+
+        self.assertEqual(result.output, """\
+datacenter    : Equinix Paris
+----------
+flavor        : linux-hvm
+----------
+flavor        : linux
+version       : 3.10-x86_64
+version       : 3.10-i386
+
+
+datacenter    : Level3 Baltimore
+----------
+flavor        : linux-hvm
+----------
+flavor        : linux
+version       : 3.10-x86_64
+version       : 3.10-i386
+
+
+datacenter    : Bissen
+----------
+flavor        : linux-hvm
+----------
+flavor        : linux
+version       : 3.10-x86_64
+version       : 3.10-i386
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_kernels_flavor(self):
+
+        result = self.runner.invoke(vm.kernels, ['--flavor', 'linux-hvm'])
+
+        self.assertEqual(result.output, """\
+datacenter    : Equinix Paris
+----------
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
+
+
+datacenter    : Level3 Baltimore
+----------
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
+
+
+datacenter    : Bissen
+----------
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_kernels_datacenter(self):
+
+        result = self.runner.invoke(vm.kernels, ['--datacenter', 'LU'])
+
+        self.assertEqual(result.output, """\
+datacenter    : Bissen
+----------
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
+----------
+flavor        : linux
+version       : 2.6.32
+version       : 2.6.27 (deprecated)
+version       : 2.6.32-x86_64
+version       : 2.6.32-x86_64-grsec
+version       : 3.2-i386
+version       : 3.2-x86_64
+version       : 3.2-x86_64-grsec
+version       : 3.10-x86_64
+version       : 3.10-i386
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_kernels_vm(self):
+
+        result = self.runner.invoke(vm.kernels, ['--vm', 'server01'])
+
+        self.assertEqual(result.output, """\
+datacenter    : Equinix Paris
+----------
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
+----------
+flavor        : linux
+version       : 2.6.18 (deprecated)
+version       : 2.6.27-compat-sysfs (deprecated)
+version       : 2.6.32
+version       : 2.6.27 (deprecated)
+version       : 2.6.32-x86_64
+version       : 2.6.36 (deprecated)
+version       : 2.6.32-x86_64-grsec
+version       : 2.6.36-x86_64 (deprecated)
+version       : 3.2-i386
+version       : 3.2-x86_64
+version       : 3.2-x86_64-grsec
+version       : 3.10-x86_64
+version       : 3.10-i386
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_kernels_all(self):
+
+        args = ['--vm', 'server01', '--datacenter', 'FR',
+                '--flavor', 'linux-hvm', '3.12']
+        result = self.runner.invoke(vm.kernels, args)
+
+        self.assertEqual(result.output, """\
+datacenter    : Equinix Paris
+----------
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+""")
+        self.assertEqual(result.exit_code, 0)
