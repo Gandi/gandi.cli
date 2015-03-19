@@ -648,3 +648,35 @@ def disk_list_kernels(dc_id):
             'linux-hvm': ['3.12-x86_64 (hvm)', 'grub', 'raw']}}
 
     return ret[dc_id]
+
+
+def account_info():
+    return {'average_credit_cost': 0.0,
+            'credits': 2335360,
+            'cycle_day': 23,
+            'date_credits_expiration': DateTime('20160319T10:07:24'),
+            'fullname': 'Peter Parker',
+            'handle': 'PXP561-GANDI',
+            'id': 2920674,
+            'products': None,
+            'rating_enabled': True,
+            'resources': {'available': None,
+                          'expired': None,
+                          'granted': None,
+                          'used': None},
+            'share_definition': None}
+
+
+def rating_list():
+    return [{'bw_out': None,
+             'cpu': {'default': 168},
+             'disk_data': {'default': 135},
+             'disk_snapshot': None,
+             'disk_snapshot_auto': None,
+             'instance': {'default': 0},
+             'ip': {'v4_public': 210, 'v6': 0},
+             'ram': {'default': 120},
+             'rproxy': None,
+             'rproxy_server': None,
+             'rproxy_ssl': None,
+             'timestamp': DateTime('20150319T15:07:24')}]
