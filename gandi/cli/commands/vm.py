@@ -247,10 +247,13 @@ def delete(gandi, background, force, resource):
 @click.option('--script', default=None,
               help='Local script to upload and run on the VM after creation.'
                    'Instead of spawning an ssh session')
+@click.option('--ssh', default=False, is_flag=True,
+              help='Open a SSH session to the machine after creation '
+                   '(default=False).')
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
            password, hostname, image, run, background, sshkey, size, vlan, ip,
-           script):
+           script, ssh):
     """Create a new virtual machine.
 
     you can specify a configuration entry named 'sshkey' containing
@@ -303,7 +306,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                                bandwidth, login, pwd, hostname,
                                image, run,
                                background,
-                               sshkey, size, vlan, ip, script)
+                               sshkey, size, vlan, ip, script, ssh)
     if background:
         gandi.echo('* IAAS backend is now creating your VM and its '
                    'associated resources in the background.')
@@ -372,6 +375,8 @@ def console(gandi, resource):
 
 
 @cli.command()
+@click.option('--wait', default=False, is_flag=True,
+              help='Wait for virtual machine sshd to come up (timeout 2min).')
 @click.option('--wipe-key', default=False, is_flag=True,
               help='Wipe SSH known host entry first.')
 @click.option('--login', '-l', default='root',
@@ -381,7 +386,7 @@ def console(gandi, resource):
 @click.argument('resource')
 @click.argument('args', nargs=-1)
 @pass_gandi
-def ssh(gandi, resource, login, identity, wipe_key, args):
+def ssh(gandi, resource, login, identity, wipe_key, wait, args):
     """Spawn an SSH session to virtual machine.
 
     Resource can be a Hostname or an ID
@@ -390,6 +395,8 @@ def ssh(gandi, resource, login, identity, wipe_key, args):
         (login, resource) = resource.split('@', 1)
     if wipe_key:
         gandi.iaas.ssh_keyscan(resource)
+    if wait:
+        gandi.wait_for_sshd(resource)
     gandi.iaas.ssh(resource, login, identity, args)
 
 

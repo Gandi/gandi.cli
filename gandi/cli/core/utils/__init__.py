@@ -9,7 +9,7 @@ import click
 import json
 from click.formatting import measure_table
 
-from ascii_sparks import sparks
+from .ascii_sparks import sparks
 
 
 class MissingConfiguration(Exception):

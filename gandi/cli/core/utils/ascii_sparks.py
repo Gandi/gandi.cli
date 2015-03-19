@@ -1,5 +1,9 @@
 # coding: utf-8
 
+# Author: Rory McCann 
+# https://pypi.python.org/pypi/ascii_sparks/0.0.3
+# License: Unknown
+
 parts = u' ▁▂▃▄▅▆▇▉'
 
 def sparks(nums):
