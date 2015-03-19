@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 
 from .base import CommandTestCase
 from gandi.cli.commands import vm
@@ -498,5 +499,83 @@ os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 3316160
 datacenter    : LU
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_stop_one(self):
+        result = self.runner.invoke(vm.stop, ['server01'])
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Stopping your Virtual Machine(s) 'server01'.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_stop_multiple(self):
+        result = self.runner.invoke(vm.stop, ['server01', 'vm1426759833'])
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Stopping your Virtual Machine(s) 'server01, vm1426759833'.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_stop_background(self):
+        result = self.runner.invoke(vm.stop, ['server01', '--bg'])
+        self.assertEqual(result.output, """\
+id        : 200
+step      : WAIT
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_start_one(self):
+        result = self.runner.invoke(vm.start, ['server01'])
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Starting your Virtual Machine(s) 'server01'.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_start_multiple(self):
+        result = self.runner.invoke(vm.start, ['server01', 'vm1426759833'])
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Starting your Virtual Machine(s) 'server01, vm1426759833'.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_start_background(self):
+        result = self.runner.invoke(vm.start, ['server01', '--bg'])
+        self.assertEqual(result.output, """\
+id        : 200
+step      : WAIT
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_reboot_one(self):
+        result = self.runner.invoke(vm.reboot, ['server01'])
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Rebooting your Virtual Machine(s) 'server01'.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_reboot_multiple(self):
+        result = self.runner.invoke(vm.reboot, ['server01', 'vm1426759833'])
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Rebooting your Virtual Machine(s) 'server01, vm1426759833'.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_reboot_background(self):
+        result = self.runner.invoke(vm.reboot, ['server01', '--bg'])
+        self.assertEqual(result.output, """\
+id        : 200
+step      : WAIT
 """)
         self.assertEqual(result.exit_code, 0)

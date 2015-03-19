@@ -471,11 +471,6 @@ def vm_info(id):
     return vms[id]
 
 
-def vm_disk_detach(vm_id, disk_id):
-    if vm_id == 152967 and disk_id == 4970079:
-        return {'id': 200, 'step': 'WAIT'}
-
-
 def metric_query(query):
 
     vif_bytes_all = [
@@ -680,3 +675,23 @@ def rating_list():
              'rproxy_server': None,
              'rproxy_ssl': None,
              'timestamp': DateTime('20150319T15:07:24')}]
+
+
+def vm_disk_detach(vm_id, disk_id):
+    if vm_id == 152967 and disk_id == 4970079:
+        return {'id': 200, 'step': 'WAIT'}
+
+
+def vm_stop(vm_id):
+    if vm_id in (152967, 152966):
+        return {'id': 200, 'step': 'WAIT'}
+
+
+def vm_start(vm_id):
+    if vm_id in (152967, 152966):
+        return {'id': 200, 'step': 'WAIT'}
+
+
+def vm_reboot(vm_id):
+    if vm_id in (152967, 152966):
+        return {'id': 200, 'step': 'WAIT'}
