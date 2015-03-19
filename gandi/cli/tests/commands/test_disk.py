@@ -13,31 +13,32 @@ class DiskTestCase(CommandTestCase):
 
         result = self.runner.invoke(disk.list, [])
 
-        self.assertEqual(result.output, """name      : data
+        self.assertEqual(result.output, """name      : sys_1426759833
 state     : created
-size      : 10240
+size      : 3072
 ----------
-name      : arch64
+name      : sys_server01
 state     : created
-size      : 10240
+size      : 3072
 ----------
-name      : sys_docker
+name      : data
 state     : created
 size      : 3072
 """)
+
         self.assertEqual(result.exit_code, 0)
 
     def test_info(self):
-        result = self.runner.invoke(disk.info, ['arch64'])
+        result = self.runner.invoke(disk.info, ['sys_server01'])
 
-        self.assertEqual(result.output, """name      : arch64
+        self.assertEqual(result.output, """name      : sys_server01
 state     : created
-size      : 10240
+size      : 3072
 type      : data
-id        : 4204
-kernel    : 3.2-x86_64
+id        : 4969249
+kernel    : 3.12-x86_64 (hvm)
 datacenter: FR
-vm        : arch64
+vm        : server01
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -46,10 +47,10 @@ vm        : arch64
         self.assertEqual(result, 2048)
         self.assertRaises(ClickException, disk_check_size, None, None, 2040)
 
-    def __test_detach(self):
+    def test_detach(self):
         result = self.runner.invoke(disk.detach, ['data'])
         self.assertEqual(result.output.strip(),
-                         "Are you sure to detach data? [y/N]:"
+                         "Are you sure you want to detach data? [y/N]:"
                          )
         self.assertEqual(result.exit_code, 0)
 
@@ -57,7 +58,7 @@ vm        : arch64
         result = self.runner.invoke(disk.detach, ['-f', 'data'])
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-The disk is still attached to the vm 80458.
+The disk is still attached to the vm 152967.
 Will detach it.
 Detaching your disk(s).
 \rProgress: [###] 100.00%  00:00:00""")
