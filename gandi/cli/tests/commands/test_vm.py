@@ -579,3 +579,35 @@ id        : 200
 step      : WAIT
 """)
         self.assertEqual(result.exit_code, 0)
+
+    def test_delete_prompt(self):
+        result = self.runner.invoke(vm.delete, ['server01'])
+        self.assertEqual(result.output.strip(), """\
+Are you sure to delete Virtual Machine 'server01'? [y/N]:""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_delete_one(self):
+        result = self.runner.invoke(vm.delete, ['server01', '-f'])
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Stopping your Virtual Machine(s) 'server01'.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Deleting your Virtual Machine(s) 'server01'.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_delete_multiple(self):
+        args = ['server01', 'vm1426759833', '-f']
+        result = self.runner.invoke(vm.delete, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Stopping your Virtual Machine(s) 'server01'.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Stopping your Virtual Machine(s) 'vm1426759833'.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Deleting your Virtual Machine(s) 'server01, vm1426759833'.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
