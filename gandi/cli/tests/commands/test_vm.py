@@ -362,3 +362,141 @@ flavor        : linux-hvm
 version       : 3.12-x86_64 (hvm)
 """)
         self.assertEqual(result.exit_code, 0)
+
+    def test_images(self):
+
+        result = self.runner.invoke(vm.images, [])
+
+        self.assertEqual(result.output, """\
+label         : Fedora 17 32 bits
+os_arch       : x86-32
+kernel_version: 3.2-i386
+disk_id       : 527489
+datacenter    : LU
+----------
+label         : Fedora 17 64 bits
+os_arch       : x86-64
+kernel_version: 3.2-x86_64
+disk_id       : 527490
+datacenter    : LU
+----------
+label         : OpenSUSE 12.2 32 bits
+os_arch       : x86-32
+kernel_version: 3.2-i386
+disk_id       : 527491
+datacenter    : LU
+----------
+label         : OpenSUSE 12.2 64 bits
+os_arch       : x86-64
+kernel_version: 3.2-x86_64
+disk_id       : 527494
+datacenter    : LU
+----------
+label         : CentOS 5 32 bits
+os_arch       : x86-32
+kernel_version: 2.6.32
+disk_id       : 726224
+datacenter    : LU
+----------
+label         : CentOS 5 64 bits
+os_arch       : x86-64
+kernel_version: 2.6.32-x86_64
+disk_id       : 726225
+datacenter    : LU
+----------
+label         : ArchLinux 32 bits
+os_arch       : x86-32
+kernel_version: 3.2-i386
+disk_id       : 726230
+datacenter    : LU
+----------
+label         : ArchLinux 64 bits
+os_arch       : x86-64
+kernel_version: 3.2-x86_64
+disk_id       : 726233
+datacenter    : LU
+----------
+label         : Debian 8 (testing) 64 bits (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 3315704
+datacenter    : FR
+----------
+label         : Debian 8 (testing) 64 bits (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 3315992
+datacenter    : US
+----------
+label         : Debian 8 (testing) 64 bits (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 3316076
+datacenter    : LU
+----------
+label         : Ubuntu 14.04 64 bits LTS (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 3315748
+datacenter    : FR
+----------
+label         : Ubuntu 14.04 64 bits LTS (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 3316144
+datacenter    : US
+----------
+label         : Ubuntu 14.04 64 bits LTS (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 3316160
+datacenter    : LU
+----------
+label         : CentOS 7 64 bits (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 2876292
+datacenter    : FR
+----------
+label         : CentOS 7 64 bits (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 4744388
+datacenter    : US
+----------
+label         : CentOS 7 64 bits (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 4744392
+datacenter    : LU
+----------
+label         : Debian 7 64 bits (HVM)
+kernel_version: 3.12-x86_64 (hvm)
+name          : sys_1426759833
+datacenter    : LU
+----------
+label         : Debian 7 64 bits (HVM)
+kernel_version: 3.12-x86_64 (hvm)
+name          : sys_server01
+datacenter    : FR
+----------
+label         :
+kernel_version:
+name          : data
+datacenter    : FR
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_images_all(self):
+
+        args = ['Ubuntu 14.04', '--datacenter', 'LU']
+        result = self.runner.invoke(vm.images, args)
+
+        self.assertEqual(result.output, """\
+label         : Ubuntu 14.04 64 bits LTS (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 3316160
+datacenter    : LU
+""")
+        self.assertEqual(result.exit_code, 0)
