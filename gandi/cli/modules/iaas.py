@@ -525,6 +525,6 @@ class Kernel(GandiModule):
         if flavor:
             if flavor not in kmap:
                 cls.error('flavor %s not supported here' % flavor)
-            return kmap[flavor]
+            return dict([(flavor, kmap[flavor])])
 
         return kmap
