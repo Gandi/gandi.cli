@@ -72,6 +72,10 @@ class Webacc(GandiModule):
                              'record and try again :' % vhost)
                     cls.echo(txt_record)
                     cls.echo(cname_record)
+                    cls.echo('\nOr add a file containing %s at :\n'
+                             'http://%s/%s.txt\n' % (dns_entry['txt'],
+                                                     dns_entry['domain'],
+                                                     dns_entry['txt']))
                     cls.separator_line('-', 4)
             else:
                 cls.echo(err)
@@ -192,6 +196,11 @@ class Webacc(GandiModule):
                          'record and try again :')
                 cls.echo(txt_record)
                 cls.echo(cname_record)
+                cls.echo('\nOr add a file containing %s at :\n'
+                         'http://%s/%s.txt\n' % (dns_entry['txt'],
+                                                 dns_entry['domain'],
+                                                 dns_entry['txt']))
+
             else:
                 cls.echo(err)
 

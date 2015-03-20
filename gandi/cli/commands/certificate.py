@@ -422,6 +422,13 @@ def update(gandi, resource, csr, private_key, country, state, city,
                                       city, organisation, branch, altnames,
                                       dcv_method)
 
+    gandi.echo('The certificate update operation is %s' % result['id'])
+    gandi.echo('You can follow it with:')
+    gandi.echo('$ gandi certificate follow %s' % result['id'])
+    gandi.echo('When the operation is DONE, you can retrieve the .crt'
+               ' with:')
+    gandi.echo('$ gandi certificate export "%s"' % resource)
+
     return result
 
 
