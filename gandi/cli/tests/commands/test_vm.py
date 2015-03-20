@@ -611,3 +611,77 @@ Deleting your Virtual Machine(s) 'server01, vm1426759833'.
 \rProgress: [###] 100.00%  00:00:00""")
 
         self.assertEqual(result.exit_code, 0)
+
+    def test_update_ok(self):
+        args = ['server01', '--memory', '1024', '--cores', '4']
+        result = self.runner.invoke(vm.update, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Updating your Virtual Machine server01.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_update_memory(self):
+        args = ['server01', '--memory', '10240', '--cores', '4']
+        result = self.runner.invoke(vm.update, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+memory update must be done offline.
+reboot machine server01? [y/N]:""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_update_memory_reboot(self):
+        args = ['server01', '--memory', '10240', '--cores', '4', '--reboot']
+        result = self.runner.invoke(vm.update, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Updating your Virtual Machine server01.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_update_background(self):
+        args = ['server01', '--memory', '1024', '--cores', '4', '--bg']
+        result = self.runner.invoke(vm.update, args)
+        self.assertEqual(result.output, """\
+{'id': 200, 'step': 'WAIT'}
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_update_password(self):
+        args = ['server01', '--password']
+        result = self.runner.invoke(vm.update, args,
+                                    input='plokiploki\nplokiploki\n')
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+password: \nRepeat for confirmation: \nUpdating your Virtual Machine server01.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_update_console(self):
+        args = ['server01', '--console']
+        result = self.runner.invoke(vm.update, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Updating your Virtual Machine server01.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_console(self):
+        args = ['server01']
+        result = self.runner.invoke(vm.console, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+/!\\ Please be aware that if you didn\'t provide a password during creation, \
+console service will be unavailable.
+/!\\ You can use "gandi vm update" command to set a password.
+/!\\ Use ~. ssh escape key to exit.
+Updating your Virtual Machine server01.
+\rProgress: [###] 100.00%  00:00:00  \n\
+ssh 95.142.160.181@console.gandi.net""")
+
+        self.assertEqual(result.exit_code, 0)

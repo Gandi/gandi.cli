@@ -700,3 +700,8 @@ def vm_reboot(vm_id):
 def vm_delete(vm_id):
     if vm_id in (152967, 152966):
         return {'id': 200, 'step': 'WAIT'}
+
+
+def vm_update(vm_id, options):
+    if vm_id in (152967, 152966):
+        return {'id': 200, 'step': 'WAIT'}
