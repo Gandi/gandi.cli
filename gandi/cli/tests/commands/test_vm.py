@@ -685,3 +685,25 @@ Updating your Virtual Machine server01.
 ssh 95.142.160.181@console.gandi.net""")
 
         self.assertEqual(result.exit_code, 0)
+
+    def test_ssh(self):
+        args = ['admin@server01']
+        result = self.runner.invoke(vm.ssh, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Requesting access using: ssh admin@95.142.160.181 ...
+ssh admin@95.142.160.181""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_ssh_wipe_key(self):
+        args = ['admin@server01', '--wipe-key']
+        result = self.runner.invoke(vm.ssh, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Wiping old key and learning the new one
+ssh-keygen -R "95.142.160.181"
+Requesting access using: ssh admin@95.142.160.181 ...
+ssh admin@95.142.160.181""")
+
+        self.assertEqual(result.exit_code, 0)
