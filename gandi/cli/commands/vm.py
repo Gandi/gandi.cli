@@ -396,7 +396,7 @@ def ssh(gandi, resource, login, identity, wipe_key, wait, args):
     if wipe_key:
         gandi.iaas.ssh_keyscan(resource)
     if wait:
-        gandi.wait_for_sshd(resource)
+        gandi.iaas.wait_for_sshd(resource)
     gandi.iaas.ssh(resource, login, identity, args)
 
 
