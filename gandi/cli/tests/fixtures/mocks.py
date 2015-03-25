@@ -8,5 +8,8 @@ class MockObject(object):
     @classmethod
     def execute(cls, command, shell=True):
         """ Execute a shell command. """
-        print command
+        if not shell:
+            print ' '.join(command)
+        else:
+            print command
         return True
