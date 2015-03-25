@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 import re
+import socket
 
+from ..compat import mock
+from ..fixtures.mocks import MockObject
 from .base import CommandTestCase
 from gandi.cli.commands import vm
 
 
 class VmTestCase(CommandTestCase):
+
+    mocks = [('gandi.cli.core.base.GandiModule.exec_output',
+              MockObject.exec_output)]
 
     def test_list(self):
 
@@ -698,12 +704,62 @@ ssh admin@95.142.160.181""")
 
     def test_ssh_wipe_key(self):
         args = ['admin@server01', '--wipe-key']
-        result = self.runner.invoke(vm.ssh, args)
-        self.assertEqual(re.sub(r'\[#+\]', '[###]',
-                                result.output.strip()), """\
+        with mock.patch('gandi.cli.modules.iaas.open',
+                        create=True) as mock_open:
+            mock_open.return_value = mock.MagicMock(spec=file)
+
+            result = self.runner.invoke(vm.ssh, args)
+            self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                    result.output.strip()), """\
 Wiping old key and learning the new one
 ssh-keygen -R "95.142.160.181"
 Requesting access using: ssh admin@95.142.160.181 ...
 ssh admin@95.142.160.181""")
+
+            self.assertEqual(result.exit_code, 0)
+
+    def test_ssh_wait(self):
+        args = ['server01', '--wait']
+        with mock.patch('gandi.cli.modules.iaas.socket',
+                        create=True) as mock_socket:
+            mock_socket.return_value = mock.MagicMock(name='socket',
+                                                      spec=socket.socket)
+
+            result = self.runner.invoke(vm.ssh, args)
+            self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                    result.output.strip()), """\
+Waiting for the vm to come online
+Requesting access using: ssh root@95.142.160.181 ...
+ssh root@95.142.160.181""")
+
+            self.assertEqual(result.exit_code, 0)
+
+    def test_ssh_login(self):
+        args = ['server01', '--login', 'joe']
+        result = self.runner.invoke(vm.ssh, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Requesting access using: ssh joe@95.142.160.181 ...
+ssh joe@95.142.160.181""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_ssh_identity(self):
+        args = ['admin@server01', '-i', 'key.pub']
+        result = self.runner.invoke(vm.ssh, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Requesting access using: ssh -i key.pub admin@95.142.160.181 ...
+ssh -i key.pub admin@95.142.160.181""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_ssh_args(self):
+        args = ['server01', 'sudo reboot']
+        result = self.runner.invoke(vm.ssh, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Requesting access using: ssh root@95.142.160.181 sudo reboot ...
+ssh root@95.142.160.181 sudo reboot""")
 
         self.assertEqual(result.exit_code, 0)
