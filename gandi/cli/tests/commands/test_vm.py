@@ -6,6 +6,7 @@ from ..compat import mock
 from ..fixtures.mocks import MockObject
 from .base import CommandTestCase
 from gandi.cli.commands import vm
+from gandi.cli.core.base import GandiContextHelper
 
 
 class VmTestCase(CommandTestCase):
@@ -458,6 +459,24 @@ kernel_version: 3.2-x86_64
 disk_id       : 726233
 datacenter    : LU
 ----------
+label         : Debian 7 64 bits (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 1401491
+datacenter    : US
+----------
+label         : Debian 7 64 bits (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 1349810
+datacenter    : FR
+----------
+label         : Debian 7 64 bits (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 1401327
+datacenter    : LU
+----------
 label         : Debian 8 (testing) 64 bits (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
@@ -827,5 +846,20 @@ ssh -i key.pub admin@95.142.160.181""")
                                 result.output.strip()), """\
 Requesting access using: ssh root@95.142.160.181 sudo reboot ...
 ssh root@95.142.160.181 sudo reboot""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_default_hostname_ok(self):
+        args = ['--hostname', 'server500']
+        result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
+                                    input='plokiploki\nplokiploki\n')
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+password: \nRepeat for confirmation: \n* root user will be created.
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
+(HVM), hostname: server500, datacenter: LU
+Creating your Virtual Machine server500.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your Virtual Machine server500 has been created.""")
 
         self.assertEqual(result.exit_code, 0)

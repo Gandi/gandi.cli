@@ -107,6 +107,28 @@ def image_list(options):
             'visibility': 'all'},
            {'author_id': 248842,
             'datacenter_id': 1,
+            'date_created': DateTime('20140417T18:38:53'),
+            'date_updated': DateTime('20141030T18:06:44'),
+            'disk_id': 1349810,
+            'id': 162,
+            'kernel_version': '3.12-x86_64 (hvm)',
+            'label': 'Debian 7 64 bits (HVM)',
+            'os_arch': 'x86-64',
+            'size': 3072,
+            'visibility': 'all'},
+           {'author_id': 248842,
+            'datacenter_id': 3,
+            'date_created': DateTime('20140417T18:38:53'),
+            'date_updated': DateTime('20141030T10:38:45'),
+            'disk_id': 1401327,
+            'id': 167,
+            'kernel_version': '3.12-x86_64 (hvm)',
+            'label': 'Debian 7 64 bits (HVM)',
+            'os_arch': 'x86-64',
+            'size': 3072,
+            'visibility': 'all'},
+           {'author_id': 248842,
+            'datacenter_id': 1,
             'date_created': DateTime('20141203T14:15:28'),
             'date_updated': DateTime('20150116T11:24:56'),
             'disk_id': 3315704,
@@ -289,7 +311,7 @@ def disk_list(options):
 
     if 'name' in options:
         disks = dict([(disk['name'], disk) for disk in disks])
-        return [disks[options['name']]]
+        return [disks[options['name']]] if disks.get(options['name']) else []
 
     return disks
 
@@ -731,3 +753,7 @@ def vm_delete(vm_id):
 def vm_update(vm_id, options):
     if vm_id in (152967, 152966):
         return {'id': 200, 'step': 'WAIT'}
+
+
+def vm_create_from(vm_spec, disk_spec, src_disk_id):
+    return [{'id': 300, 'step': 'WAIT'}]
