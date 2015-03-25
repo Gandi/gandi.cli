@@ -320,6 +320,21 @@ def vm_list(options):
             'ifaces_id': [156573],
             'memory': 256,
             'state': 'running',
+            'vm_max_memory': 2048},
+           {'ai_active': 0,
+            'console': 0,
+            'cores': 1,
+            'datacenter_id': 1,
+            'date_created': DateTime('20150319T11:14:13'),
+            'date_updated': DateTime('20150319T11:14:55'),
+            'description': None,
+            'disks_id': [4969250],
+            'flex_shares': 0,
+            'hostname': 'server02',
+            'id': 152968,
+            'ifaces_id': [156574],
+            'memory': 256,
+            'state': 'halted',
             'vm_max_memory': 2048}]
 
     options.pop('items_per_page', None)
@@ -698,7 +713,7 @@ def vm_reboot(vm_id):
 
 
 def vm_delete(vm_id):
-    if vm_id in (152967, 152966):
+    if vm_id in (152968, 152967, 152966):
         return {'id': 200, 'step': 'WAIT'}
 
 

@@ -22,6 +22,9 @@ state     : running
 ----------
 hostname  : server01
 state     : running
+----------
+hostname  : server02
+state     : halted
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -36,6 +39,10 @@ id        : 152966
 hostname  : server01
 state     : running
 id        : 152967
+----------
+hostname  : server02
+state     : halted
+id        : 152968
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -43,7 +50,10 @@ id        : 152967
 
         result = self.runner.invoke(vm.list, ['--state', 'halted'])
 
-        self.assertEqual(result.output, '')
+        self.assertEqual(result.output, """hostname  : server02
+state     : halted
+""")
+
         self.assertEqual(result.exit_code, 0)
 
     def test_list_filter_datacenter(self):
@@ -52,6 +62,9 @@ id        : 152967
 
         self.assertEqual(result.output, """hostname  : server01
 state     : running
+----------
+hostname  : server02
+state     : halted
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -165,6 +178,28 @@ country   : United States of America
 iso       : LU
 name      : Bissen
 country   : Luxembourg
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_datacenters_id(self):
+
+        result = self.runner.invoke(vm.datacenters, ['--id'])
+
+        self.assertEqual(result.output, """\
+iso       : FR
+name      : Equinix Paris
+country   : France
+id        : 1
+----------
+iso       : US
+name      : Level3 Baltimore
+country   : United States of America
+id        : 2
+----------
+iso       : LU
+name      : Bissen
+country   : Luxembourg
+id        : 3
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -615,6 +650,37 @@ Stopping your Virtual Machine(s) 'vm1426759833'.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Deleting your Virtual Machine(s) 'server01, vm1426759833'.
 \rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_delete_unknown(self):
+        result = self.runner.invoke(vm.delete, ['server100'])
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Sorry virtual machine server100 does not exist
+Please use one of the following: ['vm1426759833', 'server01', \
+'server02', '152966', '152967', '152968']""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_delete_background_ko(self):
+        result = self.runner.invoke(vm.delete, ['server01', '-f', '--bg'])
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Virtual machine not stopped, background option disabled
+Stopping your Virtual Machine(s) 'server01'.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Deleting your Virtual Machine(s) 'server01'.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_delete_background_ok(self):
+        result = self.runner.invoke(vm.delete, ['server02', '-f', '--bg'])
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+id        : 200
+step      : WAIT""")
 
         self.assertEqual(result.exit_code, 0)
 
