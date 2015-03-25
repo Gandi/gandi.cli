@@ -13,3 +13,17 @@ class MockObject(object):
         else:
             print command
         return True
+
+    @classmethod
+    def exec_output(cls, command, shell=True, encoding='utf-8'):
+        """ Return execution output
+
+        :param encoding: charset used to decode the stdout
+        :type encoding: str
+
+        :return: the return of the command
+        :rtype: unicode string
+        """
+        if not shell:
+            return ' '.join(command)
+        return command
