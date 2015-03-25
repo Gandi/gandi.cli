@@ -8,12 +8,16 @@ from ..fixtures.mocks import MockObject
 
 class CommandTestCase(unittest.TestCase):
 
-    mocks = [('gandi.cli.core.base.GandiModule.save', MockObject.blank_func),
-             ('gandi.cli.core.base.GandiModule.execute', MockObject.execute)]
+    base_mocks = [('gandi.cli.core.base.GandiModule.save',
+                   MockObject.blank_func),
+                  ('gandi.cli.core.base.GandiModule.execute',
+                   MockObject.execute)]
+    mocks = []
 
     def setUp(self):
         self.runner = CliRunner()
 
+        self.mocks = self.mocks + self.base_mocks
         self.mocks = [mock.patch(*mock_args) for mock_args in self.mocks]
         for dummy in self.mocks:
             dummy.start()
