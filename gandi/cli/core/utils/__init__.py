@@ -383,3 +383,8 @@ def output_sub_generic(gandi, data, output_keys, justify=10):
     for key in output_keys:
         if key in data:
             output_sub_line(gandi, key, data[key], justify)
+
+
+def output_service(gandi, service, status, justify=10):
+    """ Helper to output a status service information."""
+    output_line(gandi, service, status, justify)
