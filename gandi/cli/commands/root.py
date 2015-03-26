@@ -3,7 +3,7 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_generic, output_line
+from gandi.cli.core.utils import output_generic, output_service
 from gandi.cli.core.params import pass_gandi
 
 
@@ -83,6 +83,19 @@ def status(gandi, service):
                   if serv['name'].lower() == service.lower()]
 
     for serv in needed:
-        output_line(gandi, serv['name'], descs[serv['status']], 10)
+        if serv['status'] != 'STORMY':
+            output_service(gandi, serv['name'], descs[serv['status']])
+            continue
+
+        filters = {
+            'category': 'Incident',
+            'services': serv['name'],
+            'current': True,
+        }
+        events = gandi.status.events(filters)
+        for event in events:
+            event_url = gandi.status.event_timeline(event)
+            service_detail = '%s - %s' % (event['title'], event_url)
+            output_service(gandi, serv['name'], service_detail)
 
     return services
