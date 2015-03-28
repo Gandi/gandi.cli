@@ -119,13 +119,16 @@ def detach(gandi, resource, background, force):
 @cli.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
+@click.option('--position', '-p',
+        help='Position where disk should be attached: 0 for system disk. '
+             'If there is already a disk attached at the specified position, it will be swapped.')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')
 @pass_gandi
 @click.argument('disk', nargs=1, required=True)
 @click.argument('vm', nargs=1, required=True)
-def attach(gandi, disk, vm, background, force):
+def attach(gandi, disk, vm, position, background, force):
     """ Attach disk to vm.
 
     disk can be a disk name, or ID
@@ -146,7 +149,7 @@ def attach(gandi, disk, vm, background, force):
         if not proceed:
             return
 
-    result = gandi.disk.attach(disk, vm, background)
+    result = gandi.disk.attach(disk, vm, background, position)
     if background and result:
         gandi.pretty_echo(result)
 
