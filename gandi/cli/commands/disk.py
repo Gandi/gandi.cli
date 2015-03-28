@@ -121,7 +121,7 @@ def detach(gandi, resource, background, force):
               help='Run command in background mode (default=False).')
 @click.option('-r', '--read-only', default=False, is_flag=True,
         help='Attach disk as read-only')
-@click.option('--position', '-p',
+@click.option('--position', '-p', type=click.INT,
         help='Position where disk should be attached: 0 for system disk. '
              'If there is already a disk attached at the specified position, it will be swapped.')
 @click.option('--force', '-f', is_flag=True,

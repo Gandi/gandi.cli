@@ -199,7 +199,7 @@ class Disk(GandiModule):
 
         options = {}
         if position is not None:
-            options['position'] = int(position)
+            options['position'] = position
 
         if read_only:
             options['access'] = 'read'
