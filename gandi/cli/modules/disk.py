@@ -190,7 +190,7 @@ class Disk(GandiModule):
         return oper
 
     @classmethod
-    def attach(cls, disk, vm, background, position=None):
+    def attach(cls, disk, vm, background, position=None, read_only=False):
         from gandi.cli.modules.iaas import Iaas as VM
         vm_id = VM.usable_id(vm)
 
@@ -200,6 +200,9 @@ class Disk(GandiModule):
         options = {}
         if position is not None:
             options['position'] = int(position)
+
+        if read_only:
+            options['access'] = 'read'
 
         need_detach = disk_info.get('vms_id')
         if need_detach:
