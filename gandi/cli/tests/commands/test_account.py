@@ -4,7 +4,7 @@ from .base import CommandTestCase
 from gandi.cli.commands import account
 
 
-class RootTestCase(CommandTestCase):
+class AccountTestCase(CommandTestCase):
 
     def test_info(self):
 
