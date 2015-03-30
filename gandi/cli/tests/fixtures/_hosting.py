@@ -757,3 +757,69 @@ def vm_update(vm_id, options):
 
 def vm_create_from(vm_spec, disk_spec, src_disk_id):
     return [{'id': 300, 'step': 'WAIT'}]
+
+
+def vlan_list(options):
+    return [{'datacenter_id': 1,
+             'gateway': None,
+             'id': 123,
+             'name': 'vlantest',
+             'state': 'created',
+             'subnet': None,
+             'uuid': 321}]
+
+
+def iface_create(options):
+    return {'id': 200, 'step': 'WAIT', 'iface_id': 156575}
+
+
+def ip_list(options):
+
+    ret = [{'datacenter_id': 1,
+            'date_created': DateTime('20150317T16:20:10'),
+            'date_updated': DateTime('20150319T11:14:13'),
+            'id': 203968,
+            'iface_id': 156573,
+            'ip': '95.142.160.181',
+            'num': 0,
+            'reverse': 'xvm-160-181.dc0.ghst.net',
+            'state': 'created',
+            'version': 4},
+           {'datacenter_id': 3,
+            'date_created': DateTime('20150319T11:10:34'),
+            'date_updated': DateTime('20150319T11:10:36'),
+            'id': 204557,
+            'iface_id': 156572,
+            'ip': '2001:4b98:dc2:43:216:3eff:fece:e25f',
+            'num': 0,
+            'reverse': 'xvm6-dc2-fece-e25f.ghst.net',
+            'state': 'created',
+            'version': 6},
+           {'datacenter_id': 1,
+            'date_created': DateTime('20150319T11:14:16'),
+            'date_updated': DateTime('20150319T11:14:16'),
+            'id': 204558,
+            'iface_id': 156573,
+            'ip': '2001:4b98:dc0:47:216:3eff:feb2:3862',
+            'num': 1,
+            'reverse': 'xvm6-dc0-feb2-3862.ghst.net',
+            'state': 'created',
+            'version': 6}]
+
+    return ret
+
+
+def ssh_list(options):
+    ret = [{'fingerprint': 'b3:11:67:10:2e:1b:a5:66:ed:16:24:98:3e:2e:ed:f5',
+            'id': 134,
+            'name': 'default'},
+           {'fingerprint': '09:11:21:e3:90:3c:7d:d5:06:d9:6f:f9:36:e1:99:a6',
+            'id': 141,
+            'name': 'mysecretkey'}]
+
+    options.pop('items_per_page', None)
+
+    for fkey in options:
+        ret = [vm for vm in ret if vm[fkey] == options[fkey]]
+
+    return ret

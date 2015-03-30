@@ -863,3 +863,112 @@ Creating your Virtual Machine server500.
 Your Virtual Machine server500 has been created.""")
 
         self.assertEqual(result.exit_code, 0)
+
+    def test_create_default_ok(self):
+        args = []
+        result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
+                                    input='plokiploki\nplokiploki\n')
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
+password: \nRepeat for confirmation: \n* root user will be created.
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
+(HVM), hostname: vm, datacenter: LU
+Creating your Virtual Machine vm.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your Virtual Machine vm has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_ip_not_vlan_ko(self):
+        args = ['--hostname', 'server500', '--ip', '127.0.0.1']
+        result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
+                                    input='plokiploki\nplokiploki\n')
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+password: \nRepeat for confirmation: \n\
+--ip can't be used without --vlan.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_vlan_script_ko(self):
+        args = ['--hostname', 'server500', '--vlan', 'vlantest',
+                '--script', '/tmp/test.sh']
+        result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
+                                    input='plokiploki\nplokiploki\n')
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+password: \nRepeat for confirmation: \n\
+--script can't be used with a private ip only vm.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_vlan_ip_ok(self):
+        args = ['--hostname', 'server400', '--vlan', 'vlantest',
+                '--ip', '127.0.0.1']
+        result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
+                                    input='plokiploki\nplokiploki\n')
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+password: \nRepeat for confirmation: \n* Private only ip vm (can't enable \
+emergency web console access).
+* root user will be created.
+Creating your iface.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your iface has been created.
+* Configuration used: 1 cores, 256Mb memory, ip private, image Debian 7 64 \
+bits (HVM), hostname: server400, datacenter: LU
+Creating your Virtual Machine server400.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your Virtual Machine server400 has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_login_ok(self):
+        args = ['--login', 'administrator']
+        result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
+                                    input='plokiploki\nplokiploki\n')
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
+password: \nRepeat for confirmation: \n\
+* root and administrator users will be created.
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
+(HVM), hostname: vm, datacenter: LU
+Creating your Virtual Machine vm.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your Virtual Machine vm has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_background_ok(self):
+        args = ['--hostname', 'server500', '--background']
+        result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
+                                    input='plokiploki\nplokiploki\n')
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+password: \nRepeat for confirmation: \n* root user will be created.
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
+(HVM), hostname: server500, datacenter: LU
+* IAAS backend is now creating your VM and its associated resources in the \
+background.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_sshkey_ok(self):
+        args = ['--sshkey', 'mysecretkey']
+        result = self.runner.invoke(vm.create, args, obj=GandiContextHelper())
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
+* root user will be created.
+* SSH key authorization will be used.
+* No password supplied for vm (required to enable emergency web console \
+access).
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
+(HVM), hostname: vm, datacenter: LU
+Creating your Virtual Machine vm.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your Virtual Machine vm has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
