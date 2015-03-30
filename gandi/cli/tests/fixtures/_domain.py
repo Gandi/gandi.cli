@@ -59,3 +59,11 @@ def info(options):
            'zone_id': 431190141}
 
     return ret
+
+
+def available(domains):
+    return dict([(dom, 'available') for dom in domains])
+
+
+def create(domain, params):
+    return {'id': 400, 'step': 'WAIT'}

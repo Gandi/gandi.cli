@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+import re
 
 from .base import CommandTestCase
+from gandi.cli.core.base import GandiContextHelper
 from gandi.cli.commands import domain
 
 
@@ -31,4 +33,30 @@ services    : ['gandidns', 'gandimail', 'paas']
 zone_id     : 431190141
 tags        :
 """)
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_ok(self):
+        args = ['--domain', 'roflozor.com']
+        result = self.runner.invoke(domain.create, args,
+                                    obj=GandiContextHelper())
+
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+        self.assertEqual(output, """\
+Duration [1]: \n\
+Creating your domain.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your domain roflozor.com has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_background_ok(self):
+        args = ['--domain', 'roflozor.com', '--background']
+        result = self.runner.invoke(domain.create, args,
+                                    obj=GandiContextHelper())
+
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+        self.assertEqual(output, """\
+Duration [1]: \n\
+{'id': 400, 'step': 'WAIT'}""")
+
         self.assertEqual(result.exit_code, 0)
