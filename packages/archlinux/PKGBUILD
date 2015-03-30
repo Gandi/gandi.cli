@@ -8,6 +8,7 @@ url="http://cli.gandi.net"
 license=('GPL3')
 groups=()
 depends=('python3' 'python-yaml' 'python-click' 'python-requests' 'python-ipy')
+optdepends=('docker: gandi docker support')
 makedepends=('python-docutils')
 provides=()
 conflicts=()
