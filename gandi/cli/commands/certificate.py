@@ -8,7 +8,7 @@ import requests
 try:
     basestring
 except NameError:
-    basestring = (str,bytes)
+    basestring = (str, bytes)
 
 type_list = list
 
@@ -57,6 +57,7 @@ def package_desc(gandi, package):
 
 def _plans(gandi, with_name=False):
     packages = gandi.certificate.package_list()
+
     def keyfunc(item):
         return (item['category']['id'],
                 item['max_domains'],
@@ -239,8 +240,8 @@ def export(gandi, resource, output, force, intermediate):
             sha_version = cert['sha_version']
             type_ = package.split('_')[1]
             extra = ('sgc' if 'SGC' in package
-                           and pro
-                           and sha_version == 1 else 'default')
+                     and pro
+                     and sha_version == 1 else 'default')
 
             if extra == 'sgc':
                 crtf = 'pem'
@@ -307,9 +308,9 @@ def create(gandi, csr, private_key, common_name, country, state, city,
         return
 
     if package and (type or max_altname or warranty):
-       gandi.echo('Please do not use --package at the same time you use '
-                  '--type, --max-altname or --warranty.')
-       return
+        gandi.echo('Please do not use --package at the same time you use '
+                   '--type, --max-altname or --warranty.')
+        return
 
     if type and warranty and type != 'pro':
         gandi.echo('The warranty can only be specified for pro certificates.')

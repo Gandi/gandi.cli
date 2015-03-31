@@ -84,8 +84,7 @@ class FdPipe:
 
 def scp(addr, user, local_path, remote_path, local_key=None):
     scp_call = ['scp', local_path,
-                '%s@[%s]:%s' % (user, addr, remote_path)
-               ]
+                '%s@[%s]:%s' % (user, addr, remote_path)]
 
     if local_key:
         scp_call.insert(1, local_key)

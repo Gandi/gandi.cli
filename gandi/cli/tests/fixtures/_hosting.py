@@ -74,7 +74,7 @@ def disk_list(options):
               'date_created': DateTime('20150103T15:26:52'),
               'snapshot_profile_id': None,
               'can_snapshot': True}
-            ]
+             ]
 
     if 'name' in options:
         disks = dict([(disk['name'], disk) for disk in disks])
@@ -127,4 +127,3 @@ def vm_disk_detach(vm_id, disk_id):
     if vm_id == 80458 and disk_id == 4126:
         return {'id': 200,
                 'step': 'WAIT'}
-
