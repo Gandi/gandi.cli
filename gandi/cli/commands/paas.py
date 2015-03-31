@@ -190,7 +190,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     """
     if not password:
         password = click.prompt('password', hide_input=True,
-            confirmation_prompt=True)
+                                confirmation_prompt=True)
 
     if not name:
         name = randomstring('vm')

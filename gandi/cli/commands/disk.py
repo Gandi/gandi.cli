@@ -120,10 +120,11 @@ def detach(gandi, resource, background, force):
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('-r', '--read-only', default=False, is_flag=True,
-        help='Attach disk as read-only')
+              help='Attach disk as read-only')
 @click.option('--position', '-p', type=click.INT,
-        help='Position where disk should be attached: 0 for system disk. '
-             'If there is already a disk attached at the specified position, it will be swapped.')
+              help='Position where disk should be attached: 0 for system disk.'
+                   ' If there is already a disk attached at the specified'
+                   ' position, it will be swapped.')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')
@@ -137,8 +138,8 @@ def attach(gandi, disk, vm, position, read_only, background, force):
     vm can be a vm name, or ID
     """
     if not force:
-        proceed = click.confirm("Are you sure you want to attach disk '%s' to vm '%s'" %
-                                (disk, vm))
+        proceed = click.confirm("Are you sure you want to attach disk '%s'"
+                                " to vm '%s'" % (disk, vm))
         if not proceed:
             return
 
@@ -211,7 +212,8 @@ def delete(gandi, resource, force, background):
     resource = tuple(set(resource))
     if not force:
         disk_info = "'%s'" % ', '.join(resource)
-        proceed = click.confirm('Are you sure you want to delete disk %s?' % disk_info)
+        proceed = click.confirm('Are you sure you want to delete disk %s?'
+                                % disk_info)
 
         if not proceed:
             return

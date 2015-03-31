@@ -86,7 +86,7 @@ class GandiModule(GandiConfig):
             return api.request(method, apikey, *args,
                                **{'dry_run': kwargs.get('dry_run', False),
                                   'return_dry_run':
-                                        kwargs.get('return_dry_run', False)})
+                                  kwargs.get('return_dry_run', False)})
         except APICallFailed as err:
             if kwargs.get('safe'):
                 return []

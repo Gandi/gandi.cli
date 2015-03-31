@@ -184,9 +184,8 @@ def package_list(options):
              'sgc': 0,
              'trustlogo': 0,
              'warranty': 250000,
-             'wildcard': 0
-            }
-           ]
+             'wildcard': 0}
+            ]
 
 
 def list(options):
@@ -254,7 +253,7 @@ def list(options):
              'comodo_id': None,
              'joi_country': None,
              'joi_state': None}
-           ]
+            ]
 
 
 def info(id):

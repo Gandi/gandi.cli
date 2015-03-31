@@ -8,6 +8,7 @@ import time
 import click
 from click.formatting import measure_table
 
+
 class MissingConfiguration(Exception):
 
     """ Raise when configuration if missing. """
@@ -290,7 +291,7 @@ def output_ip(gandi, ip, datacenters, vms, ifaces, output_keys, justify=11):
     if 'dc' in output_keys:
         for dc in datacenters:
             if dc['id'] == ip.get('datacenter_id',
-                                     ip.get('datacenter', {}).get('id')):
+                                  ip.get('datacenter', {}).get('id')):
                 dc_name = dc['iso']
                 break
 
