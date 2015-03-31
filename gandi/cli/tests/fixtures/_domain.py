@@ -27,3 +27,21 @@ def list(options):
 def info(id):
     domain = dict([(domain['fqdn'], domain) for domain in list({})])
     return domain[id]
+
+
+def available(domains):
+
+    ret = {}
+    for domain in domains:
+        if 'unavailable' in domain:
+            ret[domain] = 'unavailable'
+        elif 'pending' in domain:
+            ret[domain] = 'pending'
+        else:
+            ret[domain] = 'available'
+
+    return ret
+
+
+def create(*args):
+    return {'id': 200}

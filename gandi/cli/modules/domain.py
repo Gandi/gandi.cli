@@ -1,6 +1,9 @@
 """ Domain commands module. """
 
+import time
+
 from gandi.cli.core.base import GandiModule
+from gandi.cli.core.utils import DomainNotAvailable
 
 
 class Domain(GandiModule):
@@ -28,6 +31,14 @@ class Domain(GandiModule):
         """Create a domain."""
         if not background and not cls.intty():
             background = True
+
+        result = cls.call('domain.available', [fqdn])
+        while result[fqdn] == 'pending':
+            time.sleep(1)
+            result = cls.call('domain.available', [fqdn])
+
+        if result[fqdn] == 'unavailable':
+            raise DomainNotAvailable('%s is not available' % fqdn)
 
         # retrieve handle of user and save it to configuration
         user_handle = cls.call('contact.info')['handle']
