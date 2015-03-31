@@ -823,3 +823,16 @@ def ssh_list(options):
         ret = [vm for vm in ret if vm[fkey] == options[fkey]]
 
     return ret
+
+
+def vlan_info(options):
+    return {'datacenter': {'country': 'Luxembourg',
+                           'id': 3,
+                           'iso': 'LU',
+                           'name': 'Bissen'},
+            'gateway': None,
+            'id': 123,
+            'name': 'vlantest',
+            'state': 'created',
+            'subnet': '192.168.0.0/24',
+            'uuid': 321}
