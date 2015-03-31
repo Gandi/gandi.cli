@@ -1,13 +1,14 @@
 # Maintainer: Raphaël Doursenaud <rdoursenaud@gpcsolutions.fr>
 pkgname=gandi.cli
 pkgver=0.12
-pkgrel=2
+pkgrel=3
 pkgdesc="Gandi command line interface"
 arch=('any')
 url="http://cli.gandi.net"
 license=('GPL3')
 groups=()
-depends=('python3' 'python-yaml' 'python-click' 'python-requests' 'python-ipy')
+depends=('python3' 'python-yaml' 'python-click' 'python-requests' 'python-ipy' 'openssl' 'openssh' 'git')
+optdepends=('docker: gandi docker support')
 makedepends=('python-docutils')
 provides=()
 conflicts=()
