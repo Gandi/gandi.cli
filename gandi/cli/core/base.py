@@ -308,7 +308,7 @@ class GandiContextHelper(GandiModule):
                 module_dirs[os.path.basename(path)] = os.path.join(path,
                                                                    'modules')
 
-        for module_basename, dir in module_dirs.items():
+        for module_basename, dir in list(module_dirs.items()):
             for filename in sorted(os.listdir(dir)):
                 if filename.endswith('.py') and '__init__' not in filename:
                     submod = filename[:-3]
