@@ -183,7 +183,7 @@ Details:
 
 * ``gandi disk update resource`` modify the options of a virtual disk. Possible options are ``--kernel KERNEL`` to setup or update disk kernel, ``--cmdline TEXT`` to change kernel cmdline, ``--name TEXT`` for the label of the virtual disk, ``--size SIZE[M|G|T]`` for the new size of the disk, ``--snapshotprofile TEXT`` to select a profile of snapshot to apply to the disk for keeping multiple version of data in a timeline. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
-* ``gandi disk attach disk vm`` attach the given disk to the given vm, if the disk is currently attached, it will start by detaching it. Possible option is ``--force`` to skip all questions about detaching and attaching. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi disk attach disk vm`` attach the given disk to the given vm, if the disk is currently attached, it will start by detaching it. Possible options: ``--force`` to skip all questions about detaching and attaching; ``--position INTEGER`` (or ``-p``) to specify the position at which the disk should be attached (0 for system disk); ``--read-only`` (or ``-r``) to attach the disk in read-only mode. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi disk detach disk`` detach the disk from the vm it is currently attached. Possible option is ``--force`` to skip all questions about detaching. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 

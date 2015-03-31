@@ -183,18 +183,26 @@ class Disk(GandiModule):
         return opers
 
     @classmethod
-    def _attach(cls, disk_id, vm_id):
+    def _attach(cls, disk_id, vm_id, options=None):
         """ Attach a disk to a vm. """
-        oper = cls.call('hosting.vm.disk_attach', vm_id, disk_id)
+        options = options or {}
+        oper = cls.call('hosting.vm.disk_attach', vm_id, disk_id, options)
         return oper
 
     @classmethod
-    def attach(cls, disk, vm, background):
+    def attach(cls, disk, vm, background, position=None, read_only=False):
         from gandi.cli.modules.iaas import Iaas as VM
         vm_id = VM.usable_id(vm)
 
         disk_id = cls.usable_id(disk)
         disk_info = cls._info(disk_id)
+
+        options = {}
+        if position is not None:
+            options['position'] = position
+
+        if read_only:
+            options['access'] = 'read'
 
         need_detach = disk_info.get('vms_id')
         if need_detach:
@@ -209,7 +217,7 @@ class Disk(GandiModule):
             cls.echo('Detaching your disk.')
             cls.display_progress(detach_op)
 
-        oper = cls._attach(disk_id, vm_id)
+        oper = cls._attach(disk_id, vm_id, options)
 
         if oper and not background:
             cls.echo('Attaching your disk(s).')
