@@ -62,3 +62,7 @@ gandi.1
 
 # gh-pages
 node_modules/
+
+# ArchLinux sources and binaries
+packages/archlinux/pkg/
+packages/archlinux/src/
