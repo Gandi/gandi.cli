@@ -2,7 +2,7 @@
 
 Also custom exceptions and method to generate a random string.
 """
-
+import sys
 import time
 
 import json
@@ -118,7 +118,10 @@ def output_metric(gandi, metrics, key, justify=10):
         key_name = metric[key].pop()
         values = [point.get('value', 0) for point in metric['points']]
         graph = sparks(values) if max(values) else ''
-        output_line(gandi, key_name, graph.encode('utf-8'), justify)
+        # need to encode in utf-8 to work in python2.X
+        if sys.version_info < (2, 8):
+            graph = graph.encode('utf-8')
+        output_line(gandi, key_name, graph, justify)
 
 
 def output_vhost(gandi, vhost, paas, output_keys, justify=14):

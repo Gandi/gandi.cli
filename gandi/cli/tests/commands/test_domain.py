@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+import re
+
 from .base import CommandTestCase
 from gandi.cli.commands import domain
 from gandi.cli.core.utils import DomainNotAvailable
@@ -40,8 +43,12 @@ tags        : bla
                                               '--bill', 'BILL1-GANDI',
                                               ])
 
-        self.assertTrue('Your domain idontlike.website has been created'
-                        in result.output)
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+        self.assertEqual(output, """\
+Creating your domain.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your domain idontlike.website has been created.""")
+
         self.assertEqual(result.exit_code, 0)
 
     def test_available_with_exception(self):
@@ -54,3 +61,14 @@ tags        : bla
                            '--tech', 'TECH1-GANDI',
                            '--bill', 'BILL1-GANDI',
                            ])
+
+    def test_create_background_ok(self):
+        args = ['--domain', 'roflozor.com', '--background']
+        result = self.invoke_with_exceptions(domain.create, args)
+
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+        self.assertEqual(output, """\
+Duration [1]: \n\
+{'id': 400, 'step': 'WAIT'}""")
+
+        self.assertEqual(result.exit_code, 0)
