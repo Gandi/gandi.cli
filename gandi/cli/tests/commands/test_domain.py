@@ -1,5 +1,6 @@
 from .base import CommandTestCase
 from gandi.cli.commands import domain
+from gandi.cli.core.utils import DomainNotAvailable
 
 
 class DomainTestCase(CommandTestCase):
@@ -29,3 +30,28 @@ zone_id     : 424242
 tags        : bla
 """)
         self.assertEqual(result.exit_code, 0)
+
+    def test_create(self):
+        result = self.runner.invoke(domain.create,
+                                    ['--domain', 'idontlike.website',
+                                     '--duration', 1,
+                                     '--owner', 'OWNER1-GANDI',
+                                     '--admin', 'ADMIN1-GANDI',
+                                     '--tech', 'TECH1-GANDI',
+                                     '--bill', 'BILL1-GANDI',
+                                     ], catch_exceptions=False)
+
+        self.assertTrue('Your domain idontlike.website has been created'
+                        in result.output)
+        self.assertEqual(result.exit_code, 0)
+
+    def test_available_with_exception(self):
+        self.assertRaises(DomainNotAvailable,
+                          self.runner.invoke, domain.create,
+                          ['--domain', 'unavailable1.website',
+                           '--duration', 1,
+                           '--owner', 'OWNER1-GANDI',
+                           '--admin', 'ADMIN1-GANDI',
+                           '--tech', 'TECH1-GANDI',
+                           '--bill', 'BILL1-GANDI',
+                           ], catch_exceptions=False)
