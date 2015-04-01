@@ -5,7 +5,6 @@ Also custom exceptions and method to generate a random string.
 
 import time
 
-import click
 import json
 from click.formatting import measure_table
 

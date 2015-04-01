@@ -9,9 +9,7 @@ class CertTestCase(CommandTestCase):
 
         result = self.invoke_with_exceptions(certificate.packages, [])
 
-        #self.assertEqual(result.exit_code, 0)
-        wanted = (
-"""/!\ "gandi certificate packages" is deprecated.
+        wanted = ("""/!\ "gandi certificate packages" is deprecated.
 Please use "gandi certificate plans".
 Description            | Name               | Max altnames | Type
 -----------------------+--------------------+--------------+-----
@@ -33,7 +31,7 @@ Business Multi Domain  | cert_bus_3_250_0   | 3            | bus
 Business Multi Domain  | cert_bus_5_250_0   | 5            | bus 
 Business Multi Domain  | cert_bus_10_250_0  | 10           | bus 
 Business Multi Domain  | cert_bus_20_250_0  | 20           | bus 
-""")
+""")  # noqa
 
         self.assertEqual(result.output, wanted)
 

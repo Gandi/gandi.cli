@@ -49,8 +49,7 @@ vm        : arch64
     def __test_detach(self):
         result = self.invoke_with_exceptions(disk.detach, ['data'])
         self.assertEqual(result.output.strip(),
-                         "Are you sure to detach data? [y/N]:"
-                         )
+                         "Are you sure to detach data? [y/N]:")
         self.assertEqual(result.exit_code, 0)
 
     def test_detach_forced(self):

@@ -150,6 +150,7 @@ class Certificate(GandiModule):
             raise
 
     __packages__ = None
+
     @classmethod
     def package_get(cls, package_name):
         if not cls.__packages__:
