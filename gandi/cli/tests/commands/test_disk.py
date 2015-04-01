@@ -11,7 +11,7 @@ class DiskTestCase(CommandTestCase):
 
     def test_list(self):
 
-        result = self.runner.invoke(disk.list, [], catch_exceptions=False)
+        result = self.invoke_with_exceptions(disk.list, [])
 
         self.assertEqual(result.output, """name      : sys_1426759833
 state     : created
@@ -29,8 +29,7 @@ size      : 3072
         self.assertEqual(result.exit_code, 0)
 
     def test_info(self):
-        result = self.runner.invoke(disk.info, ['sys_server01'],
-                                    catch_exceptions=False)
+        result = self.invoke_with_exceptions(disk.info, ['sys_server01'])
 
         self.assertEqual(result.output, """name      : sys_server01
 state     : created
@@ -49,16 +48,13 @@ vm        : server01
         self.assertRaises(ClickException, disk_check_size, None, None, 2040)
 
     def test_detach(self):
-        result = self.runner.invoke(disk.detach, ['data'],
-                                    catch_exceptions=False)
+        result = self.invoke_with_exceptions(disk.detach, ['data'])
         self.assertEqual(result.output.strip(),
-                         "Are you sure you want to detach data? [y/N]:"
-                         )
+                         "Are you sure you want to detach data? [y/N]:")
         self.assertEqual(result.exit_code, 0)
 
     def test_detach_forced(self):
-        result = self.runner.invoke(disk.detach, ['-f', 'data'],
-                                    catch_exceptions=False)
+        result = self.invoke_with_exceptions(disk.detach, ['-f', 'data'])
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 The disk is still attached to the vm 152967.

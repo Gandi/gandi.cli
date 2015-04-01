@@ -7,12 +7,9 @@ class CertTestCase(CommandTestCase):
 
     def test_packages(self):
 
-        result = self.runner.invoke(certificate.packages, [],
-                                    catch_exceptions=False)
+        result = self.invoke_with_exceptions(certificate.packages, [])
 
-        #self.assertEqual(result.exit_code, 0)
-        wanted = (
-"""/!\ "gandi certificate packages" is deprecated.
+        wanted = ("""/!\ "gandi certificate packages" is deprecated.
 Please use "gandi certificate plans".
 Description            | Name               | Max altnames | Type
 -----------------------+--------------------+--------------+-----
@@ -34,7 +31,7 @@ Business Multi Domain  | cert_bus_3_250_0   | 3            | bus
 Business Multi Domain  | cert_bus_5_250_0   | 5            | bus 
 Business Multi Domain  | cert_bus_10_250_0  | 10           | bus 
 Business Multi Domain  | cert_bus_20_250_0  | 20           | bus 
-""")
+""")  # noqa
 
         self.assertEqual(result.output, wanted)
 
@@ -42,8 +39,7 @@ Business Multi Domain  | cert_bus_20_250_0  | 20           | bus
 
     def test_list(self):
 
-        result = self.runner.invoke(certificate.list, [],
-                                    catch_exceptions=False)
+        result = self.invoke_with_exceptions(certificate.list, [])
 
         self.assertEqual(result.output, """cn           : mydomain.name
 plan         : Standard Single Domain
@@ -55,8 +51,7 @@ plan         : Business Multi Domain
 
     def test_info(self):
 
-        result = self.runner.invoke(certificate.info, ['inter.net'],
-                                    catch_exceptions=False)
+        result = self.invoke_with_exceptions(certificate.info, ['inter.net'])
 
         self.assertEqual(result.output, """cn           : inter.net
 date_created : 20140904T14:06:26
@@ -83,11 +78,11 @@ DG0VmOWZ0tWjyZuKgtoXgHnH3whEac+pM7M3J+z94/msO9hnpUOQNt4XALEoONrv
 v0L9Vc0443fop+UbFCabF0NWM6rJ31Nlv7s3mQIA
 -----END CERTIFICATE REQUEST-----'''
 
-        result = self.runner.invoke(certificate.create,
-                                    ['--csr', csr,
-                                     '--duration', 5,
-                                     '--max-altname', '5',
-                                     ], catch_exceptions=False)
+        result = self.invoke_with_exceptions(certificate.create,
+                                             ['--csr', csr,
+                                              '--duration', 5,
+                                              '--max-altname', '5',
+                                              ])
 
         wanted = '''The certificate create operation is 1
 You can follow it with:

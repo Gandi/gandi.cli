@@ -40,7 +40,7 @@ Then configure it using:
 
 Or to both change target vm and spawn a process (note the -- separator):
     $ gandi docker --vm myvm -- run -i -t debian bash
-""")
+""")  # noqa
         return
 
     return gandi.docker.handle(vm, args)

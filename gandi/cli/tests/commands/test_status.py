@@ -114,7 +114,7 @@ class StatusTestCase(CommandTestCase):
     def test_status(self):
         self._mock_http_request_working()
 
-        result = self.runner.invoke(root.status, [], catch_exceptions=False)
+        result = self.invoke_with_exceptions(root.status, [])
 
         wanted = ("""\
 IAAS      : All services are up and running
@@ -134,8 +134,7 @@ Email     : All services are up and running
     def test_status_service(self):
         self._mock_http_request_working()
 
-        result = self.runner.invoke(root.status, ['ssl'],
-                                    catch_exceptions=False)
+        result = self.invoke_with_exceptions(root.status, ['ssl'])
 
         wanted = ("""\
 SSL       : All services are up and running
@@ -149,8 +148,7 @@ SSL       : All services are up and running
     def test_status_service_incident(self):
         self._mock_http_request_incident()
 
-        result = self.runner.invoke(root.status, ['paas'],
-                                    catch_exceptions=False)
+        result = self.invoke_with_exceptions(root.status, ['paas'])
 
         url = 'https://status.gandi.net/timeline/events/7'
         wanted = ("""\
