@@ -11,7 +11,7 @@ class DiskTestCase(CommandTestCase):
 
     def test_list(self):
 
-        result = self.runner.invoke(disk.list, [])
+        result = self.runner.invoke(disk.list, [], catch_exceptions=False)
 
         self.assertEqual(result.output, """name      : data
 state     : created
@@ -28,7 +28,8 @@ size      : 3072
         self.assertEqual(result.exit_code, 0)
 
     def test_info(self):
-        result = self.runner.invoke(disk.info, ['arch64'])
+        result = self.runner.invoke(disk.info, ['arch64'],
+                                    catch_exceptions=False)
 
         self.assertEqual(result.output, """name      : arch64
 state     : created
@@ -47,14 +48,16 @@ vm        : arch64
         self.assertRaises(ClickException, disk_check_size, None, None, 2040)
 
     def __test_detach(self):
-        result = self.runner.invoke(disk.detach, ['data'])
+        result = self.runner.invoke(disk.detach, ['data'],
+                                    catch_exceptions=False)
         self.assertEqual(result.output.strip(),
                          "Are you sure to detach data? [y/N]:"
                          )
         self.assertEqual(result.exit_code, 0)
 
     def test_detach_forced(self):
-        result = self.runner.invoke(disk.detach, ['-f', 'data'])
+        result = self.runner.invoke(disk.detach, ['-f', 'data'],
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 The disk is still attached to the vm 80458.

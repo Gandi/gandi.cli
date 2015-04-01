@@ -7,7 +7,8 @@ class CertTestCase(CommandTestCase):
 
     def test_packages(self):
 
-        result = self.runner.invoke(certificate.packages, [])
+        result = self.runner.invoke(certificate.packages, [],
+                                    catch_exceptions=False)
 
         #self.assertEqual(result.exit_code, 0)
         wanted = (
@@ -41,7 +42,8 @@ Business Multi Domain  | cert_bus_20_250_0  | 20           | bus
 
     def test_list(self):
 
-        result = self.runner.invoke(certificate.list, [])
+        result = self.runner.invoke(certificate.list, [],
+                                    catch_exceptions=False)
 
         self.assertEqual(result.output, """cn           : mydomain.name
 plan         : Standard Single Domain
@@ -53,7 +55,8 @@ plan         : Business Multi Domain
 
     def test_info(self):
 
-        result = self.runner.invoke(certificate.info, ['inter.net'])
+        result = self.runner.invoke(certificate.info, ['inter.net'],
+                                    catch_exceptions=False)
 
         self.assertEqual(result.output, """cn           : inter.net
 date_created : 20140904T14:06:26
@@ -84,7 +87,7 @@ v0L9Vc0443fop+UbFCabF0NWM6rJ31Nlv7s3mQIA
                                     ['--csr', csr,
                                      '--duration', 5,
                                      '--max-altname', '5',
-                                     ])
+                                     ], catch_exceptions=False)
 
         wanted = '''The certificate create operation is 1
 You can follow it with:
