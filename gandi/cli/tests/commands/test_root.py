@@ -8,7 +8,7 @@ class RootTestCase(CommandTestCase):
 
     def test_api(self):
 
-        result = self.runner.invoke(root.api, [])
+        result = self.runner.invoke(root.api, [], catch_exceptions=False)
 
         self.assertEqual(result.output, """\
 API version: 3.3.42

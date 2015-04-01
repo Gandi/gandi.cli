@@ -16,7 +16,7 @@ class VmTestCase(CommandTestCase):
 
     def test_list(self):
 
-        result = self.runner.invoke(vm.list, [])
+        result = self.runner.invoke(vm.list, [], catch_exceptions=False)
 
         self.assertEqual(result.output, """hostname  : vm1426759833
 state     : running
@@ -31,7 +31,7 @@ state     : halted
 
     def test_list_id(self):
 
-        result = self.runner.invoke(vm.list, ['--id'])
+        result = self.runner.invoke(vm.list, ['--id'], catch_exceptions=False)
 
         self.assertEqual(result.output, """hostname  : vm1426759833
 state     : running
@@ -49,7 +49,8 @@ id        : 152968
 
     def test_list_filter_state(self):
 
-        result = self.runner.invoke(vm.list, ['--state', 'halted'])
+        result = self.runner.invoke(vm.list, ['--state', 'halted'],
+                                    catch_exceptions=False)
 
         self.assertEqual(result.output, """hostname  : server02
 state     : halted
@@ -59,7 +60,8 @@ state     : halted
 
     def test_list_filter_datacenter(self):
 
-        result = self.runner.invoke(vm.list, ['--datacenter', 'FR'])
+        result = self.runner.invoke(vm.list, ['--datacenter', 'FR'],
+                                    catch_exceptions=False)
 
         self.assertEqual(result.output, """hostname  : server01
 state     : running
@@ -71,12 +73,13 @@ state     : halted
 
     def test_info_ko_resource(self):
 
-        result = self.runner.invoke(vm.info, [])
+        result = self.runner.invoke(vm.info, [], catch_exceptions=False)
         self.assertEqual(result.exit_code, 2)
 
     def test_info_ok_one_resource(self):
 
-        result = self.runner.invoke(vm.info, ['server01'])
+        result = self.runner.invoke(vm.info, ['server01'],
+                                    catch_exceptions=False)
 
         self.assertEqual(result.output, """hostname      : server01
 state         : running
@@ -98,7 +101,8 @@ size          : 3072
 
     def test_info_ok_multiple_resources(self):
 
-        result = self.runner.invoke(vm.info, ['server01', 'vm1426759833'])
+        result = self.runner.invoke(vm.info, ['server01', 'vm1426759833'],
+                                    catch_exceptions=False)
 
         self.assertEqual(result.output, """hostname      : server01
 state         : running
@@ -135,7 +139,8 @@ size          : 3072
 
     def test_info_stat(self):
 
-        result = self.runner.invoke(vm.info, ['server01', '--stat'])
+        result = self.runner.invoke(vm.info, ['server01', '--stat'],
+                                    catch_exceptions=False)
 
         expected = u"""hostname      : server01
 state         : running
@@ -165,7 +170,7 @@ write         :     ▁    ▁  ▂        ▉▁▁
 
     def test_datacenters(self):
 
-        result = self.runner.invoke(vm.datacenters, [])
+        result = self.runner.invoke(vm.datacenters, [], catch_exceptions=False)
 
         self.assertEqual(result.output, """\
 iso       : FR
@@ -184,7 +189,8 @@ country   : Luxembourg
 
     def test_datacenters_id(self):
 
-        result = self.runner.invoke(vm.datacenters, ['--id'])
+        result = self.runner.invoke(vm.datacenters, ['--id'],
+                                    catch_exceptions=False)
 
         self.assertEqual(result.output, """\
 iso       : FR
@@ -206,7 +212,7 @@ id        : 3
 
     def test_kernels(self):
 
-        result = self.runner.invoke(vm.kernels, [])
+        result = self.runner.invoke(vm.kernels, [], catch_exceptions=False)
 
         self.assertEqual(result.output, """\
 datacenter    : Equinix Paris
@@ -277,7 +283,8 @@ version       : 3.10-i386
 
     def test_kernels_match(self):
 
-        result = self.runner.invoke(vm.kernels, ['3.10'])
+        result = self.runner.invoke(vm.kernels, ['3.10'],
+                                    catch_exceptions=False)
 
         self.assertEqual(result.output, """\
 datacenter    : Equinix Paris
@@ -310,7 +317,8 @@ version       : 3.10-i386
 
     def test_kernels_flavor(self):
 
-        result = self.runner.invoke(vm.kernels, ['--flavor', 'linux-hvm'])
+        result = self.runner.invoke(vm.kernels, ['--flavor', 'linux-hvm'],
+                                    catch_exceptions=False)
 
         self.assertEqual(result.output, """\
 datacenter    : Equinix Paris
@@ -340,7 +348,8 @@ version       : raw
 
     def test_kernels_datacenter(self):
 
-        result = self.runner.invoke(vm.kernels, ['--datacenter', 'LU'])
+        result = self.runner.invoke(vm.kernels, ['--datacenter', 'LU'],
+                                    catch_exceptions=False)
 
         self.assertEqual(result.output, """\
 datacenter    : Bissen
@@ -365,7 +374,8 @@ version       : 3.10-i386
 
     def test_kernels_vm(self):
 
-        result = self.runner.invoke(vm.kernels, ['--vm', 'server01'])
+        result = self.runner.invoke(vm.kernels, ['--vm', 'server01'],
+                                    catch_exceptions=False)
 
         self.assertEqual(result.output, """\
 datacenter    : Equinix Paris
@@ -396,7 +406,7 @@ version       : 3.10-i386
 
         args = ['--vm', 'server01', '--datacenter', 'FR',
                 '--flavor', 'linux-hvm', '3.12']
-        result = self.runner.invoke(vm.kernels, args)
+        result = self.runner.invoke(vm.kernels, args, catch_exceptions=False)
 
         self.assertEqual(result.output, """\
 datacenter    : Equinix Paris
@@ -408,7 +418,7 @@ version       : 3.12-x86_64 (hvm)
 
     def test_images(self):
 
-        result = self.runner.invoke(vm.images, [])
+        result = self.runner.invoke(vm.images, [], catch_exceptions=False)
 
         self.assertEqual(result.output, """\
 label         : Fedora 17 32 bits
@@ -551,7 +561,7 @@ datacenter    : FR
     def test_images_all(self):
 
         args = ['Ubuntu 14.04', '--datacenter', 'LU']
-        result = self.runner.invoke(vm.images, args)
+        result = self.runner.invoke(vm.images, args, catch_exceptions=False)
 
         self.assertEqual(result.output, """\
 label         : Ubuntu 14.04 64 bits LTS (HVM)
@@ -563,7 +573,8 @@ datacenter    : LU
         self.assertEqual(result.exit_code, 0)
 
     def test_stop_one(self):
-        result = self.runner.invoke(vm.stop, ['server01'])
+        result = self.runner.invoke(vm.stop, ['server01'],
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Stopping your Virtual Machine(s) 'server01'.
@@ -572,7 +583,8 @@ Stopping your Virtual Machine(s) 'server01'.
         self.assertEqual(result.exit_code, 0)
 
     def test_stop_multiple(self):
-        result = self.runner.invoke(vm.stop, ['server01', 'vm1426759833'])
+        result = self.runner.invoke(vm.stop, ['server01', 'vm1426759833'],
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Stopping your Virtual Machine(s) 'server01, vm1426759833'.
@@ -581,7 +593,8 @@ Stopping your Virtual Machine(s) 'server01, vm1426759833'.
         self.assertEqual(result.exit_code, 0)
 
     def test_stop_background(self):
-        result = self.runner.invoke(vm.stop, ['server01', '--bg'])
+        result = self.runner.invoke(vm.stop, ['server01', '--bg'],
+                                    catch_exceptions=False)
         self.assertEqual(result.output, """\
 id        : 200
 step      : WAIT
@@ -589,7 +602,8 @@ step      : WAIT
         self.assertEqual(result.exit_code, 0)
 
     def test_start_one(self):
-        result = self.runner.invoke(vm.start, ['server01'])
+        result = self.runner.invoke(vm.start, ['server01'],
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Starting your Virtual Machine(s) 'server01'.
@@ -598,7 +612,8 @@ Starting your Virtual Machine(s) 'server01'.
         self.assertEqual(result.exit_code, 0)
 
     def test_start_multiple(self):
-        result = self.runner.invoke(vm.start, ['server01', 'vm1426759833'])
+        result = self.runner.invoke(vm.start, ['server01', 'vm1426759833'],
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Starting your Virtual Machine(s) 'server01, vm1426759833'.
@@ -607,7 +622,8 @@ Starting your Virtual Machine(s) 'server01, vm1426759833'.
         self.assertEqual(result.exit_code, 0)
 
     def test_start_background(self):
-        result = self.runner.invoke(vm.start, ['server01', '--bg'])
+        result = self.runner.invoke(vm.start, ['server01', '--bg'],
+                                    catch_exceptions=False)
         self.assertEqual(result.output, """\
 id        : 200
 step      : WAIT
@@ -615,7 +631,8 @@ step      : WAIT
         self.assertEqual(result.exit_code, 0)
 
     def test_reboot_one(self):
-        result = self.runner.invoke(vm.reboot, ['server01'])
+        result = self.runner.invoke(vm.reboot, ['server01'],
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Rebooting your Virtual Machine(s) 'server01'.
@@ -624,7 +641,8 @@ Rebooting your Virtual Machine(s) 'server01'.
         self.assertEqual(result.exit_code, 0)
 
     def test_reboot_multiple(self):
-        result = self.runner.invoke(vm.reboot, ['server01', 'vm1426759833'])
+        result = self.runner.invoke(vm.reboot, ['server01', 'vm1426759833'],
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Rebooting your Virtual Machine(s) 'server01, vm1426759833'.
@@ -633,7 +651,8 @@ Rebooting your Virtual Machine(s) 'server01, vm1426759833'.
         self.assertEqual(result.exit_code, 0)
 
     def test_reboot_background(self):
-        result = self.runner.invoke(vm.reboot, ['server01', '--bg'])
+        result = self.runner.invoke(vm.reboot, ['server01', '--bg'],
+                                    catch_exceptions=False)
         self.assertEqual(result.output, """\
 id        : 200
 step      : WAIT
@@ -641,14 +660,16 @@ step      : WAIT
         self.assertEqual(result.exit_code, 0)
 
     def test_delete_prompt(self):
-        result = self.runner.invoke(vm.delete, ['server01'])
+        result = self.runner.invoke(vm.delete, ['server01'],
+                                    catch_exceptions=False)
         self.assertEqual(result.output.strip(), """\
 Are you sure to delete Virtual Machine 'server01'? [y/N]:""")
 
         self.assertEqual(result.exit_code, 0)
 
     def test_delete_one(self):
-        result = self.runner.invoke(vm.delete, ['server01', '-f'])
+        result = self.runner.invoke(vm.delete, ['server01', '-f'],
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Stopping your Virtual Machine(s) 'server01'.
@@ -660,7 +681,7 @@ Deleting your Virtual Machine(s) 'server01'.
 
     def test_delete_multiple(self):
         args = ['server01', 'vm1426759833', '-f']
-        result = self.runner.invoke(vm.delete, args)
+        result = self.runner.invoke(vm.delete, args, catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Stopping your Virtual Machine(s) 'server01'.
@@ -673,7 +694,8 @@ Deleting your Virtual Machine(s) 'server01, vm1426759833'.
         self.assertEqual(result.exit_code, 0)
 
     def test_delete_unknown(self):
-        result = self.runner.invoke(vm.delete, ['server100'])
+        result = self.runner.invoke(vm.delete, ['server100'],
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Sorry virtual machine server100 does not exist
@@ -683,7 +705,8 @@ Please use one of the following: ['vm1426759833', 'server01', \
         self.assertEqual(result.exit_code, 0)
 
     def test_delete_background_ko(self):
-        result = self.runner.invoke(vm.delete, ['server01', '-f', '--bg'])
+        result = self.runner.invoke(vm.delete, ['server01', '-f', '--bg'],
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Virtual machine not stopped, background option disabled
@@ -695,7 +718,8 @@ Deleting your Virtual Machine(s) 'server01'.
         self.assertEqual(result.exit_code, 0)
 
     def test_delete_background_ok(self):
-        result = self.runner.invoke(vm.delete, ['server02', '-f', '--bg'])
+        result = self.runner.invoke(vm.delete, ['server02', '-f', '--bg'],
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 id        : 200
@@ -705,7 +729,7 @@ step      : WAIT""")
 
     def test_update_ok(self):
         args = ['server01', '--memory', '1024', '--cores', '4']
-        result = self.runner.invoke(vm.update, args)
+        result = self.runner.invoke(vm.update, args, catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Updating your Virtual Machine server01.
@@ -715,7 +739,7 @@ Updating your Virtual Machine server01.
 
     def test_update_memory(self):
         args = ['server01', '--memory', '10240', '--cores', '4']
-        result = self.runner.invoke(vm.update, args)
+        result = self.runner.invoke(vm.update, args, catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 memory update must be done offline.
@@ -725,7 +749,7 @@ reboot machine server01? [y/N]:""")
 
     def test_update_memory_reboot(self):
         args = ['server01', '--memory', '10240', '--cores', '4', '--reboot']
-        result = self.runner.invoke(vm.update, args)
+        result = self.runner.invoke(vm.update, args, catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Updating your Virtual Machine server01.
@@ -735,7 +759,7 @@ Updating your Virtual Machine server01.
 
     def test_update_background(self):
         args = ['server01', '--memory', '1024', '--cores', '4', '--bg']
-        result = self.runner.invoke(vm.update, args)
+        result = self.runner.invoke(vm.update, args, catch_exceptions=False)
         self.assertEqual(result.output, """\
 {'id': 200, 'step': 'WAIT'}
 """)
@@ -743,7 +767,7 @@ Updating your Virtual Machine server01.
 
     def test_update_password(self):
         args = ['server01', '--password']
-        result = self.runner.invoke(vm.update, args,
+        result = self.runner.invoke(vm.update, args, catch_exceptions=False,
                                     input='plokiploki\nplokiploki\n')
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
@@ -754,7 +778,7 @@ password: \nRepeat for confirmation: \nUpdating your Virtual Machine server01.
 
     def test_update_console(self):
         args = ['server01', '--console']
-        result = self.runner.invoke(vm.update, args)
+        result = self.runner.invoke(vm.update, args, catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Updating your Virtual Machine server01.
@@ -764,7 +788,7 @@ Updating your Virtual Machine server01.
 
     def test_console(self):
         args = ['server01']
-        result = self.runner.invoke(vm.console, args)
+        result = self.runner.invoke(vm.console, args, catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 /!\\ Please be aware that if you didn\'t provide a password during creation, \
@@ -779,7 +803,7 @@ ssh 95.142.160.181@console.gandi.net""")
 
     def test_ssh(self):
         args = ['admin@server01']
-        result = self.runner.invoke(vm.ssh, args)
+        result = self.runner.invoke(vm.ssh, args, catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Requesting access using: ssh admin@95.142.160.181 ...
@@ -793,7 +817,7 @@ ssh admin@95.142.160.181""")
                         create=True) as mock_open:
             mock_open.return_value = mock.MagicMock(spec=file)
 
-            result = self.runner.invoke(vm.ssh, args)
+            result = self.runner.invoke(vm.ssh, args, catch_exceptions=False)
             self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                     result.output.strip()), """\
 Wiping old key and learning the new one
@@ -810,7 +834,7 @@ ssh admin@95.142.160.181""")
             mock_socket.return_value = mock.MagicMock(name='socket',
                                                       spec=socket.socket)
 
-            result = self.runner.invoke(vm.ssh, args)
+            result = self.runner.invoke(vm.ssh, args, catch_exceptions=False)
             self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                     result.output.strip()), """\
 Waiting for the vm to come online
@@ -821,7 +845,7 @@ ssh root@95.142.160.181""")
 
     def test_ssh_login(self):
         args = ['server01', '--login', 'joe']
-        result = self.runner.invoke(vm.ssh, args)
+        result = self.runner.invoke(vm.ssh, args, catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Requesting access using: ssh joe@95.142.160.181 ...
@@ -831,7 +855,7 @@ ssh joe@95.142.160.181""")
 
     def test_ssh_identity(self):
         args = ['admin@server01', '-i', 'key.pub']
-        result = self.runner.invoke(vm.ssh, args)
+        result = self.runner.invoke(vm.ssh, args, catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Requesting access using: ssh -i key.pub admin@95.142.160.181 ...
@@ -841,7 +865,7 @@ ssh -i key.pub admin@95.142.160.181""")
 
     def test_ssh_args(self):
         args = ['server01', 'sudo reboot']
-        result = self.runner.invoke(vm.ssh, args)
+        result = self.runner.invoke(vm.ssh, args, catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Requesting access using: ssh root@95.142.160.181 sudo reboot ...
@@ -852,7 +876,8 @@ ssh root@95.142.160.181 sudo reboot""")
     def test_create_default_hostname_ok(self):
         args = ['--hostname', 'server500']
         result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
-                                    input='plokiploki\nplokiploki\n')
+                                    input='plokiploki\nplokiploki\n',
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* root user will be created.
@@ -867,7 +892,8 @@ Your Virtual Machine server500 has been created.""")
     def test_create_default_ok(self):
         args = []
         result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
-                                    input='plokiploki\nplokiploki\n')
+                                    input='plokiploki\nplokiploki\n',
+                                    catch_exceptions=False)
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
 
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
@@ -883,7 +909,8 @@ Your Virtual Machine vm has been created.""")
     def test_create_ip_not_vlan_ko(self):
         args = ['--hostname', 'server500', '--ip', '127.0.0.1']
         result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
-                                    input='plokiploki\nplokiploki\n')
+                                    input='plokiploki\nplokiploki\n',
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n\
@@ -895,7 +922,8 @@ password: \nRepeat for confirmation: \n\
         args = ['--hostname', 'server500', '--vlan', 'vlantest',
                 '--script', '/tmp/test.sh']
         result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
-                                    input='plokiploki\nplokiploki\n')
+                                    input='plokiploki\nplokiploki\n',
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n\
@@ -907,7 +935,8 @@ password: \nRepeat for confirmation: \n\
         args = ['--hostname', 'server400', '--vlan', 'vlantest',
                 '--ip', '127.0.0.1']
         result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
-                                    input='plokiploki\nplokiploki\n')
+                                    input='plokiploki\nplokiploki\n',
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* Private only ip vm (can't enable \
@@ -927,7 +956,8 @@ Your Virtual Machine server400 has been created.""")
     def test_create_login_ok(self):
         args = ['--login', 'administrator']
         result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
-                                    input='plokiploki\nplokiploki\n')
+                                    input='plokiploki\nplokiploki\n',
+                                    catch_exceptions=False)
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
 
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
@@ -944,7 +974,8 @@ Your Virtual Machine vm has been created.""")
     def test_create_background_ok(self):
         args = ['--hostname', 'server500', '--background']
         result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
-                                    input='plokiploki\nplokiploki\n')
+                                    input='plokiploki\nplokiploki\n',
+                                    catch_exceptions=False)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* root user will be created.
@@ -957,7 +988,8 @@ background.""")
 
     def test_create_sshkey_ok(self):
         args = ['--sshkey', 'mysecretkey']
-        result = self.runner.invoke(vm.create, args, obj=GandiContextHelper())
+        result = self.runner.invoke(vm.create, args, obj=GandiContextHelper(),
+                                    catch_exceptions=False)
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
 
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
