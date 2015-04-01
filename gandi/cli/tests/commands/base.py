@@ -33,5 +33,7 @@ class CommandTestCase(unittest.TestCase):
         for dummy in reversed(self.mocks):
             dummy.stop()
 
-    def invoke_with_exceptions(self, cli, args, catch_exceptions=False):
-        return self.runner.invoke(cli, args, catch_exceptions=catch_exceptions)
+    def invoke_with_exceptions(self, cli, args, catch_exceptions=False,
+                               **kwargs):
+        return self.runner.invoke(cli, args, catch_exceptions=catch_exceptions,
+                                  **kwargs)

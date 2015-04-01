@@ -8,7 +8,7 @@ class VlanTestCase(CommandTestCase):
 
     def test_list(self):
 
-        result = self.runner.invoke(vlan.list, [], catch_exceptions=False)
+        result = self.invoke_with_exceptions(vlan.list, [])
 
         self.assertEqual(result.output, """\
 name      : vlantest
@@ -19,8 +19,7 @@ datacenter: FR
 
     def test_info(self):
 
-        result = self.runner.invoke(vlan.info, ['vlantest'],
-                                    catch_exceptions=False)
+        result = self.invoke_with_exceptions(vlan.info, ['vlantest'])
 
         self.assertEqual(result.output, """\
 name       : vlantest

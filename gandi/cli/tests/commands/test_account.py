@@ -8,7 +8,7 @@ class AccountTestCase(CommandTestCase):
 
     def test_info(self):
 
-        result = self.runner.invoke(account.info, [], catch_exceptions=False)
+        result = self.invoke_with_exceptions(account.info, [])
 
         self.assertEqual(result.output, """\
 handle           : PXP561-GANDI

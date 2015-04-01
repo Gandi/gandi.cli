@@ -64,8 +64,7 @@ Your domain idontlike.website has been created.""")
 
     def test_create_background_ok(self):
         args = ['--domain', 'roflozor.com', '--background']
-        result = self.runner.invoke(domain.create, args,
-                                    catch_exceptions=False)
+        result = self.invoke_with_exceptions(domain.create, args)
 
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
         self.assertEqual(output, """\
