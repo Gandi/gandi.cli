@@ -7,7 +7,7 @@ class DomainTestCase(CommandTestCase):
 
     def test_list(self):
 
-        result = self.runner.invoke(domain.list, [], catch_exceptions=False)
+        result = self.invoke_with_exceptions(domain.list, [])
 
         self.assertEqual(result.output, """iheartcli.com
 cli.sexy
@@ -15,8 +15,7 @@ cli.sexy
         self.assertEqual(result.exit_code, 0)
 
     def test_info(self):
-        result = self.runner.invoke(domain.info, ['iheartcli.com'],
-                                    catch_exceptions=False)
+        result = self.invoke_with_exceptions(domain.info, ['iheartcli.com'])
 
         self.assertEqual(result.output, """owner       : AA1-GANDI
 admin       : AA2-GANDI
@@ -32,14 +31,14 @@ tags        : bla
         self.assertEqual(result.exit_code, 0)
 
     def test_create(self):
-        result = self.runner.invoke(domain.create,
-                                    ['--domain', 'idontlike.website',
-                                     '--duration', 1,
-                                     '--owner', 'OWNER1-GANDI',
-                                     '--admin', 'ADMIN1-GANDI',
-                                     '--tech', 'TECH1-GANDI',
-                                     '--bill', 'BILL1-GANDI',
-                                     ], catch_exceptions=False)
+        result = self.invoke_with_exceptions(domain.create,
+                                             ['--domain', 'idontlike.website',
+                                              '--duration', 1,
+                                              '--owner', 'OWNER1-GANDI',
+                                              '--admin', 'ADMIN1-GANDI',
+                                              '--tech', 'TECH1-GANDI',
+                                              '--bill', 'BILL1-GANDI',
+                                              ])
 
         self.assertTrue('Your domain idontlike.website has been created'
                         in result.output)
@@ -47,11 +46,11 @@ tags        : bla
 
     def test_available_with_exception(self):
         self.assertRaises(DomainNotAvailable,
-                          self.runner.invoke, domain.create,
+                          self.invoke_with_exceptions, domain.create,
                           ['--domain', 'unavailable1.website',
                            '--duration', 1,
                            '--owner', 'OWNER1-GANDI',
                            '--admin', 'ADMIN1-GANDI',
                            '--tech', 'TECH1-GANDI',
                            '--bill', 'BILL1-GANDI',
-                           ], catch_exceptions=False)
+                           ])
