@@ -1,6 +1,8 @@
 try:
+    # python3
     from xmlrpc.client import DateTime
 except ImportError:
+    # python2
     from xmlrpclib import DateTime
 
 
