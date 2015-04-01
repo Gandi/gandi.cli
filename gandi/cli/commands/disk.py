@@ -67,7 +67,7 @@ def info(gandi, resource):
     output_keys = ['name', 'state', 'size', 'type', 'id', 'dc', 'vm',
                    'profile', 'kernel']
 
-    resource = tuple(set(resource))
+    resource = sorted(tuple(set(resource)))
     vms = dict([(vm['id'], vm) for vm in gandi.iaas.list()])
     datacenters = gandi.datacenter.list()
 
@@ -95,7 +95,7 @@ def detach(gandi, resource, background, force):
 
     Resource can be a disk name, or ID
     """
-    resource = tuple(set(resource))
+    resource = sorted(tuple(set(resource)))
     if not force:
         proceed = click.confirm('Are you sure you want to detach %s?' %
                                 ', '.join(resource))
@@ -202,7 +202,7 @@ def delete(gandi, resource, force, background):
     """ Delete a disk. """
     output_keys = ['name', 'disk_id', 'state', 'date_creation']
 
-    resource = tuple(set(resource))
+    resource = sorted(tuple(set(resource)))
     if not force:
         disk_info = "'%s'" % ', '.join(resource)
         proceed = click.confirm('Are you sure you want to delete disk %s?'
