@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import re
 import socket
 
@@ -796,7 +798,7 @@ ssh admin@95.142.160.181""")
         args = ['admin@server01', '--wipe-key']
         with mock.patch('gandi.cli.modules.iaas.open',
                         create=True) as mock_open:
-            mock_open.return_value = mock.MagicMock(spec=file)
+            mock_open.return_value = mock.MagicMock()
 
             result = self.invoke_with_exceptions(vm.ssh, args)
             self.assertEqual(re.sub(r'\[#+\]', '[###]',
