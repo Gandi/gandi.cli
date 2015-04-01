@@ -2,57 +2,71 @@
 import re
 
 from .base import CommandTestCase
-from gandi.cli.core.base import GandiContextHelper
 from gandi.cli.commands import domain
+from gandi.cli.core.utils import DomainNotAvailable
 
 
 class DomainTestCase(CommandTestCase):
 
     def test_list(self):
 
-        result = self.runner.invoke(domain.list, [])
+        result = self.runner.invoke(domain.list, [], catch_exceptions=False)
 
-        self.assertEqual(result.output, """\
-smurfies.com
-roboperk.io
+        self.assertEqual(result.output, """iheartcli.com
+cli.sexy
 """)
         self.assertEqual(result.exit_code, 0)
 
     def test_info(self):
-        args = ['roboperk.io']
-        result = self.runner.invoke(domain.info, args)
+        result = self.runner.invoke(domain.info, ['iheartcli.com'],
+                                    catch_exceptions=False)
 
-        self.assertEqual(result.output, """\
-owner       : PXP561-GANDI
-admin       : PXP561-GANDI
-bill        : PXP561-GANDI
-tech        : PXP561-GANDI
-fqdn        : roboperk.io
+        self.assertEqual(result.output, """owner       : AA1-GANDI
+admin       : AA2-GANDI
+bill        : AA3-GANDI
+tech        : AA5-GANDI
+reseller    : AA4-GANDI
+fqdn        : iheartcli.com
 nameservers : ['a.dns.gandi.net', 'b.dns.gandi.net', 'c.dns.gandi.net']
-services    : ['gandidns', 'gandimail', 'paas']
-zone_id     : 431190141
-tags        :
+services    : ['gandidns']
+zone_id     : 424242
+tags        : bla
 """)
         self.assertEqual(result.exit_code, 0)
 
-    def test_create_ok(self):
-        args = ['--domain', 'roflozor.com']
-        result = self.runner.invoke(domain.create, args,
-                                    obj=GandiContextHelper())
+    def test_create(self):
+        result = self.runner.invoke(domain.create,
+                                    ['--domain', 'idontlike.website',
+                                     '--duration', 1,
+                                     '--owner', 'OWNER1-GANDI',
+                                     '--admin', 'ADMIN1-GANDI',
+                                     '--tech', 'TECH1-GANDI',
+                                     '--bill', 'BILL1-GANDI',
+                                     ], catch_exceptions=False)
 
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
         self.assertEqual(output, """\
-Duration [1]: \n\
 Creating your domain.
 \rProgress: [###] 100.00%  00:00:00  \n\
-Your domain roflozor.com has been created.""")
+Your domain idontlike.website has been created.""")
 
         self.assertEqual(result.exit_code, 0)
+
+    def test_available_with_exception(self):
+        self.assertRaises(DomainNotAvailable,
+                          self.runner.invoke, domain.create,
+                          ['--domain', 'unavailable1.website',
+                           '--duration', 1,
+                           '--owner', 'OWNER1-GANDI',
+                           '--admin', 'ADMIN1-GANDI',
+                           '--tech', 'TECH1-GANDI',
+                           '--bill', 'BILL1-GANDI',
+                           ], catch_exceptions=False)
 
     def test_create_background_ok(self):
         args = ['--domain', 'roflozor.com', '--background']
         result = self.runner.invoke(domain.create, args,
-                                    obj=GandiContextHelper())
+                                    catch_exceptions=False)
 
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
         self.assertEqual(output, """\

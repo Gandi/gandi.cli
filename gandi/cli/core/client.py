@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """ XML-RPC connection helper. """
 
+from __future__ import print_function
+
 import sys
 import json
 import socket
@@ -13,7 +15,7 @@ except ImportError:
 try:
     import requests
 except ImportError:
-    print >> sys.stderr, 'python requests is required, please reinstall.'
+    print('python requests is required, please reinstall.', file=sys.stderr)
     sys.exit(1)
 
 from gandi.cli import __version__
@@ -96,7 +98,7 @@ class JsonClient(object):
             response = requests.get(url, data=json.dumps(data),
                                     headers=headers)
             response.raise_for_status()
-            return json.loads(response.content)
+            return json.loads(response.content.decode())
         except (socket.error, requests.exceptions.ConnectionError):
             msg = 'Remote API service is unreachable'
             raise APICallFailed(msg)

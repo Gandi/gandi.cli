@@ -4,7 +4,7 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (
-    output_generic, output_list, output_json, output_sub_generic
+    output_generic, output_json, output_sub_generic
 )
 from gandi.cli.core.params import (
     pass_gandi, BACKEND, DATACENTER, WEBACC_NAME, WEBACC_VHOST_NAME
@@ -74,7 +74,7 @@ def info(gandi, resource, format):
             'state': result['state'],
             'ssl':  'Disable' if result['ssl_enable'] is False else 'Enabled'
         }
-        output_keys = {'name', 'state', 'datacenter', 'ssl', 'algorithm'}
+        output_keys = ['name', 'state', 'datacenter', 'ssl', 'algorithm']
         output_generic(gandi, output_base, output_keys, justify=14)
 
         gandi.echo('Vhosts :')

@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 
 class MockObject(object):
 
@@ -9,9 +11,9 @@ class MockObject(object):
     def execute(cls, command, shell=True):
         """ Execute a shell command. """
         if not shell:
-            print ' '.join(command)
+            print(' '.join(command))
         else:
-            print command
+            print(command)
         return True
 
     @classmethod

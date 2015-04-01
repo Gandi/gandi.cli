@@ -3,9 +3,7 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import (
-    output_generic, check_domain_available, output_contact_info,
-)
+from gandi.cli.core.utils import output_generic, output_contact_info
 from gandi.cli.core.params import pass_gandi
 
 
@@ -40,7 +38,6 @@ def info(gandi, resource):
 
 @cli.command()
 @click.option('--domain', default=None, prompt=True,
-              callback=check_domain_available,
               help='Name of the domain.')
 @click.option('--duration', default=1, prompt=True,
               type=click.IntRange(min=1, max=10),

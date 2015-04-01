@@ -1,4 +1,7 @@
 import httpretty
+# disable SSL requests warning for tests
+import requests.packages.urllib3
+requests.packages.urllib3.disable_warnings()
 
 from gandi.cli.commands import root
 from .base import CommandTestCase

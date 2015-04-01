@@ -1,6 +1,9 @@
 """ Status commands module. """
 
-import urllib
+try:
+    import urllib.parse as uparse
+except ImportError:
+    import urllib as uparse
 
 from gandi.cli.core.base import GandiModule
 
@@ -38,7 +41,7 @@ class Status(GandiModule):
         if current:
             current_params = [('current', 'true')]
 
-        filter_url = urllib.urlencode(filters.items() + current_params)
+        filter_url = uparse.urlencode(list(filters.items()) + current_params)
         events = cls.json_call('%s/events?%s' % (cls.api_url, filter_url))
         return events
 

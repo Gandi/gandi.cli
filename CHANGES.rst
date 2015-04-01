@@ -1,6 +1,51 @@
 Changelog
 =========
 
+0.13
+----
+
+* New 'webacc' namespace for managing web accelerators for virtual machines.
+* New command 'gandi status' to display Gandi services statuses.
+* New command 'gandi ip update' to update reverse (PTR record)
+* Update 'gandi vm create' command to add new parameter --ssh to open a SSH
+  session to the machine after creation is complete. This means that the
+  previous behavior is changed and vm creation will not automatically open a
+  session anymore.
+* Update several commands with statistics information:
+    - add disk quota usage in 'gandi paas info' command
+    - add disk network and vm network stats in 'gandi vm info' command
+* Update 'gandi account info' command to display credit usage per hour
+* Update 'gandi certificate update' command to displays how to follow and
+  retrieve the certificate after completing the process.
+* Update 'gandi ip info' command to display reverse information
+* Update 'gandi ip list' command to add vlan filtering
+* Update 'gandi vm list' command to add datacenter filtering
+* Update 'gandi vm create' command to allow usage of a size suffix for
+  --size parameter (as in disk commands)
+* Update 'gandi vm ssh' command to add new parameter --wait to wait for
+* Update 'certificate' namespace:
+    - 'gandi certificate follow' command to know in which step of the process
+       is the current operation
+    - 'gandi certificate packages' display has been enhanced
+    - 'gandi certificate create' will try to guess the number of altnames
+       or wildcard
+    - 'gandi certificate export' will retrieve the correct intermediate
+       certificate.
+* Update 'gandi disk attach' command to enable mounting in read-only and also
+  specify position where disk should be attached.
+* Update 'gandi record list' command with new parameter --format
+* Update 'gandi record update' command to update only one record in the zone
+  file
+* Update 'gandi vm list' command to add datacenter filtering
+* Refactor code for 'gandi ip attach' and 'gandi ip delete' commands
+  virtual machine sshd to come up (timeout 2min).
+* Refactor 'gandi vm create' command to pass the script directly to the API
+  and not use scp manually after creation.
+* Fixes wording and various typos in documentation and help pages.
+* Add more unittests.
+* Add tox and httpretty to tests packages requirements for unittests
+
+
 0.12
 ----
 
