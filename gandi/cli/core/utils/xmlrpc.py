@@ -1,6 +1,8 @@
 """
 Security enhancements for xmlrpc.
 """
+from __future__ import print_function
+
 import sys
 
 try:
@@ -11,7 +13,7 @@ except ImportError:
 try:
     import requests
 except ImportError:
-    print >> sys.stderr, 'python requests is required, please reinstall.'
+    print('python requests is required, please reinstall.', file=sys.stderr)
     sys.exit(1)
 
 

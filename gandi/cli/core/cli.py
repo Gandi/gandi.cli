@@ -155,7 +155,7 @@ class GandiCLI(click.Group):
                 command_dirs[os.path.basename(path)] = os.path.join(path,
                                                                     'commands')
 
-        for module_basename, dir in command_dirs.items():
+        for module_basename, dir in list(command_dirs.items()):
             for filename in sorted(os.listdir(dir)):
                 if filename.endswith('.py') and '__init__' not in filename:
                     submod = filename[:-3]
