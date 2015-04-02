@@ -154,6 +154,15 @@ def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=11):
             disk_used = '%.1f%%' % (df['used'] * 100 / total)
             output_line(gandi, 'quota used', disk_used, justify)
 
+    if 'cache' in paas:
+        cache = paas['cache']
+        total = cache['hit'] + cache['miss'] + cache['not'] + cache['pass']
+        if total:
+            output_line(gandi, 'cache', None, justify)
+            for key, value in cache.items():
+                str_value = '%.1f%%' % (value * 100 / total)
+                output_line(gandi, '      %s' % key, str_value, justify)
+
 
 def output_image(gandi, image, datacenters, output_keys, justify=14):
     """ Helper to output a disk image."""

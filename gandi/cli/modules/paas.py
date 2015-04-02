@@ -57,6 +57,23 @@ class Paas(GandiModule, SshkeyHelper):
         return df
 
     @classmethod
+    def cache(cls, id):
+        """return the numbre of query cache for the last 24H"""
+        sampler = {'unit': 'days', 'value': 1, 'function': 'sum'}
+        query = 'webacc.requests.cache.all'
+        metrics = Metric.query(id, 60*60*24, query, 'paas', sampler)
+
+        cache = {'hit': 0, 'miss': 0, 'not': 0, 'pass': 0}
+        nb_query = 0
+        for metric in metrics:
+            what = metric['cache'].pop()
+            for point in metric['points']:
+                value = point.get('value', 0)
+                cache[what] += value
+
+        return cache
+
+    @classmethod
     def delete(cls, resources, background=False):
         """Delete a PaaS instance."""
         if not isinstance(resources, (list, tuple)):
