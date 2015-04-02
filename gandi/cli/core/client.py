@@ -54,6 +54,7 @@ class XMLRPCClient(object):
     def __init__(self, host, debug=False):
         """ Initialize xml-rpc endpoint connector. """
         self.debug = debug
+        self.host = host
         self.endpoint = xmlrpclib.ServerProxy(
             host, allow_none=True, use_datetime=True,
             transport=GandiTransport(use_datetime=True, host=host))

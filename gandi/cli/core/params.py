@@ -30,8 +30,9 @@ class GandiChoice(click.Choice):
             gandi = self.gandi or GandiContextHelper()
             self._choices = self._get_choices(gandi)
             if not self._choices:
-                gandi.echo("No configuration found, please use 'gandi setup' "
-                           "command")
+                api = self.gandi.get_api_connector()
+                gandi.echo('Please check that you are connecting to the good '
+                           "api '%s' and that it's running." % (api.host))
                 sys.exit(1)
 
         return self._choices
