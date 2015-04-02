@@ -210,14 +210,13 @@ id        : 3
 
         result = self.invoke_with_exceptions(vm.kernels, [])
 
-        self.assertEqual(result.output, """\
-datacenter    : Equinix Paris
-----------
+        linux_hvm_out = """\
 flavor        : linux-hvm
 version       : 3.12-x86_64 (hvm)
 version       : grub
 version       : raw
-----------
+"""
+        linux_out_dc1 = """\
 flavor        : linux
 version       : 2.6.18 (deprecated)
 version       : 2.6.27-compat-sysfs (deprecated)
@@ -232,15 +231,8 @@ version       : 3.2-x86_64
 version       : 3.2-x86_64-grsec
 version       : 3.10-x86_64
 version       : 3.10-i386
-
-
-datacenter    : Level3 Baltimore
-----------
-flavor        : linux-hvm
-version       : 3.12-x86_64 (hvm)
-version       : grub
-version       : raw
-----------
+"""
+        linux_out_dc2 = """\
 flavor        : linux
 version       : 2.6.18 (deprecated)
 version       : 2.6.27-compat-sysfs (deprecated)
@@ -255,15 +247,8 @@ version       : 3.2-x86_64
 version       : 3.2-x86_64-grsec
 version       : 3.10-x86_64
 version       : 3.10-i386
-
-
-datacenter    : Bissen
-----------
-flavor        : linux-hvm
-version       : 3.12-x86_64 (hvm)
-version       : grub
-version       : raw
-----------
+"""
+        linux_out_dc3 = """\
 flavor        : linux
 version       : 2.6.32
 version       : 2.6.27 (deprecated)
@@ -274,40 +259,30 @@ version       : 3.2-x86_64
 version       : 3.2-x86_64-grsec
 version       : 3.10-x86_64
 version       : 3.10-i386
-""")
+"""
+        self.assertTrue(linux_hvm_out in result.output)
+        self.assertTrue(linux_out_dc1 in result.output)
+        self.assertTrue(linux_out_dc2 in result.output)
+        self.assertTrue(linux_out_dc3 in result.output)
+        self.assertTrue('datacenter    : Bissen' in result.output)
+        self.assertTrue('datacenter    : Level3 Baltimore' in result.output)
+        self.assertTrue('datacenter    : Equinix Paris' in result.output)
         self.assertEqual(result.exit_code, 0)
 
     def test_kernels_match(self):
 
         result = self.invoke_with_exceptions(vm.kernels, ['3.10'])
 
-        self.assertEqual(result.output, """\
-datacenter    : Equinix Paris
-----------
-flavor        : linux-hvm
+        linux_out = """\
 ----------
 flavor        : linux
 version       : 3.10-x86_64
 version       : 3.10-i386
-
-
-datacenter    : Level3 Baltimore
-----------
-flavor        : linux-hvm
-----------
-flavor        : linux
-version       : 3.10-x86_64
-version       : 3.10-i386
-
-
-datacenter    : Bissen
-----------
-flavor        : linux-hvm
-----------
-flavor        : linux
-version       : 3.10-x86_64
-version       : 3.10-i386
-""")
+"""
+        self.assertTrue(linux_out in result.output)
+        self.assertTrue('datacenter    : Bissen' in result.output)
+        self.assertTrue('datacenter    : Level3 Baltimore' in result.output)
+        self.assertTrue('datacenter    : Equinix Paris' in result.output)
         self.assertEqual(result.exit_code, 0)
 
     def test_kernels_flavor(self):
@@ -344,14 +319,7 @@ version       : raw
         args = ['--datacenter', 'LU']
         result = self.invoke_with_exceptions(vm.kernels, args)
 
-        self.assertEqual(result.output, """\
-datacenter    : Bissen
-----------
-flavor        : linux-hvm
-version       : 3.12-x86_64 (hvm)
-version       : grub
-version       : raw
-----------
+        linux_out = """\
 flavor        : linux
 version       : 2.6.32
 version       : 2.6.27 (deprecated)
@@ -362,21 +330,23 @@ version       : 3.2-x86_64
 version       : 3.2-x86_64-grsec
 version       : 3.10-x86_64
 version       : 3.10-i386
-""")
+"""
+        linux_hvm_out = """\
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
+"""
+        self.assertTrue(linux_out in result.output)
+        self.assertTrue(linux_hvm_out in result.output)
+        self.assertTrue('datacenter    : Bissen' in result.output)
         self.assertEqual(result.exit_code, 0)
 
     def test_kernels_vm(self):
 
         result = self.invoke_with_exceptions(vm.kernels, ['--vm', 'server01'])
 
-        self.assertEqual(result.output, """\
-datacenter    : Equinix Paris
-----------
-flavor        : linux-hvm
-version       : 3.12-x86_64 (hvm)
-version       : grub
-version       : raw
-----------
+        linux_out = """\
 flavor        : linux
 version       : 2.6.18 (deprecated)
 version       : 2.6.27-compat-sysfs (deprecated)
@@ -391,7 +361,16 @@ version       : 3.2-x86_64
 version       : 3.2-x86_64-grsec
 version       : 3.10-x86_64
 version       : 3.10-i386
-""")
+"""
+        linux_hvm_out = """\
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
+"""
+        self.assertTrue(linux_out in result.output)
+        self.assertTrue(linux_hvm_out in result.output)
+        self.assertTrue('datacenter    : Equinix Paris' in result.output)
         self.assertEqual(result.exit_code, 0)
 
     def test_kernels_all(self):
