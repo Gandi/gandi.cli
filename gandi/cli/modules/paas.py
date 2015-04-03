@@ -64,13 +64,11 @@ class Paas(GandiModule, SshkeyHelper):
         metrics = Metric.query(id, 60*60*24, query, 'paas', sampler)
 
         cache = {'hit': 0, 'miss': 0, 'not': 0, 'pass': 0}
-        nb_query = 0
         for metric in metrics:
             what = metric['cache'].pop()
             for point in metric['points']:
                 value = point.get('value', 0)
                 cache[what] += value
-
         return cache
 
     @classmethod
