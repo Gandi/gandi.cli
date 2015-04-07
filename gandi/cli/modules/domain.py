@@ -29,6 +29,7 @@ class Domain(GandiModule):
     @classmethod
     def create(cls, fqdn, duration, owner, admin, tech, bill, background):
         """Create a domain."""
+        fqdn = fqdn.lower()
         if not background and not cls.intty():
             background = True
 
