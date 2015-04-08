@@ -48,7 +48,7 @@ def info(gandi, resource, id):
 
     Resource must be the vhost fqdn.
     """
-    output_keys = ['name', 'state', 'date_creation', 'paas_name']
+    output_keys = ['name', 'state', 'date_creation', 'paas_name', 'ssl']
 
     if id:
         # When we will have more than paas vhost, we will append rproxy_id
@@ -60,6 +60,11 @@ def info(gandi, resource, id):
     paas = None
     for num, item in enumerate(resource):
         vhost = gandi.vhost.info(item)
+        try:
+            hostedcert = gandi.hostedcert.infos(vhost['name'])
+            vhost['ssl'] = 'activated' if hostedcert else 'disabled'
+        except ValueError:
+            vhost['ssl'] = 'disabled'
         paas = paas_names.get(vhost['paas_id'])
         if num:
             gandi.separator_line()
