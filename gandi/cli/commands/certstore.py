@@ -1,0 +1,82 @@
+""" Hosted certificate namespace commands. """
+
+import os
+import click
+import requests
+
+# define basestring for python3
+try:
+    basestring
+except NameError:
+    basestring = (str, bytes)
+
+type_list = list
+
+from gandi.cli.core.cli import cli
+from gandi.cli.core.utils import output_hostedcert
+from gandi.cli.core.params import pass_gandi, IntChoice
+
+
+@cli.command()
+@click.option('--id', help='Display ids.', is_flag=True)
+@click.option('--vhosts', help='Display related vhosts.', is_flag=True)
+@click.option('--dates', help='Display dates.', is_flag=True)
+@click.option('--fqdns', help='Display fqdns.', is_flag=True)
+@click.option('--limit', help='Limit number of results.', default=100,
+              show_default=True)
+@pass_gandi
+def list(gandi, id, vhosts, dates, fqdns, limit):
+    """ List hosted certificates. """
+    justify = 10
+    options = {'items_per_page': limit, 'state': 'created'}
+
+    output_keys = []
+
+    if id:
+        output_keys.append('id')
+
+    output_keys.append('subject')
+
+    if dates:
+        output_keys.extend(['date_created', 'date_expire'])
+        justify = 12
+
+    if fqdns:
+        output_keys.append('fqdns')
+
+    if vhosts:
+        output_keys.append('vhosts')
+
+
+    result = gandi.hostedcert.list(options)
+
+    for num, hcert in enumerate(result):
+        if num:
+            gandi.separator_line()
+
+        if fqdns or vhosts:
+            hcert = gandi.hostedcert.info(hcert['id'])
+
+        output_hostedcert(gandi, hcert, output_keys, justify)
+
+    return result
+
+
+@cli.command()
+@click.argument('resource', nargs=-1, required=True)
+@pass_gandi
+def info(gandi, resource):
+    """ Display information about a hosted certificate.
+
+    Resource can be a FQDN or an ID
+    """
+    output_keys = ['id', 'subject', 'date_created', 'date_expire',
+                   'fqdns', 'vhosts']
+
+    result = gandi.hostedcert.infos(resource)
+    for num, hcert in enumerate(result):
+        if num:
+            gandi.separator_line()
+        output_hostedcert(gandi, hcert, output_keys)
+
+    return result
