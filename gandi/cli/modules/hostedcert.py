@@ -45,6 +45,12 @@ class HostedCert(GandiModule):
     @classmethod
     def infos(cls, fqdn):
         """ Display information about hosted certificates for a fqdn. """
+        if isinstance(fqdn, (list, tuple)):
+            ids = []
+            for fqd_ in fqdn:
+                ids.extend(cls.infos(fqd_))
+            return ids
+
         ids = cls.usable_id(fqdn)
         if not ids:
             return []
