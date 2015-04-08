@@ -80,3 +80,29 @@ def info(gandi, resource):
         output_hostedcert(gandi, hcert, output_keys)
 
     return result
+
+
+@cli.command()
+@click.option('--pk', '--private-key', required=True,
+              help='Private key used to generate this CRT.')
+@click.option('--crt', '--certificate', required=True,
+              help='The certificate.')
+@pass_gandi
+def create(gandi, private_key, certificate):
+    """ Create a new hosted certificate. """
+    if os.path.isfile(private_key):
+        with open(private_key) as fhandle:
+            private_key = fhandle.read()
+
+    if os.path.isfile(certificate):
+        with open(certificate) as fhandle:
+            certificate = fhandle.read()
+
+    result = gandi.hostedcert.create(private_key, certificate)
+
+    output_keys = ['id', 'subject', 'date_created', 'date_expire',
+                   'fqdns', 'vhosts']
+
+    output_hostedcert(gandi, result, output_keys)
+
+    return result
