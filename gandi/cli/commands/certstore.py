@@ -106,3 +106,30 @@ def create(gandi, private_key, certificate):
     output_hostedcert(gandi, result, output_keys)
 
     return result
+
+
+@cli.command()
+@click.argument('resource', nargs=-1, required=True)
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False).')
+@pass_gandi
+def delete(gandi, resource, force):
+    """ Delete a hosted certificate.
+
+    Resource can be a FQDN or an ID
+    """
+    infos = gandi.hostedcert.infos(resource)
+    if not infos:
+        return
+
+    if not force:
+        proceed = click.confirm('Are you sure to delete the following hosted '
+                                'certificates ?\n' +
+                                '\n'.join(['%s: %s' % (res['id'], res['subject'])
+                                           for res in infos]) + '\n')
+        if not proceed:
+            return
+
+    for res in infos:
+        gandi.hostedcert.delete(res['id'])

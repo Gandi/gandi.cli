@@ -65,3 +65,8 @@ class HostedCert(GandiModule):
         """ Add a new crt in the hosted cert store. """
         options = {'crt': crt, 'key': key}
         return cls.call('cert.hosted.create', options)
+
+    @classmethod
+    def delete(cls, id_):
+        """ Remove a cert from the hosted cert store. """
+        return cls.call('cert.hosted.delete', id_)
