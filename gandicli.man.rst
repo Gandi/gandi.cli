@@ -100,7 +100,7 @@ Namespaces:
 *  paas console            Open a console on a PaaS.
 *  paas create             Create a new PaaS instance and initialize associated git repository.
 *  paas delete             Delete a PaaS instance.
-*  paas info               Display information about a PaaS instance.
+*  paas info               Display information about a PaaS instance. The cache statistics is based on 24 hours data.
 *  paas list               List PaaS instances.
 *  paas restart            Restart a PaaS instance.
 *  paas types              List types PaaS instances.
