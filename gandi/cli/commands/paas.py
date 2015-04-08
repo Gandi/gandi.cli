@@ -55,6 +55,7 @@ def info(gandi, resource):
     """Display information about a PaaS instance.
 
     Resource can be a vhost, a hostname, or an ID
+    Cache statistics are based on 24 hours data.
     """
     output_keys = ['name', 'type', 'size', 'memory', 'console', 'vhost',
                    'dc', 'sftp_server', 'git_server']
