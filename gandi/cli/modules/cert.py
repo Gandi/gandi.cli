@@ -239,7 +239,7 @@ class Certificate(GandiModule):
         cls.call('cert.resend_dcv', oper_id)
 
     @classmethod
-    def create(cls, csr, duration, package, altnames, dcv_method):
+    def create(cls, csr, duration, package, altnames=None, dcv_method=None):
         """ Create a new certificate. """
         params = {'csr': csr, 'package': package, 'duration': duration}
         if altnames:
@@ -339,8 +339,9 @@ class Certificate(GandiModule):
         return common_name
 
     @classmethod
-    def process_csr(cls, common_name, csr, private_key, country, state, city,
-                    organisation, branch):
+    def process_csr(cls, common_name, csr=None, private_key=None,
+                    country=None, state=None, city=None, organisation=None,
+                    branch=None):
         """ Create a PK and a CSR if needed."""
         if csr:
             if branch or organisation or city or state or country:
