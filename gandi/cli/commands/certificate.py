@@ -240,7 +240,7 @@ def export(gandi, resource, output, force, intermediate):
             sha_version = cert['sha_version']
             type_ = package.split('_')[1]
             extra = ('sgc' if 'SGC' in package
-                     and pro
+                     and 'pro' in package
                      and sha_version == 1 else 'default')
 
             if extra == 'sgc':
