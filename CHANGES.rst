@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.14
+----
+
+* New 'certstore' namespace to manage certificates in webaccs.
+* Update vhost create and update to handle hosted certificates.
+
 0.13
 ----
 
