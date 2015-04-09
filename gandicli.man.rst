@@ -64,6 +64,10 @@ Namespaces:
 *  certificate plans       List certificate plans (replace packages).
 *  certificate resend-dcv  Resend the DCV mail for a pending certificate.
 *  certificate update      Update a certificate CSR.
+*  certstore create        Create an hosted certificate.
+*  certstore delete        Delete an hosted certificate.
+*  certstore info          Display information about an hosted certificate.
+*  certstore list          List hosted certificates.
 *  config                  Configure default values.
 *  contact create          Create a new contact in interactive mode.
 *  datacenters             List available datacenters.
@@ -119,6 +123,7 @@ Namespaces:
 *  vhost delete            Delete a vhost.
 *  vhost info              Display information about a vhost.
 *  vhost list              List vhosts.
+*  vhost update            Update a vhost.
 *  vlan create             Create a new vlan
 *  vlan delete             Delete a vlan.
 *  vlan info               Display information about a vlan.
@@ -165,6 +170,14 @@ Details:
 * ``certificate resend-dcv resource`` send the validation email again (only for the 'email' DCV method). Note that a resource can be a cn entry or an integer id.
 
 * ``certificate update resource`` modify the options of a certificate. Possible options are ``--csr TEXT``, ``--private-key TEXT`` could be either the content of a certificate request and a private key or a path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``--organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--altnames LIST`` to change all the alternative names (comma separated text without space), ``--dcv-method TEXT`` with domain validation process method in email, dns, file, auto. Note that a resource can be a CN entry or an integer id.
+
+* ``gandi certstore create`` create a new hosted certificate that will be associated to paas vhost or webaccs. Possible options are ``--private-key PK`` (or ``--pk``) to give the private key and ``--certificate CERT`` (or ``--crt``) to give the certificate.
+
+* ``gandi certstore delete resource`` delete all hosted certificate corresponding to the resource (/!\ if you give an FQDN, it will delete all hosted certificate that correspond). Possible option is ``--force`` (or ``-f``) to continue deleting without asking.
+
+* ``gandi certstore info resource`` show detailed view of hosted certificates corresponding to the resource.
+
+* ``gandi certstore list`` list all the hosted certificates for this account. Possible options are ``--id`` to show the id, ``--vhosts`` to show the associated vhosts, ``--fqdns`` to show the fqdns contained in that certificate, ``--dates`` to show the create and expire dates and ``--limit`` to limit the number of elements in the list.
 
 * ``gandi config key value`` configure value in the configuration file. With no option, configuration setting is stored in the local directory, which makes it suitable for code repositories. Using the ``-g`` flag, the change is stored in the global configuration file.
 
@@ -270,7 +283,7 @@ Details:
 
 * ``gandi status`` shows the current status for all services as seen on status.gandi.net. Possible option is to provide a service name to the command to retrieve only the status of this service.
 
-* ``gandi vhost create`` add a virtual host. Mandatory options are ``--vhost TEXT`` for the fully qualified domain name (FQDN like host.domain.tld) and ``--paas TEXT`` for the Simple Hosting instance on which it will create the virtual host, ``--alter-zone`` will update the domain zone. Creation can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi vhost create`` add a virtual host. Mandatory options are ``--vhost TEXT`` for the fully qualified domain name (FQDN like host.domain.tld) and ``--paas TEXT`` for the Simple Hosting instance on which it will create the virtual host, ``--alter-zone`` will update the domain zone, ``--ssl`` to activate SSL on that host, ``--pk`` to give the private key used to generate the certificate if it's linked to the same account in certificate section, and ``--poll-cert`` to wait for certificate generation in case you want to get one with Gandi (certificate create can take some time to achieve). Creation can be done as background process using the option ``--background`` (or ``--bg``) it will have no effet on the certificate creation process.
 
 * ``gandi vhost delete host.domain.tld`` delete a virtual host after asking for user validation. Possible option is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting. Deletion can be done as background process using the option ``--background`` (or ``--bg``).
 
@@ -278,6 +291,7 @@ Details:
 
 * ``gandi vhost list`` show all the virtual host defined in Simple Hosting. Possible option are ``--names`` which add the name of the Simple Hosting instance on which the virtual host is setup, ``--ids`` which show the integer identificator and ``--limit INTEGER`` which show a subset of the full list of virtual host.
 
+* ``gandi vhost update host.domain.tld`` allow to activate SSL on this host. Possible options are ``--ssl`` to activate SSL on that host, ``--pk`` to give the private key used to generate the certificate if it's linked to the same account in certificate section, and ``--poll-cert`` to wait for certificate generation in case you want to get one with Gandi (certificate create can take some time to achieve).
 *  ``gandi vlan create`` add a new vlan. Mandatory options are ``--name TEXT`` for the label of the vlan, ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``. Possible options are ``--subnet`` to set a subnet and ``--gateway`` to set the gateway. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
 *  ``gandi vlan delete resource`` delete a vlan after asking for user validation. Possible option is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting. Deletion can be done as background process using the option ``--background`` (or ``--bg``).
