@@ -333,40 +333,15 @@ def create(gandi, csr, private_key, common_name, country, state, city,
                    '--type (in std, pro or bus) and --max-altname to set '
                    'the max number of altnames.')
     elif type or max_altname or warranty:
-        type = type or 'std'
-
-        if max_altname:
-            if max_altname < len(altnames):
-                gandi.echo('You choose --max-altname %s but you have more '
-                           'altnames (%s)' % (max_altname, len(altnames)))
-                return
-        else:
-            if '*' in common_name:
-                max_altname = 'w'
-            else:
-                for max_ in [1, 3, 5, 10, 20]:
-                    if len(altnames) < max_:
-                        max_altname = max_
-                        break
-
-                if not max_altname:
-                    gandi.echo('Too many altnames, max is 20.')
-                    return
-
-        pack_filter = 'cert_%s_%s_' % (type, max_altname)
-        if warranty:
-            pack_filter += '%s_' % (warranty)
-
-        packages = [item['name']
-                    for item in gandi.certificate.package_list()
-                    if item['name'].startswith(pack_filter)]
-
-        if not packages:
+        package = gandi.certificate.get_package(common_name,
+                                                type,
+                                                max_altname,
+                                                altnames,
+                                                warranty)
+        if not package:
             gandi.echo("Can't find any plan with your params.")
             gandi.echo('Please call : "gandi certificate plans".')
             return
-
-        package = packages[0]
 
     result = gandi.certificate.create(csr, duration, package, altnames,
                                       dcv_method)

@@ -185,6 +185,41 @@ class Certificate(GandiModule):
         return cls.call('cert.info', cls.usable_id(id))
 
     @classmethod
+    def get_package(cls, common_name, type='std', max_altname=None,
+                    altnames=None, warranty=None):
+        type = type or 'std'
+
+        if max_altname:
+            if max_altname < len(altnames):
+                cls.echo('You choose --max-altname %s but you have more '
+                           'altnames (%s)' % (max_altname, len(altnames)))
+                return
+        else:
+            if '*' in common_name:
+                max_altname = 'w'
+            elif not altnames:
+                max_altname = 1
+            else:
+                for max_ in [1, 3, 5, 10, 20]:
+                    if len(altnames) < max_:
+                        max_altname = max_
+                        break
+
+                if not max_altname:
+                    cls.echo('Too many altnames, max is 20.')
+                    return
+
+        pack_filter = 'cert_%s_%s_' % (type, max_altname)
+        if warranty:
+            pack_filter += '%s_' % (warranty)
+
+        packages = [item['name']
+                    for item in cls.package_list()
+                    if item['name'].startswith(pack_filter)]
+
+        return packages[0] if packages else None
+
+    @classmethod
     def advice_dcv_method(cls, csr, package, altnames, dcv_method):
         """ Display dcv_method information. """
         params = {'csr': csr, 'package': package, 'dcv_method': dcv_method}
