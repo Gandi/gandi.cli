@@ -101,6 +101,20 @@ class Certificate(GandiModule):
     """
 
     @classmethod
+    def get_latest_valid(cls, common_name):
+        """ Retrieve valid certificates by fqdn. """
+        certs = cls.list({'status': 'valid'})
+        possible = None
+
+        for cert in certs:
+            if common_name == cert['cn'] or common_name in cert['altnames']:
+                if (possible and possible['date_end'] < cert['date_end']
+                    or not possible):
+                        possible = cert
+
+        return possible
+
+    @classmethod
     def from_cn(cls, common_name):
         """ Retrieve a certificate by its common name. """
         result = [(cert['id'], [cert['cn']] + cert['altnames'])
