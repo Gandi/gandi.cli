@@ -1,6 +1,7 @@
 """ PaaS instances namespace commands. """
 
 import click
+from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_paas, output_generic, randomstring
@@ -227,15 +228,22 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
               help='Reset mysql password for root.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
+@click.option('--delete-snapshotprofile', default=False, is_flag=True,
+              help='Remove a snapshot profile associated to this paas disk.')
 @pass_gandi
 @click.argument('resource')
 def update(gandi, resource, name, size, quantity, password, sshkey,
            upgrade, console, snapshotprofile, reset_mysql_password,
-           background):
+           background, delete_snapshotprofile):
     """Update a PaaS instance.
 
     Resource can be a Hostname or an ID
     """
+
+    if snapshotprofile and delete_snapshotprofile:
+        raise UsageError('You must not set snapshotprofile and '
+                         'delete-snapshotprofile.')
+
     pwd = None
     if password:
         pwd = click.prompt('password', hide_input=True,
@@ -243,7 +251,8 @@ def update(gandi, resource, name, size, quantity, password, sshkey,
 
     result = gandi.paas.update(resource, name, size, quantity, pwd,
                                sshkey, upgrade, console, snapshotprofile,
-                               reset_mysql_password, background)
+                               reset_mysql_password, background,
+                               delete_snapshotprofile)
     if background:
         gandi.pretty_echo(result)
 
