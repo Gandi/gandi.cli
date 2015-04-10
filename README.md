@@ -20,6 +20,7 @@ Use `$ gandi` to easily create and manage web resources from the command line.
     * [Creating a Virtual Machine](#creating-a-virtual-machine)
     * [Deploying a Web Application](#deploying-a-web-application)
     * [Creating a SSL Certificate](#creating-a-ssl-certificate)
+    * [Adding a Web Application vhost with SSL](#adding-a-web-application-vhost-with-ssl)
     * [Creating a Private VLAN](#creating-a-private-vlan)
   * [Advanced Usage](#advanced-usage)
     * [All Commands](#all-commands)
@@ -82,6 +83,7 @@ See the [Advanced Usage](#advanced-usage) section for more details on configurat
   * [Creating a virtual machine](#creating-a-virtual-machine)
   * [Deploying a web application](#deploying-a-web-application)
   * [Creating a SSL Certificate](#creating-a-ssl-certificate)
+  * [Adding a Web Application vhost with SSL](#adding-a-web-application-vhost-with-ssl)
   * [Creating a Private VLAN](#creating-a-private-vlan)
 
 ### Registering a Domain Name
@@ -295,6 +297,47 @@ You can also retrieve intermediate certificates if needed.
     $ gandi certificate export "domain.tld" --intermediate
 
 Find information on how to use your certificate with different servers on [our wiki](http://wiki.gandi.net/en/ssl).
+
+
+### Adding a Web Application vhost with SSL
+
+
+Gandi allow you to associate a certificate with your vhost.
+
+
+#### 1. You already have the matching certificate at Gandi
+
+
+Just create the vhost giving it the private key used to generate that certificate.
+
+    $ gandi vhost create --vhost "domain.tld" --paas "PaasName" \
+        --ssl --private-key "domain.tld.key"
+
+
+#### 2. You have the matching certificate but not at Gandi (or in another account)
+
+
+Declare the hosted certificate.
+
+    $ gandi certstore create --pk "domain.tld.key" --crt "domain.tld.crt"
+
+And then create the vhost.
+
+    $ gandi vhost create --vhost "domain.tld" --paas "PaasName" --ssl
+
+
+#### 3. You don't have any certificate and plan to get it at Gandi
+
+
+Create the certificate.
+
+    $ gandi certificate create --cn "domain.tld.key" --type std
+
+And then create the vhost.
+
+    $ gandi vhost create --vhost "domain.tld" --paas "PaasName" \
+        --ssl --private-key "domain.tld.key"
+
 
 ### Creating a private VLAN
 
