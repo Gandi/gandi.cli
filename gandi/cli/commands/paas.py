@@ -167,7 +167,7 @@ def delete(gandi, background, force, resource):
 @click.option('--vhosts', default=None, multiple=True,
               help='List of virtual hosts to be linked to the instance.')
 @click.option('--password', help='Use command-line supplied password.')
-@click.option('--snapshotprofile', default=None,
+@click.option('--snapshotprofile', default=None, type=click.INT,
               help='Set a snapshot profile associated to this paas disk.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
@@ -221,7 +221,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
               help='Upgrade the instance to the last system image if needed.')
 @click.option('--console', default=None,
               help='Activate or deactivate the Console.')
-@click.option('--snapshotprofile', default=None,
+@click.option('--snapshotprofile', default=None, type=click.INT,
               help='Set a snapshot profile associated to this paas disk.')
 @click.option('--reset-mysql-password', default=None,
               help='Reset mysql password for root.')
