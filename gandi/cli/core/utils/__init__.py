@@ -154,7 +154,7 @@ def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=11):
             output_line(gandi, 'quota used', disk_used, justify)
 
     if 'snapshot' in output_keys:
-        val = 'None'
+        val = None
         if paas['snapshot_profile']:
             val = paas['snapshot_profile']['name']
         output_line(gandi, 'snapshot', val, justify)
