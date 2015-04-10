@@ -58,7 +58,7 @@ class Paas(GandiModule, SshkeyHelper):
 
     @classmethod
     def cache(cls, id):
-        """return the numbre of query cache for the last 24H"""
+        """return the number of query cache for the last 24H"""
         sampler = {'unit': 'days', 'value': 1, 'function': 'sum'}
         query = 'webacc.requests.cache.all'
         metrics = Metric.query(id, 60*60*24, query, 'paas', sampler)
