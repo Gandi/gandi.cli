@@ -363,3 +363,10 @@ def hosted_info(id):
 
     hc = dict([(hc['id'], additional(hc)) for hc in hosted_list({})])
     return hc[id]
+
+
+def hosted_create(params):
+    return hosted_info(5)
+
+def hosted_delete(id):
+    return
