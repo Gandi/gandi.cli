@@ -81,6 +81,8 @@ See the [Advanced Usage](#advanced-usage) section for more details on configurat
   * [Registering a domain name](#registering-a-domain-name)
   * [Creating a virtual machine](#creating-a-virtual-machine)
   * [Deploying a web application](#deploying-a-web-application)
+  * [Creating a SSL Certificate](#creating-a-ssl-certificate)
+  * [Creating a Private VLAN](#creating-a-private-vlan)
 
 ### Registering a Domain Name
 
