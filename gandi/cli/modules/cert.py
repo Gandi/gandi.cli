@@ -296,6 +296,26 @@ class Certificate(GandiModule):
 
         return result
 
+    @staticmethod
+    def private_key(common_name):
+        return common_name.replace('*.', 'wildcard.') + '.key'
+
+    @classmethod
+    def gen_pk(cls, common_name, private_key):
+        if private_key:
+            cmd = 'openssl req -new -key %(key)s -out %(csr)s -subj "%(subj)s"'
+            if not os.path.exists(private_key):
+                content = private_key
+                private_key = cls.private_key(common_name)
+                with open(private_key, 'w') as fhandle:
+                    fhandle.write(content)
+        else:
+            private_key = cls.private_key(common_name)
+            # TODO check if it exists
+            cmd = ('openssl req -new -newkey rsa:2048 -sha256 -nodes '
+                   '-out %(csr)s -keyout %(key)s -subj "%(subj)s"')
+        return cmd, private_key
+
     @classmethod
     def create_csr(cls, common_name, private_key=None, params=None):
         """ Create CSR. """
@@ -304,13 +324,7 @@ class Certificate(GandiModule):
         params = [(key, val) for key, val in params if val]
         subj = '/' + '/'.join(['='.join(value) for value in params])
 
-        if private_key and os.path.exists(private_key):
-            cmd = 'openssl req -new -key %(key)s -out %(csr)s -subj "%(subj)s"'
-        else:
-            private_key = common_name.replace('*.', 'wildcard.') + '.key'
-            # TODO check if it exists
-            cmd = ('openssl req -new -newkey rsa:2048 -sha256 -nodes '
-                   '-out %(csr)s -keyout %(key)s -subj "%(subj)s"')
+        cmd, private_key = cls.gen_pk(common_name, private_key)
 
         if private_key.endswith('.crt') or private_key.endswith('.key'):
             csr_file = re.sub('\.(crt|key)$', '.csr', private_key)
