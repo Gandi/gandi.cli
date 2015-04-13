@@ -115,6 +115,11 @@ def info(gandi, resource, format):
               help="set a default port backend if not specified with backend")
 @click.option('--vhost', '-v', help="Vhost to add in the webaccelerator",
               multiple=True)
+@click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
+@click.option('--pk', '--private-key',
+              help='Private key used to generate the ssl Certificate.')
+@click.option('--poll-cert', help='Will wait for the certificate creation.',
+              is_flag=True)
 @click.option('--algorithm', type=click.Choice(['client-ip', 'round-robin']),
               help="Choose the loadbalancer algorithm", default='client-ip')
 @click.option('--ssl-enable', is_flag=True,
@@ -125,7 +130,7 @@ def info(gandi, resource, format):
 @click.argument('name')
 @pass_gandi
 def create(gandi, name, datacenter, backend, port, vhost, algorithm,
-           ssl_enable, zone_alter):
+           ssl_enable, zone_alter, ssl, private_key, pool_cert):
     """ Create a webaccelerator """
     backends = backend
     for backend in backends:
@@ -137,6 +142,12 @@ def create(gandi, name, datacenter, backend, port, vhost, algorithm,
                                                'different port for each '
                                                'backend, use `-b ip:port`',
                                                type=int)
+    if vhost and not gandi.hostedcert.activate_ssl(vhost,
+                                                   ssl,
+                                                   private_key,
+                                                   poll_cert):
+        return
+
     result = gandi.webacc.create(name, datacenter, backends, vhost, algorithm,
                                  ssl_enable, zone_alter)
     return result
@@ -192,6 +203,11 @@ def delete(gandi, webacc, vhost, backend, port):
 @cli.command()
 @click.option('--vhost', '-v', help="Add vhosts in the webaccelerator",
               multiple=True)
+@click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
+@click.option('--pk', '--private-key',
+              help='Private key used to generate the ssl Certificate.')
+@click.option('--poll-cert', help='Will wait for the certificate creation.',
+              is_flag=True)
 @click.option('--zone-alter', is_flag=True,
               help="Alter and active zone file if Gandi DNS are used for"
                    " the domain",)
@@ -201,7 +217,8 @@ def delete(gandi, webacc, vhost, backend, port):
               help="set a default port backend if not specified with backend")
 @click.argument('resource', type=WEBACC_NAME)
 @pass_gandi
-def add(gandi, resource, vhost, zone_alter, backend, port):
+def add(gandi, resource, vhost, zone_alter, backend, port, ssl, private_key,
+        poll_cert):
     """ Add a backend or a vhost on a webaccelerator """
     if backend:
         backends = backend
@@ -216,6 +233,11 @@ def add(gandi, resource, vhost, zone_alter, backend, port):
                                                    'ip:port`', type=int)
             result = gandi.webacc.backend_add(resource, backend)
     if vhost:
+        if not gandi.hostedcert.activate_ssl(vhost,
+                                             ssl,
+                                             private_key,
+                                             poll_cert):
+            return
         vhosts = vhost
         for vhost in vhosts:
             params = {'vhost': vhost}
