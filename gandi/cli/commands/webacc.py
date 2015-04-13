@@ -130,7 +130,7 @@ def info(gandi, resource, format):
 @click.argument('name')
 @pass_gandi
 def create(gandi, name, datacenter, backend, port, vhost, algorithm,
-           ssl_enable, zone_alter, ssl, private_key, pool_cert):
+           ssl_enable, zone_alter, ssl, private_key, poll_cert):
     """ Create a webaccelerator """
     backends = backend
     for backend in backends:
