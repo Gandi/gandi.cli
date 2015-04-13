@@ -18,10 +18,11 @@ def list(gandi, limit):
     options = {
         'step': ['BILL', 'WAIT', 'RUN'],
         'items_per_page': limit,
+        'sort_by': 'date_created DESC'
     }
 
     result = gandi.oper.list(options)
-    for num, oper in enumerate(result):
+    for num, oper in enumerate(reversed(result)):
         if num:
             gandi.separator_line()
         output_generic(gandi, oper, output_keys)
