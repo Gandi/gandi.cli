@@ -10,13 +10,16 @@ from gandi.cli.core.params import pass_gandi
 @cli.command()
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
+@click.option('--step', type=click.Choice(['BILL', 'WAIT', 'RUN', 'ERROR']),
+              default=['BILL', 'WAIT', 'RUN'], multiple=True,
+              show_default=False)
 @pass_gandi
-def list(gandi, limit):
+def list(gandi, limit, step):
     """List operations."""
     output_keys = ['id', 'type', 'step']
 
     options = {
-        'step': ['BILL', 'WAIT', 'RUN'],
+        'step': step,
         'items_per_page': limit,
         'sort_by': 'date_created DESC'
     }
