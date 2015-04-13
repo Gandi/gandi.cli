@@ -50,8 +50,10 @@ def list(gandi, state, id, vhosts, type, limit):
 
 @cli.command()
 @click.argument('resource')
+@click.option('--stat', default=False, is_flag=True,
+              help='Display cached page statistic based on the last 24 hours.')
 @pass_gandi
-def info(gandi, resource):
+def info(gandi, resource, stat):
     """Display information about a PaaS instance.
 
     Resource can be a vhost, a hostname, or an ID
@@ -67,8 +69,9 @@ def info(gandi, resource):
     df = gandi.paas.quota(paas['id'])
     paas.update({'df': df})
 
-    cache = gandi.paas.cache(paas['id'])
-    paas.update({'cache': cache})
+    if stat:
+        cache = gandi.paas.cache(paas['id'])
+        paas.update({'cache': cache})
 
     for host in list_vhost:
         paas_hosts.append(host['name'])
