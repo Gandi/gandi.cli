@@ -101,13 +101,17 @@ class Certificate(GandiModule):
     """
 
     @classmethod
-    def get_latest_valid(cls, common_name):
+    def get_latest_valid(cls, hosts):
         """ Retrieve valid certificates by fqdn. """
         certs = cls.list({'status': 'valid'})
         possible = None
 
+        if not isinstance(hosts, (tuple, list)):
+            hosts = [hosts]
+
         for cert in certs:
-            if common_name == cert['cn'] or common_name in cert['altnames']:
+            cert_hosts = set([cert['cn']] + cert['altnames'])
+            if len(set(hosts) - cert_hosts) == 0:
                 if (possible and possible['date_end'] < cert['date_end']
                     or not possible):
                         possible = cert
