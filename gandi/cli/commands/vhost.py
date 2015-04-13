@@ -74,51 +74,6 @@ def info(gandi, resource, id):
     return ret
 
 
-def activate_ssl(gandi, vhost, ssl, private_key, poll_cert):
-    if ssl:
-        try:
-            hostedcert = gandi.hostedcert.infos(vhost)
-        except ValueError:
-            cert = gandi.certificate.get_latest_valid(vhost)
-            if cert:
-                if not private_key:
-                    gandi.echo('Please give the private key for certificate '
-                               + 'id %s (CN: %s)' % (cert['id'], cert['cn']))
-                    return False
-
-                if os.path.isfile(private_key):
-                    with open(private_key) as fhandle:
-                        private_key = fhandle.read()
-
-                crt = gandi.certificate.pretty_format_cert(cert)
-                gandi.hostedcert.create(private_key, crt)
-            elif poll_cert:
-                gandi.echo('This operation will take a long time waiting '
-                           'for the certificate to be generated.')
-
-                # create the certificate
-                csr = gandi.certificate.process_csr(common_name,
-                                                    private_key=private_key)
-                package = gandi.certificate.get_package(vhost)
-                oper = gandi.certificate.create(csr, 1, package)
-
-                gandi.echo('If the term close, you can check the create '
-                           'operation with :')
-                gandi.echo('$ gandi certificate follow %s' % oper['id'])
-                gandi.echo("And when it's DONE you can continue doing :")
-                gandi.echo('$ gandi vhost update %s --ssl --private-key %s' %
-                           (vhost, vhost.replace('*.', 'wildcard.') + '.key'))
-            else:
-                gandi.echo('There is no certificate for %s.' % vhost)
-                gandi.echo('Create the certificate with (for exemple) :')
-                gandi.echo('$ gandi certificate create --cn %s --type std' %
-                           vhost)
-                gandi.echo('Then update the vhost to activate ssl with :')
-                gandi.echo('$ gandi vhost udpate %s --ssl' % vhost)
-                ssl = False
-    return True
-
-
 @cli.command()
 @click.option('--vhost', help='Vhost fqdn.', required=True)
 @click.option('--paas', required=True,
@@ -138,7 +93,7 @@ def activate_ssl(gandi, vhost, ssl, private_key, poll_cert):
 def create(gandi, vhost, paas, ssl, private_key, alter_zone, poll_cert,
            background, force):
     """ Create a new vhost. """
-    if not activate_ssl(gandi, vhost, ssl, private_key, poll_cert):
+    if not gandi.hostedcert.activate_ssl(vhost, ssl, private_key, poll_cert):
         return
 
     paas_info = gandi.paas.info(paas)
@@ -166,7 +121,7 @@ def update(gandi, resource, ssl, private_key, poll_cert):
 
     Right now you can only activate ssl on the vhost.
     """
-    activate_ssl(gandi, resource, ssl, private_key, poll_cert)
+    gandi.hostedcert.activate_ssl(resource, ssl, private_key, poll_cert)
 
 
 @cli.command()
