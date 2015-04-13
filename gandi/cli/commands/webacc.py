@@ -81,7 +81,7 @@ def info(gandi, resource, format):
         for vhost in result['vhosts']:
             output_vhosts = ['vhost', 'ssl']
             vhost['vhost'] = vhost['name']
-            vhost['ssl'] = 'Disable' if vhost['cert_id'] is None else 'Enabled'
+            vhost['ssl'] = 'None' if vhost['cert_id'] is None else 'Exists'
             output_sub_generic(gandi, vhost, output_vhosts, justify=14)
             gandi.echo('')
         gandi.echo('Backends :')
