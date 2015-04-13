@@ -161,7 +161,7 @@ def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=11):
             output_line(gandi, 'cache', None, justify)
             for key, value in cache.items():
                 str_value = '%.1f%%' % (value * 100 / total)
-                output_line(gandi, '      %s' % key, str_value, justify)
+                output_sub_line(gandi, key, str_value, 5)
 
 
 def output_image(gandi, image, datacenters, output_keys, justify=14):
