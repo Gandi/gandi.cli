@@ -240,7 +240,7 @@ Details:
 
 * ``gandi paas delete resource`` delete a Simple Hosting instance. Possible option is ``--force`` (or ``-f``) to bypass the validation question; useful in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
-* ``gandi paas info resource`` show details about a specific Simple Hosting instance.
+* ``gandi paas info resource`` show details about a specific Simple Hosting instance. Possible option is ``--stat`` in order to get statistic of the cached pages (it's based on the last 24 hours).
 
 * ``gandi paas list`` show all the Simple Hosting instances. Possible options are ``--state TEXT`` for filtering the output by a specific state, ``--id`` which display the integer identificator, ``--vhosts`` which show all the virtual hosts associated with each instances, ``--type`` which display the type of Simple Hosting and ``--limit INTEGER`` which show only a subset of the full Simple Hosting list (default is 100).
 
