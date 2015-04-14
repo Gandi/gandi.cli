@@ -90,8 +90,8 @@ def info(gandi, resource):
 @click.option('--crt-id', '--certificate-id', required=False,
               help='The certificate.')
 @pass_gandi
-def create(gandi, private_key, certificate, certificate_id):
-    """ Create a new hosted certificate. """
+def add(gandi, private_key, certificate, certificate_id):
+    """ Add a new hosted certificate. """
     if not certificate and not certificate_id:
         gandi.echo('One of --certificate or --certificate-id is needed.')
         return
