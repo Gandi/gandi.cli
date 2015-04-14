@@ -124,14 +124,15 @@ class HostedCert(GandiModule):
             package = Certificate.get_package(vhost, altnames=altnames)
             oper = Certificate.create(csr, 1, package, altnames=altnames)
 
-            cls.echo('If the term close, you can check the create operation '
-                     'with :')
+            cls.echo('If the term close, you can check the certificate create '
+                     'operation with :')
             cls.echo('$ gandi certificate follow %s' % oper['id'])
             cls.echo("And when it's DONE you can continue doing :")
-            # TODO this help should be modified in case of webaccs.
-            cls.echo('$ gandi vhost update %s --ssl --private-key %s' %
-                     (vhost, vhost.replace('*.', 'wildcard.') + '.key'))
-
+            cls.echo('$ gandi certificate export %s' % vhost)
+            cls.echo('$ gandi certstore create --private-key %s --certificate '
+                     '%s' % (vhost.replace('*.', 'wildcard.') + '.key',
+                             vhost.replace('*.', 'wildcard.') + '.crt'))
+            cls.echo('And then relaunch the current command.\n')
             cls.echo('Creating the certificate for %s%s' %
                      (vhost,
                       ' (%s)' % ', '.join(altnames) if altnames else ''))
@@ -153,7 +154,5 @@ class HostedCert(GandiModule):
             cls.echo('$ gandi certificate create --cn %s --type std %s' %
                      (vhost, '--altnames=%s' % ','.join(altnames) if altnames
                       else ''))
-            # TODO this help should be modified in case of webaccs.
-            cls.echo('Then update the vhost to activate ssl with :')
-            cls.echo('$ gandi vhost udpate %s --ssl' % vhost)
+            cls.echo('Or relaunch the current command with --poll-cert option')
         return True
