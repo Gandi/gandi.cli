@@ -249,10 +249,12 @@ def update(gandi, resource, name, size, quantity, password, sshkey,
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
+    if delete_snapshotprofile:
+        snapshotprofile = ''
+
     result = gandi.paas.update(resource, name, size, quantity, pwd,
                                sshkey, upgrade, console, snapshotprofile,
-                               reset_mysql_password, background,
-                               delete_snapshotprofile)
+                               reset_mysql_password, background)
     if background:
         gandi.pretty_echo(result)
 

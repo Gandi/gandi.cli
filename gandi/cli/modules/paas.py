@@ -79,8 +79,7 @@ class Paas(GandiModule, SshkeyHelper):
 
     @classmethod
     def update(cls, id, name, size, quantity, password, sshkey, upgrade,
-               console, snapshot_profile, reset_mysql_password, background,
-               delete_snapshotprofile):
+               console, snapshot_profile, reset_mysql_password, background):
         """Update a PaaS instance."""
         if not background and not cls.intty():
             background = True
@@ -107,14 +106,11 @@ class Paas(GandiModule, SshkeyHelper):
         if console:
             paas_params['console'] = console
 
-        if snapshot_profile:
+        if snapshot_profile is not None:
             paas_params['snapshot_profile'] = snapshot_profile
 
         if reset_mysql_password:
             paas_params['reset_mysql_password'] = reset_mysql_password
-
-        if delete_snapshotprofile:
-            paas_params['snapshot_profile'] = ''
 
         result = cls.call('paas.update', cls.usable_id(id), paas_params)
         if background:
