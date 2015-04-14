@@ -106,6 +106,7 @@ class Paas(GandiModule, SshkeyHelper):
         if console:
             paas_params['console'] = console
 
+        # XXX to delete a snapshot_profile the value has to be an empty string
         if snapshot_profile is not None:
             paas_params['snapshot_profile'] = snapshot_profile
 
