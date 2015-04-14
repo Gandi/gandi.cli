@@ -171,7 +171,7 @@ Details:
 
 * ``gandi certificate update resource`` modify the options of a certificate. Possible options are ``--csr TEXT``, ``--private-key TEXT`` could be either the content of a certificate request and a private key or a path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``--organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--altnames LIST`` to change all the alternative names (comma separated text without space), ``--dcv-method TEXT`` with domain validation process method in email, dns, file, auto. Note that a resource can be a CN entry or an integer id.
 
-* ``gandi certstore create`` create a new hosted certificate that will be associated to paas vhost or webaccs. Possible options are ``--private-key PK`` (or ``--pk``) to give the private key and ``--certificate CERT`` (or ``--crt``) to give the certificate.
+* ``gandi certstore create`` create a new hosted certificate that will be associated to paas vhost or webaccs. Possible options are ``--private-key PK`` (or ``--pk``) to give the private key and ``--certificate CERT`` (or ``--crt``) to give the certificate (the certificate can also be given by its id with ``--certificate-id ID``.
 
 * ``gandi certstore delete resource`` delete all hosted certificate corresponding to the resource (/!\ if you give an FQDN, it will delete all hosted certificate that correspond). Possible option is ``--force`` (or ``-f``) to continue deleting without asking.
 

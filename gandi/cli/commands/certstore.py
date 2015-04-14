@@ -85,18 +85,30 @@ def info(gandi, resource):
 @cli.command()
 @click.option('--pk', '--private-key', required=True,
               help='Private key used to generate this CRT.')
-@click.option('--crt', '--certificate', required=True,
+@click.option('--crt', '--certificate', required=False,
+              help='The certificate.')
+@click.option('--crt-id', '--certificate-id', required=False,
               help='The certificate.')
 @pass_gandi
-def create(gandi, private_key, certificate):
+def create(gandi, private_key, certificate, certificate_id):
     """ Create a new hosted certificate. """
+    if not certificate and not certificate_id:
+        gandi.echo('One of --certificate or --certificate-id is needed.')
+        return
+    if certificate and certificate_id:
+        gandi.echo('Only one of --certificate or --certificate-id is needed.')
+
     if os.path.isfile(private_key):
         with open(private_key) as fhandle:
             private_key = fhandle.read()
 
-    if os.path.isfile(certificate):
-        with open(certificate) as fhandle:
-            certificate = fhandle.read()
+    if certificate:
+        if os.path.isfile(certificate):
+            with open(certificate) as fhandle:
+                certificate = fhandle.read()
+    else:
+        cert = gandi.certificate.info(certificate_id)
+        certificate = gandi.certificate.pretty_format_cert(cert)
 
     result = gandi.hostedcert.create(private_key, certificate)
 
