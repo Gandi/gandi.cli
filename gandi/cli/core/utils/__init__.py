@@ -63,7 +63,6 @@ def output_generic(gandi, data, output_keys, justify=10):
         if key in data:
             output_line(gandi, key, data[key], justify)
 
-
 def output_account(gandi, account, output_keys, justify=17):
     """ Helper to output an account information."""
     output_generic(gandi, account, output_keys, justify)
@@ -153,6 +152,12 @@ def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=11):
         if total:
             disk_used = '%.1f%%' % (df['used'] * 100 / total)
             output_line(gandi, 'quota used', disk_used, justify)
+
+    if 'snapshot' in output_keys:
+        val = None
+        if paas['snapshot_profile']:
+            val = paas['snapshot_profile']['name']
+        output_line(gandi, 'snapshot', val, justify)
 
     if 'cache' in paas:
         cache = paas['cache']

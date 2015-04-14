@@ -61,7 +61,7 @@ def info(gandi, resource, stat):
     Cache statistics are based on 24 hours data.
     """
     output_keys = ['name', 'type', 'size', 'memory', 'console', 'vhost',
-                   'dc', 'sftp_server', 'git_server']
+                   'dc', 'sftp_server', 'git_server', 'snapshot']
 
     paas = gandi.paas.info(resource)
     paas_hosts = []
