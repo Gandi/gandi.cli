@@ -1,6 +1,7 @@
 """ PaaS instances namespace commands. """
 
 import click
+from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_paas, output_generic, randomstring
@@ -174,7 +175,7 @@ def delete(gandi, background, force, resource):
 @click.option('--vhosts', default=None, multiple=True,
               help='List of virtual hosts to be linked to the instance.')
 @click.option('--password', help='Use command-line supplied password.')
-@click.option('--snapshotprofile', default=None,
+@click.option('--snapshotprofile', default=None, type=click.INT,
               help='Set a snapshot profile associated to this paas disk.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
@@ -228,25 +229,35 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
               help='Upgrade the instance to the last system image if needed.')
 @click.option('--console', default=None,
               help='Activate or deactivate the Console.')
-@click.option('--snapshotprofile', default=None,
+@click.option('--snapshotprofile', default=None, type=click.INT,
               help='Set a snapshot profile associated to this paas disk.')
 @click.option('--reset-mysql-password', default=None,
               help='Reset mysql password for root.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
+@click.option('--delete-snapshotprofile', default=False, is_flag=True,
+              help='Remove a snapshot profile associated to this paas disk.')
 @pass_gandi
 @click.argument('resource')
 def update(gandi, resource, name, size, quantity, password, sshkey,
            upgrade, console, snapshotprofile, reset_mysql_password,
-           background):
+           background, delete_snapshotprofile):
     """Update a PaaS instance.
 
     Resource can be a Hostname or an ID
     """
+
+    if snapshotprofile and delete_snapshotprofile:
+        raise UsageError('You must not set snapshotprofile and '
+                         'delete-snapshotprofile.')
+
     pwd = None
     if password:
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
+
+    if delete_snapshotprofile:
+        snapshotprofile = ''
 
     result = gandi.paas.update(resource, name, size, quantity, pwd,
                                sshkey, upgrade, console, snapshotprofile,
