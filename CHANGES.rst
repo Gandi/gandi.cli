@@ -6,6 +6,8 @@ Changelog
 
 * New 'certstore' namespace to manage certificates in webaccs.
 * Update vhost create and update to handle hosted certificates.
+* Update paas create to handle hosted certificates.
+* Update webacc create and add to handle hosted certificates.
 
 0.13
 ----
