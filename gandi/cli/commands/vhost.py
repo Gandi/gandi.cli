@@ -87,11 +87,9 @@ def info(gandi, resource, id):
               is_flag=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
-@click.option('--force', '-f', is_flag=True,
-              help='Continue the process whatever append.')
 @pass_gandi
 def create(gandi, vhost, paas, ssl, private_key, alter_zone, poll_cert,
-           background, force):
+           background):
     """ Create a new vhost. """
     if not gandi.hostedcert.activate_ssl(vhost, ssl, private_key, poll_cert):
         return
