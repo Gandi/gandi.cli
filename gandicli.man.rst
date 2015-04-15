@@ -230,7 +230,7 @@ Details:
 
 * ``gandi oper info id`` show information about the operation ``id``.
 
-* ``gandi oper list`` show all the running operation on your product at Gandi (for example Simple Hosting, domain, hosting). Possible option is ``--limit INTEGER`` which list only a subset of the full list of running operations (default is 100), ``--step`` to filter on specific step possible values are: BILL', 'WAIT', 'RUN', 'ERROR' (default to 'BILL', 'WAIT', 'RUN').
+* ``gandi oper list`` show all the running operation on your product at Gandi (for example Simple Hosting, domain, hosting). Possible option is ``--limit INTEGER`` which list only a subset of the full list of running operations (default is 100), ``--step`` to filter on specific step possible values are: BILL, WAIT, RUN, ERROR (default to BILL, WAIT, RUN).
 
 * ``gandi paas clone host.domain.tld`` clone all files of a remote virtual host to a local git repository.
 
