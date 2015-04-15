@@ -10,7 +10,7 @@ from gandi.cli.core.params import pass_gandi, OPER_STEP
 @cli.command()
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
-@click.option('--step', type=OPER_STEP,
+@click.option('--step', '-s', type=OPER_STEP,
               default=['BILL', 'WAIT', 'RUN'], multiple=True,
               show_default=False)
 @pass_gandi
