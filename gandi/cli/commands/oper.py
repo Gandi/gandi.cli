@@ -4,13 +4,13 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_generic
-from gandi.cli.core.params import pass_gandi
+from gandi.cli.core.params import pass_gandi, OPER_STEP
 
 
 @cli.command()
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
-@click.option('--step', type=click.Choice(['BILL', 'WAIT', 'RUN', 'ERROR']),
+@click.option('--step', type=OPER_STEP,
               default=['BILL', 'WAIT', 'RUN'], multiple=True,
               show_default=False)
 @pass_gandi
