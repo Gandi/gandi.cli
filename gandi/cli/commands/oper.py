@@ -12,7 +12,7 @@ from gandi.cli.core.params import pass_gandi, OPER_STEP
               show_default=True)
 @click.option('--step', '-s', type=OPER_STEP, help='Filter the result by step',
               default=['BILL', 'WAIT', 'RUN'], multiple=True,
-              show_default=False)
+              show_default=True)
 @pass_gandi
 def list(gandi, limit, step):
     """List operations."""
