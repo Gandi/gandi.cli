@@ -128,8 +128,8 @@ date_expire : 20160316T00:00:00
 """)
         self.assertEqual(result.exit_code, 0)
 
-    def test_add(self):
-        result = self.invoke_with_exceptions(certstore.add,
+    def test_create(self):
+        result = self.invoke_with_exceptions(certstore.create,
                                              ['--pk', 'PK', '--crt', 'CRT'])
 
         self.assertEqual(result.output, """\
