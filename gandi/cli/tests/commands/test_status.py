@@ -9,7 +9,7 @@ from .base import CommandTestCase
 
 class StatusTestCase(CommandTestCase):
 
-    def _mock_http_request_base(self):
+    def _mock_http_request_base(self, status='SUNNY'):
 
         response = """{
         "fields": {"status": {"value": [
@@ -23,15 +23,15 @@ class StatusTestCase(CommandTestCase):
                                body=response,
                                status=200)
 
-        response = """{"status": "SUNNY"}"""
+        response = """{"status": "%s"}""" % status
         httpretty.register_uri(httpretty.GET,
                                'https://status.gandi.net/api/status',
                                body=response,
                                status=200)
 
-    def _mock_http_request_working(self):
+    def _mock_http_request_working(self, status='SUNNY'):
 
-        self._mock_http_request_base()
+        self._mock_http_request_base(status)
         response = """[
         {"description": "IAAS",
          "name": "IAAS",
@@ -68,9 +68,9 @@ class StatusTestCase(CommandTestCase):
                                body=response,
                                status=200)
 
-    def _mock_http_request_incident(self):
+    def _mock_http_request_incident(self, status='STORMY'):
 
-        self._mock_http_request_base()
+        self._mock_http_request_base(status)
         response = """[
         {"description": "IAAS",
          "name": "IAAS",
@@ -176,7 +176,7 @@ SSL       : All services are up and running
 
     @httpretty.activate
     def test_status_service_incident(self):
-        self._mock_http_request_incident()
+        self._mock_http_request_incident('STORMY')
 
         result = self.invoke_with_exceptions(root.status, ['paas'])
 
@@ -191,7 +191,7 @@ PAAS      : Incident on a storage unit on Paris datacenter - %s
 
     @httpretty.activate
     def test_status_no_service_incident(self):
-        self._mock_http_request_working()
+        self._mock_http_request_working('FOGGY')
         self._mock_http_request_incident_no_service()
 
         result = self.invoke_with_exceptions(root.status, [])
