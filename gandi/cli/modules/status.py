@@ -34,6 +34,11 @@ class Status(GandiModule):
         return cls.json_call('%s/services' % cls.api_url)
 
     @classmethod
+    def status(cls):
+        """Retrieve global status from status.gandi.net."""
+        return cls.json_call('%s/status' % cls.api_url)
+
+    @classmethod
     def events(cls, filters):
         """Retrieve events details from status.gandi.net."""
         current = filters.pop('current', False)

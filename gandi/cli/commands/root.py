@@ -77,16 +77,21 @@ def status(gandi, service):
     """Display current status from status.gandi.net."""
 
     if not service:
-        # check if there is something going on but not affecting a service
-        filters = {
-            'category': 'Incident',
-            'current': True,
-        }
-        events = gandi.status.events(filters)
-        for event in events:
-            event_url = gandi.status.event_timeline(event)
-            service_detail = '%s - %s' % (event['title'], event_url)
-            gandi.echo(service_detail)
+        global_status = gandi.status.status()
+        if global_status['status'] == 'FOGGY':
+            # something is going on but not affecting services
+            filters = {
+                'category': 'Incident',
+                'current': True,
+            }
+            events = gandi.status.events(filters)
+            for event in events:
+                if event['services']:
+                    # do not process services
+                    continue
+                event_url = gandi.status.event_timeline(event)
+                service_detail = '%s - %s' % (event['title'], event_url)
+                gandi.echo(service_detail)
 
     # then check other services
     descs = gandi.status.descriptions()
