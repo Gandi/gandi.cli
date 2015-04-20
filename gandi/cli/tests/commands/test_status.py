@@ -59,6 +59,15 @@ class StatusTestCase(CommandTestCase):
                                body=response,
                                status=200)
 
+        response = """[]"""
+
+        incident_url = ('https://status.gandi.net/api/events?category='
+                        'Incident&current=true')
+        httpretty.register_uri(httpretty.GET,
+                               incident_url,
+                               body=response,
+                               status=200)
+
     def _mock_http_request_incident(self):
 
         self._mock_http_request_base()
@@ -110,6 +119,27 @@ class StatusTestCase(CommandTestCase):
                                body=response,
                                status=200)
 
+    def _mock_http_request_incident_no_service(self):
+
+        response = """
+        [{"category": "Incident",
+        "date_end": "2015-04-15T22:06:43+00:00",
+        "date_start": "2015-04-15T21:30:00+00:00",
+        "duration": 36,
+        "estimate_date_end": "2015-04-15T22:30:00+00:00",
+        "id": "15",
+        "services": [],
+        "title": "Reachability issue on our website"
+        }]
+        """
+
+        incident_url_2 = ('https://status.gandi.net/api/events?category='
+                          'Incident&current=true')
+        httpretty.register_uri(httpretty.GET,
+                               incident_url_2,
+                               body=response,
+                               status=200)
+
     @httpretty.activate
     def test_status(self):
         self._mock_http_request_working()
@@ -154,6 +184,28 @@ SSL       : All services are up and running
         wanted = ("""\
 PAAS      : Incident on a storage unit on Paris datacenter - %s
 """) % url
+
+        self.assertEqual(result.output, wanted)
+
+        self.assertEqual(result.exit_code, 0)
+
+    @httpretty.activate
+    def test_status_no_service_incident(self):
+        self._mock_http_request_working()
+        self._mock_http_request_incident_no_service()
+
+        result = self.invoke_with_exceptions(root.status, [])
+
+        wanted = ("""\
+Reachability issue on our website - https://status.gandi.net/timeline/events/15
+IAAS      : All services are up and running
+PAAS      : All services are up and running
+Site      : All services are up and running
+API       : All services are up and running
+SSL       : All services are up and running
+Domain    : All services are up and running
+Email     : All services are up and running
+""")
 
         self.assertEqual(result.output, wanted)
 
