@@ -152,6 +152,8 @@ def create(gandi, name, datacenter, backend, port, vhost, algorithm,
                                                'different port for each '
                                                'backend, use `-b ip:port`',
                                                type=int)
+            else:
+                backend['port'] = port
     if vhost and not gandi.hostedcert.activate_ssl(vhost,
                                                    ssl,
                                                    private_key,
@@ -203,6 +205,8 @@ def delete(gandi, webacc, vhost, backend, port):
                                                    ' different port for '
                                                    'each backend, use `-b '
                                                    'ip:port`', type=int)
+                else:
+                    backend['port'] = port
             result = gandi.webacc.backend_remove(backend)
         return result
     if vhost:
@@ -243,6 +247,8 @@ def add(gandi, resource, vhost, zone_alter, backend, port, ssl, private_key,
                                                    ' different port for '
                                                    'each backend, use `-b '
                                                    'ip:port`', type=int)
+                else:
+                    backend['port'] = port
             result = gandi.webacc.backend_add(resource, backend)
     if vhost:
         if not gandi.hostedcert.activate_ssl(vhost,
@@ -262,11 +268,13 @@ def add(gandi, resource, vhost, zone_alter, backend, port, ssl, private_key,
 @cli.command()
 @click.option('--backend', '-b', help="Enable backends in the webaccelerator",
               multiple=True, type=BACKEND)
+@click.option('--port', '-p', type=click.INT, required=False,
+              help="set a default port backend if not specified with backend")
 @click.option('--probe', '-p', help="Enable probe for the webaccelerator",
               is_flag=True)
 @click.argument('resource', metavar="Webbacc name", required=False)
 @pass_gandi
-def enable(gandi, resource, backend, probe):
+def enable(gandi, resource, backend, port, probe):
     """ Enable a backend or a prove on a webaccelerator """
     if backend:
         backends = backend
@@ -278,6 +286,8 @@ def enable(gandi, resource, backend, probe):
                                                    ' different port for '
                                                    'each backend, use `-b '
                                                    'ip:port`', type=int)
+                else:
+                    backend['port'] = port
             result = gandi.webacc.backend_enable(backend)
     return result
     if probe:
@@ -309,6 +319,8 @@ def disable(gandi, resource, backend, port, probe):
                                                    ' different port for '
                                                    'each backend, use `-b '
                                                    'ip:port`', type=int)
+                else:
+                    backend['port'] = port
             result = gandi.webacc.backend_disable(backend)
         return result
     if probe:
