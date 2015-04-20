@@ -80,10 +80,10 @@ def status(gandi, service):
         # check if there is something going on but not affecting a service
         filters = {
             'category': 'Incident',
-            # 'current': True,
+            'current': True,
         }
         events = gandi.status.events(filters)
-        for event in events[:1]:
+        for event in events:
             event_url = gandi.status.event_timeline(event)
             service_detail = '%s - %s' % (event['title'], event_url)
             gandi.echo(service_detail)
