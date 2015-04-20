@@ -277,7 +277,7 @@ def add(gandi, resource, vhost, zone_alter, backend, port, ssl, private_key,
 @click.argument('resource', metavar="Webbacc name", required=False)
 @pass_gandi
 def enable(gandi, resource, backend, port, probe):
-    """ Enable a backend or a prove on a webaccelerator """
+    """ Enable a backend or a probe on a webaccelerator """
     if backend:
         backends = backend
         for backend in backends:
