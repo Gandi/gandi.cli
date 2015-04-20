@@ -28,13 +28,15 @@ def list(gandi, limit, format):
         output_keys = ['name', 'state', 'ssl']
 
         for webacc in result:
-                webacc['ssl'] = 'Enabled' if webacc['ssl_enable'] else 'Disable'
+                webacc['ssl'] = ('Enabled' if webacc['ssl_enable']
+                                 else 'Disable')
                 output_generic(gandi, webacc, output_keys, justify=14)
                 gandi.echo('Vhosts :')
                 for num, vhost in enumerate(webacc['vhosts']):
                     output_vhosts = ['vhost', 'ssl']
                     vhost['vhost'] = vhost['name']
-                    vhost['ssl'] = 'Disable' if vhost['cert_id'] is None else 'Enabled'
+                    vhost['ssl'] = ('Disable' if vhost['cert_id'] is None
+                                    else 'Enabled')
                     output_sub_generic(gandi, vhost, output_vhosts,
                                        justify=14)
                     gandi.echo('')
@@ -43,10 +45,13 @@ def list(gandi, limit, format):
                     try:
                         ip = gandi.ip.info(server['ip'])
                         iface = gandi.iface.info(ip['iface_id'])
-                        server['name'] = gandi.iaas.info(iface['vm_id'])['hostname']
+                        vm_info = gandi.iaas.info(iface['vm_id'])
+                        server['name'] = vm_info['hostname']
                         output_servers = ['name', 'ip', 'port', 'state']
                     except:
-                        click.secho('\tThe backend with ip address %s is no longer exist.\n\tYou should remove it.' % server['ip'], fg='red')
+                        warningmsg = ('\tBackend with ip address %s no longer \
+                            exists.\n\tYou should remove it.' % server['ip'])
+                        gandi.echo(warningmsg)
                         output_servers = ['ip', 'port', 'state']
                     output_sub_generic(gandi, server, output_servers,
                                        justify=14)
@@ -72,7 +77,7 @@ def info(gandi, resource, format):
             'algorithm': result['lb']['algorithm'],
             'datacenter': result['datacenter']['name'],
             'state': result['state'],
-            'ssl':  'Disable' if result['ssl_enable'] is False else 'Enabled'
+            'ssl': 'Disable' if result['ssl_enable'] is False else 'Enabled'
         }
         output_keys = ['name', 'state', 'datacenter', 'ssl', 'algorithm']
         output_generic(gandi, output_base, output_keys, justify=14)
@@ -92,14 +97,18 @@ def info(gandi, resource, format):
                 server['name'] = gandi.iaas.info(iface['vm_id'])['hostname']
                 output_servers = ['name', 'ip', 'port', 'state']
             except:
+                warningmsg = ('\tBackend with ip address %s no longer \
+                    exists.\n\tYou should remove it.' % server['ip'])
+                gandi.echo(warningmsg)
                 output_servers = ['ip', 'port', 'state']
-                click.secho('\tThe backend with ip address %s is no longer exist.' % server['ip'], fg='red')
             output_sub_generic(gandi, server, output_servers, justify=14)
             gandi.echo('')
         gandi.echo('Probe :')
         output_probe = ['state', 'host', 'interval', 'method', 'response',
                         'threshold', 'timeout', 'url', 'window']
-        result['probe']['state'] = 'Disable' if result['probe']['enable'] is False else 'Enabled'
+        result['probe']['state'] = ('Disable'
+                                    if result['probe']['enable'] is False
+                                    else 'Enabled')
         output_sub_generic(gandi, result['probe'], output_probe, justify=14)
     elif format:
         output_json(gandi, format, result)
@@ -108,7 +117,8 @@ def info(gandi, resource, format):
 
 @cli.command()
 @click.option('--datacenter', '-dc', type=DATACENTER,
-              help="Datacenter where the webaccelerator will be created", required=True)
+              help="Datacenter where the webaccelerator will be created",
+              required=True)
 @click.option('--backend', '-b', type=BACKEND, multiple=True,
               help="Backend to add in the webaccelerator, use ip:port")
 @click.option('--port', '-p', type=click.INT, required=False,
@@ -154,8 +164,10 @@ def create(gandi, name, datacenter, backend, port, vhost, algorithm,
 @pass_gandi
 def update(gandi, resource, name, algorithm, ssl_enable, ssl_disable):
     """Update a webaccelerator"""
-    result = gandi.webacc.update(resource, name, algorithm, ssl_enable, ssl_disable)
+    result = gandi.webacc.update(resource, name, algorithm, ssl_enable,
+                                 ssl_disable)
     return result
+
 
 @cli.command()
 @click.option('--vhost', '-v', help="Remove vhosts in the webaccelerator",
