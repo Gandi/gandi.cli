@@ -24,42 +24,43 @@ def list(gandi, limit, format):
     }
 
     result = gandi.webacc.list(options)
-    if not format:
-        output_keys = ['name', 'state', 'ssl']
-
-        for webacc in result:
-                webacc['ssl'] = ('Enabled' if webacc['ssl_enable']
-                                 else 'Disable')
-                output_generic(gandi, webacc, output_keys, justify=14)
-                gandi.echo('Vhosts :')
-                for num, vhost in enumerate(webacc['vhosts']):
-                    output_vhosts = ['vhost', 'ssl']
-                    vhost['vhost'] = vhost['name']
-                    vhost['ssl'] = ('Disable' if vhost['cert_id'] is None
-                                    else 'Enabled')
-                    output_sub_generic(gandi, vhost, output_vhosts,
-                                       justify=14)
-                    gandi.echo('')
-                gandi.echo('Backends :')
-                for server in webacc['servers']:
-                    try:
-                        ip = gandi.ip.info(server['ip'])
-                        iface = gandi.iface.info(ip['iface_id'])
-                        vm_info = gandi.iaas.info(iface['vm_id'])
-                        server['name'] = vm_info['hostname']
-                        output_servers = ['name', 'ip', 'port', 'state']
-                    except:
-                        warningmsg = ('\tBackend with ip address %s no longer \
-                            exists.\n\tYou should remove it.' % server['ip'])
-                        gandi.echo(warningmsg)
-                        output_servers = ['ip', 'port', 'state']
-                    output_sub_generic(gandi, server, output_servers,
-                                       justify=14)
-                    gandi.echo('')
-
-                gandi.separator_line('-', 4)
-    elif format:
+    if format:
         output_json(gandi, format, result)
+        return result
+
+    output_keys = ['name', 'state', 'ssl']
+    for num, webacc in enumerate(result):
+        if num:
+            gandi.separator_line('-', 4)
+
+        webacc['ssl'] = 'Enabled' if webacc['ssl_enable'] else 'Disable'
+        output_generic(gandi, webacc, output_keys, justify=14)
+
+        gandi.echo('Vhosts :')
+        for num, vhost in enumerate(webacc['vhosts']):
+            output_vhosts = ['vhost', 'ssl']
+            vhost['vhost'] = vhost['name']
+            vhost['ssl'] = 'Disable' if vhost['cert_id'] is None else 'Enabled'
+            output_sub_generic(gandi, vhost, output_vhosts,
+                               justify=14)
+            gandi.echo('')
+
+        gandi.echo('Backends :')
+        for server in webacc['servers']:
+            try:
+                ip = gandi.ip.info(server['ip'])
+                iface = gandi.iface.info(ip['iface_id'])
+                vm_info = gandi.iaas.info(iface['vm_id'])
+                server['name'] = vm_info['hostname']
+                output_servers = ['name', 'ip', 'port', 'state']
+            except:
+                warningmsg = ('\tBackend with ip address %s no longer exists.\
+                    \n\tYou should remove it.' % server['ip'])
+                gandi.echo(warningmsg)
+                output_servers = ['ip', 'port', 'state']
+            output_sub_generic(gandi, server, output_servers,
+                               justify=14)
+            gandi.echo('')
     return result
 
 
@@ -71,47 +72,48 @@ def list(gandi, limit, format):
 def info(gandi, resource, format):
     """ Dislay information about a webaccelerator """
     result = gandi.webacc.info(resource)
-    if not format:
-        output_base = {
-            'name': result['name'],
-            'algorithm': result['lb']['algorithm'],
-            'datacenter': result['datacenter']['name'],
-            'state': result['state'],
-            'ssl': 'Disable' if result['ssl_enable'] is False else 'Enabled'
-        }
-        output_keys = ['name', 'state', 'datacenter', 'ssl', 'algorithm']
-        output_generic(gandi, output_base, output_keys, justify=14)
-
-        gandi.echo('Vhosts :')
-        for vhost in result['vhosts']:
-            output_vhosts = ['vhost', 'ssl']
-            vhost['vhost'] = vhost['name']
-            vhost['ssl'] = 'None' if vhost['cert_id'] is None else 'Exists'
-            output_sub_generic(gandi, vhost, output_vhosts, justify=14)
-            gandi.echo('')
-        gandi.echo('Backends :')
-        for server in result['servers']:
-            try:
-                ip = gandi.ip.info(server['ip'])
-                iface = gandi.iface.info(ip['iface_id'])
-                server['name'] = gandi.iaas.info(iface['vm_id'])['hostname']
-                output_servers = ['name', 'ip', 'port', 'state']
-            except:
-                warningmsg = ('\tBackend with ip address %s no longer \
-                    exists.\n\tYou should remove it.' % server['ip'])
-                gandi.echo(warningmsg)
-                output_servers = ['ip', 'port', 'state']
-            output_sub_generic(gandi, server, output_servers, justify=14)
-            gandi.echo('')
-        gandi.echo('Probe :')
-        output_probe = ['state', 'host', 'interval', 'method', 'response',
-                        'threshold', 'timeout', 'url', 'window']
-        result['probe']['state'] = ('Disable'
-                                    if result['probe']['enable'] is False
-                                    else 'Enabled')
-        output_sub_generic(gandi, result['probe'], output_probe, justify=14)
-    elif format:
+    if format:
         output_json(gandi, format, result)
+        return result
+
+    output_base = {
+        'name': result['name'],
+        'algorithm': result['lb']['algorithm'],
+        'datacenter': result['datacenter']['name'],
+        'state': result['state'],
+        'ssl': 'Disable' if result['ssl_enable'] is False else 'Enabled'
+    }
+    output_keys = ['name', 'state', 'datacenter', 'ssl', 'algorithm']
+    output_generic(gandi, output_base, output_keys, justify=14)
+
+    gandi.echo('Vhosts :')
+    for vhost in result['vhosts']:
+        output_vhosts = ['vhost', 'ssl']
+        vhost['vhost'] = vhost['name']
+        vhost['ssl'] = 'None' if vhost['cert_id'] is None else 'Exists'
+        output_sub_generic(gandi, vhost, output_vhosts, justify=14)
+        gandi.echo('')
+    gandi.echo('Backends :')
+    for server in result['servers']:
+        try:
+            ip = gandi.ip.info(server['ip'])
+            iface = gandi.iface.info(ip['iface_id'])
+            server['name'] = gandi.iaas.info(iface['vm_id'])['hostname']
+            output_servers = ['name', 'ip', 'port', 'state']
+        except:
+            warningmsg = ('\tBackend with ip address %s no longer exists.\
+                \n\tYou should remove it.' % server['ip'])
+            gandi.echo(warningmsg)
+            output_servers = ['ip', 'port', 'state']
+        output_sub_generic(gandi, server, output_servers, justify=14)
+        gandi.echo('')
+    gandi.echo('Probe :')
+    output_probe = ['state', 'host', 'interval', 'method', 'response',
+                    'threshold', 'timeout', 'url', 'window']
+    result['probe']['state'] = ('Disable'
+                                if result['probe']['enable'] is False
+                                else 'Enabled')
+    output_sub_generic(gandi, result['probe'], output_probe, justify=14)
     return result
 
 
