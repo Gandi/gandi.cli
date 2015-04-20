@@ -101,6 +101,24 @@ class Certificate(GandiModule):
     """
 
     @classmethod
+    def get_latest_valid(cls, hosts):
+        """ Retrieve valid certificates by fqdn. """
+        certs = cls.list({'status': 'valid'})
+        possible = None
+
+        if not isinstance(hosts, (tuple, list)):
+            hosts = [hosts]
+
+        for cert in certs:
+            cert_hosts = set([cert['cn']] + cert['altnames'])
+            if len(set(hosts) - cert_hosts) == 0:
+                if (possible and possible['date_end'] < cert['date_end']
+                    or not possible):
+                        possible = cert
+
+        return possible
+
+    @classmethod
     def from_cn(cls, common_name):
         """ Retrieve a certificate by its common name. """
         result = [(cert['id'], [cert['cn']] + cert['altnames'])
@@ -171,6 +189,41 @@ class Certificate(GandiModule):
         return cls.call('cert.info', cls.usable_id(id))
 
     @classmethod
+    def get_package(cls, common_name, type='std', max_altname=None,
+                    altnames=None, warranty=None):
+        type = type or 'std'
+
+        if max_altname:
+            if max_altname < len(altnames):
+                cls.echo('You choose --max-altname %s but you have more '
+                           'altnames (%s)' % (max_altname, len(altnames)))
+                return
+        else:
+            if '*' in common_name:
+                max_altname = 'w'
+            elif not altnames:
+                max_altname = 1
+            else:
+                for max_ in [1, 3, 5, 10, 20]:
+                    if len(altnames) < max_:
+                        max_altname = max_
+                        break
+
+                if not max_altname:
+                    cls.echo('Too many altnames, max is 20.')
+                    return
+
+        pack_filter = 'cert_%s_%s_' % (type, max_altname)
+        if warranty:
+            pack_filter += '%s_' % (warranty)
+
+        packages = [item['name']
+                    for item in cls.package_list()
+                    if item['name'].startswith(pack_filter)]
+
+        return packages[0] if packages else None
+
+    @classmethod
     def advice_dcv_method(cls, csr, package, altnames, dcv_method):
         """ Display dcv_method information. """
         params = {'csr': csr, 'package': package, 'dcv_method': dcv_method}
@@ -190,7 +243,7 @@ class Certificate(GandiModule):
         cls.call('cert.resend_dcv', oper_id)
 
     @classmethod
-    def create(cls, csr, duration, package, altnames, dcv_method):
+    def create(cls, csr, duration, package, altnames=None, dcv_method=None):
         """ Create a new certificate. """
         params = {'csr': csr, 'package': package, 'duration': duration}
         if altnames:
@@ -247,6 +300,26 @@ class Certificate(GandiModule):
 
         return result
 
+    @staticmethod
+    def private_key(common_name):
+        return common_name.replace('*.', 'wildcard.') + '.key'
+
+    @classmethod
+    def gen_pk(cls, common_name, private_key):
+        if private_key:
+            cmd = 'openssl req -new -key %(key)s -out %(csr)s -subj "%(subj)s"'
+            if not os.path.exists(private_key):
+                content = private_key
+                private_key = cls.private_key(common_name)
+                with open(private_key, 'w') as fhandle:
+                    fhandle.write(content)
+        else:
+            private_key = cls.private_key(common_name)
+            # TODO check if it exists
+            cmd = ('openssl req -new -newkey rsa:2048 -sha256 -nodes '
+                   '-out %(csr)s -keyout %(key)s -subj "%(subj)s"')
+        return cmd, private_key
+
     @classmethod
     def create_csr(cls, common_name, private_key=None, params=None):
         """ Create CSR. """
@@ -255,13 +328,7 @@ class Certificate(GandiModule):
         params = [(key, val) for key, val in params if val]
         subj = '/' + '/'.join(['='.join(value) for value in params])
 
-        if private_key and os.path.exists(private_key):
-            cmd = 'openssl req -new -key %(key)s -out %(csr)s -subj "%(subj)s"'
-        else:
-            private_key = common_name.replace('*.', 'wildcard.') + '.key'
-            # TODO check if it exists
-            cmd = ('openssl req -new -newkey rsa:2048 -sha256 -nodes '
-                   '-out %(csr)s -keyout %(key)s -subj "%(subj)s"')
+        cmd, private_key = cls.gen_pk(common_name, private_key)
 
         if private_key.endswith('.crt') or private_key.endswith('.key'):
             csr_file = re.sub('\.(crt|key)$', '.csr', private_key)
@@ -290,8 +357,9 @@ class Certificate(GandiModule):
         return common_name
 
     @classmethod
-    def process_csr(cls, common_name, csr, private_key, country, state, city,
-                    organisation, branch):
+    def process_csr(cls, common_name, csr=None, private_key=None,
+                    country=None, state=None, city=None, organisation=None,
+                    branch=None):
         """ Create a PK and a CSR if needed."""
         if csr:
             if branch or organisation or city or state or country:

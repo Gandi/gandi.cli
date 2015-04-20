@@ -398,3 +398,28 @@ def output_sub_generic(gandi, data, output_keys, justify=10):
 def output_service(gandi, service, status, justify=10):
     """ Helper to output a status service information."""
     output_line(gandi, service, status, justify)
+
+
+def output_hostedcert(gandi, hcert, output_keys, justify=12):
+    output_keys = list(output_keys)
+    fqdns = 'fqdns' in output_keys
+    vhosts = 'vhosts' in output_keys
+
+    if fqdns:
+        output_keys.pop(output_keys.index('fqdns'))
+
+    if vhosts:
+        output_keys.pop(output_keys.index('vhosts'))
+
+    output_generic(gandi, hcert, output_keys, justify)
+
+    if fqdns:
+        for fqdn in hcert['fqdns']:
+            gandi.separator_sub_line()
+            output_sub_line(gandi, 'fqdn', fqdn['name'], 10)
+
+    if vhosts:
+        for vhost in hcert['related_vhosts']:
+            gandi.separator_sub_line()
+            output_sub_line(gandi, 'vhost', vhost['name'], 10)
+            output_sub_line(gandi, 'type', vhost['type'], 10)

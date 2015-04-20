@@ -64,6 +64,10 @@ Namespaces:
 *  certificate plans       List certificate plans (replace packages).
 *  certificate resend-dcv  Resend the DCV mail for a pending certificate.
 *  certificate update      Update a certificate CSR.
+*  certstore create        Create an hosted certificate.
+*  certstore delete        Delete an hosted certificate.
+*  certstore info          Display information about an hosted certificate.
+*  certstore list          List hosted certificates.
 *  config                  Configure default values.
 *  contact create          Create a new contact in interactive mode.
 *  datacenters             List available datacenters.
@@ -119,6 +123,7 @@ Namespaces:
 *  vhost delete            Delete a vhost.
 *  vhost info              Display information about a vhost.
 *  vhost list              List vhosts.
+*  vhost update            Update a vhost.
 *  vlan create             Create a new vlan
 *  vlan delete             Delete a vlan.
 *  vlan info               Display information about a vlan.
@@ -144,27 +149,35 @@ Details:
 
 * ``gandi api`` display information about the Gandi.net API.
 
-* ``certificate change-dcv resource`` allow to change the domain validation process for a specific certificate request. Mandatory option is ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
+* ``gandi certificate change-dcv resource`` allow to change the domain validation process for a specific certificate request. Mandatory option is ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
 
-* ``certificate create`` allow to request the creation of a certificate. If a private key is present as ``--private-key`` and not a CSR, the CSR will be generated. If no CSR or private key are present in the parameters, both are generated. Possible options are ``--csr TEXT`` and ``--private-key TEXT`` which could be the content of a certificate request and a private key or path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``-organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--duration INTEGER`` how many years of validity (up to 5 years), ``--package TEXT`` is the type of certificate as listed by ``gandi certificate package``, ``--package`` is now deprecated and should be replaced by ``--type``, ``--max-altname`` and ``--warranty``, ``--type`` is the certificate type in std (standard), bus (business) and pro, ``--max-altname`` is the maximum number of altnames that this multi domain certificate will be able to have (by default it's calculated on the number of ``--altnames`` param you have, but you can override it with a bigger value), ``--warranty`` is the value of the financial transaction under warranty (only appliable with Pro certificates), ``--altnames LIST`` is a list of all alternative names and ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
+* ``gandi certificate create`` allow to request the creation of a certificate. If a private key is present as ``--private-key`` and not a CSR, the CSR will be generated. If no CSR or private key are present in the parameters, both are generated. Possible options are ``--csr TEXT`` and ``--private-key TEXT`` which could be the content of a certificate request and a private key or path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``-organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--duration INTEGER`` how many years of validity (up to 5 years), ``--package TEXT`` is the type of certificate as listed by ``gandi certificate package``, ``--package`` is now deprecated and should be replaced by ``--type``, ``--max-altname`` and ``--warranty``, ``--type`` is the certificate type in std (standard), bus (business) and pro, ``--max-altname`` is the maximum number of altnames that this multi domain certificate will be able to have (by default it's calculated on the number of ``--altnames`` param you have, but you can override it with a bigger value), ``--warranty`` is the value of the financial transaction under warranty (only appliable with Pro certificates), ``--altnames LIST`` is a list of all alternative names and ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
 
-* ``certificate delete resource`` delete a certificate. Possible option is ``--force`` (or ``-f``) to bypass the validation question; usefull in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``). Note that a resource can be a cn entry or an integer id.
+* ``gandi certificate delete resource`` delete a certificate. Possible option is ``--force`` (or ``-f``) to bypass the validation question; usefull in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``). Note that a resource can be a cn entry or an integer id.
 
-* ``certificate follow resource`` display the current status of a certificate operation. Resource is an operation id.
+* ``gandi certificate follow resource`` display the current status of a certificate operation. Resource is an operation id.
 
-* ``certificate export resource`` write the selected certificate to a file. Possible option is ``--output TEXT`` for the path of the output file, ``--force`` overwrite any existing file, ``--intermediate`` will retrieve the needed intermediate certificates. Note that a resource can be a cn entry or an integer id.
+* ``gandi certificate export resource`` write the selected certificate to a file. Possible option is ``--output TEXT`` for the path of the output file, ``--force`` overwrite any existing file, ``--intermediate`` will retrieve the needed intermediate certificates. Note that a resource can be a cn entry or an integer id.
 
-* ``certificate info resource`` show detailed view of a specific certificate. Possible options are ``--id``, ``--altnames``, ``--csr``, ``--cert`` which show the integer id, the alternative names, the certificate request and the full certificate, ``--all-status`` show the certificate without regard for its status. Note that a resource can be a cn entry or an integer id.
+* ``gandi certificate info resource`` show detailed view of a specific certificate. Possible options are ``--id``, ``--altnames``, ``--csr``, ``--cert`` which show the integer id, the alternative names, the certificate request and the full certificate, ``--all-status`` show the certificate without regard for its status. Note that a resource can be a cn entry or an integer id.
 
-* ``certificate list`` Possible options are ``--id``, ``--altnames``, ``--csr``, ``--cert`` which show the integer id, the alternative names, the certificate request and the full certificate for each element of the list, ``--all-status`` show certificates without regards to their status, ``--status``, ``--dates`` show the status of the certificate and the creation and expiration dates, ``--limit INTEGER`` show a subset of the list.
+* ``gandi certificate list`` Possible options are ``--id``, ``--altnames``, ``--csr``, ``--cert`` which show the integer id, the alternative names, the certificate request and the full certificate for each element of the list, ``--all-status`` show certificates without regards to their status, ``--status``, ``--dates`` show the status of the certificate and the creation and expiration dates, ``--limit INTEGER`` show a subset of the list.
 
-* ``certificate packages`` show a full list of all available certificate types, this is depreacted, replace it by ``certificate plans``.
+* ``gandi certificate packages`` show a full list of all available certificate types, this is depreacted, replace it by ``certificate plans``.
 
-* ``certificate plans`` show a full list of all available certificate plans.
+* ``gandi certificate plans`` show a full list of all available certificate plans.
 
-* ``certificate resend-dcv resource`` send the validation email again (only for the 'email' DCV method). Note that a resource can be a cn entry or an integer id.
+* ``gandi certificate resend-dcv resource`` send the validation email again (only for the 'email' DCV method). Note that a resource can be a cn entry or an integer id.
 
-* ``certificate update resource`` modify the options of a certificate. Possible options are ``--csr TEXT``, ``--private-key TEXT`` could be either the content of a certificate request and a private key or a path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``--organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--altnames LIST`` to change all the alternative names (comma separated text without space), ``--dcv-method TEXT`` with domain validation process method in email, dns, file, auto. Note that a resource can be a CN entry or an integer id.
+* ``gandi certificate update resource`` modify the options of a certificate. Possible options are ``--csr TEXT``, ``--private-key TEXT`` could be either the content of a certificate request and a private key or a path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``--organisation TEXT``, ``--branch TEXT`` to specify new administrative informations, ``--altnames LIST`` to change all the alternative names (comma separated text without space), ``--dcv-method TEXT`` with domain validation process method in email, dns, file, auto. Note that a resource can be a CN entry or an integer id.
+
+* ``gandi certstore create`` create a new hosted certificate that will be associated to paas vhost or webaccs. Possible options are ``--private-key PK`` (or ``--pk``) to give the private key and ``--certificate CERT`` (or ``--crt``) to give the certificate (the certificate can also be given by its id with ``--certificate-id ID``.
+
+* ``gandi certstore delete resource`` delete all hosted certificate corresponding to the resource (/!\ if you give an FQDN, it will delete all hosted certificate that correspond). Possible option is ``--force`` (or ``-f``) to continue deleting without asking.
+
+* ``gandi certstore info resource`` show detailed view of hosted certificates corresponding to the resource.
+
+* ``gandi certstore list`` list all the hosted certificates for this account. Possible options are ``--id`` to show the id, ``--vhosts`` to show the associated vhosts, ``--fqdns`` to show the fqdns contained in that certificate, ``--dates`` to show the create and expire dates and ``--limit`` to limit the number of elements in the list.
 
 * ``gandi config key value`` configure value in the configuration file. With no option, configuration setting is stored in the local directory, which makes it suitable for code repositories. Using the ``-g`` flag, the change is stored in the global configuration file.
 
@@ -236,7 +249,7 @@ Details:
 
 * ``gandi paas console resource`` open a console to the SimpleHosting. Note that resource could be a full qualified domain name or an integer id.
 
-* ``gandi paas create`` allow to create a Simple Hosting instance. Mandatory option is  ``--password TEXT`` for the password of the instance. Possible option are ``--name TEXT`` for the name of the instance (if not present, will be autogenerated), ``--size s|m|x|xl|xxl`` for the size (amount of RAM and processes), ``--type TYPE`` for the type as listed by the ``gandi paas types`` command, ``--quantity INTEGER`` for the additional disk space, ``--duration TEXT`` for the number of month suffixed with 'm', ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``, ``--vhosts TEXT`` for a list of virtual hosts to link to this instance, ``--snapshotprofile INTEGER`` for the snapshot profile for the disk of the instance, ``--delete-snapshotprofile`` to remove the snapshotprofile on the instance , ``--sshkey TEXT`` to specifiy a name of a SSH key. The operation can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi paas create`` allow to create a Simple Hosting instance. Mandatory option is  ``--password TEXT`` for the password of the instance. Possible option are ``--name TEXT`` for the name of the instance (if not present, will be autogenerated), ``--size s|m|x|xl|xxl`` for the size (amount of RAM and processes), ``--type TYPE`` for the type as listed by the ``gandi paas types`` command, ``--quantity INTEGER`` for the additional disk space, ``--duration TEXT`` for the number of month suffixed with 'm', ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``, ``--vhosts TEXT`` for a list of virtual hosts to link to this instance, ``--ssl`` to activate SSL on all vhosts, ``--pk`` to give the private key used to generate the certificate if it's linked to the same account in certificate section, and ``--poll-cert`` to wait for certificate generation in case you want to get one with Gandi (certificate create can take some time to achieve), ``--snapshotprofile INTEGER`` for the snapshot profile for the disk of the instance, ``--delete-snapshotprofile`` to remove the snapshotprofile on the instance , ``--sshkey TEXT`` to specifiy a name of a SSH key. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi paas delete resource`` delete a Simple Hosting instance. Possible option is ``--force`` (or ``-f``) to bypass the validation question; useful in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
@@ -270,7 +283,7 @@ Details:
 
 * ``gandi status`` shows the current status for all services as seen on status.gandi.net. Possible option is to provide a service name to the command to retrieve only the status of this service.
 
-* ``gandi vhost create`` add a virtual host. Mandatory options are ``--vhost TEXT`` for the fully qualified domain name (FQDN like host.domain.tld) and ``--paas TEXT`` for the Simple Hosting instance on which it will create the virtual host, ``--alter-zone`` will update the domain zone. Creation can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi vhost create`` add a virtual host. Mandatory options are ``--vhost TEXT`` for the fully qualified domain name (FQDN like host.domain.tld) and ``--paas TEXT`` for the Simple Hosting instance on which it will create the virtual host, ``--alter-zone`` will update the domain zone, ``--ssl`` to activate SSL on that host, ``--pk`` to give the private key used to generate the certificate if it's linked to the same account in certificate section, and ``--poll-cert`` to wait for certificate generation in case you want to get one with Gandi (certificate create can take some time to achieve). Creation can be done as background process using the option ``--background`` (or ``--bg``) it will have no effet on the certificate creation process.
 
 * ``gandi vhost delete host.domain.tld`` delete a virtual host after asking for user validation. Possible option is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting. Deletion can be done as background process using the option ``--background`` (or ``--bg``).
 
@@ -278,6 +291,7 @@ Details:
 
 * ``gandi vhost list`` show all the virtual host defined in Simple Hosting. Possible option are ``--names`` which add the name of the Simple Hosting instance on which the virtual host is setup, ``--ids`` which show the integer identificator and ``--limit INTEGER`` which show a subset of the full list of virtual host.
 
+* ``gandi vhost update host.domain.tld`` allow to activate SSL on this host. Possible options are ``--ssl`` to activate SSL on that host, ``--pk`` to give the private key used to generate the certificate if it's linked to the same account in certificate section, and ``--poll-cert`` to wait for certificate generation in case you want to get one with Gandi (certificate create can take some time to achieve).
 *  ``gandi vlan create`` add a new vlan. Mandatory options are ``--name TEXT`` for the label of the vlan, ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``. Possible options are ``--subnet`` to set a subnet and ``--gateway`` to set the gateway. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
 *  ``gandi vlan delete resource`` delete a vlan after asking for user validation. Possible option is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting. Deletion can be done as background process using the option ``--background`` (or ``--bg``).

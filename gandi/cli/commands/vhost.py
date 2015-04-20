@@ -1,6 +1,7 @@
 """ Virtual hosts namespace commands. """
 
 import click
+import os
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_generic, output_vhost
@@ -48,7 +49,7 @@ def info(gandi, resource, id):
 
     Resource must be the vhost fqdn.
     """
-    output_keys = ['name', 'state', 'date_creation', 'paas_name']
+    output_keys = ['name', 'state', 'date_creation', 'paas_name', 'ssl']
 
     if id:
         # When we will have more than paas vhost, we will append rproxy_id
@@ -60,6 +61,11 @@ def info(gandi, resource, id):
     paas = None
     for num, item in enumerate(resource):
         vhost = gandi.vhost.info(item)
+        try:
+            hostedcert = gandi.hostedcert.infos(vhost['name'])
+            vhost['ssl'] = 'activated' if hostedcert else 'disabled'
+        except ValueError:
+            vhost['ssl'] = 'disabled'
         paas = paas_names.get(vhost['paas_id'])
         if num:
             gandi.separator_line()
@@ -72,13 +78,22 @@ def info(gandi, resource, id):
 @click.option('--vhost', help='Vhost fqdn.', required=True)
 @click.option('--paas', required=True,
               help='PaaS instance on which to create it.')
+@click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
+@click.option('--pk', '--private-key',
+              help='Private key used to generate the ssl Certificate.')
 @click.option('--alter-zone', help='Will update the domain zone.',
+              is_flag=True)
+@click.option('--poll-cert', help='Will wait for the certificate creation.',
               is_flag=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
-def create(gandi, vhost, paas, alter_zone, background):
+def create(gandi, vhost, paas, ssl, private_key, alter_zone, poll_cert,
+           background):
     """ Create a new vhost. """
+    if not gandi.hostedcert.activate_ssl(vhost, ssl, private_key, poll_cert):
+        return
+
     paas_info = gandi.paas.info(paas)
     result = gandi.vhost.create(paas_info, vhost, alter_zone, background)
 
@@ -89,6 +104,22 @@ def create(gandi, vhost, paas, alter_zone, background):
         gandi.pretty_echo(result)
 
     return result
+
+
+@cli.command()
+@click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
+@click.option('--pk', '--private-key',
+              help='Private key used to generate the ssl Certificate.')
+@click.option('--poll-cert', help='Will wait for the certificate creation.',
+              is_flag=True)
+@click.argument('resource', nargs=1, required=True)
+@pass_gandi
+def update(gandi, resource, ssl, private_key, poll_cert):
+    """ Update a vhost.
+
+    Right now you can only activate ssl on the vhost.
+    """
+    gandi.hostedcert.activate_ssl(resource, ssl, private_key, poll_cert)
 
 
 @cli.command()

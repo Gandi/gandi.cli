@@ -6,6 +6,9 @@ except ImportError:
     from xmlrpclib import DateTime
 
 
+type_list = list
+
+
 def package_list(options):
     return [{'category': {'id': 1, 'name': 'standard'},
              'comodo_id': 287,
@@ -265,3 +268,105 @@ def info(id):
 
 def create(*args):
     return {'id': 1}
+
+
+def hosted_list(options):
+    fqdns_id = {'test1.domain.fr': [1, 2],
+                'test2.domain.fr': [3],
+                'test3.domain.fr': [4],
+                'test4.domain.fr': [5],
+                '*.domain.fr': [6]}
+
+    ret = [{'date_created': DateTime('20150407T00:00:00'),
+            'date_expire': DateTime('20160316T00:00:00'),
+            'id': 1,
+            'state': u'created',
+            'subject': u'/OU=Domain Control Validated/OU=Gandi Standard '
+                        'SSL/CN=test1.domain.fr'},
+           {'date_created': DateTime('20150407T00:00:00'),
+            'date_expire': DateTime('20160316T00:00:00'),
+            'id': 2,
+            'state': u'created',
+            'subject': u'/OU=Domain Control Validated/OU=Gandi Standard '
+                        'SSL/CN=test1.domain.fr'},
+           {'date_created': DateTime('20150408T00:00:00'),
+            'date_expire': DateTime('20160408T00:00:00'),
+            'id': 3,
+            'state': u'created',
+            'subject': u'/OU=Domain Control Validated/OU=Gandi Standard '
+                        'SSL/CN=test2.domain.fr'},
+           {'date_created': DateTime('20150408T00:00:00'),
+            'date_expire': DateTime('20160408T00:00:00'),
+            'id': 4,
+            'state': u'created',
+            'subject': u'/OU=Domain Control Validated/OU=Gandi Standard '
+                        'SSL/CN=test3.domain.fr'},
+           {'date_created': DateTime('20150408T00:00:00'),
+            'date_expire': DateTime('20160408T00:00:00'),
+            'id': 5,
+            'state': u'created',
+            'subject': u'/OU=Domain Control Validated/OU=Gandi Standard '
+                        'SSL/CN=test4.domain.fr'},
+           {'date_created': DateTime('20150409T00:00:00'),
+            'date_expire': DateTime('20160409T00:00:00'),
+            'id': 6,
+            'state': u'created',
+            'subject': u'/OU=Domain Control Validated/OU=Gandi Standard '
+                        'Wildcard SSL/CN=*.domain.fr'}]
+
+    options.pop('items_per_page', None)
+    fqdns = options.pop('fqdns', None)
+
+    if fqdns:
+        if not isinstance(fqdns, (type_list, tuple)):
+            fqdns = [fqdns]
+        for fqdn in fqdns:
+            options.setdefault('id', []).extend(fqdns_id.get(fqdn, []))
+
+    def compare(hc, option):
+        if isinstance(option, (type_list, tuple)):
+            return hc in option
+        return hc == option
+
+    for fkey in options:
+        ret = [hc for hc in ret if compare(hc[fkey], options[fkey])]
+
+    return ret
+
+
+def hosted_info(id):
+    additionals = {
+        1: {'fqdns': [{'type': u'cn', 'name': u'test1.domain.fr'}],
+            'related_vhosts': [{'service_id': 1,
+                                'type': 'paas',
+                                'id': 1,
+                                'name': 'test1.domain.fr'}]},
+        2: {'fqdns': [{'type': u'cn', 'name': u'test1.domain.fr'}],
+            'related_vhosts': [{'service_id': 1,
+                                'type': 'paas',
+                                'id': 1,
+                                'name': 'test1.domain.fr'}]},
+        3: {'fqdns': [{'type': u'cn', 'name': u'test2.domain.fr'}],
+            'related_vhosts': []},
+        4: {'fqdns': [{'type': u'cn', 'name': u'test3.domain.fr'}],
+            'related_vhosts': []},
+        5: {'fqdns': [{'type': u'cn', 'name': u'test4.domain.fr'}],
+            'related_vhosts': []},
+        6: {'fqdns': [{'type': u'cn', 'name': u'*.domain.fr'}],
+            'related_vhosts': [{'service_id': 2,
+                                'type': 'paas',
+                                'id': 2,
+                                'name': '*.domain.fr'}]}}
+    def additional(hc):
+        hc.update(additionals[hc['id']])
+        return hc
+
+    hc = dict([(hc['id'], additional(hc)) for hc in hosted_list({})])
+    return hc[id]
+
+
+def hosted_create(params):
+    return hosted_info(5)
+
+def hosted_delete(id):
+    return
