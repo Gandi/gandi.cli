@@ -141,6 +141,15 @@ Namespaces:
 *  vm start                Start a virtual machine.
 *  vm stop                 Stop a virtual machine.
 *  vm update               Update a virtual machine.
+*  webacc add              Add a backend or a vhost on a webaccelerator
+*  webacc create           Create a webaccelerator
+*  webacc delete           Delete a webaccelerator, a vhost or a backend
+*  webacc disable          Disable a backend or a probe on a webaccelerator
+*  webacc enable           Enable a backend or a prove on a webaccelerator
+*  webacc info             Display information about a webaccelerator
+*  webacc list             List webaccelerators
+*  webacc probe            Manage a probe for a webaccelerator
+*  webacc update           Update a webaccelerator
 
 
 Details:
@@ -292,6 +301,7 @@ Details:
 * ``gandi vhost list`` show all the virtual host defined in Simple Hosting. Possible option are ``--names`` which add the name of the Simple Hosting instance on which the virtual host is setup, ``--ids`` which show the integer identificator and ``--limit INTEGER`` which show a subset of the full list of virtual host.
 
 * ``gandi vhost update host.domain.tld`` allow to activate SSL on this host. Possible options are ``--ssl`` to activate SSL on that host, ``--pk`` to give the private key used to generate the certificate if it's linked to the same account in certificate section, and ``--poll-cert`` to wait for certificate generation in case you want to get one with Gandi (certificate create can take some time to achieve).
+
 *  ``gandi vlan create`` add a new vlan. Mandatory options are ``--name TEXT`` for the label of the vlan, ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters``. Possible options are ``--subnet`` to set a subnet and ``--gateway`` to set the gateway. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
 *  ``gandi vlan delete resource`` delete a vlan after asking for user validation. Possible option is ``--force`` to bypass the validation question; useful in non-interactive mode when scripting. Deletion can be done as background process using the option ``--background`` (or ``--bg``).
@@ -326,6 +336,24 @@ Details:
 
 * ``gandi vm update resource`` allow to change the quantity of memory (using ``--memory INTEGER``), the number of virtual CPU (using ``--cores INTEGER``), enable the virtual console which allow to get a shell to the virtual machine even without network interfaces on the virtual machine (using ``--console``) or change the root password (using ``--password``). All these modification can be done as background process using the option ``--background`` (or ``--bg``). *NOTE*: Because of the cost of page table setup, a maximum memory limit has to be given for some kernels, limiting dynamic updates. You cannot online resize a VM memory crossing this value, and the ``--reboot`` option allows you to acknowledge the required reboot.
 
+* ``webacc add resource`` add a backend or a vhost on a webaccelerator. Possible options are ``--vhost TEXT`` to add the fully qualified domain name (FQDN like host.domain.tld) to the webaccelerator, can be used multiple times, ``--backend TEXT`` to specify an IP address, can be used multiple times, using format ip[:port], ``--port INTEGER`` to set a default port value for backend parameters if not specified in backend format, ``--ssl`` to activate ssl for vhost, ``--private-key TEXT`` to provide the private key used to generate the ssl certificate, ``--zone-alter`` to alter and activate zone file if Gandi DNS are used for the domain, ``--poll-cert`` will wait for the certificate creation to be finished, be warned that this can take a long time.
+
+* ``webacc create NAME`` create a new webaccelerator. Mandatory options are ``--datacenter FR|US|LU`` for the geographical datacenter as listed by ``gandi datacenters`` where the webaccelerator will be created. Possible options are ``--backend TEXT`` to specify an IP address, can be used multiple times, using format ip[:port], ``--port INTEGER`` to set a default port value for backend parameters if not specified in backend format, ``--vhost TEXT`` to add the fully qualified domain name (FQDN like host.domain.tld) to the webaccelerator, can be used multiple times, ``--ssl`` to activate ssl for vhost, ``--private-key TEXT`` to provide the private key used to generate the ssl certificate, ``--zone-alter`` to alter and activate zone file if Gandi DNS are used for the domain, ``--poll-cert`` will wait for the certificate creation to be finished, be warned that this can take a long time, ``--ssl-enable`` to activate SSL support on the webaccelerator, ``--algorithm [client-ip, round-robin]`` to choose the loadbalancer algorithm defaulting to ``client-ip``.
+
+* ``webacc delete`` delete a webaccelerator, a vhost or a backend. Possible options are ``--webacc TEXT`` to specify the webaccelerator name to be deleted, ``--backend TEXT`` to specify an IP address to be deleted, can be used multiple times, using format ip[:port], ``--port INTEGER`` to set a default port value for backend parameters if not specified in backend format, ``--vhost TEXT`` to remove the fully qualified domain name (FQDN like host.domain.tld) from the webaccelerator, can be used multiple times.
+
+* ``webacc disable`` disable a backend or a probe on a webaccelerator. Possible options are ``--backend TEXT`` to specify an IP address to be disabled, can be used multiple times, using format ip[:port], ``--port INTEGER`` to set a default port value for backend parameters if not specified in backend format, ``--probe`` to disable probe for the webaccelerator, requires the webaccelerator name to be passed to the command.
+
+* ``webacc enable`` enable a backend or a probe on a webaccelerator. Possible options are ``--backend TEXT`` to specify an IP address to be enabled, can be used multiple times, using format ip[:port], ``--port INTEGER`` to set a default port value for backend parameters if not specified in backend format, ``--probe`` to enable probe for the webaccelerator, requires the webaccelerator name to be passed to the command.
+
+* ``webacc info resource`` display information about a webaccelerator. Possible options are ``--format [json, pretty-json]`` to specify output format to be used.
+
+* ``webacc list`` show all the webaccelerators. Possible options are ``--limit INTEGER`` which shows only a subset of the webaccelerators list, ``--format [json, pretty-json]`` to specify output format to be used.
+
+* ``webacc probe resource`` manage a probe for a webaccelerator. Possible options are ``--enable`` to enable the probe on the webaccelerator, ``--disable`` to disable the probe on the webaccelerator, ``--host TEXT`` to set the host value for testing the probe, ``--test`` to test the probe on the webaccelerator, ``--interval INTEGER`` to set interval for the probe to be checked, ``--url TEXT`` to set the probe url in the virtual host, ``--window INTEGER`` to set total number of probes to consider health decision, ``--threshold INTEGER`` to set number of probes to consider in the window, ``--timeout INTEGER`` to set the timeout in seconds, ``--http-method [GET, POST, PUT, DELETE, OPTIONS]`` to set HTTP method used for the probe check, ``--http-response INTEGER`` to set HTTP response code expected by the probe
+
+* ``webacc update resource`` update a webaccelerator.  Possible options are ``--name TEXT`` to change the name of the webaccelerator, ``--algorithm [client-ip, round-robin]`` to change the loadbalancer algorithm, ``--ssl-enable`` to activate SSL support on the webaccelerator, ``--ssl-disable`` to deactivate SSL support on the webaccelerator.
+
 
 ENVIRONMENT
 ===========
@@ -341,12 +369,13 @@ AUTHORS
 =======
 
 Originaly created by Dejan Filipovic for Gandi S.A.S.
-Copyright (c) 2014 - Gandi S.A.S
+Copyright (c) 2014-2015 - Gandi S.A.S
 
 CONTRIBUTORS
 ============
 
- - Dejan Filipovic <dejan.filipovic@gandi.net>
+ - Dejan Filipovic <sayoun@gandi.net>
+ - Olivier Roussy <olivier@gandi.net>
  - Guillaume Gauvrit <guillaume.gauvrit@gandi.net>
  - Alexandre Solleiro <alexandre.solleiro@gandi.net>
  - Nicolas Chipaux <aegiap@gandi.net>
