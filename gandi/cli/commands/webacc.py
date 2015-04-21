@@ -70,7 +70,7 @@ def list(gandi, limit, format):
 @click.argument('resource', type=WEBACC_NAME)
 @pass_gandi
 def info(gandi, resource, format):
-    """ Dislay information about a webaccelerator """
+    """ Display information about a webaccelerator """
     result = gandi.webacc.info(resource)
     if format:
         output_json(gandi, format, result)
@@ -93,6 +93,7 @@ def info(gandi, resource, format):
         vhost['ssl'] = 'None' if vhost['cert_id'] is None else 'Exists'
         output_sub_generic(gandi, vhost, output_vhosts, justify=14)
         gandi.echo('')
+
     gandi.echo('Backends :')
     for server in result['servers']:
         try:
@@ -107,6 +108,7 @@ def info(gandi, resource, format):
             output_servers = ['ip', 'port', 'state']
         output_sub_generic(gandi, server, output_servers, justify=14)
         gandi.echo('')
+
     gandi.echo('Probe :')
     output_probe = ['state', 'host', 'interval', 'method', 'response',
                     'threshold', 'timeout', 'url', 'window']
@@ -156,6 +158,7 @@ def create(gandi, name, datacenter, backend, port, vhost, algorithm,
                                                type=int)
             else:
                 backend['port'] = port
+
     if vhost and not gandi.hostedcert.activate_ssl(vhost,
                                                    ssl,
                                                    private_key,
@@ -175,7 +178,7 @@ def create(gandi, name, datacenter, backend, port, vhost, algorithm,
               help="Activate SSL support on the webaccelerator")
 @click.option('--ssl-disable', is_flag=True,
               help="Deactivate SSL support on the webaccelerator")
-@click.argument('resource', required=True)
+@click.argument('resource', required=True, type=WEBACC_NAME)
 @pass_gandi
 def update(gandi, resource, name, algorithm, ssl_enable, ssl_disable):
     """Update a webaccelerator"""
@@ -191,12 +194,15 @@ def update(gandi, resource, name, algorithm, ssl_enable, ssl_disable):
               multiple=True, type=BACKEND)
 @click.option('--port', '-p', type=click.INT, required=False,
               help="The backend port if not specified with backend")
-@click.option('--webacc', '-w', type=WEBACC_NAME, required=False)
+@click.option('--webacc', '-w', type=WEBACC_NAME, required=False,
+              help='The webaccelerator name')
 @pass_gandi
 def delete(gandi, webacc, vhost, backend, port):
     """ Delete a webaccelerator, a vhost or a backend """
+    result = []
     if webacc:
         result = gandi.webacc.delete(webacc)
+
     if backend:
         backends = backend
         for backend in backends:
@@ -210,11 +216,12 @@ def delete(gandi, webacc, vhost, backend, port):
                 else:
                     backend['port'] = port
             result = gandi.webacc.backend_remove(backend)
-        return result
+
     if vhost:
         vhosts = vhost
         for vhost in vhosts:
             result = gandi.webacc.vhost_remove(vhost)
+
     return result
 
 
@@ -227,7 +234,7 @@ def delete(gandi, webacc, vhost, backend, port):
 @click.option('--poll-cert', help='Will wait for the certificate creation.',
               is_flag=True)
 @click.option('--zone-alter', is_flag=True,
-              help="Alter and active zone file if Gandi DNS are used for"
+              help="Alter and activate zone file if Gandi DNS are used for"
                    " the domain",)
 @click.option('--backend', '-b', help="Add backends in the webaccelerator",
               type=BACKEND, multiple=True)
@@ -238,6 +245,7 @@ def delete(gandi, webacc, vhost, backend, port):
 def add(gandi, resource, vhost, zone_alter, backend, port, ssl, private_key,
         poll_cert):
     """ Add a backend or a vhost on a webaccelerator """
+    result = []
     if backend:
         backends = backend
         for backend in backends:
@@ -252,10 +260,9 @@ def add(gandi, resource, vhost, zone_alter, backend, port, ssl, private_key,
                 else:
                     backend['port'] = port
             result = gandi.webacc.backend_add(resource, backend)
+
     if vhost:
-        if not gandi.hostedcert.activate_ssl(vhost,
-                                             ssl,
-                                             private_key,
+        if not gandi.hostedcert.activate_ssl(vhost, ssl, private_key,
                                              poll_cert):
             return
         vhosts = vhost
@@ -274,10 +281,11 @@ def add(gandi, resource, vhost, zone_alter, backend, port, ssl, private_key,
               help="set a default port backend if not specified with backend")
 @click.option('--probe', '-p', help="Enable probe for the webaccelerator",
               is_flag=True)
-@click.argument('resource', metavar="Webbacc name", required=False)
+@click.argument('resource', required=False, type=WEBACC_NAME)
 @pass_gandi
 def enable(gandi, resource, backend, port, probe):
     """ Enable a backend or a probe on a webaccelerator """
+    result = []
     if backend:
         backends = backend
         for backend in backends:
@@ -291,13 +299,14 @@ def enable(gandi, resource, backend, port, probe):
                 else:
                     backend['port'] = port
             result = gandi.webacc.backend_enable(backend)
-    return result
+
     if probe:
+        if not resource:
+            gandi.echo('You need to indicate the Webaccelerator name')
+            return
         result = gandi.webacc.probe_enable(resource)
-        return result
-    if resource and not probe:
-        gandi.echo('You need to indicate the Webaccelerator before'
-                   'the flag --probe')
+
+    return result
 
 
 @cli.command()
@@ -307,10 +316,11 @@ def enable(gandi, resource, backend, port, probe):
               help="set a default port backend if not specified with backend")
 @click.option('--probe', '-p', help="Disable probe for the webaccelerator",
               is_flag=True)
-@click.argument('resource', metavar="Webbacc name's", required=False)
+@click.argument('resource', required=False, type=WEBACC_NAME)
 @pass_gandi
 def disable(gandi, resource, backend, port, probe):
     """ Disable a backend or a probe on a webaccelerator """
+    result = []
     if backend:
         backends = backend
         for backend in backends:
@@ -324,13 +334,14 @@ def disable(gandi, resource, backend, port, probe):
                 else:
                     backend['port'] = port
             result = gandi.webacc.backend_disable(backend)
-        return result
+
     if probe:
+        if not resource:
+            gandi.echo('You need to indicate the Webaccelerator name')
+            return
         result = gandi.webacc.probe_disable(resource)
-        return result
-    if resource and not probe:
-        gandi.echo('You need to indicate the Webaccelerator before'
-                   'the flag --probe')
+
+    return result
 
 
 @cli.command()
@@ -345,7 +356,7 @@ def disable(gandi, resource, backend, port, probe):
 @click.option('--http-method', '-m', help="Choose HTTP method for the probe",
               type=click.Choice(['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']))
 @click.option('--http-response', '-r', type=click.INT,
-              help="HTTP respond code expected by the probe")
+              help="HTTP response code expected by the probe")
 @click.option('--threshold', '-t', type=click.INT,
               help="Number of probes to consider in the window")
 @click.option('--timeout', help="Timeout in seconds",
