@@ -77,32 +77,38 @@ def list(gandi, datacenter, type, id, attached, detached, version, reverse,
 
 
 @cli.command()
-@click.argument('resource')
+@click.argument('resources', nargs=-1)
 @pass_gandi
-def info(gandi, resource):
-    """Display information about an ip.
+def info(gandi, resources):
+    """Display information about one or more IPs
 
     Resource can be an ip or id.
     """
     output_keys = ['ip', 'state', 'dc', 'type', 'vm', 'reverse']
+    justify = 14
 
+    resources = sorted(tuple(set(resources)))
     datacenters = gandi.datacenter.list()
 
-    ip = gandi.ip.info(resource)
-    iface = gandi.iface.info(ip['iface_id'])
-    vms = None
-    if iface.get('vm_id'):
-        vm = gandi.iaas.info(iface['vm_id'])
-        vms = {vm['id']: vm}
+    ret = []
+    for num, item in enumerate(resources):
+        if num:
+            gandi.separator_line()
+        ip = gandi.ip.info(item)
+        ret.append(ip)
+        iface = gandi.iface.info(ip['iface_id'])
+        vms = None
+        if iface.get('vm_id'):
+            vm = gandi.iaas.info(iface['vm_id'])
+            vms = {vm['id']: vm}
+        output_ip(gandi, ip, datacenters, vms, {iface['id']: iface},
+                  output_keys)
 
-    output_ip(gandi, ip, datacenters, vms, {iface['id']: iface},
-              output_keys)
-
-    return ip
+    return ret
 
 
 @cli.command()
-@click.argument('ip')
+@click.argument('ip', nargs=-1)
 @click.option('--reverse', help='Update reverse (PTR record) for this IP')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
@@ -115,7 +121,7 @@ def update(gandi, ip, reverse, background):
 
 
 @cli.command()
-@click.argument('ip')
+@click.argument('resources', nargs=-1)
 @click.argument('vm')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
@@ -123,32 +129,44 @@ def update(gandi, ip, reverse, background):
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')
 @pass_gandi
-def attach(gandi, ip, vm, background, force):
-    """Attach an ip to a vm.
+def attach(gandi, resources, vm, background, force):
+    """Attach one or more IPs to a vm.
 
-    ip can be an ip id or ip
+    ip can be an ip id or ip.
     vm can be a vm id or name.
     """
-    try:
-        ip_ = gandi.ip.info(ip)
-        vm_ = gandi.iaas.info(vm)
-    except UsageError:
-        gandi.error("Can't find this ip %s" % ip)
 
-    iface = gandi.iface.info(ip_['iface_id'])
-    if iface.get('vm_id'):
-        if vm_ and iface['vm_id'] == vm_.get('id'):
-            gandi.echo('This ip is already attached to this vm.')
-            return
+    resources = sorted(tuple(set(resources)))
+    ret = []
 
-        if not force:
-            proceed = click.confirm('Are you sure you want to detach'
-                                    ' %s from vm %s' %
-                                    (ip_['ip'], iface['vm_id']))
-            if not proceed:
-                return
+    for num, item in enumerate(resources):
+        try:
+            ip_ = gandi.ip.info(item)
+            vm_ = gandi.iaas.info(vm)
+        except UsageError:
+            gandi.error("Can't find this ip %s" % ip)
+            break
 
-    return gandi.ip.attach(ip, vm, background, force)
+        iface = gandi.iface.info(ip_['iface_id'])
+        if iface.get('vm_id'):
+            if vm_ and iface['vm_id'] == vm_.get('id'):
+                gandi.echo('IP %s is already attached to vm %s.' %
+                           (ip_['ip'], iface['vm_id']))
+                continue
+
+            if not force:
+                proceed = click.confirm('Are you sure you want to detach'
+                                        ' %s from vm %s?' %
+                                        (ip_['ip'], iface['vm_id']))
+                if not proceed:
+                    continue
+
+        gandi.echo('Attaching IP %s to VM %s...' %
+                    (ip_['ip'], iface['vm_id']))
+
+        ret.append(gandi.ip.attach(item, vm, background, force))
+
+    return ret 
 
 
 @cli.command()
@@ -190,7 +208,7 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
         if vm_:
             datacenter = vm_['datacenter_id']
         else:
-            gandi.echo('The vm you want to attach is not in %s datacenter.'
+            gandi.echo('The vm you want to attach this IP to is not in %s datacenter.'
                        % datacenter)
             return
 
@@ -199,52 +217,65 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
 
 
 @cli.command()
-@click.argument('resource')
+@click.argument('resources', nargs=-1)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')
 @pass_gandi
-def detach(gandi, resource, background, force):
-    """Detach an ip from it's currently attached vm.
+def detach(gandi, resources, background, force):
+    """Detach one or more IPs from the vm they are attached to.
 
     resource can be an ip id or ip.
     """
-    if not force:
-        proceed = click.confirm('Are you sure to detach ip %s?' % resource)
-        if not proceed:
-            return
+    resources = sorted(tuple(set(resources)))
+    ret = []
 
-    return gandi.ip.detach(resource, background, force)
+    for num, item in enumerate(resources):
+        if not force:
+            proceed = click.confirm('Are you sure you want to detach ip %s?' % item)
+            if not proceed:
+                continue
+        ret.append(gandi.ip.detach(item, background, force))
+    return ret
 
 
 @cli.command()
-@click.argument('resource')
+@click.argument('resources', nargs=-1)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')
 @pass_gandi
-def delete(gandi, resource, background, force):
-    """Delete an ip (and detach it from it's currently attached vm).
+def delete(gandi, resources, background, force):
+    """Delete one or more IPs (after detaching them from VMs if necessary).
 
     resource can be an ip id or ip.
     """
-    try:
-        ip_ = gandi.ip.info(resource)
-    except UsageError:
-        gandi.error("Can't find this ip %s" % resource)
+    resources = sorted(tuple(set(resources)))
+    ret = []
 
-    iface = gandi.iface.info(ip_['iface_id'])
-    ips = ', '.join([ip['ip'] for ip in iface['ips']])
-    if len(iface['ips']) > 1:
-        gandi.echo('All these ips (%s) are attached, will delete them all' %
-                 ips)
-    if not force:
-        proceed = click.confirm('Are you sure to delete ip(s) %s' % ips)
-        if not proceed:
-            return
+    for num, item in enumerate(resources):
+        try:
+            ip_ = gandi.ip.info(item)
+        except UsageError:
+            gandi.error("Can't find ip %s" % item)
 
-    return gandi.ip.delete(resource, background, force)
+        iface = gandi.iface.info(ip_['iface_id'])
+        ips = ', '.join([ip['ip'] for ip in iface['ips']])
+        if len(iface['ips']) > 1:
+            gandi.echo('None of the ips (%s) is attached to a vm; will delete them all' %
+                     ips)
+        if not force:
+            proceed = click.confirm('Are you sure you want to delete the following ip(s)? %s' % ips)
+            if not proceed:
+                continue
+
+        ret.append(gandi.ip.delete(item, background, force))
+
+    return ret 
+
+
+
