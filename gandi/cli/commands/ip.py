@@ -82,7 +82,7 @@ def list(gandi, datacenter, type, id, attached, detached, version, reverse,
 def info(gandi, resources):
     """Display information about one or more IPs
 
-    Resource can be an ip or id.
+    Resource can be one or more IPs or IDs.
     """
     output_keys = ['ip', 'state', 'dc', 'type', 'vm', 'reverse']
     justify = 14
@@ -94,21 +94,25 @@ def info(gandi, resources):
     for num, item in enumerate(resources):
         if num:
             gandi.separator_line()
-        ip = gandi.ip.info(item)
-        ret.append(ip)
-        iface = gandi.iface.info(ip['iface_id'])
-        vms = None
-        if iface.get('vm_id'):
-            vm = gandi.iaas.info(iface['vm_id'])
-            vms = {vm['id']: vm}
-        output_ip(gandi, ip, datacenters, vms, {iface['id']: iface},
-                  output_keys)
+        try:
+            ip = gandi.ip.info(item)
+            ret.append(ip)
+            iface = gandi.iface.info(ip['iface_id'])
+            vms = None
+            if iface.get('vm_id'):
+                vm = gandi.iaas.info(iface['vm_id'])
+                vms = {vm['id']: vm}
+            output_ip(gandi, ip, datacenters, vms, {iface['id']: iface},
+                      output_keys)
+        except:
+            gandi.echo("Error looking up ip %s, skipping" % item)
+            # TODO: should be more verbose here (possible reasons: "unknown identifier"...)
 
     return ret
 
 
 @cli.command()
-@click.argument('ip', nargs=-1)
+@click.argument('ip')
 @click.option('--reverse', help='Update reverse (PTR record) for this IP')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
@@ -144,7 +148,7 @@ def attach(gandi, resources, vm, background, force):
             ip_ = gandi.ip.info(item)
             vm_ = gandi.iaas.info(vm)
         except UsageError:
-            gandi.error("Can't find this ip %s" % ip)
+            gandi.error("Can't find this ip %s" % item)
             break
 
         iface = gandi.iface.info(ip_['iface_id'])
@@ -254,26 +258,35 @@ def delete(gandi, resources, background, force):
 
     resource can be an ip id or ip.
     """
-    resources = sorted(tuple(set(resources)))
-    ret = []
 
+    resources = sorted(tuple(set(resources)))
+    possible_resources = [ x['ip'] for x in gandi.ip.list() ]
+    ret, ip_list, item_list = [], [], []
+
+    # check that each IP can be deleted
     for num, item in enumerate(resources):
         try:
             ip_ = gandi.ip.info(item)
+            iface = gandi.iface.info(ip_['iface_id'])
+            ips = ', '.join([ip['ip'] for ip in iface['ips']])
+            ip_list.append(ips)
+            item_list.append(item)
+
         except UsageError:
-            gandi.error("Can't find ip %s" % item)
+            gandi.echo("IP %s could not be found in your account. Skipping." % item)
+            continue
 
-        iface = gandi.iface.info(ip_['iface_id'])
-        ips = ', '.join([ip['ip'] for ip in iface['ips']])
-        if len(iface['ips']) > 1:
-            gandi.echo('None of the ips (%s) is attached to a vm; will delete them all' %
-                     ips)
+    if len(item_list) == 0:
+        gandi.echo("No IPs to delete. Giving up.")
+    else:
         if not force:
-            proceed = click.confirm('Are you sure you want to delete the following ip(s)? %s' % ips)
-            if not proceed:
-                continue
-
-        ret.append(gandi.ip.delete(item, background, force))
+            gandi.echo("The following IPs will be deleted:")
+            [ gandi.echo(ip) for ip in ip_list ]
+            proceed = click.confirm('Do you want to proceed?')
+            if proceed:
+                for item in item_list:
+                    gandi.echo("Deleting: %s" % item)
+                    ret.append(gandi.ip.delete(item, background, force))
 
     return ret 
 
