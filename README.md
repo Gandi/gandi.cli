@@ -416,6 +416,8 @@ The default variables are:
 
 We <3 contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
+You can check the [contributors list](https://github.com/Gandi/gandi.cli/graphs/contributors).
+
 ## Code status
 
 [![Build Status](https://travis-ci.org/Gandi/gandi.cli.svg?branch=master)](https://travis-ci.org/Gandi/gandi.cli)
