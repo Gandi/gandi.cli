@@ -53,6 +53,14 @@ class Ip(GandiModule):
         return result
 
     @classmethod
+    def resource_list(cls):
+        """ Get the possible list of resources (name, id). """
+        items = cls.list()
+        ret = [str(ip['id']) for ip in items]
+        ret.extend([ip['ip'] for ip in items])
+        return ret
+
+    @classmethod
     def _check_and_detach(cls, ip_, vm_=None):
         # if the ip exists and is attached, we have to detach it
         iface = Iface.info(ip_['iface_id'])
