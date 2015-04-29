@@ -417,7 +417,7 @@ class Iface(GandiModule):
         if background:
             return opers
 
-        cls.echo('Deleting your iface.')
+        cls.echo('Deleting your iface(s).')
         cls.display_progress(opers)
         return opers
 

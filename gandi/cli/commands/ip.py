@@ -260,35 +260,22 @@ def delete(gandi, resources, background, force):
     """
 
     resources = sorted(tuple(set(resources)))
-    possible_resources = [ x['ip'] for x in gandi.ip.list() ]
-    ret, ip_list, item_list = [], [], []
+    possible_resources = gandi.ip.resource_list()
 
     # check that each IP can be deleted
-    for num, item in enumerate(resources):
-        try:
-            ip_ = gandi.ip.info(item)
-            iface = gandi.iface.info(ip_['iface_id'])
-            ips = ', '.join([ip['ip'] for ip in iface['ips']])
-            ip_list.append(ips)
-            item_list.append(item)
+    for item in resources:
+        if item not in possible_resources:
+            gandi.echo('Sorry interface %s does not exist' % item)
+            gandi.echo('Please use one of the following: %s' %
+                        possible_resources)
+            return
 
-        except UsageError:
-            gandi.echo("IP %s could not be found in your account. Skipping." % item)
-            continue
+    if not force:
+        gandi.echo("The following IPs will be deleted:")
+        [ gandi.echo(ip) for ip in resources ]
+        proceed = click.confirm('Do you want to proceed?')
+        if not proceed:
+            return
 
-    if len(item_list) == 0:
-        gandi.echo("No IPs to delete. Giving up.")
-    else:
-        if not force:
-            gandi.echo("The following IPs will be deleted:")
-            [ gandi.echo(ip) for ip in ip_list ]
-            proceed = click.confirm('Do you want to proceed?')
-            if proceed:
-                for item in item_list:
-                    gandi.echo("Deleting: %s" % item)
-                    ret.append(gandi.ip.delete(item, background, force))
-
-    return ret 
-
-
-
+    gandi.echo("Deleting: %s" % resources)
+    return gandi.ip.delete(resources, background, force)
