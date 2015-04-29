@@ -160,13 +160,13 @@ def attach(gandi, resources, vm, background, force):
 
             if not force:
                 proceed = click.confirm('Are you sure you want to detach'
-                                        ' %s from vm %s?' %
-                                        (ip_['ip'], iface['vm_id']))
+                                        ' %s from vm %s (%s)?' %
+                                        (ip_['ip'], vm_['hostname'], iface['vm_id']))
                 if not proceed:
                     continue
 
-        gandi.echo('Attaching IP %s to VM %s...' %
-                    (ip_['ip'], iface['vm_id']))
+        gandi.echo('Attaching IP %s to VM %s (%s)...' %
+                    (ip_['ip'], vm_['hostname'], vm_['id']))
 
         ret.append(gandi.ip.attach(item, vm, background, force))
 
