@@ -102,23 +102,21 @@ class Ip(GandiModule):
         return cls._detach(ip_, iface, background, force)
 
     @classmethod
-    def delete(cls, resource, background=False, force=False):
-        try:
-            ip_ = cls.info(resource)
-        except UsageError:
-            cls.error("Can't find this ip %s" % resource)
+    def delete(cls, resources, background=False, force=False):
+        if not isinstance(resources, (list, tuple)):
+            resources = [resources]
 
-        iface = Iface.info(ip_['iface_id'])
+        ifaces = []
+        for item in resources:
+            try:
+                ip_ = cls.info(item)
+            except UsageError:
+                cls.error("Can't find this ip %s" % item)
 
-        if iface.get('vm'):
-            cls._detach(ip_, iface, False, force)
+            iface = Iface.info(ip_['iface_id'])
+            ifaces.append(iface['id'])
 
-        delete = Iface.delete(iface['id'], background)
-        if background:
-            return delete
-
-        cls.display_progress(delete)
-        return delete
+        return Iface.delete(ifaces, background)
 
     @classmethod
     def from_ip(cls, ip):
