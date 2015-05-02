@@ -229,20 +229,51 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
                    ' without prompting. (default=False).')
 @pass_gandi
 def detach(gandi, resources, background, force):
-    """Detach one or more IPs from the vm they are attached to.
-
-    resource can be an ip id or ip.
+    """Detach the interface(s) corresponding to the given IP addresses.
+    
+    The IP addresses can be:
+    - IPv4 addresses;
+    - IPv6 addresses;
+    - the internal API ID of an address.
     """
-    resources = sorted(tuple(set(resources)))
-    ret = []
-
-    for num, item in enumerate(resources):
-        if not force:
-            proceed = click.confirm('Are you sure you want to detach ip %s?' % item)
-            if not proceed:
-                continue
-        ret.append(gandi.ip.detach(item, background, force))
-    return ret
+    # FIXME: this might have to be changed to a set, to cope with duplicates.
+    iface_and_vm_info = []
+    # First, resolve each IP address to interface ID + VM ID.
+    for resource in resources:
+        try:
+            ip_info = gandi.ip.info(resource)
+            iface_id = ip_info['iface_id']
+            iface_info = gandi.iface.info(iface_id)
+        except:
+            raise # FIXME check what can be raised here
+        # will be "None" if unattached
+        vm_id = iface_info['vm_id']  
+        if vm_id:
+            vm_info = gandi.iaas.info(vm_id)
+        else:
+            vm_info = None
+        # If vm_info is None, the interface is already detached.
+        # We don't need to add it to the "todo list".
+        if vm_info:
+            iface_and_vm_info.append((iface_info, vm_info))
+    if iface_and_vm_info is []:
+        gandi.echo("No interface needs to be detached.")
+        return
+    # Then, ask for confirmation (if necessary).
+    if not force:
+        message = "The following interface(s) will be detached:\n"
+        for iface_info, vm_info in iface_and_vm_info:
+            message += "- "
+            message += ", ".join(ip['ip'] for ip in iface_info['ips'])
+            message += (" (attached to VM id %s, aka %s)"
+                        %(vm_info['id'], vm_info['hostname']))
+            message += "\n"
+        message += "Do you want to proceed?"
+        proceed = click.confirm(message)
+        if not proceed:
+            gandi.echo("Aborting.")
+            return
+    return gandi.iface.detach(iface_and_vm_info, background)
 
 
 @cli.command()
