@@ -257,13 +257,13 @@ def enable(gandi, resource, backend, probe):
                                                    'each backend, use `-b '
                                                    'ip:port`', type=int)
             result = gandi.webacc.backend_enable(backend)
-    return result
     if probe:
         result = gandi.webacc.probe_enable(resource)
         return result
     if resource and not probe:
         gandi.echo('You need to indicate the Webaccelerator before'
                    'the flag --probe')
+    return result
 
 
 @cli.command()
@@ -288,13 +288,13 @@ def disable(gandi, resource, backend, port, probe):
                                                    'each backend, use `-b '
                                                    'ip:port`', type=int)
             result = gandi.webacc.backend_disable(backend)
-        return result
     if probe:
         result = gandi.webacc.probe_disable(resource)
         return result
     if resource and not probe:
         gandi.echo('You need to indicate the Webaccelerator before'
                    'the flag --probe')
+    return result
 
 
 @cli.command()
