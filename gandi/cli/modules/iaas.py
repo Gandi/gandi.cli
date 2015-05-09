@@ -497,7 +497,7 @@ class Image(GandiModule):
         """ Retrieve id from input which can be label or id."""
         try:
             qry_id = int(id)
-        except:
+        except Exception:
             # if id is a string, prefer a system disk then a label
             qry_id = cls.from_sysdisk(id) or cls.from_label(id, datacenter)
 
