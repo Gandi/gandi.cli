@@ -399,6 +399,18 @@ class WebAccVhostParamType(GandiChoice):
         """ Internal method to get choice list """
         return [str(item['name']) for item in gandi.webacc.vhost_list()]
 
+
+class OperStepParamType(click.Choice):
+    """ Choice parameter to filter on operation step """
+
+    name = 'oper step'
+    choices = ['BILL', 'WAIT', 'RUN', 'ERROR']
+
+    def __init__(self):
+        """ Initialize choices list. """
+        pass
+
+
 DATACENTER = DatacenterParamType()
 PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
@@ -416,6 +428,7 @@ SIZE = SizeParamType()
 BACKEND = BackendParamType()
 WEBACC_NAME = WebAccNameParamType()
 WEBACC_VHOST_NAME = WebAccVhostParamType()
+OPER_STEP = OperStepParamType()
 
 
 class GandiOption(click.Option):
