@@ -79,7 +79,7 @@ class Domain(GandiModule):
         # Check if it's already an integer.
         try:
             qry_id = int(id)
-        except:
+        except Exception:
             # Otherwise, assume it's a FQDN.
             # This will return `None` if the FQDN is not found.
             qry_id = cls.from_fqdn(id)

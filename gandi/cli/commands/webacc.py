@@ -48,7 +48,7 @@ def list(gandi, limit, format):
                         vm_info = gandi.iaas.info(iface['vm_id'])
                         server['name'] = vm_info['hostname']
                         output_servers = ['name', 'ip', 'port', 'state']
-                    except:
+                    except Exception:
                         warningmsg = ('\tBackend with ip address %s no longer \
                             exists.\n\tYou should remove it.' % server['ip'])
                         gandi.echo(warningmsg)
@@ -96,7 +96,7 @@ def info(gandi, resource, format):
                 iface = gandi.iface.info(ip['iface_id'])
                 server['name'] = gandi.iaas.info(iface['vm_id'])['hostname']
                 output_servers = ['name', 'ip', 'port', 'state']
-            except:
+            except Exception:
                 warningmsg = ('\tBackend with ip address %s no longer \
                     exists.\n\tYou should remove it.' % server['ip'])
                 gandi.echo(warningmsg)
@@ -257,13 +257,13 @@ def enable(gandi, resource, backend, probe):
                                                    'each backend, use `-b '
                                                    'ip:port`', type=int)
             result = gandi.webacc.backend_enable(backend)
-    return result
     if probe:
         result = gandi.webacc.probe_enable(resource)
         return result
     if resource and not probe:
         gandi.echo('You need to indicate the Webaccelerator before'
                    'the flag --probe')
+    return result
 
 
 @cli.command()
@@ -288,13 +288,13 @@ def disable(gandi, resource, backend, port, probe):
                                                    'each backend, use `-b '
                                                    'ip:port`', type=int)
             result = gandi.webacc.backend_disable(backend)
-        return result
     if probe:
         result = gandi.webacc.probe_disable(resource)
         return result
     if resource and not probe:
         gandi.echo('You need to indicate the Webaccelerator before'
                    'the flag --probe')
+    return result
 
 
 @cli.command()
