@@ -24,7 +24,7 @@ class Paas(GandiModule, SshkeyHelper):
     """
 
     @classmethod
-    def type_list(cls, options={}):
+    def type_list(cls, options=None):
         """List type of PaaS instances."""
         return cls.safe_call('paas.type.list', options)
 

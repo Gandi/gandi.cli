@@ -395,7 +395,7 @@ class WebAccVhostParamType(GandiChoice):
     """ Retrieve vhost on a webaccelerator """
     name = 'webacc vhost list'
 
-    def _get_choices(seld, gandi):
+    def _get_choices(self, gandi):
         """ Internal method to get choice list """
         return [str(item['name']) for item in gandi.webacc.vhost_list()]
 
