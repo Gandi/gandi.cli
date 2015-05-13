@@ -19,10 +19,10 @@ Changelog
   snapshotprofile.
 * Update 'gandi status' command to also display current incidents not
   attached to a specific service.
-* Fixes issue #132
-* Fixes issue #131
-* Fixes issue #130
-* Fixes issue #120
+* Fixes #132
+* Fixes #131
+* Fixes #130
+* Fixes #120
 
 
 0.13
