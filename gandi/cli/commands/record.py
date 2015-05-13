@@ -58,9 +58,9 @@ def list(gandi, domain, zone_id, output, format):
                                   record['type'], record['value']))
                 gandi.echo(format_record)
         if format == 'json':
-                format_record = json.dumps(records, sort_keys=True,
-                                           indent=4, separators=(',', ': '))
-                gandi.echo(format_record)
+            format_record = json.dumps(records, sort_keys=True,
+                                       indent=4, separators=(',', ': '))
+            gandi.echo(format_record)
 
     return records
 
@@ -129,7 +129,13 @@ def delete(gandi, domain, zone_id, name, type, value):
         gandi.echo('No zone records found, domain %s doesn\'t seems to be '
                    'managed at Gandi.' % domain)
         return
-
+    if not name and not type and not value:
+        proceed = click.confirm('This command without parameters --type, '
+                                '--name or --value will remove all records'
+                                ' in this zone file. Are you sur to '
+                                'perform this action ?')
+        if not proceed:
+            return
     record = {'name': name, 'type': type, 'value': value}
     result = gandi.record.delete(zone_id, record)
     return result
