@@ -279,10 +279,6 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
         gandi.echo("--ip can't be used without --vlan.")
         return
 
-    if vlan and not ip_version and script:
-        gandi.echo("--script can't be used with a private ip only vm.")
-        return
-
     if not vlan and not ip_version:
         ip_version = 6
 

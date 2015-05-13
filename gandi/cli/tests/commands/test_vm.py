@@ -880,19 +880,6 @@ password: \nRepeat for confirmation: \n\
 
         self.assertEqual(result.exit_code, 0)
 
-    def test_create_vlan_script_ko(self):
-        args = ['--hostname', 'server500', '--vlan', 'vlantest',
-                '--script', '/tmp/test.sh']
-        result = self.invoke_with_exceptions(vm.create, args,
-                                             obj=GandiContextHelper(),
-                                             input='plokiploki\nplokiploki\n')
-        self.assertEqual(re.sub(r'\[#+\]', '[###]',
-                                result.output.strip()), """\
-password: \nRepeat for confirmation: \n\
---script can't be used with a private ip only vm.""")
-
-        self.assertEqual(result.exit_code, 0)
-
     def test_create_vlan_ip_ok(self):
         args = ['--hostname', 'server400', '--vlan', 'vlantest',
                 '--ip', '127.0.0.1']
