@@ -23,7 +23,7 @@ Changelog
 * Fixes #131
 * Fixes #130
 * Fixes #120
-
+* Fixes error message when API is not reachable.
 
 0.13
 ----
