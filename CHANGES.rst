@@ -5,9 +5,25 @@ Changelog
 ----
 
 * New 'certstore' namespace to manage certificates in webaccs.
-* Update vhost create and update to handle hosted certificates.
-* Update paas create to handle hosted certificates.
-* Update webacc create and add to handle hosted certificates.
+* New command 'gandi vhost update' to activate ssl on the vhost.
+* Update 'gandi vhost create' and 'gandi vhost update' commands
+  to handle hosted certificates.
+* Update 'gandi paas create' command to handle hosted certificates.
+* Update 'gandi webacc create' and add to handle hosted certificates.
+* Update 'gandi paas info' command:
+    - add new --stat parameter, which will display cached page statistic
+      based on the last 24 hours.
+    - add snapshotprofile information to output.
+* Update 'gandi oper list' command to add filter on step type.
+* Update 'gandi paas update' command to allow deleting an existing
+  snapshotprofile.
+* Update 'gandi status' command to also display current incidents not
+  attached to a specific service.
+* Fixes issue #132
+* Fixes issue #131
+* Fixes issue #130
+* Fixes issue #120
+
 
 0.13
 ----
