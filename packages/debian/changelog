@@ -1,3 +1,28 @@
+gandicli (0.14) unstable; urgency=medium
+
+  * New 'certstore' namespace to manage certificates in webaccs.
+  * New command 'gandi vhost update' to activate ssl on the vhost.
+  * Update 'gandi vhost create' and 'gandi vhost update' commands
+    to handle hosted certificates.
+  * Update 'gandi paas create' command to handle hosted certificates.
+  * Update 'gandi webacc create' and add to handle hosted certificates.
+  * Update 'gandi paas info' command:
+      - add new --stat parameter, which will display cached page statistic
+        based on the last 24 hours.
+      - add snapshotprofile information to output.
+  * Update 'gandi oper list' command to add filter on step type.
+  * Update 'gandi paas update' command to allow deleting an existing
+    snapshotprofile.
+  * Update 'gandi status' command to also display current incidents not
+    attached to a specific service.
+  * Fixes #132
+  * Fixes #131
+  * Fixes #130
+  * Fixes #120
+  * Fixes error message when API is not reachable.
+
+ -- Dejan Filipovic <sayoun@gandi.net>  Wed, 13 May 2015 18:32:49 +0200
+
 gandicli (0.13) unstable; urgency=medium
 
   * New 'webacc' namespace for managing web accelerators for virtual machines.
