@@ -9,6 +9,8 @@ license=('GPL3')
 groups=()
 depends=('python3' 'python-yaml' 'python-click' 'python-requests' 'python-ipy' 'openssl' 'openssh' 'git')
 optdepends=('docker: gandi docker support')
+makdepends=('python-setuptools')
+checkdepends=('python-nose' 'python-coverage' 'python-tox' 'python-mock')
 makedepends=('python-docutils')
 provides=()
 conflicts=()
@@ -23,6 +25,11 @@ build() {
   # Building the manpage
   cd "$srcdir/$pkgname-$pkgver"
   rst2man --no-generator gandicli.man.rst > gandi.1
+}
+
+check() {
+  cd "$srcdir/$pkgname-$pkgver"
+  python setup.py test
 }
 
 package() {
