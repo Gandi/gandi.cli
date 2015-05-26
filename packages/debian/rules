@@ -1,11 +1,33 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 
+PYTHONS:=$(shell pyversions -vr)
+PYTHON3S:=$(shell py3versions -vr)
+
 %:
-	dh $@ --with python2
+	dh $@ --with python2,python3
 
 override_dh_auto_build:
 	dh_auto_build
 	rst2man --no-generator gandicli.man.rst > gandi.1
 
-.PHONY: override_dh_auto_build
+override_dh_install:
+	set -e ; for pyvers in $(PYTHONS); do \
+	        python$$pyvers setup.py install --install-layout=deb \
+	                --root $(CURDIR)/debian/python-gandicli; \
+        done
+	set -e ; for pyvers in $(PYTHON3S); do \
+                python$$pyvers setup.py install --install-layout=deb \
+                        --root $(CURDIR)/debian/python3-gandicli; \
+        done
+
+
+# Commands not to run
+override_dh_installcatalogs:
+override_dh_installemacsen override_dh_installifupdown:
+override_dh_installinfo override_dh_installmenu override_dh_installmime:
+override_dh_installmodules override_dh_installlogcheck:
+override_dh_installpam override_dh_installppp override_dh_installudev override_dh_installwm:
+override_dh_installxfonts override_dh_gconf override_dh_icons override_dh_perl override_dh_usrlocal:
+override_dh_installcron override_dh_installdebconf:
+override_dh_installlogrotate override_dh_installgsettings:
