@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.15
+----
+
+* Update 'domain info' command:
+    - add creation, update and expiration date to output
+    - changes nameservers and services output for easier parsing
+
+
 0.14
 ----
 
