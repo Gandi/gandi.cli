@@ -7,6 +7,7 @@ Changelog
 * Update 'domain info' command:
     - add creation, update and expiration date to output
     - changes nameservers and services output for easier parsing
+* Fixes #119
 
 
 0.14
