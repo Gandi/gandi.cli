@@ -3,7 +3,7 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_generic, output_contact_info
+from gandi.cli.core.utils import output_contact_info, output_domain
 from gandi.cli.core.params import pass_gandi
 
 
@@ -26,12 +26,13 @@ def list(gandi, limit):
 @pass_gandi
 def info(gandi, resource):
     """Display information about a domain."""
-    output_keys = ['fqdn', 'nameservers', 'services', 'zone_id', 'tags']
+    output_keys = ['fqdn', 'nameservers', 'services', 'zone_id', 'tags',
+                   'created', 'expires', 'updated']
     contact_field = ['owner', 'admin', 'bill', 'tech', 'reseller']
 
     result = gandi.domain.info(resource)
     output_contact_info(gandi, result['contacts'], contact_field, justify=12)
-    output_generic(gandi, result, output_keys, justify=12)
+    output_domain(gandi, result, output_keys, justify=12)
 
     return result
 
