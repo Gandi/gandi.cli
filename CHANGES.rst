@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.15
+----
+
+* Update 'gandi domain create' command: the domain name can now be passed
+  as argument, the option --domain will be deprecated upon next release.
+
 0.14
 ----
 
