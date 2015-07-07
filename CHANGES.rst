@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.15
+----
+
+* New command 'gandi domain renew' command to renew a domain.
+
 0.14
 ----
 
