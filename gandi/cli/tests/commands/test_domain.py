@@ -51,6 +51,31 @@ Your domain idontlike.website has been created.""")
 
         self.assertEqual(result.exit_code, 0)
 
+    def test_renew(self):
+        result = self.invoke_with_exceptions(domain.renew,
+                                             ['iheartcli.com',
+                                              '--duration', 1,
+                                              ])
+
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+        self.assertEqual(output, """\
+Renewing your domain.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your domain iheartcli.com has been renewed.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_renew_background_ok(self):
+        args = ['iheartcli.com', '--background']
+        result = self.invoke_with_exceptions(domain.renew, args)
+
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+        self.assertEqual(output, """\
+Duration [1]: \n\
+{'id': 400, 'step': 'WAIT'}""")
+
+        self.assertEqual(result.exit_code, 0)
+
     def test_available_with_exception(self):
         self.assertRaises(DomainNotAvailable,
                           self.invoke_with_exceptions, domain.create,
