@@ -154,10 +154,17 @@ class SnapshotParamType(GandiChoice):
     """ Choice parameter to select an available snapshot profile. """
 
     name = 'snapshot profile'
+    target = None
+
+    def __init__(self, target=None):
+        """ Initialize choices list. """
+        self._choices = []
+        self.target = target
 
     def _get_choices(self, gandi):
         """ Internal method to get choices list """
-        return [str(item['id']) for item in gandi.snapshotprofile.list()]
+        return [str(item['id'])
+                for item in gandi.snapshotprofile.list(target=self.target)]
 
     def convert(self, value, param, ctx):
         """ Convert value to int. """
@@ -417,6 +424,8 @@ DISK_IMAGE = DiskImageParamType()
 DISK_MAXLIST = 500
 KERNEL = KernelParamType()
 SNAPSHOTPROFILE = SnapshotParamType()
+SNAPSHOTPROFILE_PAAS = SnapshotParamType('paas')
+SNAPSHOTPROFILE_VM = SnapshotParamType('vm')
 CERTIFICATE_PACKAGE = CertificatePackage()
 CERTIFICATE_PACKAGE_TYPE = CertificatePackageType()
 CERTIFICATE_PACKAGE_MAX = CertificatePackageMax()
