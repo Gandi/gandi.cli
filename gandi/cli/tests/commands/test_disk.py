@@ -5,6 +5,7 @@ from click.exceptions import ClickException
 from .base import CommandTestCase
 from gandi.cli.commands import disk
 from gandi.cli.core.utils.size import disk_check_size
+from gandi.cli.core.base import GandiContextHelper
 
 
 class DiskTestCase(CommandTestCase):
@@ -441,3 +442,81 @@ Creating your disk.
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.disk.create_from'][0][0]
         self.assertEqual(params['name'], 'snappy')
+
+    def test_create_default_ok(self):
+        args = []
+        result = self.invoke_with_exceptions(disk.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Creating your disk.
+\rProgress: [###] 100.00%  00:00:00""")
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.disk.create'][0][0]
+        self.assertEqual(params['type'], 'data')
+        self.assertEqual(params['size'], 3072)
+        self.assertTrue(params['name'].startswith('vdi'))
+
+    def test_create_params(self):
+        args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'FR',
+                '--snapshotprofile', '7']
+        result = self.invoke_with_exceptions(disk.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Creating your disk.
+\rProgress: [###] 100.00%  00:00:00""")
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.disk.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 1)
+        self.assertEqual(params['size'], 5120)
+        self.assertEqual(params['name'], 'newdisk')
+        self.assertEqual(params['snapshot_profile'], 7)
+
+    def test_create_default_background(self):
+        args = ['--bg']
+        result = self.invoke_with_exceptions(disk.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(result.output.strip(), """\
+id        : 200
+step      : WAIT""")
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.disk.create'][0][0]
+        self.assertEqual(params['type'], 'data')
+        self.assertEqual(params['size'], 3072)
+        self.assertTrue(params['name'].startswith('vdi'))
+
+    def test_create_vm(self):
+        args = ['--vm', 'server01']
+        result = self.invoke_with_exceptions(disk.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Creating your disk.
+\rProgress: [###] 100.00%  00:00:00  \
+\nAttaching your disk.
+\rProgress: [###] 100.00%  00:00:00""")
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.disk.create'][0][0]
+        self.assertEqual(params['type'], 'data')
+        self.assertEqual(params['size'], 3072)
+        self.assertTrue(params['name'].startswith('vdi'))
+
+    def test_create_source(self):
+        args = ['--source', 'sys_server01']
+        result = self.invoke_with_exceptions(disk.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Creating your disk.
+\rProgress: [###] 100.00%  00:00:00""")
+        self.assertEqual(result.exit_code, 0)
+        params, disk_id = self.api_calls['hosting.disk.create_from'][0]
+        self.assertEqual(params['type'], 'data')
+        self.assertTrue(params['name'].startswith('vdi'))
+        self.assertEqual(disk_id, 4969249)

@@ -366,6 +366,10 @@ def disk_create_from(options, disk_id):
     return {'id': 200, 'step': 'WAIT'}
 
 
+def disk_create(options):
+    return {'id': 200, 'step': 'WAIT', 'disk_id': 9000}
+
+
 def vm_list(options):
 
     ret = [{'ai_active': 0,
@@ -779,6 +783,9 @@ def vm_disk_attach(vm_id, disk_id, options):
         return {'id': 200, 'step': 'WAIT'}
 
     if vm_id == 152966 and disk_id == 4970079:
+        return {'id': 200, 'step': 'WAIT'}
+
+    if vm_id == 152967 and disk_id == 9000:
         return {'id': 200, 'step': 'WAIT'}
 
 
