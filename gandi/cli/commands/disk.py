@@ -174,14 +174,6 @@ def update(gandi, resource, cmdline, kernel, name, size,
 
     Resource can be a disk name, or ID
     """
-    try:
-        snapshotprofile = int(snapshotprofile) if snapshotprofile else None
-    except ValueError:
-        gandi.echo('--snapshotprofile must be an existing profile.')
-        gandi.echo('get all existing profiles with :')
-        gandi.echo('  gandi snapshotprofile list')
-        return
-
     result = gandi.disk.update(resource, name, size, snapshotprofile,
                                background, cmdline, kernel)
     if background:
@@ -241,14 +233,6 @@ def delete(gandi, resource, force, background):
 def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
            background):
     """ Create a new disk. """
-    try:
-        snapshotprofile = int(snapshotprofile) if snapshotprofile else None
-    except ValueError:
-        gandi.echo('--snapshotprofile must be an existing profile.')
-        gandi.echo('get all existing profiles with :')
-        gandi.echo('  gandi snapshotprofile list')
-        return
-
     name = name or randomstring('vdi')
 
     disk_type = 'data'
