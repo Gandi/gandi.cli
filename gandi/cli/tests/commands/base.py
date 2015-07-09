@@ -23,8 +23,11 @@ class CommandTestCase(unittest.TestCase):
             dummy.start()
 
         GandiModule._api = Api()
+        GandiModule._api._calls = {}
         GandiModule._conffiles = {'global': {'api': {'env': 'test',
                                                      'key': 'apikey0001'}}}
+
+        self.api_calls = GandiModule._api._calls
 
     def tearDown(self):
         GandiModule._api = None
