@@ -335,6 +335,11 @@ Updating your disk.
 
         self.assertEqual(result.exit_code, 0)
 
+    def test_update_snapshotprofile_conflict(self):
+        args = ['data', '--delete-snapshotprofile', '--snapshotprofile', '7']
+        result = self.invoke_with_exceptions(disk.update, args)
+        self.assertEqual(result.exit_code, 2)
+
     def test_update_size(self):
         args = ['data', '--size', '5G']
         result = self.invoke_with_exceptions(disk.update, args)
@@ -408,3 +413,31 @@ Disk rollback in progress.
         result = self.invoke_with_exceptions(disk.rollback, args)
         self.assertEqual(result.output.strip(), "{'id': 200, 'step': 'WAIT'}")
         self.assertEqual(result.exit_code, 0)
+
+    def test_snapshot(self):
+        args = ['snaptest']
+        result = self.invoke_with_exceptions(disk.snapshot, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Creating your disk.
+\rProgress: [###] 100.00%  00:00:00""")
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.disk.create_from'][0][0]
+        self.assertTrue(params['name'].startswith('snp'))
+
+    def test_snapshot_background(self):
+        args = ['snaptest', '--bg']
+        result = self.invoke_with_exceptions(disk.snapshot, args)
+        self.assertEqual(result.output.strip(), "{'id': 200, 'step': 'WAIT'}")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_snapshot_name(self):
+        args = ['snaptest', '--name', 'snappy']
+        result = self.invoke_with_exceptions(disk.snapshot, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Creating your disk.
+\rProgress: [###] 100.00%  00:00:00""")
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.disk.create_from'][0][0]
+        self.assertEqual(params['name'], 'snappy')

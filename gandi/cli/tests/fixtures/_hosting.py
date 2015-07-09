@@ -362,6 +362,10 @@ def disk_rollback_from(disk_id):
     return {'id': 200, 'step': 'WAIT'}
 
 
+def disk_create_from(options, disk_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
 def vm_list(options):
 
     ret = [{'ai_active': 0,

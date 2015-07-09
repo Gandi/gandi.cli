@@ -258,9 +258,9 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
 @cli.command()
 @click.option('--name', type=click.STRING, default=None,
               help='Snapshot name, will be generated if not provided.')
-@click.argument('resource')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
+@click.argument('resource')
 @pass_gandi
 def snapshot(gandi, name, resource, background):
     """ Create a snapshot on the fly. """
