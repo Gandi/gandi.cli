@@ -243,16 +243,17 @@ def delete(gandi, resource, force, background):
 def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
            background):
     """ Create a new disk. """
+    output_keys = ['id', 'type', 'step']
     name = name or randomstring('vdi')
 
     disk_type = 'data'
-    result = gandi.disk.create(name, vm, size, snapshotprofile, datacenter,
-                               source, disk_type, background)
+    oper = gandi.disk.create(name, vm, size, snapshotprofile, datacenter,
+                             source, disk_type, background)
 
     if background:
-        gandi.pretty_echo(result)
+        output_generic(gandi, oper, output_keys)
 
-    return result
+    return oper
 
 
 @cli.command()
