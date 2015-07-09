@@ -1,6 +1,7 @@
 """ Disk namespace commands. """
 
 import click
+from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_disk, output_generic, randomstring
@@ -164,16 +165,25 @@ def attach(gandi, disk, vm, position, read_only, background, force):
               callback=disk_check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE)
+@click.option('--delete-snapshotprofile', default=False, is_flag=True,
+              help='Remove snapshot profile associated to this disk.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
 @click.argument('resource')
 def update(gandi, resource, cmdline, kernel, name, size,
-           snapshotprofile, background):
+           snapshotprofile, delete_snapshotprofile, background):
     """ Update a disk.
 
     Resource can be a disk name, or ID
     """
+    if snapshotprofile and delete_snapshotprofile:
+        raise UsageError('You must not set snapshotprofile and '
+                         'delete-snapshotprofile.')
+
+    if delete_snapshotprofile:
+        snapshotprofile = ''
+
     result = gandi.disk.update(resource, name, size, snapshotprofile,
                                background, cmdline, kernel)
     if background:
