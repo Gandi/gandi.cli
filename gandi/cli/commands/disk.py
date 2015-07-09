@@ -132,7 +132,7 @@ def attach(gandi, disk, vm, position, read_only, background, force):
     """
     if not force:
         proceed = click.confirm("Are you sure you want to attach disk '%s'"
-                                " to vm '%s'" % (disk, vm))
+                                " to vm '%s'?" % (disk, vm))
         if not proceed:
             return
 
@@ -200,7 +200,7 @@ def update(gandi, resource, cmdline, kernel, name, size,
 @pass_gandi
 def delete(gandi, resource, force, background):
     """ Delete a disk. """
-    output_keys = ['name', 'disk_id', 'state', 'date_creation']
+    output_keys = ['id', 'type', 'step']
 
     resource = sorted(tuple(set(resource)))
     if not force:
@@ -290,4 +290,7 @@ def snapshot(gandi, name, resource, background):
 def rollback(gandi, resource, background):
     """ Rollback a disk from a snapshot. """
     result = gandi.disk.rollback(resource, background)
+
+    if background:
+        gandi.pretty_echo(result)
     return result
