@@ -38,8 +38,7 @@ def info(gandi, resource):
 
 
 @cli.command()
-@click.option('--domain', default=None, prompt=True,
-              help='Name of the domain.')
+@click.option('--domain', default=None, help='Name of the domain.')
 @click.option('--duration', default=1, prompt=True,
               type=click.IntRange(min=1, max=10),
               help='Registration period in years, between 1 and 10.')
@@ -53,10 +52,27 @@ def info(gandi, resource):
               help='Billing contact handle.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
+@click.argument('resource', metavar='DOMAIN', required=False)
 @pass_gandi
-def create(gandi, domain, duration, owner, admin, tech, bill, background):
+def create(gandi, resource, domain, duration, owner, admin, tech, bill,
+           background):
     """Buy a domain."""
-    result = gandi.domain.create(domain, duration, owner, admin, tech, bill,
+    if domain:
+        gandi.echo('/!\ --domain option is deprecated and will be removed '
+                   'upon next release.')
+        gandi.echo("You should use 'gandi domain create %s' instead." % domain)
+
+    if (domain and resource) and (domain != resource):
+        gandi.echo('/!\ You specified both an option and an argument which '
+                   'are different, please choose only one between: %s and %s.'
+                   % (domain, resource))
+        return
+
+    _domain = domain or resource
+    if not _domain:
+        _domain = click.prompt('Name of the domain')
+
+    result = gandi.domain.create(_domain, duration, owner, admin, tech, bill,
                                  background)
     if background:
         gandi.pretty_echo(result)
