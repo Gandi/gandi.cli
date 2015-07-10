@@ -59,12 +59,13 @@ def list(gandi, datacenter, type, id, attached, detached, version, reverse,
     if iface_options:
         ifaces = gandi.iface.list(iface_options)
         options['iface_id'] = [iface['id'] for iface in ifaces]
+    iface_options.update(opt_dc)
 
     datacenters = gandi.datacenter.list()
 
     ips = gandi.ip.list(options)
     ifaces = dict([(iface['id'], iface)
-                   for iface in gandi.iface.list(opt_dc)])
+                   for iface in gandi.iface.list(iface_options)])
     vms = dict([(vm['id'], vm)
                 for vm in gandi.iaas.list(opt_dc)])
 
