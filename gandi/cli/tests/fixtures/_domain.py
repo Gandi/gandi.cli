@@ -1,4 +1,5 @@
 from datetime import datetime
+
 try:
     # python3
     from xmlrpc.client import DateTime
@@ -78,4 +79,8 @@ def available(domains):
 
 
 def create(domain, params):
+    return {'id': 400, 'step': 'WAIT'}
+
+
+def renew(domain, params):
     return {'id': 400, 'step': 'WAIT'}

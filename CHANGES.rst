@@ -4,6 +4,7 @@ Changelog
 0.15
 ----
 
+* New command 'gandi domain renew' command to renew a domain.
 * Update 'domain info' command:
     - add creation, update and expiration date to output
     - changes nameservers and services output for easier parsing

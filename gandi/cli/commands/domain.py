@@ -62,3 +62,20 @@ def create(gandi, domain, duration, owner, admin, tech, bill, background):
         gandi.pretty_echo(result)
 
     return result
+
+
+@cli.command()
+@click.option('--duration', default=1, prompt=True,
+              type=click.IntRange(min=1, max=10),
+              help='Registration period in years, between 1 and 10.')
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.argument('domain')
+@pass_gandi
+def renew(gandi, domain, duration, background):
+    """Renew a domain."""
+    result = gandi.domain.renew(domain, duration, background)
+    if background:
+        gandi.pretty_echo(result)
+
+    return result

@@ -82,6 +82,7 @@ Namespaces:
 *  disk update             Update a disk.
 *  docker                  Manage docker instances.
 *  domain create           Buy a domain.
+*  domain renew            Renew a domain.
 *  domain info             Display information about a domain.
 *  domain list             List domains.
 *  help                    Display help for a command.
@@ -217,6 +218,8 @@ Details:
 * ``gandi docker`` will setup ssh forwarding towards a gandi VM, remotely feeding a docker unix socket. This, for example, can be used for zeroconf access to scripted temporary build VMs. The ``--vm`` option alters the ``dockervm`` configuration parameter and can be used to set the VM used for future docker connections. ``dockervm`` can also be set locally for per-project vms (See ``gandi config``). *NOTE*: passing option parameters to docker require the usage of the POSIX argument parsing ``--`` separator. *NOTE*: a local docker client is required for this command to operate.
 
 * ``gandi domain create`` helps register a domain. Options are ``--domain domain.tld`` for the domain you want to get, ``--duration INTEGER RANGE`` for the registration period, ``--owner TEXT``, ``--admin TEXT``, ``--tech TEXT``, ``--bill TEXT`` for the four contacts to pass to the creation process. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+
+* ``gandi domain renew domain.tld`` will renew a domain. Available option is ``--duration INTEGER RANGE`` for the registration period. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi domain info domain.tld`` show information about the specific domain ``domain.tld`` : owner, admin, billing and technical contacts, fully qualified domain name, nameservers, associated zone, associated tags and more.
 
