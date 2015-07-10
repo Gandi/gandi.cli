@@ -66,8 +66,8 @@ def list(gandi, datacenter, type, id, attached, detached, version, reverse,
     ips = gandi.ip.list(options)
     ifaces = dict([(iface['id'], iface)
                    for iface in gandi.iface.list(iface_options)])
-    vms = dict([(vm['id'], vm)
-                for vm in gandi.iaas.list(opt_dc)])
+    vms = dict([(vm_['id'], vm_)
+                for vm_ in gandi.iaas.list(opt_dc)])
 
     for num, ip_ in enumerate(ips):
         if num:
@@ -242,7 +242,7 @@ def delete(gandi, resource, background, force):
     ips = ', '.join([ip['ip'] for ip in iface['ips']])
     if len(iface['ips']) > 1:
         gandi.echo('All these ips (%s) are attached, will delete them all' %
-                 ips)
+                   ips)
     if not force:
         proceed = click.confirm('Are you sure to delete ip(s) %s' % ips)
         if not proceed:
