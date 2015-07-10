@@ -12,6 +12,7 @@ Changelog
     - add new option '--delete-snapshotprofile' to remove a snapshot
       profile from disk
 * Fixes #119
+* Fixes #141
 
 0.14
 ----
