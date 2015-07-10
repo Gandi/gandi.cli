@@ -423,7 +423,6 @@ PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
 DISK_MAXLIST = 500
 KERNEL = KernelParamType()
-SNAPSHOTPROFILE = SnapshotParamType()
 SNAPSHOTPROFILE_PAAS = SnapshotParamType('paas')
 SNAPSHOTPROFILE_VM = SnapshotParamType('vm')
 CERTIFICATE_PACKAGE = CertificatePackage()
