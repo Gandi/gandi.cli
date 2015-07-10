@@ -526,6 +526,11 @@ label         :
 kernel_version:
 name          : data
 datacenter    : FR
+----------
+label         : Debian 7 64 bits
+kernel_version: 3.2-x86_64
+name          : snaptest
+datacenter    : FR
 """)
         self.assertEqual(result.exit_code, 0)
 

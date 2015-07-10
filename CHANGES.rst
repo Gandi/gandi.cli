@@ -7,8 +7,10 @@ Changelog
 * Update 'domain info' command:
     - add creation, update and expiration date to output
     - changes nameservers and services output for easier parsing
+* Update 'gandi disk update' command:
+    - add new option '--delete-snapshotprofile' to remove a snapshot
+      profile from disk
 * Fixes #119
-
 
 0.14
 ----
