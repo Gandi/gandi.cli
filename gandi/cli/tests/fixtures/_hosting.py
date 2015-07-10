@@ -302,18 +302,44 @@ def disk_list(options):
               'label': None,
               'name': 'data',
               'size': 3072,
-              'snapshot_profile_id': None,
-              'snapshots_id': [],
+              'snapshot_profile_id': 1,
+              'snapshots_id': [663497],
               'source': None,
               'state': 'created',
               'total_size': 3072,
               'type': 'data',
               'visibility': 'private',
-              'vms_id': [152967]}]
+              'vms_id': [152967]},
+             {'can_snapshot': False,
+              'datacenter_id': 1,
+              'date_created': DateTime('20140826T00:00:00'),
+              'date_updated': DateTime('20140826T00:00:00'),
+              'id': 663497,
+              'is_boot_disk': False,
+              'kernel_version': '3.2-x86_64',
+              'label': 'Debian 7 64 bits',
+              'name': 'snaptest',
+              'size': 3072,
+              'snapshot_profile_id': None,
+              'snapshots_id': [],
+              'source': 4970079,
+              'state': 'created',
+              'total_size': 3072,
+              'type': 'snapshot',
+              'visibility': 'private',
+              'vms_id': []}]
 
-    if 'name' in options:
-        disks = dict([(disk['name'], disk) for disk in disks])
-        return [disks[options['name']]] if disks.get(options['name']) else []
+    options.pop('items_per_page', None)
+
+    for fkey in options:
+        ret = []
+        for disk in disks:
+            if isinstance(options[fkey], list):
+                if disk[fkey] in options[fkey]:
+                    ret.append(disk)
+            elif disk[fkey] == options[fkey]:
+                ret.append(disk)
+        disks = ret
 
     return disks
 
@@ -322,6 +348,26 @@ def disk_info(id):
     disks = disk_list({})
     disks = dict([(disk['id'], disk) for disk in disks])
     return disks[id]
+
+
+def disk_update(disk_id, options):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def disk_delete(disk_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def disk_rollback_from(disk_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def disk_create_from(options, disk_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def disk_create(options):
+    return {'id': 200, 'step': 'WAIT', 'disk_id': 9000}
 
 
 def vm_list(options):
@@ -732,6 +778,17 @@ def vm_disk_detach(vm_id, disk_id):
         return {'id': 200, 'step': 'WAIT'}
 
 
+def vm_disk_attach(vm_id, disk_id, options):
+    if vm_id == 152967 and disk_id == 663497:
+        return {'id': 200, 'step': 'WAIT'}
+
+    if vm_id == 152966 and disk_id == 4970079:
+        return {'id': 200, 'step': 'WAIT'}
+
+    if vm_id == 152967 and disk_id == 9000:
+        return {'id': 200, 'step': 'WAIT'}
+
+
 def vm_stop(vm_id):
     if vm_id in (152967, 152966):
         return {'id': 200, 'step': 'WAIT'}
@@ -838,3 +895,24 @@ def vlan_info(options):
             'state': 'created',
             'subnet': '192.168.0.0/24',
             'uuid': 321}
+
+
+def snapshotprofile_list(options):
+    ret = [{'id': 1,
+            'kept_total': 2,
+            'name': 'minimal',
+            'quota_factor': 1.2,
+            'schedules': [{'kept_version': 2, 'name': 'daily'}]},
+           {'id': 2,
+            'kept_total': 7,
+            'name': 'full_week',
+            'quota_factor': 1.7,
+            'schedules': [{'kept_version': 7, 'name': 'daily'}]},
+           {'id': 3,
+            'kept_total': 10,
+            'name': 'security',
+            'quota_factor': 2.0,
+            'schedules': [{'kept_version': 3, 'name': 'hourly6'},
+                          {'kept_version': 6, 'name': 'daily'},
+                          {'kept_version': 1, 'name': 'weekly4'}]}]
+    return ret

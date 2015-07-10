@@ -1,3 +1,5 @@
+from datetime import datetime
+
 try:
     # python3
     from xmlrpc.client import DateTime
@@ -16,12 +18,12 @@ def list(options):
                           'bill': {'handle': 'AA3-GANDI'},
                           'reseller': {'handle': 'AA4-GANDI'},
                           'tech': {'handle': 'AA5-GANDI'}},
-             'date_created': DateTime('20100922T15:06:18'),
-             'date_delete': DateTime('20151019T19:14:00'),
-             'date_hold_begin': DateTime('20150922T22:00:00'),
-             'date_registry_creation': DateTime('20100922T13:06:16'),
-             'date_registry_end': DateTime('20150922T00:00:00'),
-             'date_updated': DateTime('20140921T03:10:07'),
+             'date_created': datetime(2010, 9, 22, 15, 6, 18),
+             'date_delete': datetime(2015, 10, 19, 19, 14, 0),
+             'date_hold_begin': datetime(2015, 9, 22, 22, 0, 0),
+             'date_registry_creation': datetime(2010, 9, 22, 13, 6, 16),
+             'date_registry_end': datetime(2015, 9, 22, 0, 0, 0),
+             'date_updated': datetime(2014, 9, 21, 3, 10, 7),
              'nameservers': ['a.dns.gandi.net', 'b.dns.gandi.net',
                              'c.dns.gandi.net'],
              'services': ['gandidns'],
@@ -77,4 +79,8 @@ def available(domains):
 
 
 def create(domain, params):
+    return {'id': 400, 'step': 'WAIT'}
+
+
+def renew(domain, params):
     return {'id': 400, 'step': 'WAIT'}

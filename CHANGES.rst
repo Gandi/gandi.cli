@@ -4,8 +4,18 @@ Changelog
 0.15
 ----
 
-* Update 'gandi domain create' command: the domain name can now be passed
-  as argument, the option --domain will be deprecated upon next release.
+* New command 'gandi domain renew' command to renew a domain.
+* Update 'domain info' command:
+    - add creation, update and expiration date to output
+    - changes nameservers and services output for easier parsing
+* Update 'gandi domain create' command:
+    - the domain name can now be passed as argument, the option
+    --domain will be deprecated upon next release.
+* Update 'gandi disk update' command:
+    - add new option '--delete-snapshotprofile' to remove a snapshot
+      profile from disk
+* Fixes #119
+* Fixes #141
 
 0.14
 ----

@@ -82,6 +82,7 @@ Namespaces:
 *  disk update             Update a disk.
 *  docker                  Manage docker instances.
 *  domain create           Buy a domain.
+*  domain renew            Renew a domain.
 *  domain info             Display information about a domain.
 *  domain list             List domains.
 *  help                    Display help for a command.
@@ -204,7 +205,7 @@ Details:
 
   ``gandi disk list`` show a list of virtual disk. Possible options to filter the list are : ``--only-data`` and ``--only-snapshot`` which limit the list to regular disk and to snapshots, ``--type`` add the type of the virtual disk, ``--id`` add the integer id of each virtual disk, ``--vm`` show the virtual machines by which the disk are used, ``--snapshotprofile`` show the profile of data retention associated and ``--limit INTEGER`` show only a limit amount of disks.
 
-* ``gandi disk update resource`` modify the options of a virtual disk. Possible options are ``--kernel KERNEL`` to setup or update disk kernel, ``--cmdline TEXT`` to change kernel cmdline, ``--name TEXT`` for the label of the virtual disk, ``--size SIZE[M|G|T]`` for the new size of the disk, ``--snapshotprofile TEXT`` to select a profile of snapshot to apply to the disk for keeping multiple version of data in a timeline. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi disk update resource`` modify the options of a virtual disk. Possible options are ``--kernel KERNEL`` to setup or update disk kernel, ``--cmdline TEXT`` to change kernel cmdline, ``--name TEXT`` for the label of the virtual disk, ``--size SIZE[M|G|T]`` for the new size of the disk, ``--snapshotprofile TEXT`` to select a profile of snapshot to apply to the disk for keeping multiple version of data in a timeline, ``--delete-snapshotprofile`` to remove snapshot profile associated to this virtual disk. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi disk attach disk vm`` attach the given disk to the given vm, if the disk is currently attached, it will start by detaching it. Possible options: ``--force`` to skip all questions about detaching and attaching; ``--position INTEGER`` (or ``-p``) to specify the position at which the disk should be attached (0 for system disk); ``--read-only`` (or ``-r``) to attach the disk in read-only mode. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
@@ -217,6 +218,8 @@ Details:
 * ``gandi docker`` will setup ssh forwarding towards a gandi VM, remotely feeding a docker unix socket. This, for example, can be used for zeroconf access to scripted temporary build VMs. The ``--vm`` option alters the ``dockervm`` configuration parameter and can be used to set the VM used for future docker connections. ``dockervm`` can also be set locally for per-project vms (See ``gandi config``). *NOTE*: passing option parameters to docker require the usage of the POSIX argument parsing ``--`` separator. *NOTE*: a local docker client is required for this command to operate.
 
 * ``gandi domain create domain.tld`` helps register a domain. Options are ``--domain domain.tld`` for the domain you want to get (/!\ this option is deprecated and will be removed upon next release), ``--duration INTEGER RANGE`` for the registration period, ``--owner TEXT``, ``--admin TEXT``, ``--tech TEXT``, ``--bill TEXT`` for the four contacts to pass to the creation process. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+
+* ``gandi domain renew domain.tld`` will renew a domain. Available option is ``--duration INTEGER RANGE`` for the registration period. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi domain info domain.tld`` show information about the specific domain ``domain.tld`` : owner, admin, billing and technical contacts, fully qualified domain name, nameservers, associated zone, associated tags and more.
 

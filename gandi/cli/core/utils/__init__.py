@@ -4,6 +4,7 @@ Also custom exceptions and method to generate a random string.
 """
 import sys
 import time
+from datetime import datetime
 
 import json
 from click.formatting import measure_table
@@ -38,6 +39,15 @@ class DomainNotAvailable(Exception):
         self.errors = errors
 
 
+def format_list(data):
+    """ Remove useless characters to output a clean list."""
+    if isinstance(data, (list, tuple)):
+        to_clean = ['[', ']', '(', ')', "'"]
+        for item in to_clean:
+            data = str(data).replace(item, '')
+    return data
+
+
 def display_rows(gandi, rows, has_header=True):
     col_len = measure_table(rows)
     formatting = ' | '.join(['%-' + str(l) + 's' for l in col_len])
@@ -62,6 +72,7 @@ def output_generic(gandi, data, output_keys, justify=10):
     for key in output_keys:
         if key in data:
             output_line(gandi, key, data[key], justify)
+
 
 def output_account(gandi, account, output_keys, justify=17):
     """ Helper to output an account information."""
@@ -423,3 +434,31 @@ def output_hostedcert(gandi, hcert, output_keys, justify=12):
             gandi.separator_sub_line()
             output_sub_line(gandi, 'vhost', vhost['name'], 10)
             output_sub_line(gandi, 'type', vhost['type'], 10)
+
+
+def output_domain(gandi, domain, output_keys, justify=12):
+    """ Helper to output a domain information."""
+    if 'nameservers' in domain:
+        domain['nameservers'] = format_list(domain['nameservers'])
+
+    if 'services' in domain:
+        domain['services'] = format_list(domain['services'])
+
+    if 'tags' in domain:
+        domain['tags'] = format_list(domain['tags'])
+
+    output_generic(gandi, domain, output_keys, justify)
+
+    if 'created' in output_keys:
+        output_line(gandi, 'created', domain['date_created'], justify)
+
+    if 'expires' in output_keys:
+        date_end = domain.get('date_registry_end')
+        if date_end:
+            days_left = (date_end - datetime.now()).days
+        output_line(gandi, 'expires',
+                    '%s (in %d days)' % (date_end, days_left),
+                    justify)
+
+    if 'updated' in output_keys:
+        output_line(gandi, 'updated', domain['date_updated'], justify)

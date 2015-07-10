@@ -1,4 +1,5 @@
 from __future__ import print_function
+from datetime import datetime
 
 
 class MockObject(object):
@@ -29,3 +30,7 @@ class MockObject(object):
         if not shell:
             return ' '.join(command)
         return command
+
+    @classmethod
+    def now(cls, *args, **kwargs):
+        return datetime(2020, 12, 25, 0, 0, 0)
