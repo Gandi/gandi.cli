@@ -70,7 +70,7 @@ def create(gandi, resource, domain, duration, owner, admin, tech, bill,
 
     _domain = domain or resource
     if not _domain:
-        _domain = click.prompt('Name of the domain.')
+        _domain = click.prompt('Name of the domain')
 
     result = gandi.domain.create(_domain, duration, owner, admin, tech, bill,
                                  background)
