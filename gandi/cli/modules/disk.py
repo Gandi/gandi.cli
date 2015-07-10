@@ -24,7 +24,7 @@ class Disk(GandiModule):
 
     @classmethod
     def from_name(cls, name):
-        """ Retrieve a disk id accsociated to a name. """
+        """ Retrieve a disk id associated to a name. """
         disks = cls.list({'name': name})
         if len(disks) == 1:
             return disks[0]['id']

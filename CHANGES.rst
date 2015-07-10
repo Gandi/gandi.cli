@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.15
+----
+
+* Update 'gandi disk update' command:
+    - add new option '--delete-snapshotprofile' to remove a snapshot
+      profile from disk
+
 0.14
 ----
 
