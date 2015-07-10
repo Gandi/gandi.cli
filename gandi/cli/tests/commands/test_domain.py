@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
+from datetime import datetime
 
 from .base import CommandTestCase
+from ..compat import mock
 from gandi.cli.commands import domain
 from gandi.cli.core.utils import DomainNotAvailable
 
@@ -18,7 +20,13 @@ cli.sexy
         self.assertEqual(result.exit_code, 0)
 
     def test_info(self):
-        result = self.invoke_with_exceptions(domain.info, ['iheartcli.com'])
+        with mock.patch('gandi.cli.core.utils.datetime') as mock_datetime:
+            mock_datetime.now.return_value = datetime(2015, 7, 1)
+            mock_datetime.side_effect = lambda *args, **kw: datetime(*args,
+                                                                     **kw)
+
+            result = self.invoke_with_exceptions(domain.info,
+                                                 ['iheartcli.com'])
 
         self.assertEqual(result.output, """owner       : AA1-GANDI
 admin       : AA2-GANDI
@@ -26,10 +34,13 @@ bill        : AA3-GANDI
 tech        : AA5-GANDI
 reseller    : AA4-GANDI
 fqdn        : iheartcli.com
-nameservers : ['a.dns.gandi.net', 'b.dns.gandi.net', 'c.dns.gandi.net']
-services    : ['gandidns']
+nameservers : a.dns.gandi.net, b.dns.gandi.net, c.dns.gandi.net
+services    : gandidns
 zone_id     : 424242
 tags        : bla
+created     : 2010-09-22 15:06:18
+expires     : 2015-09-22 00:00:00 (in 83 days)
+updated     : 2014-09-21 03:10:07
 """)
         self.assertEqual(result.exit_code, 0)
 
