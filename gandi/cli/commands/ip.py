@@ -213,7 +213,8 @@ def detach(gandi, resource, background, force):
     resource can be an ip id or ip.
     """
     if not force:
-        proceed = click.confirm('Are you sure to detach ip %s?' % resource)
+        proceed = click.confirm('Are you sure you want to detach ip %s?' %
+                                resource)
         if not proceed:
             return
 
@@ -244,7 +245,8 @@ def delete(gandi, resource, background, force):
         gandi.echo('All these ips (%s) are attached, will delete them all' %
                    ips)
     if not force:
-        proceed = click.confirm('Are you sure to delete ip(s) %s' % ips)
+        proceed = click.confirm('Are you sure you want to delete ip(s) %s' %
+                                ips)
         if not proceed:
             return
 
