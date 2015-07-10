@@ -1,6 +1,7 @@
 """ Disk namespace commands. """
 
 import click
+from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_disk, output_generic, randomstring
@@ -132,7 +133,7 @@ def attach(gandi, disk, vm, position, read_only, background, force):
     """
     if not force:
         proceed = click.confirm("Are you sure you want to attach disk '%s'"
-                                " to vm '%s'" % (disk, vm))
+                                " to vm '%s'?" % (disk, vm))
         if not proceed:
             return
 
@@ -164,23 +165,24 @@ def attach(gandi, disk, vm, position, read_only, background, force):
               callback=disk_check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE_VM)
+@click.option('--delete-snapshotprofile', default=False, is_flag=True,
+              help='Remove snapshot profile associated to this disk.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
 @click.argument('resource')
 def update(gandi, resource, cmdline, kernel, name, size,
-           snapshotprofile, background):
+           snapshotprofile, delete_snapshotprofile, background):
     """ Update a disk.
 
     Resource can be a disk name, or ID
     """
-    try:
-        snapshotprofile = int(snapshotprofile) if snapshotprofile else None
-    except ValueError:
-        gandi.echo('--snapshotprofile must be an existing profile.')
-        gandi.echo('get all existing profiles with :')
-        gandi.echo('  gandi snapshotprofile list')
-        return
+    if snapshotprofile and delete_snapshotprofile:
+        raise UsageError('You must not set snapshotprofile and '
+                         'delete-snapshotprofile.')
+
+    if delete_snapshotprofile:
+        snapshotprofile = ''
 
     result = gandi.disk.update(resource, name, size, snapshotprofile,
                                background, cmdline, kernel)
@@ -200,7 +202,7 @@ def update(gandi, resource, cmdline, kernel, name, size,
 @pass_gandi
 def delete(gandi, resource, force, background):
     """ Delete a disk. """
-    output_keys = ['name', 'disk_id', 'state', 'date_creation']
+    output_keys = ['id', 'type', 'step']
 
     resource = sorted(tuple(set(resource)))
     if not force:
@@ -241,32 +243,25 @@ def delete(gandi, resource, force, background):
 def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
            background):
     """ Create a new disk. """
-    try:
-        snapshotprofile = int(snapshotprofile) if snapshotprofile else None
-    except ValueError:
-        gandi.echo('--snapshotprofile must be an existing profile.')
-        gandi.echo('get all existing profiles with :')
-        gandi.echo('  gandi snapshotprofile list')
-        return
-
+    output_keys = ['id', 'type', 'step']
     name = name or randomstring('vdi')
 
     disk_type = 'data'
-    result = gandi.disk.create(name, vm, size, snapshotprofile, datacenter,
-                               source, disk_type, background)
+    oper = gandi.disk.create(name, vm, size, snapshotprofile, datacenter,
+                             source, disk_type, background)
 
     if background:
-        gandi.pretty_echo(result)
+        output_generic(gandi, oper, output_keys)
 
-    return result
+    return oper
 
 
 @cli.command()
 @click.option('--name', type=click.STRING, default=None,
               help='Snapshot name, will be generated if not provided.')
-@click.argument('resource')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
+@click.argument('resource')
 @pass_gandi
 def snapshot(gandi, name, resource, background):
     """ Create a snapshot on the fly. """
@@ -290,4 +285,7 @@ def snapshot(gandi, name, resource, background):
 def rollback(gandi, resource, background):
     """ Rollback a disk from a snapshot. """
     result = gandi.disk.rollback(resource, background)
+
+    if background:
+        gandi.pretty_echo(result)
     return result
