@@ -6,7 +6,7 @@ from click.exceptions import UsageError
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_disk, output_generic, randomstring
 from gandi.cli.core.utils.size import disk_check_size
-from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE,
+from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE_VM,
                                    KERNEL, SIZE, option, DISK_IMAGE)
 
 
@@ -164,7 +164,7 @@ def attach(gandi, disk, vm, position, read_only, background, force):
                     'suffix is present.'),
               callback=disk_check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
-              default=None, type=SNAPSHOTPROFILE)
+              default=None, type=SNAPSHOTPROFILE_VM)
 @click.option('--delete-snapshotprofile', default=False, is_flag=True,
               help='Remove snapshot profile associated to this disk.')
 @click.option('--bg', '--background', default=False, is_flag=True,
@@ -232,7 +232,7 @@ def delete(gandi, resource, force, background):
                     'suffix is present.'),
               callback=disk_check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
-              default=None, type=SNAPSHOTPROFILE)
+              default=None, type=SNAPSHOTPROFILE_VM)
 @click.option('--source', default=None, type=DISK_IMAGE,
               help='Create a disk from a disk or a snapshot.')
 @option('--datacenter', type=DATACENTER, default='LU',

@@ -5,7 +5,9 @@ from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_paas, output_generic, randomstring
-from gandi.cli.core.params import pass_gandi, DATACENTER, PAAS_TYPE, option
+from gandi.cli.core.params import (
+    pass_gandi, DATACENTER, SNAPSHOTPROFILE_PAAS, PAAS_TYPE, option,
+)
 
 
 @cli.command()
@@ -180,7 +182,7 @@ def delete(gandi, background, force, resource):
 @click.option('--poll-cert', help='Will wait for the certificate creation.',
               is_flag=True)
 @click.option('--password', help='Use command-line supplied password.')
-@click.option('--snapshotprofile', default=None, type=click.INT,
+@click.option('--snapshotprofile', default=None, type=SNAPSHOTPROFILE_PAAS,
               help='Set a snapshot profile associated to this paas disk.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')

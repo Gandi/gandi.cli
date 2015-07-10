@@ -316,8 +316,13 @@ Updating your disk.
 
         self.assertEqual(result.exit_code, 0)
 
-    def test_update_snapshotprofile(self):
+    def test_update_snapshotprofile_ko(self):
         args = ['data', '--snapshotprofile', '7']
+        result = self.invoke_with_exceptions(disk.update, args)
+        self.assertEqual(result.exit_code, 2)
+
+    def test_update_snapshotprofile(self):
+        args = ['data', '--snapshotprofile', '2']
         result = self.invoke_with_exceptions(disk.update, args)
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
@@ -460,7 +465,7 @@ Creating your disk.
 
     def test_create_params(self):
         args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'FR',
-                '--snapshotprofile', '7']
+                '--snapshotprofile', '3']
         result = self.invoke_with_exceptions(disk.create, args,
                                              obj=GandiContextHelper())
 
@@ -473,7 +478,14 @@ Creating your disk.
         self.assertEqual(params['datacenter_id'], 1)
         self.assertEqual(params['size'], 5120)
         self.assertEqual(params['name'], 'newdisk')
-        self.assertEqual(params['snapshot_profile'], 7)
+        self.assertEqual(params['snapshot_profile'], 3)
+
+    def test_create_params_snapshot_ko(self):
+        args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'FR',
+                '--snapshotprofile', '7']
+        result = self.invoke_with_exceptions(disk.create, args,
+                                             obj=GandiContextHelper())
+        self.assertEqual(result.exit_code, 2)
 
     def test_create_default_background(self):
         args = ['--bg']
