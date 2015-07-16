@@ -3,6 +3,7 @@ import re
 
 from .base import CommandTestCase
 from gandi.cli.commands import ip
+from gandi.cli.core.base import GandiContextHelper
 
 
 class IpTestCase(CommandTestCase):
@@ -177,3 +178,132 @@ Updating your IP
 \rProgress: [###] 100.00%  00:00:00""")
 
         self.assertEqual(result.exit_code, 0)
+
+    def test_attach_ko(self):
+        args = ['395.142.160.181', 'vm1426759833']
+        result = self.invoke_with_exceptions(ip.attach, args)
+
+        self.assertTrue("Can't find this ip 395.142.160.181" in result.output)
+        self.assertEqual(result.exit_code, 2)
+
+    def test_attach_already(self):
+        args = ['95.142.160.181', 'server01']
+        result = self.invoke_with_exceptions(ip.attach, args, input='y\n')
+
+        self.assertEqual(result.output, """\
+This ip is already attached to this vm.
+""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_attach(self):
+        args = ['95.142.160.181', 'vm1426759833']
+        result = self.invoke_with_exceptions(ip.attach, args, input='y\n')
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Are you sure you want to detach 95.142.160.181 from vm 152967 [y/N]: y
+The iface is still attached to the vm 152967.
+Will detach it.
+\rProgress: [###] 100.00%  00:00:00  \
+\n\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_attach_force(self):
+        args = ['95.142.160.181', 'vm1426759833', '--force']
+        result = self.invoke_with_exceptions(ip.attach, args)
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+The iface is still attached to the vm 152967.
+Will detach it.
+\rProgress: [###] 100.00%  00:00:00  \
+\n\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_attach_refuse(self):
+        args = ['95.142.160.181', 'vm1426759833']
+        result = self.invoke_with_exceptions(ip.attach, args, input='N\n')
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Are you sure you want to detach 95.142.160.181 from vm 152967 [y/N]: N""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_attach_background(self):
+        args = ['95.142.160.181', 'vm1426759833', '--force', '--bg']
+        result = self.invoke_with_exceptions(ip.attach, args)
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+The iface is still attached to the vm 152967.
+Will detach it.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_default(self):
+        args = []
+        result = self.invoke_with_exceptions(ip.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Creating your iface.
+\rProgress: [###] 100.00%  00:00:00  \
+\nYour iface has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.iface.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 3)
+        self.assertEqual(params['bandwidth'], 102400)
+        self.assertEqual(params['ip_version'], 4)
+
+    def test_create_params(self):
+        args = ['--datacenter', 'FR', '--bandwidth', '51200',
+                '--ip-version', '6']
+        result = self.invoke_with_exceptions(ip.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Creating your iface.
+\rProgress: [###] 100.00%  00:00:00  \
+\nYour iface has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.iface.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 1)
+        self.assertEqual(params['bandwidth'], 51200)
+        self.assertEqual(params['ip_version'], 6)
+
+    def test_create_params_vlan_ko(self):
+        args = ['--datacenter', 'FR', '--bandwidth', '51200',
+                '--ip-version', '6', '--vlan', 'pouet']
+        result = self.invoke_with_exceptions(ip.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+You must have an --ip-version to 4 when having a vlan.""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_params_vlan_ok(self):
+        args = ['--datacenter', 'FR', '--bandwidth', '51200',
+                '--ip-version', '4', '--vlan', 'pouet']
+        result = self.invoke_with_exceptions(ip.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Creating your iface.
+\rProgress: [###] 100.00%  00:00:00  \
+\nYour iface has been created.""")
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.iface.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 1)
+        self.assertEqual(params['bandwidth'], 51200)
+        self.assertEqual(params['ip_version'], 4)
+        self.assertEqual(params['vlan'], 717)
