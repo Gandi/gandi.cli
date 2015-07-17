@@ -237,7 +237,7 @@ Details:
 
 * ``gandi ip detach`` detach an ip from a vm. It only takes one parameter, the ``ip``. Possible options are ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
 
-* ``gandi ip delete`` delete an ip. If the ip is still attached, it will detach it before deleting it. Possible options are ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
+* ``gandi ip delete`` delete one or more ips. If the ip is still attached, it will detach it before deleting it. Possible options are ``--force`` to bypass the validation question; useful in non-interactive mode when scripting, and ``--background`` (or ``--bg``) to process in background.
 
 * ``gandi ip update`` update an ip. The only available parameter is now ``--reverse``, to specify a reverse (PTR record) name for this ip address.
 

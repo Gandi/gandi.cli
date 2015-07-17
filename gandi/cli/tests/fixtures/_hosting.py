@@ -778,6 +778,19 @@ def vm_disk_detach(vm_id, disk_id):
         return {'id': 200, 'step': 'WAIT'}
 
 
+def vm_iface_detach(vm_id, iface_id):
+    if vm_id == 152967 and iface_id == 156573:
+        return {'id': 200, 'step': 'WAIT'}
+
+
+def vm_iface_attach(vm_id, iface_id):
+    if vm_id == 152966 and iface_id == 156573:
+        return {'id': 200, 'step': 'WAIT'}
+
+    if vm_id == 152967 and iface_id == 156575:
+        return {'id': 200, 'step': 'WAIT'}
+
+
 def vm_disk_attach(vm_id, disk_id, options):
     if vm_id == 152967 and disk_id == 663497:
         return {'id': 200, 'step': 'WAIT'}
@@ -825,16 +838,116 @@ def vlan_list(options):
              'name': 'vlantest',
              'state': 'created',
              'subnet': None,
-             'uuid': 321}]
+             'uuid': 321},
+            {'datacenter_id': 1,
+             'gateway': None,
+             'id': 717,
+             'name': 'pouet',
+             'state': 'created',
+             'subnet': None,
+             'uuid': 720}]
 
 
 def iface_create(options):
     return {'id': 200, 'step': 'WAIT', 'iface_id': 156575}
 
 
+def iface_delete(ip_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def iface_list(options):
+
+    ret = [{'bandwidth': 102400.0,
+            'datacenter_id': 1,
+            'date_created': DateTime('20140423T00:00:00'),
+            'date_updated': DateTime('20140423T00:00:00'),
+            'id': 156573,
+            'ips_id': [203968, 204558],
+            'ips': [{'datacenter_id': 1,
+                     'date_created': DateTime('20150317T16:20:10'),
+                     'date_updated': DateTime('20150319T11:14:13'),
+                     'id': 203968,
+                     'iface_id': 156573,
+                     'ip': '95.142.160.181',
+                     'num': 0,
+                     'reverse': 'xvm-160-181.dc0.ghst.net',
+                     'state': 'created',
+                     'version': 4},
+                    {'datacenter_id': 1,
+                     'date_created': DateTime('20150319T11:14:16'),
+                     'date_updated': DateTime('20150319T11:14:16'),
+                     'id': 204558,
+                     'iface_id': 156573,
+                     'ip': '2001:4b98:dc0:47:216:3eff:feb2:3862',
+                     'num': 1,
+                     'reverse': 'xvm6-dc0-feb2-3862.ghst.net',
+                     'state': 'created',
+                     'version': 6}],
+            'num': 0,
+            'state': 'used',
+            'type': 'public',
+            'vlan': None,
+            'vm_id': 152967},
+           {'bandwidth': 102400.0,
+            'datacenter_id': 1,
+            'date_created': DateTime('20141009T00:00:00'),
+            'date_updated': DateTime('20141105T00:00:00'),
+            'id': 1416,
+            'ips_id': [],
+            'num': None,
+            'state': 'free',
+            'type': 'private',
+            'vlan': {'id': 717, 'name': 'pouet'},
+            'vm_id': None},
+           {'bandwidth': 204800.0,
+            'datacenter_id': 1,
+            'date_created': DateTime('20150105T00:00:00'),
+            'date_updated': DateTime('20150105T00:00:00'),
+            'id': 1914,
+            'ips_id': [2361],
+            'num': None,
+            'state': 'free',
+            'type': 'private',
+            'vlan': {'id': 717, 'name': 'pouet'},
+            'vm_id': None},
+           {'bandwidth': 204800.0,
+            'datacenter_id': 1,
+            'date_created': DateTime('20150105T00:00:00'),
+            'date_updated': DateTime('20150105T00:00:00'),
+            'id': 156572,
+            'ips_id': [204557],
+            'num': None,
+            'state': 'free',
+            'type': 'private',
+            'vlan': {'id': 717, 'name': 'pouet'},
+            'vm_id': None}]
+
+    options.pop('items_per_page', None)
+
+    for fkey in options:
+        if fkey == 'vlan':
+            ret_ = []
+            for iface in ret:
+                if iface['vlan'] and iface['vlan']['name'] == options['vlan']:
+                    ret_.append(iface)
+            ret = ret_
+        else:
+            ret = [iface for iface in ret if iface[fkey] == options[fkey]]
+
+    return ret
+
+
+def iface_info(iface_id):
+
+    ifaces = iface_list({})
+    ifaces = dict([(iface['id'], iface) for iface in ifaces])
+    return ifaces[iface_id]
+
+
 def ip_list(options):
 
-    ret = [{'datacenter_id': 1,
+    ips = [{'datacenter_id': 1,
             'date_created': DateTime('20150317T16:20:10'),
             'date_updated': DateTime('20150319T11:14:13'),
             'id': 203968,
@@ -865,7 +978,30 @@ def ip_list(options):
             'state': 'created',
             'version': 6}]
 
-    return ret
+    options.pop('items_per_page', None)
+
+    for fkey in options:
+        ret = []
+        for ip in ips:
+            if isinstance(options[fkey], list):
+                if ip[fkey] in options[fkey]:
+                    ret.append(ip)
+            elif ip[fkey] == options[fkey]:
+                ret.append(ip)
+        ips = ret
+
+    return ips
+
+
+def ip_info(ip_id):
+
+    ips = ip_list({})
+    ips = dict([(ip['id'], ip) for ip in ips])
+    return ips[ip_id]
+
+
+def ip_update(ip_id, options):
+    return {'id': 200, 'step': 'WAIT'}
 
 
 def ssh_list(options):

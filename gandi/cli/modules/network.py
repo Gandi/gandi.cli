@@ -53,6 +53,14 @@ class Ip(GandiModule):
         return result
 
     @classmethod
+    def resource_list(cls):
+        """ Get the possible list of resources (name, id). """
+        items = cls.list()
+        ret = [str(ip['id']) for ip in items]
+        ret.extend([ip['ip'] for ip in items])
+        return ret
+
+    @classmethod
     def _check_and_detach(cls, ip_, vm_=None):
         # if the ip exists and is attached, we have to detach it
         iface = Iface.info(ip_['iface_id'])
@@ -102,23 +110,22 @@ class Ip(GandiModule):
         return cls._detach(ip_, iface, background, force)
 
     @classmethod
-    def delete(cls, resource, background=False, force=False):
-        try:
-            ip_ = cls.info(resource)
-        except UsageError:
-            cls.error("Can't find this ip %s" % resource)
+    def delete(cls, resources, background=False, force=False):
+        """Delete an ip by deleting the iface"""
+        if not isinstance(resources, (list, tuple)):
+            resources = [resources]
 
-        iface = Iface.info(ip_['iface_id'])
+        ifaces = []
+        for item in resources:
+            try:
+                ip_ = cls.info(item)
+            except UsageError:
+                cls.error("Can't find this ip %s" % item)
 
-        if iface.get('vm'):
-            cls._detach(ip_, iface, False, force)
+            iface = Iface.info(ip_['iface_id'])
+            ifaces.append(iface['id'])
 
-        delete = Iface.delete(iface['id'], background)
-        if background:
-            return delete
-
-        cls.display_progress(delete)
-        return delete
+        return Iface.delete(ifaces, background)
 
     @classmethod
     def from_ip(cls, ip):
@@ -411,7 +418,7 @@ class Iface(GandiModule):
         if background:
             return opers
 
-        cls.echo('Deleting your iface.')
+        cls.echo('Detaching/deleting your iface(s).')
         cls.display_progress(opers)
         return opers
 

@@ -59,14 +59,15 @@ def list(gandi, datacenter, type, id, attached, detached, version, reverse,
     if iface_options:
         ifaces = gandi.iface.list(iface_options)
         options['iface_id'] = [iface['id'] for iface in ifaces]
+    iface_options.update(opt_dc)
 
     datacenters = gandi.datacenter.list()
 
     ips = gandi.ip.list(options)
     ifaces = dict([(iface['id'], iface)
-                   for iface in gandi.iface.list(opt_dc)])
-    vms = dict([(vm['id'], vm)
-                for vm in gandi.iaas.list(opt_dc)])
+                   for iface in gandi.iface.list(iface_options)])
+    vms = dict([(vm_['id'], vm_)
+                for vm_ in gandi.iaas.list(opt_dc)])
 
     for num, ip_ in enumerate(ips):
         if num:
@@ -152,8 +153,8 @@ def attach(gandi, ip, vm, background, force):
 
 
 @cli.command()
-@option('--datacenter', type=DATACENTER, default='LU',
-        help='Datacenter where the ip will be created.')
+@click.option('--datacenter', type=DATACENTER,
+              help='Datacenter where the ip will be created.')
 @option('--bandwidth', type=click.INT, default=102400,
         help="Network bandwidth in bit/s used to create the VM's first "
              "network interface.")
@@ -182,17 +183,12 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
     if datacenter and vm_:
         dc_id = gandi.datacenter.usable_id(datacenter)
         if dc_id != vm_['datacenter_id']:
-            gandi.echo('The datacenter you give is not the same the vm you'
-                       ' want to attach.')
+            gandi.echo('The datacenter you provided does not match the '
+                       'datacenter of the vm you want to attach to.')
             return
 
     if not datacenter:
-        if vm_:
-            datacenter = vm_['datacenter_id']
-        else:
-            gandi.echo('The vm you want to attach is not in %s datacenter.'
-                       % datacenter)
-            return
+        datacenter = vm_['datacenter_id'] if vm_ else 'LU'
 
     return gandi.ip.create(ip_version, datacenter, bandwidth, attach,
                            vlan, ip, background)
@@ -212,7 +208,8 @@ def detach(gandi, resource, background, force):
     resource can be an ip id or ip.
     """
     if not force:
-        proceed = click.confirm('Are you sure to detach ip %s?' % resource)
+        proceed = click.confirm('Are you sure you want to detach ip %s?' %
+                                resource)
         if not proceed:
             return
 
@@ -220,7 +217,7 @@ def detach(gandi, resource, background, force):
 
 
 @cli.command()
-@click.argument('resource')
+@click.argument('resource', nargs=-1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
@@ -228,22 +225,24 @@ def detach(gandi, resource, background, force):
                    ' without prompting. (default=False).')
 @pass_gandi
 def delete(gandi, resource, background, force):
-    """Delete an ip (and detach it from it's currently attached vm).
+    """Delete one or more IPs (after detaching them from VMs if necessary).
 
     resource can be an ip id or ip.
     """
-    try:
-        ip_ = gandi.ip.info(resource)
-    except UsageError:
-        gandi.error("Can't find this ip %s" % resource)
+    resource = sorted(tuple(set(resource)))
+    possible_resources = gandi.ip.resource_list()
 
-    iface = gandi.iface.info(ip_['iface_id'])
-    ips = ', '.join([ip['ip'] for ip in iface['ips']])
-    if len(iface['ips']) > 1:
-        gandi.echo('All these ips (%s) are attached, will delete them all' %
-                 ips)
+    # check that each IP can be deleted
+    for item in resource:
+        if item not in possible_resources:
+            gandi.echo('Sorry interface %s does not exist' % item)
+            gandi.echo('Please use one of the following: %s' %
+                       possible_resources)
+            return
+
     if not force:
-        proceed = click.confirm('Are you sure to delete ip(s) %s' % ips)
+        proceed = click.confirm('Are you sure you want to delete ip(s) %s' %
+                                ', '.join(resource))
         if not proceed:
             return
 

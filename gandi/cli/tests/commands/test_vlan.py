@@ -14,6 +14,10 @@ class VlanTestCase(CommandTestCase):
 name      : vlantest
 state     : created
 datacenter: FR
+----------
+name      : pouet
+state     : created
+datacenter: FR
 """)
         self.assertEqual(result.exit_code, 0)
 
