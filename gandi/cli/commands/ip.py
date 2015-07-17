@@ -183,8 +183,8 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
     if datacenter and vm_:
         dc_id = gandi.datacenter.usable_id(datacenter)
         if dc_id != vm_['datacenter_id']:
-            gandi.echo('The datacenter you give is not the same the vm you'
-                       ' want to attach.')
+            gandi.echo('The datacenter you provided does not match the '
+                       'datacenter of the vm you want to attach to.')
             return
 
     if not datacenter:
