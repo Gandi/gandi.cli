@@ -153,8 +153,8 @@ def attach(gandi, ip, vm, background, force):
 
 
 @cli.command()
-@option('--datacenter', type=DATACENTER, default='LU',
-        help='Datacenter where the ip will be created.')
+@click.option('--datacenter', type=DATACENTER,
+              help='Datacenter where the ip will be created.')
 @option('--bandwidth', type=click.INT, default=102400,
         help="Network bandwidth in bit/s used to create the VM's first "
              "network interface.")
@@ -186,6 +186,9 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
             gandi.echo('The datacenter you provided does not match the '
                        'datacenter of the vm you want to attach to.')
             return
+
+    if not datacenter:
+        datacenter = vm_['datacenter_id'] if vm_ else 'LU'
 
     return gandi.ip.create(ip_version, datacenter, bandwidth, attach,
                            vlan, ip, background)
