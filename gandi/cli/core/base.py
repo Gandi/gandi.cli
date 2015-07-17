@@ -37,6 +37,8 @@ class GandiModule(GandiConfig):
 
     verbose = 0
     _api = None
+    # frequency of api calls when polling for operation progress
+    _poll_freq = 1
 
     @classmethod
     def get_api_connector(cls):
@@ -265,7 +267,7 @@ class GandiModule(GandiConfig):
             if op_score == count_operations:
                 updating_done = True
 
-            time.sleep(1)
+            time.sleep(cls._poll_freq)
 
         cls.echo('\r')
 
