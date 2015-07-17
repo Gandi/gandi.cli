@@ -187,14 +187,6 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
                        'datacenter of the vm you want to attach to.')
             return
 
-    if not datacenter:
-        if vm_:
-            datacenter = vm_['datacenter_id']
-        else:
-            gandi.echo('The vm you want to attach is not in %s datacenter.'
-                       % datacenter)
-            return
-
     return gandi.ip.create(ip_version, datacenter, bandwidth, attach,
                            vlan, ip, background)
 
