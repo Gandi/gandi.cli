@@ -852,6 +852,10 @@ def iface_create(options):
     return {'id': 200, 'step': 'WAIT', 'iface_id': 156575}
 
 
+def iface_delete(ip_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
 def iface_list(options):
 
     ret = [{'bandwidth': 102400.0,
@@ -860,6 +864,26 @@ def iface_list(options):
             'date_updated': DateTime('20140423T00:00:00'),
             'id': 156573,
             'ips_id': [203968, 204558],
+            'ips': [{'datacenter_id': 1,
+                     'date_created': DateTime('20150317T16:20:10'),
+                     'date_updated': DateTime('20150319T11:14:13'),
+                     'id': 203968,
+                     'iface_id': 156573,
+                     'ip': '95.142.160.181',
+                     'num': 0,
+                     'reverse': 'xvm-160-181.dc0.ghst.net',
+                     'state': 'created',
+                     'version': 4},
+                    {'datacenter_id': 1,
+                     'date_created': DateTime('20150319T11:14:16'),
+                     'date_updated': DateTime('20150319T11:14:16'),
+                     'id': 204558,
+                     'iface_id': 156573,
+                     'ip': '2001:4b98:dc0:47:216:3eff:feb2:3862',
+                     'num': 1,
+                     'reverse': 'xvm6-dc0-feb2-3862.ghst.net',
+                     'state': 'created',
+                     'version': 6}],
             'num': 0,
             'state': 'used',
             'type': 'public',
