@@ -14,7 +14,11 @@ Changelog
 * Update 'gandi disk update' command:
     - add new option '--delete-snapshotprofile' to remove a snapshot
       profile from disk
+* Update 'gandi ip delete' command:
+    - now accept multiple IP as argument in order to delete a list
+      of IP addresses
 * Fixes #119
+* Fixes #129
 * Fixes #141
 
 0.14
