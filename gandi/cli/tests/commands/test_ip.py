@@ -433,8 +433,14 @@ Will detach it.
         args = ['395.142.160.181']
         result = self.invoke_with_exceptions(ip.delete, args)
 
-        self.assertTrue("Can't find this ip 395.142.160.181" in result.output)
-        self.assertEqual(result.exit_code, 2)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Sorry interface 395.142.160.181 does not exist
+Please use one of the following: ['203968', '204557', '204558', \
+'95.142.160.181', '2001:4b98:dc2:43:216:3eff:fece:e25f', \
+'2001:4b98:dc0:47:216:3eff:feb2:3862']""")
+
+        self.assertEqual(result.exit_code, 0)
 
     def test_delete(self):
         args = ['95.142.160.181']
@@ -442,17 +448,13 @@ Will detach it.
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-All these ips (95.142.160.181, 2001:4b98:dc0:47:216:3eff:feb2:3862) \
-are attached, will delete them all
-Are you sure you want to delete ip(s) 95.142.160.181, \
-2001:4b98:dc0:47:216:3eff:feb2:3862 [y/N]: y
+Are you sure you want to delete ip(s) 95.142.160.181 [y/N]: y
 The iface is still attached to the vm 152967.
 Will detach it.
 Detaching your iface(s).
 \rProgress: [###] 100.00%  00:00:00  \
-\nDeleting your iface.
-\rProgress: [###] 100.00%  00:00:00  \
-\n\rProgress: [###] 100.00%  00:00:00""")
+\nDetaching/deleting your iface(s).
+\rProgress: [###] 100.00%  00:00:00""")
 
         self.assertEqual(result.exit_code, 0)
 
@@ -462,9 +464,52 @@ Detaching your iface(s).
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-All these ips (95.142.160.181, 2001:4b98:dc0:47:216:3eff:feb2:3862) \
-are attached, will delete them all
-Are you sure you want to delete ip(s) 95.142.160.181, \
-2001:4b98:dc0:47:216:3eff:feb2:3862 [y/N]: N""")
+Are you sure you want to delete ip(s) 95.142.160.181 [y/N]: N""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_delete_force(self):
+        args = ['95.142.160.181', '--force']
+        result = self.invoke_with_exceptions(ip.delete, args)
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+The iface is still attached to the vm 152967.
+Will detach it.
+Detaching your iface(s).
+\rProgress: [###] 100.00%  00:00:00  \
+\nDetaching/deleting your iface(s).
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_delete_background(self):
+        args = ['95.142.160.181', '--background']
+        result = self.invoke_with_exceptions(ip.delete, args, input='y\n')
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Are you sure you want to delete ip(s) 95.142.160.181 [y/N]: y
+The iface is still attached to the vm 152967.
+Will detach it.
+Detaching your iface(s).
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_delete_multiple(self):
+        args = ['95.142.160.181', '2001:4b98:dc2:43:216:3eff:fece:e25f']
+        result = self.invoke_with_exceptions(ip.delete, args, input='y\n')
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Are you sure you want to delete ip(s) 2001:4b98:dc2:43:216:3eff:fece:e25f, \
+95.142.160.181 [y/N]: y
+The iface is still attached to the vm 152967.
+Will detach it.
+Detaching your iface(s).
+\rProgress: [###] 100.00%  00:00:00  \
+\nDetaching/deleting your iface(s).
+\rProgress: [###] 100.00%  00:00:00""")
 
         self.assertEqual(result.exit_code, 0)
