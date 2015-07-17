@@ -787,6 +787,9 @@ def vm_iface_attach(vm_id, iface_id):
     if vm_id == 152966 and iface_id == 156573:
         return {'id': 200, 'step': 'WAIT'}
 
+    if vm_id == 152967 and iface_id == 156575:
+        return {'id': 200, 'step': 'WAIT'}
+
 
 def vm_disk_attach(vm_id, disk_id, options):
     if vm_id == 152967 and disk_id == 663497:

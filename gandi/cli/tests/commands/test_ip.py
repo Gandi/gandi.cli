@@ -307,3 +307,89 @@ Creating your iface.
         self.assertEqual(params['bandwidth'], 51200)
         self.assertEqual(params['ip_version'], 4)
         self.assertEqual(params['vlan'], 717)
+
+    def test_create_params_ip_ko(self):
+        args = ['--datacenter', 'FR', '--bandwidth', '51200',
+                '--ip-version', '4', '--ip', '10.50.10.10']
+        result = self.invoke_with_exceptions(ip.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+You must have a --vlan when giving an --ip.""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_params_ip_ok(self):
+        args = ['--datacenter', 'FR', '--bandwidth', '51200',
+                '--ip-version', '4', '--ip', '10.50.10.10',
+                '--vlan', 'pouet']
+        result = self.invoke_with_exceptions(ip.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Creating your iface.
+\rProgress: [###] 100.00%  00:00:00  \
+\nYour iface has been created.""")
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.iface.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 1)
+        self.assertEqual(params['bandwidth'], 51200)
+        self.assertEqual(params['ip_version'], 4)
+        self.assertEqual(params['vlan'], 717)
+        self.assertEqual(params['ip'], '10.50.10.10')
+
+    def test_create_params_attach_ko(self):
+        args = ['--datacenter', 'US', '--bandwidth', '51200',
+                '--ip-version', '4', '--attach', 'server01']
+        result = self.invoke_with_exceptions(ip.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+The datacenter you provided does not match the datacenter of the \
+vm you want to attach to.""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_params_attach_ok(self):
+        args = ['--datacenter', 'FR', '--bandwidth', '51200',
+                '--ip-version', '4', '--ip', '10.50.10.10',
+                '--vlan', 'pouet', '--attach', 'server01']
+        result = self.invoke_with_exceptions(ip.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Creating your iface.
+\rProgress: [###] 100.00%  00:00:00  \
+\nYour iface has been created.
+Attaching your iface.
+\rProgress: [###] 100.00%  00:00:00""")
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.iface.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 1)
+        self.assertEqual(params['bandwidth'], 51200)
+        self.assertEqual(params['ip_version'], 4)
+        self.assertEqual(params['vlan'], 717)
+        self.assertEqual(params['ip'], '10.50.10.10')
+
+    def test_create_background(self):
+        args = ['--datacenter', 'FR', '--bandwidth', '51200',
+                '--ip-version', '4', '--ip', '10.50.10.10',
+                '--vlan', 'pouet', '--attach', 'server01',
+                '--background']
+        result = self.invoke_with_exceptions(ip.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Creating your iface.
+\rProgress: [###] 100.00%  00:00:00  \
+\nYour iface has been created.""")
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.iface.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 1)
+        self.assertEqual(params['bandwidth'], 51200)
+        self.assertEqual(params['ip_version'], 4)
+        self.assertEqual(params['vlan'], 717)
+        self.assertEqual(params['ip'], '10.50.10.10')
