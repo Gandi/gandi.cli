@@ -214,7 +214,7 @@ def detach(gandi, resource, background, force):
 
 
 @cli.command()
-@click.argument('resource')
+@click.argument('resource', nargs=-1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
@@ -222,23 +222,24 @@ def detach(gandi, resource, background, force):
                    ' without prompting. (default=False).')
 @pass_gandi
 def delete(gandi, resource, background, force):
-    """Delete an ip (and detach it from it's currently attached vm).
+    """Delete one or more IPs (after detaching them from VMs if necessary).
 
     resource can be an ip id or ip.
     """
-    try:
-        ip_ = gandi.ip.info(resource)
-    except UsageError:
-        gandi.error("Can't find this ip %s" % resource)
+    resource = sorted(tuple(set(resource)))
+    possible_resources = gandi.ip.resource_list()
 
-    iface = gandi.iface.info(ip_['iface_id'])
-    ips = ', '.join([ip['ip'] for ip in iface['ips']])
-    if len(iface['ips']) > 1:
-        gandi.echo('All these ips (%s) are attached, will delete them all' %
-                   ips)
+    # check that each IP can be deleted
+    for item in resource:
+        if item not in possible_resources:
+            gandi.echo('Sorry interface %s does not exist' % item)
+            gandi.echo('Please use one of the following: %s' %
+                       possible_resources)
+            return
+
     if not force:
         proceed = click.confirm('Are you sure you want to delete ip(s) %s' %
-                                ips)
+                                ', '.join(resource))
         if not proceed:
             return
 
