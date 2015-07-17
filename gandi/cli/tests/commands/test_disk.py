@@ -342,7 +342,7 @@ Updating your disk.
         self.assertEqual(result.exit_code, 0)
 
     def test_update_snapshotprofile_conflict(self):
-        args = ['data', '--delete-snapshotprofile', '--snapshotprofile', '7']
+        args = ['data', '--delete-snapshotprofile', '--snapshotprofile', '2']
         result = self.invoke_with_exceptions(disk.update, args)
         self.assertEqual(result.exit_code, 2)
 
