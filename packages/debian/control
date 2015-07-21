@@ -12,6 +12,7 @@ Build-Depends-Indep: python-setuptools,
  python3-nose
 Standards-Version: 3.9.4
 X-Python-Version: >= 2.6
+X-Python3-Version: >= 3.0
 
 Package: python-gandicli
 Architecture: all
