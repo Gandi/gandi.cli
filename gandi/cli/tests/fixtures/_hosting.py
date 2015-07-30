@@ -247,8 +247,13 @@ def datacenter_list(options):
            {'iso': 'LU',
             'name': 'Bissen',
             'id': 3,
-            'country': 'Luxembourg'}]
+            'country': 'Luxembourg'},
+           {'iso': 'FR',
+            'name': 'France, Paris',
+            'id': 4,
+            'country': 'France'}]
 
+    options.pop('sort_by', None)
     for fkey in options:
         ret = [dc for dc in ret if dc[fkey] == options[fkey]]
     return ret
@@ -728,6 +733,16 @@ def disk_list_kernels(dc_id):
                       '3.10-i386'],
             'linux-hvm': ['3.12-x86_64 (hvm)', 'grub', 'raw']},
         3: {'linux': ['2.6.32',
+                      '2.6.27 (deprecated)',
+                      '2.6.32-x86_64',
+                      '2.6.32-x86_64-grsec',
+                      '3.2-i386',
+                      '3.2-x86_64',
+                      '3.2-x86_64-grsec',
+                      '3.10-x86_64',
+                      '3.10-i386'],
+            'linux-hvm': ['3.12-x86_64 (hvm)', 'grub', 'raw']},
+        4: {'linux': ['2.6.32',
                       '2.6.27 (deprecated)',
                       '2.6.32-x86_64',
                       '2.6.32-x86_64-grsec',

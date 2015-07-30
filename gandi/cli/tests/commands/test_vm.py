@@ -181,6 +181,10 @@ country   : United States of America
 iso       : LU
 name      : Bissen
 country   : Luxembourg
+----------
+iso       : FR
+name      : France, Paris
+country   : France
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -203,6 +207,11 @@ iso       : LU
 name      : Bissen
 country   : Luxembourg
 id        : 3
+----------
+iso       : FR
+name      : France, Paris
+country   : France
+id        : 4
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -307,6 +316,14 @@ version       : raw
 
 
 datacenter    : Bissen
+----------
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
+
+
+datacenter    : France, Paris
 ----------
 flavor        : linux-hvm
 version       : 3.12-x86_64 (hvm)

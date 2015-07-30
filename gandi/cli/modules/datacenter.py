@@ -32,11 +32,12 @@ class Datacenter(GandiModule):
 
     @classmethod
     def from_iso(cls, iso):
-        """Retrieve datacenter id associated to an ISO."""
-        result = cls.list()
+        """Retrieve the first datacenter id associated to an ISO."""
+        result = cls.list({'sort_by': 'id ASC'})
         dc_isos = {}
         for dc in result:
-            dc_isos[dc['iso']] = dc['id']
+            if dc['iso'] not in dc_isos:
+                dc_isos[dc['iso']] = dc['id']
 
         return dc_isos.get(iso)
 
@@ -52,11 +53,12 @@ class Datacenter(GandiModule):
 
     @classmethod
     def from_country(cls, country):
-        """Retrieve datacenter id associated to a country."""
-        result = cls.list()
+        """Retrieve the first datacenter id associated to a country."""
+        result = cls.list({'sort_by': 'id ASC'})
         dc_countries = {}
         for dc in result:
-            dc_countries[dc['country']] = dc['id']
+            if dc['country'] not in dc_countries:
+                dc_countries[dc['country']] = dc['id']
 
         return dc_countries.get(country)
 
