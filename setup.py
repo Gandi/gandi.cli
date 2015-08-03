@@ -56,8 +56,7 @@ setup(name='gandi.cli',
     extras_require=extras_require,
     entry_points={
         'console_scripts': [
-            'gandi = gandi = gandi.cli.__main__:main',
+            'gandi = gandi.cli.__main__:main',
         ],
     },
 )
-
