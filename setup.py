@@ -25,36 +25,39 @@ if sys.version_info < (2, 7):
 if sys.version_info < (3, 3):
     tests_require.append('mock')
 
-extras_require = {'test': tests_require,
-                  }
+extras_require = {
+    'test': tests_require,
+}
 
 setup(name='gandi.cli',
-      namespace_packages=['gandi'],
-      version=version,
-      description='Gandi command line interface',
-      long_description=README + '\n\n' + CHANGES,
-      author='Gandi',
-      author_email='feedback@gandi.net',
-      classifiers=[
-          'Programming Language :: Python',
-          'Programming Language :: Python :: 2.6',
-          'Programming Language :: Python :: 2.7',
-          'Programming Language :: Python :: 3.3',
-          'Programming Language :: Python :: 3.4',
-          'Topic :: Terminals',
-          'Intended Audience :: Developers',
-          'Intended Audience :: System Administrators',
-          'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-      ],
-      url='https://github.com/Gandi/gandi.cli',
-      packages=find_packages(),
-      include_package_data=True,
-      zip_safe=False,
-      install_requires=requires,
-      tests_require=tests_require,
-      extras_require=extras_require,
-      entry_points="""\
-[console_scripts]
-gandi = gandi.cli.__main__:main
-""",
-      )
+    namespace_packages=['gandi'],
+    version=version,
+    description='Gandi command line interface',
+    long_description=README + '\n\n' + CHANGES,
+    author='Gandi',
+    author_email='feedback@gandi.net',
+    classifiers=[
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Topic :: Terminals',
+        'Intended Audience :: Developers',
+        'Intended Audience :: System Administrators',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+    ],
+    url='https://github.com/Gandi/gandi.cli',
+    packages=find_packages(),
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=requires,
+    tests_require=tests_require,
+    extras_require=extras_require,
+    entry_points={
+        'console_scripts': [
+            'gandi = gandi = gandi.cli.__main__:main',
+        ],
+    },
+)
+
