@@ -1,10 +1,15 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 
+
 DH_VERBOSE=0
 PYTHONS:=$(shell pyversions -vr)
 PYTHON3S:=$(shell py3versions -vr)
-ENCODING:="en_US.UTF-8"
+ENCODING:=C.UTF-8
+
+export LANG=$(ENCODING)
+export LC_ALL=$(ENCODING)
+
 %:
 	dh $@ --with python2,python3
 
@@ -18,7 +23,7 @@ override_dh_install:
 	                --root $(CURDIR)/debian/python-gandicli; \
         done
 	set -e ; for pyvers in $(PYTHON3S); do \
-	        export LANG=$(ENCODING) LC_ALL=$(ENCODING) ; \
+	        LANG=$(ENCODING) LC_ALL=$(ENCODING) \
                 python$$pyvers setup.py install --install-layout=deb \
                         --root $(CURDIR)/debian/python3-gandicli; \
         done
