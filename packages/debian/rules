@@ -1,6 +1,7 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 
+DH_VERBOSE=0
 PYTHONS:=$(shell pyversions -vr)
 PYTHON3S:=$(shell py3versions -vr)
 
@@ -16,10 +17,13 @@ override_dh_install:
 	        python$$pyvers setup.py install --install-layout=deb \
 	                --root $(CURDIR)/debian/python-gandicli; \
         done
+	OLD_LANG=$$LANG; export LANG=en_US.UTF-8; \
 	set -e ; for pyvers in $(PYTHON3S); do \
                 python$$pyvers setup.py install --install-layout=deb \
                         --root $(CURDIR)/debian/python3-gandicli; \
-        done
+        done; \
+	[ -n "$$OLD_LANG" ] && export LANG="$$OLD_LANG"
+
 
 
 # Commands not to run
