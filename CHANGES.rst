@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.16
+----
+
+* update parameter '--datacenter':
+    - allow dc_code as optional value
+    - old values: FR/LU/US are still working so it doesn't break compatibility
+      but they will be deprecated in next releases
+
 0.15
 ----
 
