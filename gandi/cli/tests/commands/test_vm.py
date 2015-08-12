@@ -880,7 +880,7 @@ ssh root@95.142.160.181 sudo reboot""")
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: server500, datacenter: LU
+(HVM), hostname: server500, datacenter: LU-BI1
 Creating your Virtual Machine server500.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine server500 has been created.""")
@@ -897,7 +897,7 @@ Your Virtual Machine server500 has been created.""")
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: vm, datacenter: LU
+(HVM), hostname: vm, datacenter: LU-BI1
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -931,7 +931,7 @@ Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your iface has been created.
 * Configuration used: 1 cores, 256Mb memory, ip private, image Debian 7 64 \
-bits (HVM), hostname: server400, datacenter: LU
+bits (HVM), hostname: server400, datacenter: LU-BI1
 Creating your Virtual Machine server400.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine server400 has been created.""")
@@ -949,7 +949,7 @@ Your Virtual Machine server400 has been created.""")
 password: \nRepeat for confirmation: \n\
 * root and administrator users will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: vm, datacenter: LU
+(HVM), hostname: vm, datacenter: LU-BI1
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -965,7 +965,7 @@ Your Virtual Machine vm has been created.""")
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: server500, datacenter: LU
+(HVM), hostname: server500, datacenter: LU-BI1
 * IAAS backend is now creating your VM and its associated resources in the \
 background.""")
 
@@ -983,7 +983,7 @@ background.""")
 * No password supplied for vm (required to enable emergency web console \
 access).
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: vm, datacenter: LU
+(HVM), hostname: vm, datacenter: LU-BI1
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")

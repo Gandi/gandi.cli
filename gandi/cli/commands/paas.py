@@ -172,7 +172,7 @@ def delete(gandi, background, force, resource):
         help='Additional disk amount (in GB).')
 @option('--duration', default='1m',
         help='Number of month, suffixed with m.')
-@option('--datacenter', type=DATACENTER, default='LU',
+@option('--datacenter', type=DATACENTER, default='LU-BI1',
         help='Datacenter where the PaaS will be spawned.')
 @click.option('--vhosts', default=None, multiple=True,
               help='List of virtual hosts to be linked to the instance.')
