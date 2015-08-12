@@ -16,18 +16,18 @@ class IpTestCase(CommandTestCase):
 ip         : 95.142.160.181
 state      : created
 type       : public
-datacenter : FR
+datacenter : FR-SD2
 ----------
 ip         : 2001:4b98:dc2:43:216:3eff:fece:e25f
 state      : created
 type       : private
 vlan       : pouet
-datacenter : LU
+datacenter : LU-BI1
 ----------
 ip         : 2001:4b98:dc0:47:216:3eff:feb2:3862
 state      : created
 type       : public
-datacenter : FR
+datacenter : FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -43,7 +43,7 @@ version    : 4
 reverse    : xvm-160-181.dc0.ghst.net
 type       : public
 vm         : server01
-datacenter : FR
+datacenter : FR-SD2
 ----------
 ip         : 2001:4b98:dc2:43:216:3eff:fece:e25f
 state      : created
@@ -52,7 +52,7 @@ version    : 6
 reverse    : xvm6-dc2-fece-e25f.ghst.net
 type       : private
 vlan       : pouet
-datacenter : LU
+datacenter : LU-BI1
 ----------
 ip         : 2001:4b98:dc0:47:216:3eff:feb2:3862
 state      : created
@@ -61,7 +61,7 @@ version    : 6
 reverse    : xvm6-dc0-feb2-3862.ghst.net
 type       : public
 vm         : server01
-datacenter : FR
+datacenter : FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -73,12 +73,12 @@ datacenter : FR
 ip         : 95.142.160.181
 state      : created
 type       : public
-datacenter : FR
+datacenter : FR-SD2
 ----------
 ip         : 2001:4b98:dc0:47:216:3eff:feb2:3862
 state      : created
 type       : public
-datacenter : FR
+datacenter : FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -91,7 +91,7 @@ ip         : 2001:4b98:dc2:43:216:3eff:fece:e25f
 state      : created
 type       : private
 vlan       : pouet
-datacenter : LU
+datacenter : LU-BI1
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -104,7 +104,7 @@ ip         : 2001:4b98:dc2:43:216:3eff:fece:e25f
 state      : created
 type       : private
 vlan       : pouet
-datacenter : LU
+datacenter : LU-BI1
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -116,12 +116,12 @@ datacenter : LU
 ip         : 95.142.160.181
 state      : created
 type       : public
-datacenter : FR
+datacenter : FR-SD2
 ----------
 ip         : 2001:4b98:dc0:47:216:3eff:feb2:3862
 state      : created
 type       : public
-datacenter : FR
+datacenter : FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -134,7 +134,7 @@ ip         : 2001:4b98:dc2:43:216:3eff:fece:e25f
 state      : created
 type       : private
 vlan       : pouet
-datacenter : LU
+datacenter : LU-BI1
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -157,7 +157,7 @@ state      : created
 reverse    : xvm-160-181.dc0.ghst.net
 type       : public
 vm         : server01
-datacenter : FR
+datacenter : FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
 

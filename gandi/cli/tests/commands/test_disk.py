@@ -176,7 +176,7 @@ size      : 3072
 type      : data
 id        : 4969249
 kernel    : 3.12-x86_64 (hvm)
-datacenter: FR
+datacenter: FR-SD2
 vm        : server01
 """)
         self.assertEqual(result.exit_code, 0)
@@ -190,7 +190,7 @@ state     : created
 size      : 3072
 type      : data
 id        : 4970079
-datacenter: FR
+datacenter: FR-SD2
 vm        : server01
 ----------
 name      : sys_server01
@@ -199,7 +199,7 @@ size      : 3072
 type      : data
 id        : 4969249
 kernel    : 3.12-x86_64 (hvm)
-datacenter: FR
+datacenter: FR-SD2
 vm        : server01
 """)
         self.assertEqual(result.exit_code, 0)

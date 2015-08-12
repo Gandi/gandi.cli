@@ -13,11 +13,11 @@ class VlanTestCase(CommandTestCase):
         self.assertEqual(result.output, """\
 name      : vlantest
 state     : created
-datacenter: FR
+datacenter: FR-SD2
 ----------
 name      : pouet
 state     : created
-datacenter: FR
+datacenter: FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -30,6 +30,6 @@ name       : vlantest
 state      : created
 subnet     : 192.168.0.0/24
 gateway    :
-datacenter : LU
+datacenter : LU-BI1
 """)
         self.assertEqual(result.exit_code, 0)
