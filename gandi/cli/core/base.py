@@ -5,6 +5,7 @@ GandiModule class is used by commands modules.
 GandiContextHelper class is used as click context for commands.
 """
 
+from __future__ import print_function
 import os
 import sys
 import time
@@ -175,6 +176,10 @@ class GandiModule(GandiConfig):
         if cls.verbose > 0:
             msg = '[INFO] %s' % message
             cls.echo(msg)
+
+    @classmethod
+    def deprecated(cls, message):
+        print('[deprecated]: %s' % message, file=sys.stderr)
 
     @classmethod
     def error(cls, msg):

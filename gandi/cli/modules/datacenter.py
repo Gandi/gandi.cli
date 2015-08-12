@@ -1,5 +1,8 @@
 """ Datacenter commands module. """
 
+from __future__ import print_function
+import sys
+
 from gandi.cli.core.base import GandiModule
 
 
@@ -81,9 +84,9 @@ class Datacenter(GandiModule):
             if not qry_id:
                 # id is maybe a ISO
                 qry_id = cls.from_iso(id)
-            if not qry_id:
-                # id is maybe a name
-                qry_id = cls.from_name(id)
+                if qry_id:
+                    cls.deprecated('ISO code for datacenter filter use '
+                                   'dc_code instead')
             if not qry_id:
                 # id is maybe a country
                 qry_id = cls.from_country(id)
