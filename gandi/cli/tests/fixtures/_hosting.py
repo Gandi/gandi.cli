@@ -227,7 +227,19 @@ def image_list(options):
             'label': 'CentOS 7 64 bits (HVM)',
             'os_arch': 'x86-64',
             'size': 3072,
-            'visibility': 'all'}]
+            'visibility': 'all'},
+           {'author_id': 248842,
+            'datacenter_id': 4,
+            'date_created': DateTime('20140417T18:38:53'),
+            'date_updated': DateTime('20141030T10:38:45'),
+            'disk_id': 1401492,
+            'id': 163,
+            'kernel_version': '3.12-x86_64 (hvm)',
+            'label': 'Debian 7 64 bits (HVM)',
+            'os_arch': 'x86-64',
+            'size': 3072,
+            'visibility': 'all'},
+    ]
 
     for fkey in options:
         ret = [dc for dc in ret if dc[fkey] == options[fkey]]
@@ -239,19 +251,23 @@ def datacenter_list(options):
     ret = [{'iso': 'FR',
             'name': 'Equinix Paris',
             'id': 1,
-            'country': 'France'},
+            'country': 'France',
+            'dc_code': 'FR-SD2'},
            {'iso': 'US',
             'name': 'Level3 Baltimore',
             'id': 2,
-            'country': 'United States of America'},
+            'country': 'United States of America',
+            'dc_code': 'US-BA1'},
            {'iso': 'LU',
             'name': 'Bissen',
             'id': 3,
-            'country': 'Luxembourg'},
+            'country': 'Luxembourg',
+            'dc_code': 'LU-BI1'},
            {'iso': 'FR',
             'name': 'France, Paris',
             'id': 4,
-            'country': 'France'}]
+            'country': 'France',
+            'dc_code': 'FR-SD3'}]
 
     options.pop('sort_by', None)
     for fkey in options:

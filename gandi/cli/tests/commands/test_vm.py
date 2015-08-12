@@ -173,18 +173,22 @@ write         :     ▁    ▁  ▂        ▉▁▁
 iso       : FR
 name      : Equinix Paris
 country   : France
+dc_code   : FR-SD2
 ----------
 iso       : US
 name      : Level3 Baltimore
 country   : United States of America
+dc_code   : US-BA1
 ----------
 iso       : LU
 name      : Bissen
 country   : Luxembourg
+dc_code   : LU-BI1
 ----------
 iso       : FR
 name      : France, Paris
 country   : France
+dc_code   : FR-SD3
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -196,21 +200,25 @@ country   : France
 iso       : FR
 name      : Equinix Paris
 country   : France
+dc_code   : FR-SD2
 id        : 1
 ----------
 iso       : US
 name      : Level3 Baltimore
 country   : United States of America
+dc_code   : US-BA1
 id        : 2
 ----------
 iso       : LU
 name      : Bissen
 country   : Luxembourg
+dc_code   : LU-BI1
 id        : 3
 ----------
 iso       : FR
 name      : France, Paris
 country   : France
+dc_code   : FR-SD3
 id        : 4
 """)
         self.assertEqual(result.exit_code, 0)
@@ -528,6 +536,12 @@ os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 4744392
 datacenter    : LU
+----------
+label         : Debian 7 64 bits (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 1401492
+datacenter    : FR
 ----------
 label         : Debian 7 64 bits (HVM)
 kernel_version: 3.12-x86_64 (hvm)
@@ -970,6 +984,23 @@ background.""")
 access).
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
 (HVM), hostname: vm, datacenter: LU
+Creating your Virtual Machine vm.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your Virtual Machine vm has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_dc_code_ok(self):
+        args = ['--datacenter', 'FR-SD3']
+        result = self.invoke_with_exceptions(vm.create, args,
+                                             obj=GandiContextHelper(),
+                                             input='plokiploki\nplokiploki\n')
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
+password: \nRepeat for confirmation: \n* root user will be created.
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
+(HVM), hostname: vm, datacenter: FR-SD3
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")

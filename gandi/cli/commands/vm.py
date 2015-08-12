@@ -464,7 +464,7 @@ def kernels(gandi, vm, datacenter, flavor, match):
 @pass_gandi
 def datacenters(gandi, id):
     """List available datacenters."""
-    output_keys = ['iso', 'name', 'country']
+    output_keys = ['iso', 'name', 'country', 'dc_code']
     if id:
         output_keys.append('id')
 

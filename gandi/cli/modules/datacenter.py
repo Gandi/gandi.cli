@@ -63,11 +63,24 @@ class Datacenter(GandiModule):
         return dc_countries.get(country)
 
     @classmethod
+    def from_dc_code(cls, dc_code):
+        """Retrieve the datacenter id associated to a dc_code"""
+        result = cls.list()
+        dc_codes = {}
+        for dc in result:
+            dc_codes[dc['dc_code']] = dc['id']
+
+        return dc_codes.get(dc_code)
+
+    @classmethod
     def usable_id(cls, id):
-        """ Retrieve id from input which can be ISO, name, country."""
+        """ Retrieve id from input which can be ISO, name, country, dc_code."""
         try:
-            # id is maybe a ISO
-            qry_id = cls.from_iso(id)
+            # id is maybe a dc_code
+            qry_id = cls.from_dc_code(id)
+            if not qry_id:
+                # id is maybe a ISO
+                qry_id = cls.from_iso(id)
             if not qry_id:
                 # id is maybe a name
                 qry_id = cls.from_name(id)
