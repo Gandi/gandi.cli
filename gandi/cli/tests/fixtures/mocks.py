@@ -34,3 +34,7 @@ class MockObject(object):
     @classmethod
     def now(cls, *args, **kwargs):
         return datetime(2020, 12, 25, 0, 0, 0)
+
+    @classmethod
+    def deprecated(cls, message):
+        pass

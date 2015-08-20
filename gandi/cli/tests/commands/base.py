@@ -11,6 +11,7 @@ class CommandTestCase(unittest.TestCase):
     base_mocks = [
         ('gandi.cli.core.base.GandiModule.save', MockObject.blank_func),
         ('gandi.cli.core.base.GandiModule.execute', MockObject.execute),
+        ('gandi.cli.core.base.GandiModule.deprecated', MockObject.deprecated),
     ]
     mocks = []
 

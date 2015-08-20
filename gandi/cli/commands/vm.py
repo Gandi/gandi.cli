@@ -208,7 +208,7 @@ def delete(gandi, background, force, resource):
 
 
 @cli.command()
-@option('--datacenter', type=DATACENTER, default='LU',
+@option('--datacenter', type=DATACENTER, default='LU-BI1',
         help='Datacenter where the VM will be spawned.')
 @option('--memory', type=click.INT, default=256,
         help='Quantity of RAM in Megabytes to allocate.')
@@ -464,7 +464,7 @@ def kernels(gandi, vm, datacenter, flavor, match):
 @pass_gandi
 def datacenters(gandi, id):
     """List available datacenters."""
-    output_keys = ['iso', 'name', 'country']
+    output_keys = ['iso', 'name', 'country', 'dc_code']
     if id:
         output_keys.append('id')
 

@@ -42,6 +42,9 @@ class GandiChoice(click.Choice):
         self.gandi = ctx.obj
         return click.Choice.convert(self, value, param, ctx)
 
+    def convert_deprecated_value(self, value):
+        """ To override when needed """
+        return value
 
 class DatacenterParamType(GandiChoice):
 
@@ -51,7 +54,12 @@ class DatacenterParamType(GandiChoice):
 
     def _get_choices(self, gandi):
         """ Internal method to get choices list """
-        return [item['iso'] for item in gandi.datacenter.list()]
+        iso_codes = []
+        dc_codes = []
+        for item in gandi.datacenter.list():
+            iso_codes.append(item['iso'])
+            dc_codes.append(item['dc_code'])
+        return dc_codes + iso_codes
 
     def convert(self, value, param, ctx):
         """ Convert value to uppercase. """
@@ -59,6 +67,14 @@ class DatacenterParamType(GandiChoice):
         value = value.upper()
         return click.Choice.convert(self, value, param, ctx)
 
+    def convert_deprecated_value(self, value):
+        """ To update the configuration with the new datacenter naming """
+        convert = {
+            'FR': 'FR-SD2',
+            'LU': 'LU-BI1',
+            'US': 'US-BA1',
+        }
+        return convert.get(value, value)
 
 class PaasTypeParamType(GandiChoice):
 
@@ -488,6 +504,8 @@ class GandiOption(click.Option):
         value, args = click.Option.handle_parse_result(self, ctx, opts, args)
 
         if value is not None:
+            if isinstance(self.type, GandiChoice):
+                value = self.type.convert_deprecated_value(value)
             # save to gandi configuration
             gandi = ctx.obj
             gandi.configure(True, self.name, value)

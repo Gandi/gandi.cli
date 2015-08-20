@@ -85,7 +85,7 @@ state         : running
 cores         : 1
 memory        : 256
 console       :
-datacenter    : FR
+datacenter    : FR-SD2
 ----------
 bandwidth     : 102400.0
 ip4           : 95.142.160.181
@@ -107,7 +107,7 @@ state         : running
 cores         : 1
 memory        : 256
 console       :
-datacenter    : FR
+datacenter    : FR-SD2
 ----------
 bandwidth     : 102400.0
 ip4           : 95.142.160.181
@@ -123,7 +123,7 @@ state         : running
 cores         : 1
 memory        : 256
 console       :
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 bandwidth     : 102400.0
 ip6           : 2001:4b98:dc2:43:216:3eff:fece:e25f
@@ -144,7 +144,7 @@ state         : running
 cores         : 1
 memory        : 256
 console       :
-datacenter    : FR
+datacenter    : FR-SD2
 ----------
 bandwidth     : 102400.0
 ip4           : 95.142.160.181
@@ -173,14 +173,22 @@ write         :     ▁    ▁  ▂        ▉▁▁
 iso       : FR
 name      : Equinix Paris
 country   : France
+dc_code   : FR-SD2
 ----------
 iso       : US
 name      : Level3 Baltimore
 country   : United States of America
+dc_code   : US-BA1
 ----------
 iso       : LU
 name      : Bissen
 country   : Luxembourg
+dc_code   : LU-BI1
+----------
+iso       : FR
+name      : France, Paris
+country   : France
+dc_code   : FR-SD3
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -192,17 +200,26 @@ country   : Luxembourg
 iso       : FR
 name      : Equinix Paris
 country   : France
+dc_code   : FR-SD2
 id        : 1
 ----------
 iso       : US
 name      : Level3 Baltimore
 country   : United States of America
+dc_code   : US-BA1
 id        : 2
 ----------
 iso       : LU
 name      : Bissen
 country   : Luxembourg
+dc_code   : LU-BI1
 id        : 3
+----------
+iso       : FR
+name      : France, Paris
+country   : France
+dc_code   : FR-SD3
+id        : 4
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -312,6 +329,14 @@ flavor        : linux-hvm
 version       : 3.12-x86_64 (hvm)
 version       : grub
 version       : raw
+
+
+datacenter    : France, Paris
+----------
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -396,141 +421,147 @@ label         : Fedora 17 32 bits
 os_arch       : x86-32
 kernel_version: 3.2-i386
 disk_id       : 527489
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 label         : Fedora 17 64 bits
 os_arch       : x86-64
 kernel_version: 3.2-x86_64
 disk_id       : 527490
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 label         : OpenSUSE 12.2 32 bits
 os_arch       : x86-32
 kernel_version: 3.2-i386
 disk_id       : 527491
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 label         : OpenSUSE 12.2 64 bits
 os_arch       : x86-64
 kernel_version: 3.2-x86_64
 disk_id       : 527494
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 label         : CentOS 5 32 bits
 os_arch       : x86-32
 kernel_version: 2.6.32
 disk_id       : 726224
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 label         : CentOS 5 64 bits
 os_arch       : x86-64
 kernel_version: 2.6.32-x86_64
 disk_id       : 726225
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 label         : ArchLinux 32 bits
 os_arch       : x86-32
 kernel_version: 3.2-i386
 disk_id       : 726230
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 label         : ArchLinux 64 bits
 os_arch       : x86-64
 kernel_version: 3.2-x86_64
 disk_id       : 726233
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 label         : Debian 7 64 bits (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 1401491
-datacenter    : US
+datacenter    : US-BA1
 ----------
 label         : Debian 7 64 bits (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 1349810
-datacenter    : FR
+datacenter    : FR-SD2
 ----------
 label         : Debian 7 64 bits (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 1401327
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 label         : Debian 8 (testing) 64 bits (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 3315704
-datacenter    : FR
+datacenter    : FR-SD2
 ----------
 label         : Debian 8 (testing) 64 bits (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 3315992
-datacenter    : US
+datacenter    : US-BA1
 ----------
 label         : Debian 8 (testing) 64 bits (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 3316076
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 label         : Ubuntu 14.04 64 bits LTS (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 3315748
-datacenter    : FR
+datacenter    : FR-SD2
 ----------
 label         : Ubuntu 14.04 64 bits LTS (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 3316144
-datacenter    : US
+datacenter    : US-BA1
 ----------
 label         : Ubuntu 14.04 64 bits LTS (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 3316160
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 label         : CentOS 7 64 bits (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 2876292
-datacenter    : FR
+datacenter    : FR-SD2
 ----------
 label         : CentOS 7 64 bits (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 4744388
-datacenter    : US
+datacenter    : US-BA1
 ----------
 label         : CentOS 7 64 bits (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 4744392
-datacenter    : LU
+datacenter    : LU-BI1
+----------
+label         : Debian 7 64 bits (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 1401492
+datacenter    : FR-SD3
 ----------
 label         : Debian 7 64 bits (HVM)
 kernel_version: 3.12-x86_64 (hvm)
 name          : sys_1426759833
-datacenter    : LU
+datacenter    : LU-BI1
 ----------
 label         : Debian 7 64 bits (HVM)
 kernel_version: 3.12-x86_64 (hvm)
 name          : sys_server01
-datacenter    : FR
+datacenter    : FR-SD2
 ----------
 label         :
 kernel_version:
 name          : data
-datacenter    : FR
+datacenter    : FR-SD2
 ----------
 label         : Debian 7 64 bits
 kernel_version: 3.2-x86_64
 name          : snaptest
-datacenter    : FR
+datacenter    : FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -544,7 +575,7 @@ label         : Ubuntu 14.04 64 bits LTS (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 3316160
-datacenter    : LU
+datacenter    : LU-BI1
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -849,7 +880,7 @@ ssh root@95.142.160.181 sudo reboot""")
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: server500, datacenter: LU
+(HVM), hostname: server500, datacenter: LU-BI1
 Creating your Virtual Machine server500.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine server500 has been created.""")
@@ -866,7 +897,7 @@ Your Virtual Machine server500 has been created.""")
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: vm, datacenter: LU
+(HVM), hostname: vm, datacenter: LU-BI1
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -900,7 +931,7 @@ Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your iface has been created.
 * Configuration used: 1 cores, 256Mb memory, ip private, image Debian 7 64 \
-bits (HVM), hostname: server400, datacenter: LU
+bits (HVM), hostname: server400, datacenter: LU-BI1
 Creating your Virtual Machine server400.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine server400 has been created.""")
@@ -918,7 +949,7 @@ Your Virtual Machine server400 has been created.""")
 password: \nRepeat for confirmation: \n\
 * root and administrator users will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: vm, datacenter: LU
+(HVM), hostname: vm, datacenter: LU-BI1
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -934,7 +965,7 @@ Your Virtual Machine vm has been created.""")
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: server500, datacenter: LU
+(HVM), hostname: server500, datacenter: LU-BI1
 * IAAS backend is now creating your VM and its associated resources in the \
 background.""")
 
@@ -952,7 +983,24 @@ background.""")
 * No password supplied for vm (required to enable emergency web console \
 access).
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: vm, datacenter: LU
+(HVM), hostname: vm, datacenter: LU-BI1
+Creating your Virtual Machine vm.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your Virtual Machine vm has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_dc_code_ok(self):
+        args = ['--datacenter', 'FR-SD3']
+        result = self.invoke_with_exceptions(vm.create, args,
+                                             obj=GandiContextHelper(),
+                                             input='plokiploki\nplokiploki\n')
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
+password: \nRepeat for confirmation: \n* root user will be created.
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
+(HVM), hostname: vm, datacenter: FR-SD3
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")

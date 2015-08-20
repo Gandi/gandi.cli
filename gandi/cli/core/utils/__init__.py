@@ -106,7 +106,7 @@ def output_vm(gandi, vm, datacenters, output_keys, justify=10):
     if 'datacenter' in output_keys:
         for dc in datacenters:
             if dc['id'] == vm['datacenter_id']:
-                dc_name = dc['iso']
+                dc_name = dc['dc_code']
                 break
 
         output_line(gandi, 'datacenter', dc_name, justify)
@@ -154,7 +154,7 @@ def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=11):
             output_line(gandi, 'vhost', entry, justify)
 
     if 'dc' in output_keys:
-        dc_name = paas['datacenter']['iso']
+        dc_name = paas['datacenter']['dc_code']
         output_line(gandi, 'datacenter', dc_name, justify)
 
     if 'df' in paas:
@@ -187,7 +187,7 @@ def output_image(gandi, image, datacenters, output_keys, justify=14):
     if 'dc' in output_keys:
         for dc in datacenters:
             if dc['id'] == image['datacenter_id']:
-                dc_name = dc['iso']
+                dc_name = dc['dc_code']
                 break
 
         output_line(gandi, 'datacenter', dc_name, justify)
@@ -216,7 +216,7 @@ def output_disk(gandi, disk, datacenters, vms, profiles, output_keys,
         dc_name = None
         for dc in datacenters:
             if dc['id'] == disk['datacenter_id']:
-                dc_name = dc['iso']
+                dc_name = dc['dc_code']
                 break
 
         if dc_name:
@@ -308,7 +308,7 @@ def output_vlan(gandi, vlan, datacenters, output_keys, justify=10):
         for dc in datacenters:
             if dc['id'] == vlan.get('datacenter_id',
                                     vlan.get('datacenter', {}).get('id')):
-                dc_name = dc['iso']
+                dc_name = dc['dc_code']
                 break
 
         output_line(gandi, 'datacenter', dc_name, justify)
@@ -327,7 +327,7 @@ def output_iface(gandi, iface, datacenters, vms, output_keys, justify=10):
         for dc in datacenters:
             if dc['id'] == iface.get('datacenter_id',
                                      iface.get('datacenter', {}).get('id')):
-                dc_name = dc['iso']
+                dc_name = dc['dc_code']
                 break
 
         output_line(gandi, 'datacenter', dc_name, justify)
@@ -360,7 +360,7 @@ def output_ip(gandi, ip, datacenters, vms, ifaces, output_keys, justify=11):
         for dc in datacenters:
             if dc['id'] == ip.get('datacenter_id',
                                   ip.get('datacenter', {}).get('id')):
-                dc_name = dc['iso']
+                dc_name = dc['dc_code']
                 break
 
         output_line(gandi, 'datacenter', dc_name, justify)
