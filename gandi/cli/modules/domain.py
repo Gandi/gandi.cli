@@ -92,6 +92,24 @@ class Domain(GandiModule):
         cls.echo('Your domain %s has been renewed.' % fqdn)
 
     @classmethod
+    def autorenew_deactivate(cls, fqdn):
+        """Activate deautorenew"""
+        fqdn = fqdn.lower()
+
+        result = cls.call('domain.autorenew.deactivate', fqdn)
+
+        return result
+
+    @classmethod
+    def autorenew_activate(cls, fqdn):
+        """Activate autorenew"""
+        fqdn = fqdn.lower()
+
+        result = cls.call('domain.autorenew.activate', fqdn)
+
+        return result
+
+    @classmethod
     def from_fqdn(cls, fqdn):
         """Retrieve domain id associated to a FQDN."""
         result = cls.list({'fqdn': fqdn})
