@@ -27,3 +27,19 @@ class Account(GandiModule):
         usage = [sum(resource.values()) for (_, resource) in list(rating.items())
                  if type(resource) is dict]
         return sum(usage)
+
+    @classmethod
+    def all(cls):
+        """ Get all informations about this account """
+        account = cls.info()
+        creditusage = cls.creditusage()
+
+        left = account['credits'] / creditusage
+        years, hours = divmod(left, 365 * 24)
+        months, hours = divmod(hours, 31 * 24)
+        days, hours = divmod(hours, 24)
+
+        account.update({'credit_usage': creditusage,
+                        'left': (years, months, days, hours)})
+
+        return account
