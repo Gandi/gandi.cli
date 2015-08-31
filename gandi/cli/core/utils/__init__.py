@@ -85,15 +85,13 @@ def output_account(gandi, account, output_keys, justify=17):
         # sometimes rating is returning nothing
         usage_str = left_str = 'not available'
         usage = account.get('credit_usage', 0)
+        left = account.get('left')
         if usage:
             usage_str = '%d/h' % usage
 
-            left = available / usage
-            years, hours = divmod(left, 365 * 24)
-            months, hours = divmod(hours, 31 * 24)
-            days, hours = divmod(hours, 24)
-            left_str = '%d year(s) %d month(s) %d day(s) %d hour(s)' % \
-                       (years, months, days, hours)
+            years, months, days, hours = left
+            left_str = ('%d year(s) %d month(s) %d day(s) %d hour(s)' %
+                        (years, months, days, hours))
 
         output_line(gandi, '        usage', usage_str, justify)
         output_line(gandi, '        time left', left_str, justify)
