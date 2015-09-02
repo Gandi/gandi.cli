@@ -14,3 +14,11 @@ def info(id='PXP561-GANDI'):
 
     contact = dict([(contact['handle'], contact) for contact in list({})])
     return contact[id]
+
+
+def create(params):
+    return {'handle': 'PP0000-GANDI'}
+
+
+def create_dry_run(params):
+    return []
