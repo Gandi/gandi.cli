@@ -84,3 +84,18 @@ def create(domain, params):
 
 def renew(domain, params):
     return {'id': 400, 'step': 'WAIT'}
+
+
+def mailbox_list(domain, options):
+    return [{'login': 'admin',
+             'responder': {'active': False},
+             'quota': {'granted': 0, 'used': 233}}]
+
+
+def mailbox_info(domain, login):
+    ret = {'aliases': [],
+           'login': 'admin',
+           'responder': {'active': False, 'text': None},
+           'fallback_email': '',
+           'quota': {'granted': 0, 'used': 233}}
+    return ret
