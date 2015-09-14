@@ -124,7 +124,7 @@ You can use the information of Gandi handles associated to Contacts in your acco
 
 #### 5. Manage NS records for your domains
 
-##### Create a new record 
+##### Create a new record
 
     $ gandi record create example.com --name www --type A --value 127.0.0.1
 
@@ -136,15 +136,15 @@ Add a new record to the domain's current zone file and activate it.
 
 List a domain's zone file records. You can use the `--format` parameter to change the output format to `text` or `json`.
 
-##### Update one record 
+##### Update one record
 
     $ gandi record update example.com --record "@ 3600 IN A 127.0.0.1" --new-record "@ 3600 IN A 0.0.0.0"
 
-This command is useful to update only one record at the time. The pattern to use is `name TTL CLASS TYPE value`. 
+This command is useful to update only one record at the time. The pattern to use is `name TTL CLASS TYPE value`.
 
 You can easily check or copy-paste the values you need to replace using the `--format text` parameter:
 
-    $ gandi record list example.com --format text 
+    $ gandi record list example.com --format text
 
 
 ##### Update many records
@@ -422,9 +422,9 @@ You can check the [contributors list](https://github.com/Gandi/gandi.cli/graphs/
 
 [![Build Status](https://travis-ci.org/Gandi/gandi.cli.svg?branch=master)](https://travis-ci.org/Gandi/gandi.cli)
 [![Coverage Status](https://coveralls.io/repos/Gandi/gandi.cli/badge.svg?branch=master)](https://coveralls.io/r/Gandi/gandi.cli?branch=master)
-[![Pip Version](https://pypip.in/version/gandi.cli/badge.svg)](https://pypi.python.org/pypi/gandi.cli)
-[![Python Version](https://pypip.in/py_versions/gandi.cli/badge.svg)](https://pypi.python.org/pypi/gandi.cli)
-[![Download Stat](https://pypip.in/download/gandi.cli/badge.svg)](https://pypi.python.org/pypi/gandi.cli)
+[![Pip Version](https://img.shields.io/pypi/v/gandi.cli.svg)](https://pypi.python.org/pypi/gandi.cli)
+[![Python Version](https://img.shields.io/pypi/pyversions/gandi.cli.svg)](https://pypi.python.org/pypi/gandi.cli)
+[![Download Stat](https://img.shields.io/pypi/dm/gandi.cli.svg)](https://pypi.python.org/pypi/gandi.cli)
 
 ## License / Copying
 
