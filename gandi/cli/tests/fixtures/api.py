@@ -14,7 +14,8 @@ class Api(object):
         modname = 'gandi.cli.tests.fixtures._' + modname
         module = importlib.import_module(modname)
         func = func.replace('.', '_')
-        if kwargs.get('dry_run', False):
+        if (kwargs.get('dry_run', False)
+                and kwargs.get('return_dry_run', False)):
             func = func + '_dry_run'
         try:
             self._calls.setdefault(method, []).append(args)

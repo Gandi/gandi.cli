@@ -21,4 +21,14 @@ def create(params):
 
 
 def create_dry_run(params):
-    return []
+
+    errors = []
+    if params['phone'] == '555-123-456':
+        errors.append({'attr': None,
+                       'error': '!EC_STRMATCH',
+                       'field': 'phone',
+                       'field_type': 'String',
+                       'reason': "phone: string '555-123-456' does not "
+                                 "match '^\\+\\d{1,3}\\.\\d+$'"})
+
+    return errors
