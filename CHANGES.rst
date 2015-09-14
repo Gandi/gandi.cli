@@ -4,10 +4,17 @@ Changelog
 0.16
 ----
 
-* update parameter '--datacenter':
+* Update parameter '--datacenter':
     - allow dc_code as optional value
     - old values: FR/LU/US are still working so it doesn't break compatibility
       but they will be deprecated in next releases
+* Various improvements to modules for library usage:
+    - datacenter
+    - account
+    - domain
+    - operations
+* Bump click requirement version to <= 5.2
+* Fixes debian python3 packaging
 
 0.15
 ----
