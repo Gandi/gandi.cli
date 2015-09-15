@@ -99,3 +99,23 @@ def mailbox_info(domain, login):
            'fallback_email': '',
            'quota': {'granted': 0, 'used': 233}}
     return ret
+
+
+def mailbox_create(domain, login, params):
+    return {'id': 400, 'step': 'WAIT'}
+
+
+def mailbox_delete(domain, login):
+    return {'id': 400, 'step': 'WAIT'}
+
+
+def mailbox_update(domain, login, params):
+    return {'id': 400, 'step': 'WAIT'}
+
+
+def mailbox_alias_set(domain, login, aliases):
+    return {'id': 400, 'step': 'WAIT'}
+
+
+def mailbox_purge(domain, login):
+    return {'id': 400, 'step': 'WAIT'}
