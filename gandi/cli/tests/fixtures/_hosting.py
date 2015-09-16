@@ -1082,4 +1082,8 @@ def snapshotprofile_list(options):
             'schedules': [{'kept_version': 3, 'name': 'hourly6'},
                           {'kept_version': 6, 'name': 'daily'},
                           {'kept_version': 1, 'name': 'weekly4'}]}]
+
+    for fkey in options:
+        ret = [snp for snp in ret if snp[fkey] == options[fkey]]
+
     return ret
