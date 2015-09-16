@@ -113,7 +113,7 @@ class Certificate(GandiModule):
             cert_hosts = set([cert['cn']] + cert['altnames'])
             if len(set(hosts) - cert_hosts) == 0:
                 if (possible and possible['date_end'] < cert['date_end']
-                    or not possible):
+                        or not possible):
                         possible = cert
 
         return possible
@@ -196,7 +196,7 @@ class Certificate(GandiModule):
         if max_altname:
             if max_altname < len(altnames):
                 cls.echo('You choose --max-altname %s but you have more '
-                           'altnames (%s)' % (max_altname, len(altnames)))
+                         'altnames (%s)' % (max_altname, len(altnames)))
                 return
         else:
             if '*' in common_name:

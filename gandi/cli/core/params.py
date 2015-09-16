@@ -46,6 +46,7 @@ class GandiChoice(click.Choice):
         """ To override when needed """
         return value
 
+
 class DatacenterParamType(GandiChoice):
 
     """ Choice parameter to select an available datacenter. """
@@ -75,6 +76,7 @@ class DatacenterParamType(GandiChoice):
             'US': 'US-BA1',
         }
         return convert.get(value, value)
+
 
 class PaasTypeParamType(GandiChoice):
 

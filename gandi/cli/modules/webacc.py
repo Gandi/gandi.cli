@@ -57,9 +57,9 @@ class Webacc(GandiModule):
         except Exception as err:
             if err.code == 580142:
                 for vhost in params['vhosts']:
-                    dns_entry = cls.call('hosting.rproxy.vhost.get_dns_entries',
-                                         {'datacenter': datacenter_id_,
-                                          'vhost': vhost})
+                    dns_entry = cls.call(
+                        'hosting.rproxy.vhost.get_dns_entries',
+                        {'datacenter': datacenter_id_, 'vhost': vhost})
                     txt_record = "@ 3600 IN TXT \"%s=%s\"" % (dns_entry['key'],
                                                               dns_entry['txt'])
 

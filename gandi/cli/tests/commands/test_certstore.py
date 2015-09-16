@@ -148,10 +148,10 @@ date_expire : 20160408T00:00:00
         self.assertEqual(result.output, """\
 Are you sure to delete the following hosted certificates ?
 1: /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test1.domain.fr
- [y/N]: 
+ [y/N]: \
+
 """)
         self.assertEqual(result.exit_code, 0)
-
 
         result = self.invoke_with_exceptions(certstore.delete, ['1', '-f'])
         self.assertEqual(result.output, """\

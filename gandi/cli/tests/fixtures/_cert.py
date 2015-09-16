@@ -282,37 +282,37 @@ def hosted_list(options):
             'id': 1,
             'state': u'created',
             'subject': u'/OU=Domain Control Validated/OU=Gandi Standard '
-                        'SSL/CN=test1.domain.fr'},
+                       'SSL/CN=test1.domain.fr'},
            {'date_created': DateTime('20150407T00:00:00'),
             'date_expire': DateTime('20160316T00:00:00'),
             'id': 2,
             'state': u'created',
             'subject': u'/OU=Domain Control Validated/OU=Gandi Standard '
-                        'SSL/CN=test1.domain.fr'},
+                       'SSL/CN=test1.domain.fr'},
            {'date_created': DateTime('20150408T00:00:00'),
             'date_expire': DateTime('20160408T00:00:00'),
             'id': 3,
             'state': u'created',
             'subject': u'/OU=Domain Control Validated/OU=Gandi Standard '
-                        'SSL/CN=test2.domain.fr'},
+                       'SSL/CN=test2.domain.fr'},
            {'date_created': DateTime('20150408T00:00:00'),
             'date_expire': DateTime('20160408T00:00:00'),
             'id': 4,
             'state': u'created',
             'subject': u'/OU=Domain Control Validated/OU=Gandi Standard '
-                        'SSL/CN=test3.domain.fr'},
+                       'SSL/CN=test3.domain.fr'},
            {'date_created': DateTime('20150408T00:00:00'),
             'date_expire': DateTime('20160408T00:00:00'),
             'id': 5,
             'state': u'created',
             'subject': u'/OU=Domain Control Validated/OU=Gandi Standard '
-                        'SSL/CN=test4.domain.fr'},
+                       'SSL/CN=test4.domain.fr'},
            {'date_created': DateTime('20150409T00:00:00'),
             'date_expire': DateTime('20160409T00:00:00'),
             'id': 6,
             'state': u'created',
             'subject': u'/OU=Domain Control Validated/OU=Gandi Standard '
-                        'Wildcard SSL/CN=*.domain.fr'}]
+                       'Wildcard SSL/CN=*.domain.fr'}]
 
     options.pop('items_per_page', None)
     fqdns = options.pop('fqdns', None)
@@ -357,6 +357,7 @@ def hosted_info(id):
                                 'type': 'paas',
                                 'id': 2,
                                 'name': '*.domain.fr'}]}}
+
     def additional(hc):
         hc.update(additionals[hc['id']])
         return hc
@@ -367,6 +368,7 @@ def hosted_info(id):
 
 def hosted_create(params):
     return hosted_info(5)
+
 
 def hosted_delete(id):
     return

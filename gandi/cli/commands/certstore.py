@@ -2,7 +2,6 @@
 
 import os
 import click
-import requests
 
 # define basestring for python3
 try:
@@ -14,7 +13,7 @@ type_list = list
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_hostedcert
-from gandi.cli.core.params import pass_gandi, IntChoice
+from gandi.cli.core.params import pass_gandi
 
 
 @cli.command()
@@ -46,7 +45,6 @@ def list(gandi, id, vhosts, dates, fqdns, limit):
 
     if vhosts:
         output_keys.append('vhosts')
-
 
     result = gandi.hostedcert.list(options)
 
@@ -138,7 +136,8 @@ def delete(gandi, resource, force):
     if not force:
         proceed = click.confirm('Are you sure to delete the following hosted '
                                 'certificates ?\n' +
-                                '\n'.join(['%s: %s' % (res['id'], res['subject'])
+                                '\n'.join(['%s: %s' % (res['id'],
+                                                       res['subject'])
                                            for res in infos]) + '\n')
         if not proceed:
             return
