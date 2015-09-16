@@ -48,6 +48,39 @@ contact, use the env var : \
 \nexport API_KEY=apikey0001""")
         self.assertEqual(result.exit_code, 0)
 
+    def test_create_dry_run_unknown_ok(self):
+
+        args = []
+        inputs = ('0\nPeter\nParker\ngreen.goblin@spiderman.org\n'
+                  'Central Park\n2600\nNew York\nUSA\n555-123-456\n'
+                  'plokiploki\nplokiploki\n+011.555123456\napikey0001\n')
+        result = self.invoke_with_exceptions(contact.create, args,
+                                             input=inputs)
+        self.assertEqual(re.sub(r'\[\d+\]', '[1234567890123456]',
+                                result.output.strip()), """\
+Choose your contact type
+0- individual
+1- company
+2- association
+3- public body
+4- reseller
+: 0
+What is your first name: Peter
+What is your last name: Parker
+What is your email address: green.goblin@spiderman.org
+What is your street address: Central Park
+What is your zipcode: 2600
+Which city: New York
+Which country: USA
+What is your telephone number: 555-123-456
+Please enter your password [1234567890123456]: \
+\nRepeat for confirmation: \
+\nphone: string '555-123-456' does not match '^\\+\\d{1,3}\\.\\d+$'
+What is your telephone number: +011.555123456
+planet: Pluto not in list Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, \
+Uranus, Neptune""")
+        self.assertEqual(result.exit_code, 0)
+
     def test_create_ok(self):
 
         args = []

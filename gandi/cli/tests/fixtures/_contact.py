@@ -31,4 +31,15 @@ def create_dry_run(params):
                        'reason': "phone: string '555-123-456' does not "
                                  "match '^\\+\\d{1,3}\\.\\d+$'"})
 
+    if params['email'] == 'green.goblin@spiderman.org':
+        # add an unknown error
+        errors.append({'attr': ['Sun, Mercury, Venus, Earth, Mars, Jupiter,'
+                                'Saturn, Uranus, Neptune'],
+                       'error': '!EC_ENUMIN',
+                       'field': 'planet',
+                       'field_type': 'Enum',
+                       'reason': 'planet: Pluto not in list Sun, Mercury, '
+                                 'Venus, Earth, Mars, Jupiter, '
+                                 'Saturn, Uranus, Neptune'})
+
     return errors
