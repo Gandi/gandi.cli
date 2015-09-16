@@ -20,11 +20,12 @@ class MailTestCase(CommandTestCase):
         args = ['admin@iheartcli.com']
         result = self.invoke_with_exceptions(mail.info, args)
 
-        self.assertEqual(result.output, """login         : admin
-aliases       :
-fallback_email:
-quota         : {'granted': 0, 'used': 233}
-responder     : {'active': False, 'text': None}
+        self.assertEqual(result.output, """login           : admin
+aliases         :
+fallback email  :
+quota usage     : 233 KiB / unlimited
+responder active: no
+responder text  :
 """)
 
         self.assertEqual(result.exit_code, 0)
