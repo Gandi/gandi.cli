@@ -13,6 +13,9 @@ Changelog
     - account
     - domain
     - operations
+* Update 'gandi mail info' command:
+    - change output of responder and quota information
+      to be more reader friendly
 * Bump click requirement version to <= 5.2
 * Fixes debian python3 packaging
 
