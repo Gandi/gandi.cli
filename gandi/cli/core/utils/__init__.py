@@ -462,3 +462,35 @@ def output_domain(gandi, domain, output_keys, justify=12):
 
     if 'updated' in output_keys:
         output_line(gandi, 'updated', domain['date_updated'], justify)
+
+
+def output_mailbox(gandi, mailbox, output_keys, justify=16):
+    """ Helper to output a mailbox information."""
+    quota = 'quota' in output_keys
+    responder = 'responder' in output_keys
+
+    if quota:
+        output_keys.pop(output_keys.index('quota'))
+
+    if responder:
+        output_keys.pop(output_keys.index('responder'))
+
+    output_generic(gandi, mailbox, output_keys, justify)
+
+    if 'fallback' in output_keys:
+        output_line(gandi, 'fallback email', mailbox['fallback_email'],
+                    justify)
+
+    if quota:
+        granted = mailbox['quota']['granted']
+        if mailbox['quota']['granted'] == 0:
+            granted = 'unlimited'
+        output_line(gandi, 'quota usage',
+                    '%s KiB / %s' % (mailbox['quota']['used'], granted),
+                    justify)
+
+    if responder:
+        responder_status = 'yes' if mailbox['responder']['active'] else 'no'
+        output_line(gandi, 'responder active', responder_status, justify)
+        output_line(gandi, 'responder text', mailbox['responder']['text'],
+                    justify)
