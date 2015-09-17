@@ -257,7 +257,44 @@ def list(options):
              'ida_fax': None,
              'comodo_id': None,
              'joi_country': None,
-             'joi_state': None}
+             'joi_state': None},
+            {'altnames': [],
+             'assumed_name': None,
+             'business_category': None,
+             'card_pay_trustlogo': False,
+             'cert': 'MIIE5zCCA8+gAwIBAgIQAkC4TU9JG8wqhf4FCrsNGTANBgkqhkiG9'
+                     'w0BAQsFADBfMQswCQYDVQQGEwJGUjEOMAwGA1UECBMFUGFyaXMxDj'
+                     '...'
+                     'tU6XzbS6/s2D1/N1wWOOCD/V3XAROtKr1a0mtJ8n7SZyzr0j3weRbN'
+                     '7nV24RDQ6d4+GHy5zZstKyDrTknluyyZuDAAYAQJ+nrL5p1gxVNwj1'
+                     'f5XKFk=',
+             'cn': 'lol.cat',
+             'comodo_id': 1777348256,
+             'contact': 'DF2975-GANDI',
+             'csr': '-----BEGIN CERTIFICATE REQUEST-----\n'
+                    'MIICgzCCAWsCAQAwPjERMA8GA1UEAwwIZ2F1dnIuaX'
+                    '...'
+                    'K+I=\n-----END CERTIFICATE REQUEST-----',
+             'date_created': DateTime('20150318T00:00:00'),
+             'date_end': DateTime('20160318T00:00:00'),
+             'date_incorporation': None,
+             'date_start': DateTime('20150318T00:00:00'),
+             'date_updated': DateTime('20150318T00:00:00'),
+             'id': 710,
+             'ida_email': None,
+             'ida_fax': None,
+             'ida_tel': None,
+             'joi_country': None,
+             'joi_locality': None,
+             'joi_state': None,
+             'middleman': '',
+             'order_number': 12345678,
+             'package': 'cert_std_1_0_0',
+             'sha_version': 2,
+             'software': 2,
+             'status': 'valid',
+             'trustlogo': False,
+             'trustlogo_token': {'lol.cat': 'ababababa'}}
             ]
 
 
@@ -268,6 +305,35 @@ def info(id):
 
 def create(*args):
     return {'id': 1}
+
+
+def update(*args):
+    return {'id': 400}
+
+
+def change_dcv(oper_id, dcv_method):
+    return True
+
+
+def resend_dcv(oper_id):
+    return True
+
+
+def get_dcv_params(params):
+    return {
+        'sha1': 'AD6A9D35FF5BD9FB03A41F4F82CAA4B77',
+        'dcv_method': 'dns',
+        'fqdns': ['lol.cat'],
+        'message': ['920F78CCE11DA7D9554.lol.cat. 10800 IN '
+                    'CNAME AD6A9D35FF5BD9FB03A41.comodoca.com.'],
+        'dns_records': ['920F78CCE11DA7D9554.lol.cat. 10800 IN '
+                        'CNAME AD6A9D35FF5BD9FB03A41.comodoca.com.'],
+        'md5': '920F78CCE11DA7ADAD9554',
+    }
+
+
+def delete(cert_id):
+    return {'id': 200, 'step': 'WAIT'}
 
 
 def hosted_list(options):

@@ -11,6 +11,10 @@ class OperTestCase(CommandTestCase):
         result = self.invoke_with_exceptions(oper.list, [])
 
         self.assertEqual(result.output, """\
+id        : 100300
+type      : certificate_update
+step      : RUN
+----------
 id        : 100200
 type      : billing_prepaid_add_money
 step      : BILL
