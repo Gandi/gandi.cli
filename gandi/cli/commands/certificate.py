@@ -222,7 +222,7 @@ def export(gandi, resource, output, force, intermediate):
 
         cert_filename = cert['cn'].replace('*.', 'wildcard.', 1)
         crt_filename = output or cert_filename + '.crt'
-        if not force and os.path.exists(crt_filename):
+        if not force and os.path.isfile(crt_filename):
             gandi.echo('The file %s already exists.' % crt_filename)
             continue
 
