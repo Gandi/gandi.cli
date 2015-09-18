@@ -6,8 +6,8 @@ Changelog
 
 * Update parameter '--datacenter':
     - allow dc_code as optional value
-    - old values: FR/LU/US are still working so it doesn't break compatibility
-      but they will be deprecated in next releases
+    - old values: FR/LU/US are still working so it doesn't break
+      compatibility but they will be deprecated in next releases
 * Various improvements to modules for library usage:
     - datacenter
     - account
@@ -15,8 +15,9 @@ Changelog
     - operations
 * Update 'gandi mail info' command:
     - change output of responder and quota information
-      to be more reader friendly
-* Bump click requirement version to <= 5.2
+      to be more user friendly
+* Update click requirement version to >= 3.1 so we always use the
+  latest version
 * Fixes debian python3 packaging
 
 0.15
