@@ -59,7 +59,8 @@ class DatacenterParamType(GandiChoice):
         dc_codes = []
         for item in gandi.datacenter.list():
             iso_codes.append(item['iso'])
-            dc_codes.append(item['dc_code'])
+            if item.get('dc_code'):
+                dc_codes.append(item['dc_code'])
         return dc_codes + iso_codes
 
     def convert(self, value, param, ctx):

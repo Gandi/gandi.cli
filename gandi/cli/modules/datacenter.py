@@ -71,7 +71,8 @@ class Datacenter(GandiModule):
         result = cls.list()
         dc_codes = {}
         for dc in result:
-            dc_codes[dc['dc_code']] = dc['id']
+            if dc.get('dc_code'):
+                dc_codes[dc['dc_code']] = dc['id']
 
         return dc_codes.get(dc_code)
 
