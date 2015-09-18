@@ -22,6 +22,8 @@ Changelog
 * Update click requirement version to >= 3.1 so we always use the
   latest version
 * Fixes debian python3 packaging
+* Fixes #148
+* Fixes #147
 
 0.15
 ----
