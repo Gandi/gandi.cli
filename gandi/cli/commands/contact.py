@@ -4,6 +4,12 @@ import click
 import time
 import webbrowser
 
+# define unicode for python3
+try:
+    unicode
+except NameError:
+    unicode = str
+
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import randomstring
 from gandi.cli.core.params import pass_gandi
