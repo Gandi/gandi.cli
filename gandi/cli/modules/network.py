@@ -367,7 +367,11 @@ class Iface(GandiModule):
         # interactive mode, run a progress bar
         cls.echo('Creating your iface.')
         cls.display_progress(result)
-        cls.echo('Your iface has been created.')
+        iface_info = cls._info(result['iface_id'])
+        cls.echo('Your iface has been created with the following IP '
+                 'addresses:')
+        for _ip in iface_info['ips']:
+            cls.echo('ip%d:\t%s' % (_ip['version'], _ip['ip']))
 
         if not vm:
             return result

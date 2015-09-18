@@ -8,6 +8,9 @@ Changelog
     - allow dc_code as optional value
     - old values: FR/LU/US are still working so it doesn't break
       compatibility but they will be deprecated in next releases
+* Update output of IP creation to display IP address:
+    - for 'gandi ip create' command
+    - for 'gandi vm create' command with --ip option
 * Various improvements to modules for library usage:
     - datacenter
     - account

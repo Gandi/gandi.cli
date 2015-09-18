@@ -905,7 +905,7 @@ Your Virtual Machine vm has been created.""")
         self.assertEqual(result.exit_code, 0)
 
     def test_create_ip_not_vlan_ko(self):
-        args = ['--hostname', 'server500', '--ip', '127.0.0.1']
+        args = ['--hostname', 'server500', '--ip', '10.50.10.10']
         result = self.invoke_with_exceptions(vm.create, args,
                                              obj=GandiContextHelper(),
                                              input='plokiploki\nplokiploki\n')
@@ -918,7 +918,7 @@ password: \nRepeat for confirmation: \n\
 
     def test_create_vlan_ip_ok(self):
         args = ['--hostname', 'server400', '--vlan', 'vlantest',
-                '--ip', '127.0.0.1']
+                '--ip', '10.50.10.10']
         result = self.invoke_with_exceptions(vm.create, args,
                                              obj=GandiContextHelper(),
                                              input='plokiploki\nplokiploki\n')
@@ -929,7 +929,8 @@ emergency web console access).
 * root user will be created.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \n\
-Your iface has been created.
+Your iface has been created with the following IP addresses:
+ip4:\t10.50.10.10
 * Configuration used: 1 cores, 256Mb memory, ip private, image Debian 7 64 \
 bits (HVM), hostname: server400, datacenter: LU-BI1
 Creating your Virtual Machine server400.

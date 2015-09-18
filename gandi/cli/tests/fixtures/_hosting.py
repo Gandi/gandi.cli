@@ -239,7 +239,7 @@ def image_list(options):
             'os_arch': 'x86-64',
             'size': 3072,
             'visibility': 'all'},
-    ]
+           ]
 
     for fkey in options:
         ret = [dc for dc in ret if dc[fkey] == options[fkey]]
@@ -818,7 +818,7 @@ def vm_iface_attach(vm_id, iface_id):
     if vm_id == 152966 and iface_id == 156573:
         return {'id': 200, 'step': 'WAIT'}
 
-    if vm_id == 152967 and iface_id == 156575:
+    if vm_id == 152967 and iface_id == 156572:
         return {'id': 200, 'step': 'WAIT'}
 
 
@@ -880,7 +880,10 @@ def vlan_list(options):
 
 
 def iface_create(options):
-    return {'id': 200, 'step': 'WAIT', 'iface_id': 156575}
+    if 'ip' in options:
+        return {'id': 200, 'step': 'WAIT', 'iface_id': 156572}
+
+    return {'id': 200, 'step': 'WAIT', 'iface_id': 156573}
 
 
 def iface_delete(ip_id):
@@ -948,6 +951,16 @@ def iface_list(options):
             'date_updated': DateTime('20150105T00:00:00'),
             'id': 156572,
             'ips_id': [204557],
+            'ips': [{'datacenter_id': 3,
+                     'date_created': DateTime('20150319T11:10:34'),
+                     'date_updated': DateTime('20150319T11:10:36'),
+                     'id': 204557,
+                     'iface_id': 156572,
+                     'ip': '10.50.10.10',
+                     'num': 0,
+                     'reverse': 'xvm6-dc2-fece-e25f.ghst.net',
+                     'state': 'created',
+                     'version': 4}],
             'num': None,
             'state': 'free',
             'type': 'private',

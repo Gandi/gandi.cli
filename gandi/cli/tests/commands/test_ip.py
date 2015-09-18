@@ -253,7 +253,9 @@ Will detach it.
                                 result.output.strip()), """\
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
-\nYour iface has been created.""")
+\nYour iface has been created with the following IP addresses:
+ip4:\t95.142.160.181
+ip6:\t2001:4b98:dc0:47:216:3eff:feb2:3862""")
 
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.iface.create'][0][0]
@@ -271,7 +273,9 @@ Creating your iface.
                                 result.output.strip()), """\
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
-\nYour iface has been created.""")
+\nYour iface has been created with the following IP addresses:
+ip4:\t95.142.160.181
+ip6:\t2001:4b98:dc0:47:216:3eff:feb2:3862""")
 
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.iface.create'][0][0]
@@ -300,7 +304,9 @@ You must have an --ip-version to 4 when having a vlan.""")
                                 result.output.strip()), """\
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
-\nYour iface has been created.""")
+\nYour iface has been created with the following IP addresses:
+ip4:\t95.142.160.181
+ip6:\t2001:4b98:dc0:47:216:3eff:feb2:3862""")
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.iface.create'][0][0]
         self.assertEqual(params['datacenter_id'], 1)
@@ -330,7 +336,8 @@ You must have a --vlan when giving an --ip.""")
                                 result.output.strip()), """\
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
-\nYour iface has been created.""")
+\nYour iface has been created with the following IP addresses:
+ip4:\t10.50.10.10""")
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.iface.create'][0][0]
         self.assertEqual(params['datacenter_id'], 1)
@@ -362,7 +369,8 @@ vm you want to attach to.""")
                                 result.output.strip()), """\
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
-\nYour iface has been created.
+\nYour iface has been created with the following IP addresses:
+ip4:\t10.50.10.10
 Attaching your iface.
 \rProgress: [###] 100.00%  00:00:00""")
         self.assertEqual(result.exit_code, 0)
@@ -385,7 +393,8 @@ Attaching your iface.
                                 result.output.strip()), """\
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
-\nYour iface has been created.""")
+\nYour iface has been created with the following IP addresses:
+ip4:\t10.50.10.10""")
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.iface.create'][0][0]
         self.assertEqual(params['datacenter_id'], 1)
