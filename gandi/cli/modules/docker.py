@@ -18,7 +18,7 @@ class Docker(GandiModule):
     Note that you can use a per-project docker vm by using
     a local directory gandi configuration using:
 
-    $ gandi config dockervm foobar
+    $ gandi config set dockervm foobar
 
     Or override the current global vm using:
 

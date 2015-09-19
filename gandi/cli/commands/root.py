@@ -30,17 +30,6 @@ Setup completed. You can now:
 
 
 @cli.command()
-@click.option('-g', help='Edit global configuration (default=local).',
-              is_flag=True, default=False)
-@click.argument('key')
-@click.argument('value')
-@pass_gandi
-def config(gandi, g, key, value):
-    """Configure default values."""
-    gandi.configure(global_=g, key=key, val=value)
-
-
-@cli.command()
 @pass_gandi
 def api(gandi):
     """Display information about API used."""
