@@ -35,6 +35,9 @@ class Account(GandiModule):
         account = cls.info()
         creditusage = cls.creditusage()
 
+        if not creditusage:
+            return account
+
         left = account['credits'] / creditusage
         years, hours = divmod(left, 365 * 24)
         months, hours = divmod(hours, 31 * 24)
