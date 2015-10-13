@@ -503,15 +503,24 @@ class GandiOption(click.Option):
         return value
 
     def handle_parse_result(self, ctx, opts, args):
-        """ Save value for this option in configuration. """
+        """ Save value for this option in configuration
+        if key/value pair doesn't already exist.
+        Or old value in config was deprecated
+        it needs to be updated to the new value format
+        but the value keeps the same "meaning"
+        """
+        gandi = ctx.obj
+        needs_update = False
         value, args = click.Option.handle_parse_result(self, ctx, opts, args)
 
         if value is not None:
+            previous_value = gandi.get(global_=True, key=self.name)
             if isinstance(self.type, GandiChoice):
+                if value == previous_value:
+                    needs_update = True
                 value = self.type.convert_deprecated_value(value)
-            # save to gandi configuration
-            gandi = ctx.obj
-            gandi.configure(True, self.name, value)
+            if not previous_value or needs_update:
+                gandi.configure(global_=True, key=self.name, val=value)
         return value, args
 
 

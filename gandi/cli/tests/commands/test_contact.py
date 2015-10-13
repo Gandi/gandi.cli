@@ -152,5 +152,7 @@ What is your production apikey: apikey0002
 Will save your apikey into the config file.""")
         self.assertEqual(result.exit_code, 0)
 
-        self.assertEqual(GandiModule._conffiles,
-                         {'global': {'api': {'key': 'apikey0002'}}})
+        self.assertTrue('api' in GandiModule._conffiles['global'])
+
+        api_key = GandiModule._conffiles['global']['api'].get('key')
+        self.assertEqual(api_key,'apikey0002')

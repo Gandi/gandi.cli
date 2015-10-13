@@ -68,7 +68,11 @@ Namespaces:
 *  certstore delete        Delete an hosted certificate.
 *  certstore info          Display information about an hosted certificate.
 *  certstore list          List hosted certificates.
-*  config                  Configure default values.
+*  config delete           Delete a key/value pair from loaded configuration and save.
+*  config edit             Open configuration file in prefered editor.
+*  config get              Get value of a given key from loaded configuration.
+*  config list             List content of loaded configuration.
+*  config set              Set a key/value pair in loaded configuration and save.
 *  contact create          Create a new contact in interactive mode.
 *  datacenters             List available datacenters.
 *  deploy                  Deploy code on a remote vhost.

@@ -66,6 +66,7 @@ class GandiConfig(object):
         if ssh_key:
             del config['ssh_key']
             need_save = True
+
         # save to disk
         if need_save:
             cls.save(config_file, config)
@@ -116,6 +117,17 @@ class GandiConfig(object):
                 return
 
     @classmethod
+    def delete(cls, global_, key):
+        """ Delete key/value pair from configuration file. """
+        # first retrieve current configuration
+        scope = 'global' if global_ else 'local'
+        config = cls._conffiles.get(scope, {})
+        cls._del(scope, key)
+        conf_file = cls.home_config if global_ else cls.local_config
+        # save configuration to file
+        cls.save(os.path.expanduser(conf_file), config)
+
+    @classmethod
     def _set(cls, scope, key, val, separator='.'):
         orig_key = key
 
@@ -150,21 +162,24 @@ class GandiConfig(object):
             return default
 
     @classmethod
-    def get(cls, key, default=None, separator='.'):
+    def get(cls, key, default=None, separator='.', global_=False):
         """ Retrieve a key value from loaded configuration.
 
-        Order of search :
+        Order of search if global_=False:
         1/ environnment variables
         2/ local configuration
         3/ global configuration
         """
         # first check environnment variables
-        ret = os.environ.get(key.upper().replace('.', '_'))
-        if ret is not None:
-            return ret
+        # if we're not in global scope
+        if not global_:
+            ret = os.environ.get(key.upper().replace('.', '_'))
+            if ret is not None:
+                return ret
 
-        # then check in local -> global configuration
-        for scope in ['local', 'global']:
+        # then check in local and global configuration unless global_=True
+        scopes = ['global'] if global_ else ['local', 'global']
+        for scope in scopes:
             ret = cls._get(scope, key, default, separator)
             if ret is not None:
                 return ret
@@ -185,6 +200,12 @@ class GandiConfig(object):
         conf_file = cls.home_config if global_ else cls.local_config
         # save configuration to file
         cls.save(os.path.expanduser(conf_file), config)
+
+    @classmethod
+    def list(cls, global_):
+        """ Return configuration file content. """
+        scope = 'global' if global_ else 'local'
+        return cls._conffiles.get(scope, {})
 
     @classmethod
     def init_config(cls):
@@ -213,6 +234,7 @@ class GandiConfig(object):
                 'api': {'key': apikey,
                         'host': cls.apienvs[apienv]},
             })
+
             if sshkey is not None:
                 sshkey_file = os.path.expanduser(sshkey)
                 if os.path.exists(sshkey_file):
