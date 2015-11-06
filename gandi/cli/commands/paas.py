@@ -163,7 +163,7 @@ def delete(gandi, background, force, resource):
               help='Name of the PaaS instance, will be generated if not '
                    'provided.')
 @option('--size', default='s',
-        type=click.Choice(['s', 'm', 'x', 'xl', 'xxl']),
+        type=click.Choice(['s', 'm', 'l', 'xl', 'xxl']),
         help='Size of the PaaS instance.')
 @option('--type', default='pythonpgsql',
         type=PAAS_TYPE,
