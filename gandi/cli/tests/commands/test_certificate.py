@@ -342,7 +342,11 @@ v0L9Vc0443fop+UbFCabF0NWM6rJ31Nlv7s3mQIA
                         create=True) as mock_open:
             mock_open.return_value = mock.MagicMock()
 
-            result = self.invoke_with_exceptions(certificate.export, args)
+            with mock.patch('gandi.cli.commands.certificate.requests.get',
+                            create=True) as mock_get:
+                mock_get.return_value = mock.MagicMock()
+
+                result = self.invoke_with_exceptions(certificate.export, args)
 
         wanted = """wrote lol.cat.crt
 wrote lol.cat.inter.crt
