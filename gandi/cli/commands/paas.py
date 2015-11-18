@@ -98,6 +98,8 @@ def clone(gandi, vhost):
         gandi.vhost.init_vhost(vhost, paas=paas_info)
     else:
         paas_access = gandi.get('paas.access')
+        if not vhost:
+            vhost = gandi.get('paas.deploy_git_host').replace('.git', '')
         gandi.execute('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
 
 
