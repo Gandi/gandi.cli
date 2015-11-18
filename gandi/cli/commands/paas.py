@@ -215,7 +215,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
                                 confirmation_prompt=True)
 
     if not name:
-        name = randomstring('vm')
+        name = randomstring('paas')
 
     if vhosts and not gandi.hostedcert.activate_ssl(vhosts,
                                                     ssl,
