@@ -194,108 +194,119 @@ def package_list(options):
 
 
 def list(options):
-    return [{'trustlogo': False,
-             'assumed_name': None,
-             'package': 'cert_std_1_0_0',
-             'order_number': None,
-             'altnames': [],
-             'trustlogo_token': {'mydomain.name': 'adadadadad'},
-             'date_incorporation': None,
-             'card_pay_trustlogo': False,
-             'contact': 'TEST1-GANDI',
-             'date_start': None,
-             'ida_email': None,
-             'business_category': None,
-             'cert': None,
-             'date_end': None,
-             'status': 'pending',
-             'csr': '-----BEGIN CERTIFICATE REQUEST-----\n'
-                    'MIICgzCCAWsCAQAwPjERMA8GA1UEAwwIZ2F1dnIuaX'
+    ret = [{'trustlogo': False,
+            'assumed_name': None,
+            'package': 'cert_std_1_0_0',
+            'order_number': None,
+            'altnames': [],
+            'trustlogo_token': {'mydomain.name': 'adadadadad'},
+            'date_incorporation': None,
+            'card_pay_trustlogo': False,
+            'contact': 'TEST1-GANDI',
+            'date_start': None,
+            'ida_email': None,
+            'business_category': None,
+            'cert': None,
+            'date_end': None,
+            'status': 'pending',
+            'csr': '-----BEGIN CERTIFICATE REQUEST-----\n'
+                   'MIICgzCCAWsCAQAwPjERMA8GA1UEAwwIZ2F1dnIuaX'
+                   '...'
+                   'K+I=\n-----END CERTIFICATE REQUEST-----',
+            'date_updated': DateTime('20140904T14:06:26'),
+            'software': 2,
+            'id': 701,
+            'joi_locality': None,
+            'date_created': DateTime('20140904T14:06:26'),
+            'cn': 'mydomain.name',
+            'sha_version': 1,
+            'middleman': '',
+            'ida_tel': None,
+            'ida_fax': None,
+            'comodo_id': None,
+            'joi_country': None,
+            'joi_state': None},
+           {'trustlogo': False,
+            'assumed_name': None,
+            'package': 'cert_bus_20_250_0',
+            'order_number': None,
+            'altnames': [],
+            'trustlogo_token': {'inter.net': 'adadadadad'},
+            'date_incorporation': None,
+            'card_pay_trustlogo': False,
+            'contact': 'TEST1-GANDI',
+            'date_start': None,
+            'ida_email': None,
+            'business_category': None,
+            'cert': None,
+            'date_end': None,
+            'status': 'valid',
+            'csr': '-----BEGIN CERTIFICATE REQUEST-----\n'
+                   'MIICgzCCAWsCAQAwPjERMA8GA1UEAwwIZ2F1dnIuaX'
+                   '...'
+                   'K+I=\n-----END CERTIFICATE REQUEST-----',
+            'date_updated': DateTime('20140904T14:06:26'),
+            'software': 2,
+            'id': 706,
+            'joi_locality': None,
+            'date_created': DateTime('20140904T14:06:26'),
+            'cn': 'inter.net',
+            'sha_version': 1,
+            'middleman': '',
+            'ida_tel': None,
+            'ida_fax': None,
+            'comodo_id': None,
+            'joi_country': None,
+            'joi_state': None},
+           {'altnames': [],
+            'assumed_name': None,
+            'business_category': None,
+            'card_pay_trustlogo': False,
+            'cert': 'MIIE5zCCA8+gAwIBAgIQAkC4TU9JG8wqhf4FCrsNGTANBgkqhkiG9'
+                    'w0BAQsFADBfMQswCQYDVQQGEwJGUjEOMAwGA1UECBMFUGFyaXMxDj'
                     '...'
-                    'K+I=\n-----END CERTIFICATE REQUEST-----',
-             'date_updated': DateTime('20140904T14:06:26'),
-             'software': 2,
-             'id': 701,
-             'joi_locality': None,
-             'date_created': DateTime('20140904T14:06:26'),
-             'cn': 'mydomain.name',
-             'sha_version': 1,
-             'middleman': '',
-             'ida_tel': None,
-             'ida_fax': None,
-             'comodo_id': None,
-             'joi_country': None,
-             'joi_state': None},
-            {'trustlogo': False,
-             'assumed_name': None,
-             'package': 'cert_bus_20_250_0',
-             'order_number': None,
-             'altnames': [],
-             'trustlogo_token': {'inter.net': 'adadadadad'},
-             'date_incorporation': None,
-             'card_pay_trustlogo': False,
-             'contact': 'TEST1-GANDI',
-             'date_start': None,
-             'ida_email': None,
-             'business_category': None,
-             'cert': None,
-             'date_end': None,
-             'status': 'valid',
-             'csr': '-----BEGIN CERTIFICATE REQUEST-----\n'
-                    'MIICgzCCAWsCAQAwPjERMA8GA1UEAwwIZ2F1dnIuaX'
-                    '...'
-                    'K+I=\n-----END CERTIFICATE REQUEST-----',
-             'date_updated': DateTime('20140904T14:06:26'),
-             'software': 2,
-             'id': 706,
-             'joi_locality': None,
-             'date_created': DateTime('20140904T14:06:26'),
-             'cn': 'inter.net',
-             'sha_version': 1,
-             'middleman': '',
-             'ida_tel': None,
-             'ida_fax': None,
-             'comodo_id': None,
-             'joi_country': None,
-             'joi_state': None},
-            {'altnames': [],
-             'assumed_name': None,
-             'business_category': None,
-             'card_pay_trustlogo': False,
-             'cert': 'MIIE5zCCA8+gAwIBAgIQAkC4TU9JG8wqhf4FCrsNGTANBgkqhkiG9'
-                     'w0BAQsFADBfMQswCQYDVQQGEwJGUjEOMAwGA1UECBMFUGFyaXMxDj'
-                     '...'
-                     'tU6XzbS6/s2D1/N1wWOOCD/V3XAROtKr1a0mtJ8n7SZyzr0j3weRbN'
-                     '7nV24RDQ6d4+GHy5zZstKyDrTknluyyZuDAAYAQJ+nrL5p1gxVNwj1'
-                     'f5XKFk=',
-             'cn': 'lol.cat',
-             'comodo_id': 1777348256,
-             'contact': 'DF2975-GANDI',
-             'csr': '-----BEGIN CERTIFICATE REQUEST-----\n'
-                    'MIICgzCCAWsCAQAwPjERMA8GA1UEAwwIZ2F1dnIuaX'
-                    '...'
-                    'K+I=\n-----END CERTIFICATE REQUEST-----',
-             'date_created': DateTime('20150318T00:00:00'),
-             'date_end': DateTime('20160318T00:00:00'),
-             'date_incorporation': None,
-             'date_start': DateTime('20150318T00:00:00'),
-             'date_updated': DateTime('20150318T00:00:00'),
-             'id': 710,
-             'ida_email': None,
-             'ida_fax': None,
-             'ida_tel': None,
-             'joi_country': None,
-             'joi_locality': None,
-             'joi_state': None,
-             'middleman': '',
-             'order_number': 12345678,
-             'package': 'cert_std_1_0_0',
-             'sha_version': 2,
-             'software': 2,
-             'status': 'valid',
-             'trustlogo': False,
-             'trustlogo_token': {'lol.cat': 'ababababa'}}
-            ]
+                    'tU6XzbS6/s2D1/N1wWOOCD/V3XAROtKr1a0mtJ8n7SZyzr0j3weRbN'
+                    '7nV24RDQ6d4+GHy5zZstKyDrTknluyyZuDAAYAQJ+nrL5p1gxVNwj1'
+                    'f5XKFk=',
+            'cn': 'lol.cat',
+            'comodo_id': 1777348256,
+            'contact': 'DF2975-GANDI',
+            'csr': '-----BEGIN CERTIFICATE REQUEST-----\n'
+                   'MIICgzCCAWsCAQAwPjERMA8GA1UEAwwIZ2F1dnIuaX'
+                   '...'
+                   'K+I=\n-----END CERTIFICATE REQUEST-----',
+            'date_created': DateTime('20150318T00:00:00'),
+            'date_end': DateTime('20160318T00:00:00'),
+            'date_incorporation': None,
+            'date_start': DateTime('20150318T00:00:00'),
+            'date_updated': DateTime('20150318T00:00:00'),
+            'id': 710,
+            'ida_email': None,
+            'ida_fax': None,
+            'ida_tel': None,
+            'joi_country': None,
+            'joi_locality': None,
+            'joi_state': None,
+            'middleman': '',
+            'order_number': 12345678,
+            'package': 'cert_std_1_0_0',
+            'sha_version': 2,
+            'software': 2,
+            'status': 'valid',
+            'trustlogo': False,
+            'trustlogo_token': {'lol.cat': 'ababababa'}}]
+
+    options.pop('items_per_page', None)
+
+    def compare(hc, option):
+        if isinstance(option, (type_list, tuple)):
+            return hc in option
+        return hc == option
+
+    for fkey in options:
+        ret = [hc for hc in ret if compare(hc[fkey], options[fkey])]
+
+    return ret
 
 
 def info(id):
