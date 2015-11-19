@@ -241,6 +241,15 @@ $ gandi certificate export "domain.tld"
         self.assertEqual(result.output, wanted)
         self.assertEqual(result.exit_code, 0)
 
+    def test_create_bad_csr(self):
+        args = ['--csr', 'badpath.csr', '--pk', 'badpath.key',
+                '--package', 'cert_std_3_0_0', '--dcv-method', 'email']
+        result = self.invoke_with_exceptions(certificate.create, args)
+        wanted = """Unable to parse provided csr: badpath.csr
+"""
+        self.assertEqual(result.output, wanted)
+        self.assertEqual(result.exit_code, 0)
+
     def test_create_no_package_and_option(self):
         csr = '''-----BEGIN CERTIFICATE REQUEST-----
 MIICWjCCAUICAQAwFTETMBEGA1UEAwwKZG9tYWluLnRsZDCCASIwDQYJKoZIhvcN
