@@ -53,7 +53,7 @@ class CommandTestCase(unittest.TestCase):
         with self.runner.isolated_filesystem():
             os.mkdir('sandbox')
 
-            with open('sandbox/%s' % (temp_name or 'example.txt'), 'wb') as f:
+            with open('sandbox/%s' % (temp_name or 'example.txt'), 'w') as f:
                 f.write(temp_content)
 
             return self.runner.invoke(cli, args,
