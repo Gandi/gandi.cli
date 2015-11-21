@@ -228,7 +228,6 @@ Error: missing VHOST parameter
 Creating a new vhost.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your vhost cli.sexy has been created.
-git clone ssh+git://185290@git.dc2.gpaas.net/default.git
 ssh 185290@git.dc2.gpaas.net 'deploy default.git'""")
 
         self.assertEqual(result.exit_code, 0)
@@ -343,8 +342,7 @@ Creating your PaaS instance.
 Your PaaS instance 123456 has been created.
 Creating a new vhost.
 \rProgress: [###] 100.00%  00:00:00  \n\
-Your vhost ploki.fr has been created.
-git clone ssh+git://1185290@git.dc2.gpaas.net/default.git""")
+Your vhost ploki.fr has been created.""")
 
         self.assertEqual(result.exit_code, 0)
 

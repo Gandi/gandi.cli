@@ -1,5 +1,7 @@
 """ PaaS instances namespace commands. """
 
+import os
+
 import click
 from click.exceptions import UsageError
 
@@ -90,12 +92,46 @@ def info(gandi, resource, stat):
 def clone(gandi, vhost):
     """Clone a remote vhost in a local git repository."""
     paas_access = gandi.get('paas.access')
+    current_path = os.getcwd()
+
     if not vhost and not paas_access:
         gandi.error('missing VHOST parameter')
 
     if vhost and not paas_access:
+        # gandi.vhost.init_vhost(vhost, paas=paas_info)
+
         paas_info = gandi.paas.info(vhost)
-        gandi.vhost.init_vhost(vhost, paas=paas_info)
+        repo_path = os.path.join(current_path, paas_info['name'])
+
+        if 'php' not in paas_info['type']:
+            vhost = 'default'
+
+        git_server = paas_info['git_server']
+        # hack for dev
+        if 'dev' in paas_info['console']:
+            git_server = 'git.hosting.dev.gandi.net'
+        paas_access = '%s@%s' % (paas_info['user'], git_server)
+
+        if os.path.exists(repo_path):
+            cls.echo('%s already exists, please remove it before cloning' %
+                     repo_path)
+            return
+
+        init_git = gandi.execute('git clone ssh+git://%s/%s.git' %
+                               (paas_access, vhost))
+        if not init_git:
+            cls.echo('An error has occurred during git clone of instance.')
+            return
+
+
+        # go into directory to save configuration file in this directory
+        os.chdir(repo_path)
+        gandi.configure(False, 'paas.user', paas_info['user'])
+        gandi.configure(False, 'paas.name', paas_info['name'])
+        gandi.configure(False, 'paas.deploy_git_host', '%s.git' % vhost)
+        gandi.configure(False, 'paas.access', paas_access)
+        os.chdir(current_path)
+
     else:
         paas_access = gandi.get('paas.access')
         if not vhost:
