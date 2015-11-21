@@ -30,22 +30,6 @@ class Vhost(GandiModule):
         paas_access = '%s@%s' % (paas['user'], git_server)
         current_path = os.getcwd()
         repo_path = os.path.join(current_path, vhost)
-        if created:
-            if os.path.exists(repo_path):
-                cls.echo('%s already exists, please remove it before cloning' %
-                         repo_path)
-                return
-
-            init_git = cls.execute('git clone ssh+git://%s/%s.git' %
-                                   (paas_access, vhost))
-            if not init_git:
-                cls.echo('An error has occurred during git clone of instance.')
-                return
-        else:
-            cls.echo('You should init your git repo when the paas is created, '
-                     'type:')
-            cls.echo('gandi paas clone %s' % vhost)
-            return
 
         # go into directory to save configuration file in this directory
         os.chdir(repo_path)
