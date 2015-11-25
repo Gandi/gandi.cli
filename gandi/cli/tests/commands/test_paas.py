@@ -163,9 +163,9 @@ ssh 185290@console.dc2.gpaas.net""")
         result = self.invoke_with_exceptions(paas.clone, [])
 
         self.assertEqual(result.output, """\
-Usage: paas clone [OPTIONS] [VHOST]
+Usage: paas clone [OPTIONS] NAME
 
-Error: missing VHOST parameter
+Error: Missing argument "name".
 """)
 
         self.assertEqual(result.exit_code, 2)
@@ -178,7 +178,7 @@ Error: missing VHOST parameter
             result = self.invoke_with_exceptions(paas.clone, ['cli.sexy'])
 
         self.assertEqual(result.output, """\
-git clone ssh+git://185290@git.dc2.gpaas.net/default.git
+git clone ssh+git://185290@git.dc2.gpaas.net/default.git cli.sexy
 """)
 
         self.assertEqual(result.exit_code, 0)
@@ -190,48 +190,16 @@ git clone ssh+git://185290@git.dc2.gpaas.net/default.git
                              'user': 185290}}
         self.assertEqual(local_conf, expected)
 
-    def test_clone_conf(self):
-        GandiModule._conffiles['local'] = {
-            'paas': {'access': '185290@git.dc2.gpaas.net',
-                     'deploy_git_host': 'default.git',
-                     'name': 'paas_cozycloud',
-                     'user': 185290}}
-
-        result = self.invoke_with_exceptions(paas.clone, [])
-
-        self.assertEqual(result.output, """\
-git clone ssh+git://185290@git.dc2.gpaas.net/default.git
-""")
-
-        self.assertEqual(result.exit_code, 0)
-
     def test_deploy_no_conf(self):
         result = self.invoke_with_exceptions(paas.deploy, [])
 
         self.assertEqual(result.output, """\
-Usage: deploy [OPTIONS] [VHOST]
+Usage: deploy [OPTIONS]
 
-Error: missing VHOST parameter
+Error: Deploy requires a local configuration file.
 """)
 
         self.assertEqual(result.exit_code, 2)
-
-    def test_deploy_no_conf_vhost(self):
-        with mock.patch('gandi.cli.modules.vhost.os.chdir',
-                        create=True) as mock_chdir:
-            mock_chdir.return_value = mock.MagicMock()
-
-            result = self.invoke_with_exceptions(paas.deploy, ['cli.sexy'])
-
-        self.assertEqual(re.sub(r'\[#+\]', '[###]',
-                                result.output.strip()), """\
-Creating a new vhost.
-\rProgress: [###] 100.00%  00:00:00  \n\
-Your vhost cli.sexy has been created.
-git clone ssh+git://185290@git.dc2.gpaas.net/default.git
-ssh 185290@git.dc2.gpaas.net 'deploy default.git'""")
-
-        self.assertEqual(result.exit_code, 0)
 
     def test_delete_unknown(self):
         result = self.invoke_with_exceptions(paas.delete, ['unknown_paas'])
@@ -322,7 +290,7 @@ Your PaaS instance 123456 has been created.""")
 
     def test_create_name_vhost(self):
         self.maxDiff = None
-        args = ['--name', '123456', '--vhosts', 'ploki.fr', '--ssl']
+        args = ['--name', '123456', '--vhost', 'ploki.fr', '--ssl']
         with mock.patch('gandi.cli.modules.vhost.os.chdir',
                         create=True) as mock_chdir:
             mock_chdir.return_value = mock.MagicMock()
@@ -343,14 +311,13 @@ Creating your PaaS instance.
 Your PaaS instance 123456 has been created.
 Creating a new vhost.
 \rProgress: [###] 100.00%  00:00:00  \n\
-Your vhost ploki.fr has been created.
-git clone ssh+git://1185290@git.dc2.gpaas.net/default.git""")
+Your vhost ploki.fr has been created.""")
 
         self.assertEqual(result.exit_code, 0)
 
     def test_create_name_vhost_ssl(self):
         self.maxDiff = None
-        args = ['--name', '123456', '--vhosts', 'inter.net', '--ssl']
+        args = ['--name', '123456', '--vhost', 'inter.net', '--ssl']
         with mock.patch('gandi.cli.modules.vhost.os.chdir',
                         create=True) as mock_chdir:
             mock_chdir.return_value = mock.MagicMock()

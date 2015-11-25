@@ -1,5 +1,7 @@
 """ PaaS instances namespace commands. """
 
+import os
+
 import click
 from click.exceptions import UsageError
 
@@ -85,40 +87,41 @@ def info(gandi, resource, stat):
 
 
 @cli.command()
-@click.argument('vhost', required=False)
+@click.option('--directory', help='Specify the destination directory')
+@click.option('--vhost', required=False, default='default')
+@click.argument('name', required=True)
 @pass_gandi
-def clone(gandi, vhost):
+def clone(gandi, name, vhost, directory):
     """Clone a remote vhost in a local git repository."""
-    paas_access = gandi.get('paas.access')
-    if not vhost and not paas_access:
-        gandi.error('missing VHOST parameter')
-
-    if vhost and not paas_access:
-        paas_info = gandi.paas.info(vhost)
-        gandi.vhost.init_vhost(vhost, paas=paas_info)
+    if vhost != 'default':
+        directory = vhost
     else:
-        paas_access = gandi.get('paas.access')
-        if not vhost:
-            vhost = gandi.get('paas.deploy_git_host').replace('.git', '')
-        gandi.execute('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
+        directory = name if not directory else directory
+
+    return gandi.paas.clone(name, vhost, directory)
+
+
+@cli.command()
+@click.option('--vhost', default='default',
+              help="Add a remote for a given instance's vhost to the local "
+              "git repository")
+@click.option('--remote', default='gandi',
+              help="Specify the remote's name")
+@click.argument('name', required=True)
+@pass_gandi
+def attach(gandi, name, vhost, remote):
+    """Add remote for an instance's default vhost to the local git repository.
+    """
+    return gandi.paas.attach(name, vhost, remote)
 
 
 @cli.command(root=True)
-@click.argument('vhost', required=False)
 @pass_gandi
-def deploy(gandi, vhost):
-    """Deploy code on a remote vhost."""
-    paas_access = gandi.get('paas.access')
-    if not vhost and not paas_access:
-        gandi.error('missing VHOST parameter')
-
-    if vhost and not paas_access:
-        gandi.paas.init_conf(vhost, vhost=vhost)
-
-    paas_access = gandi.get('paas.access')
-    deploy_git_host = gandi.get('paas.deploy_git_host')
-
-    gandi.execute("ssh %s 'deploy %s'" % (paas_access, deploy_git_host))
+def deploy(gandi):
+    """Deploy code on the instance's remote vhost corresponding to current
+    directory.
+    """
+    return gandi.paas.deploy()
 
 
 @cli.command()
@@ -176,8 +179,8 @@ def delete(gandi, background, force, resource):
         help='Number of month, suffixed with m.')
 @option('--datacenter', type=DATACENTER, default='LU-BI1',
         help='Datacenter where the PaaS will be spawned.')
-@click.option('--vhosts', default=None, multiple=True,
-              help='List of virtual hosts to be linked to the instance.')
+@click.option('--vhost', default=None,
+              help='Virtual host to be linked to the instance.')
 @click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
 @click.option('--pk', '--private-key',
               help='Private key used to generate the ssl Certificate.')
@@ -191,7 +194,7 @@ def delete(gandi, background, force, resource):
 @option('--sshkey', multiple=True,
         help='Authorize ssh authentication for the given ssh key.')
 @pass_gandi
-def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
+def create(gandi, name, size, type, quantity, duration, datacenter, vhost,
            password, snapshotprofile, background, sshkey, ssl, private_key,
            poll_cert):
     """Create a new PaaS instance and initialize associated git repository.
@@ -217,14 +220,14 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     if not name:
         name = randomstring('paas')
 
-    if vhosts and not gandi.hostedcert.activate_ssl(vhosts,
+    if vhost and not gandi.hostedcert.activate_ssl(vhost,
                                                     ssl,
                                                     private_key,
                                                     poll_cert):
         return
 
     result = gandi.paas.create(name, size, type, quantity, duration,
-                               datacenter, vhosts, password,
+                               datacenter, vhost, password,
                                snapshotprofile, background, sshkey)
     return result
 

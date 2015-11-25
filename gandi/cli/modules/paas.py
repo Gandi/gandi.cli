@@ -1,5 +1,7 @@
 """ PaaS commands module. """
 
+import os
+
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.metric import Metric
 from gandi.cli.modules.vhost import Vhost
@@ -11,6 +13,7 @@ class Paas(GandiModule, SshkeyHelper):
 
     """ Module to handle CLI commands.
 
+    $ gandi paas attach
     $ gandi paas clone
     $ gandi paas console
     $ gandi paas create
@@ -27,6 +30,69 @@ class Paas(GandiModule, SshkeyHelper):
     def type_list(cls, options=None):
         """List type of PaaS instances."""
         return cls.safe_call('paas.type.list', options)
+
+    @classmethod
+    def clone(cls, name, vhost, directory):
+        """Clone a PaaS instance's vhost into a local git repository."""
+        paas_info = cls.info(name)
+
+        paas_access = '%s@%s' % (paas_info['user'], paas_info['git_server'])
+        remote_url = 'ssh+git://%s/%s.git' % (paas_access, vhost)
+
+        init_git = cls.execute('git clone %s %s'
+                               % (remote_url, directory))
+        if init_git:
+            return cls.save_config(paas_info, paas_access, vhost, directory)
+
+    @classmethod
+    def attach(cls, name, vhost, remote_name):
+        """Attach an instance's vhost to a remote from the local repository."""
+        paas_access = cls.get('paas_access')
+
+        if not paas_access:
+            paas_info = cls.info(name)
+            paas_access = '%s@%s' % (paas_info['user'], paas_info['git_server'])
+
+        remote_url = 'ssh+git://%s/%s.git' % (paas_access, vhost)
+
+        ret = cls.execute('git remote add %s %s' % (remote_name, remote_url,))
+
+        if ret:
+            cls.echo('Adding remote `%s` to your local git repository.'
+                     % (remote_name))
+            cls.echo('Use `git push %s master` to push your code to the '
+                     'instance.' % (remote_name))
+            cls.echo('Then `$ gandi deploy` to build and deploy your '
+                     'application.')
+
+            return cls.save_config(paas_info, paas_access, vhost,)
+
+    @classmethod
+    def deploy(cls):
+        paas_access = cls.get('paas.access')
+        deploy_git_host = cls.get('paas.deploy_git_host')
+
+        if not paas_access:
+            cls.error("Deploy requires a local configuration file.")
+            return
+
+        cls.execute("ssh %s 'deploy %s'" % (paas_access, deploy_git_host,))
+
+    @classmethod
+    def save_config(cls, paas_info, paas_access, vhost, directory=None):
+        """Save paas configuration in local directory."""
+
+        if directory:
+            current_path = os.getcwd()
+            os.chdir(directory)
+
+        cls.configure(False, 'paas.user', paas_info['user'])
+        cls.configure(False, 'paas.name', paas_info['name'])
+        cls.configure(False, 'paas.deploy_git_host', '%s.git' % vhost)
+        cls.configure(False, 'paas.access', paas_access)
+
+        if directory:
+            os.chdir(current_path)
 
     @classmethod
     def list(cls, options=None):
@@ -137,7 +203,7 @@ class Paas(GandiModule, SshkeyHelper):
         cls.display_progress(result)
 
     @classmethod
-    def create(cls, name, size, type, quantity, duration, datacenter, vhosts,
+    def create(cls, name, size, type, quantity, duration, datacenter, vhost,
                password, snapshot_profile, background, sshkey):
         """Create a new PaaS instance."""
         if not background and not cls.intty():
@@ -172,7 +238,11 @@ class Paas(GandiModule, SshkeyHelper):
             cls.display_progress(result)
             cls.echo('Your PaaS instance %s has been created.' % name)
 
-        cls.init_conf(name, created=not background, vhosts=vhosts)
+
+        if vhost:
+            paas_info = cls.info(name)
+            Vhost.create(paas_info, vhost, True, background)
+
         return result
 
     @classmethod
@@ -217,26 +287,6 @@ class Paas(GandiModule, SshkeyHelper):
         console_url = Paas.info(cls.usable_id(id))['console']
         access = 'ssh %s' % console_url
         cls.execute(access)
-
-    @classmethod
-    def init_conf(cls, id, vhost=None, created=True, vhosts=None,
-                  background=False):
-        """ Initialize local configuration with PaaS information. """
-        paas = Paas.info(cls.usable_id(id))
-        cls.debug('save PaaS instance information to local configuration')
-
-        if vhost and not vhosts:
-            vhosts = [vhost]
-        if not vhosts:
-            if 'php' not in paas['type']:
-                vhost = 'default'
-            elif paas['vhosts']:
-                vhosts = [vht['name'] for vht in paas['vhosts']]
-            else:
-                return
-
-        for vhost in vhosts:
-            Vhost.create(paas, vhost, True, background)
 
     @classmethod
     def usable_id(cls, id):
