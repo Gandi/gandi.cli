@@ -197,7 +197,7 @@ Set the VM's RAM to 2GB and add a CPU core on the fly.
 
 This command will setup the above VM, and install docker by running `curl -sSL https://get.docker.com/ubuntu/ | sh` after creation.
 
-#### 4. View your ressources
+#### 4. View your resources
 
     $ gandi vm list
 
