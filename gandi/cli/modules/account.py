@@ -25,8 +25,8 @@ class Account(GandiModule):
 
         rating = rating.pop()
         usage = [sum(resource.values())
-                 for (_, resource) in list(rating.items())
-                 if type(resource) is dict]
+                 for resource in rating.values()
+                 if isinstance(resource, dict)]
         return sum(usage)
 
     @classmethod
