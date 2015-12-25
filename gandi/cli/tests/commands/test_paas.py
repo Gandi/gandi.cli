@@ -190,6 +190,48 @@ git clone ssh+git://185290@git.dc2.gpaas.net/default.git cli.sexy
                              'user': 185290}}
         self.assertEqual(local_conf, expected)
 
+    def test_clone_directory(self):
+        with mock.patch('gandi.cli.modules.vhost.os.chdir',
+                        create=True) as mock_chdir:
+            mock_chdir.return_value = mock.MagicMock()
+
+            args = ['cli.sexy', '--directory', 'project']
+            result = self.invoke_with_exceptions(paas.clone, args)
+
+        self.assertEqual(result.output, """\
+git clone ssh+git://185290@git.dc2.gpaas.net/default.git project
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+        local_conf = GandiModule._conffiles['local']
+        expected = {'paas': {'access': '185290@git.dc2.gpaas.net',
+                             'deploy_git_host': 'default.git',
+                             'name': 'paas_cozycloud',
+                             'user': 185290}}
+        self.assertEqual(local_conf, expected)
+
+    def test_clone_vhost(self):
+        with mock.patch('gandi.cli.modules.vhost.os.chdir',
+                        create=True) as mock_chdir:
+            mock_chdir.return_value = mock.MagicMock()
+
+            args = ['paas_cozycloud', '--vhost', 'cli.sexy']
+            result = self.invoke_with_exceptions(paas.clone, args)
+
+        self.assertEqual(result.output, """\
+git clone ssh+git://185290@git.dc2.gpaas.net/cli.sexy.git cli.sexy
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+        local_conf = GandiModule._conffiles['local']
+        expected = {'paas': {'access': '185290@git.dc2.gpaas.net',
+                             'deploy_git_host': 'cli.sexy.git',
+                             'name': 'paas_cozycloud',
+                             'user': 185290}}
+        self.assertEqual(local_conf, expected)
+
     def test_attach(self):
         result = self.invoke_with_exceptions(paas.attach, ['paas_cozycloud'])
 
