@@ -170,7 +170,7 @@ Error: Missing argument "name".
 
         self.assertEqual(result.exit_code, 2)
 
-    def test_clone_no_conf(self):
+    def test_clone(self):
         with mock.patch('gandi.cli.modules.vhost.os.chdir',
                         create=True) as mock_chdir:
             mock_chdir.return_value = mock.MagicMock()
@@ -190,7 +190,7 @@ git clone ssh+git://185290@git.dc2.gpaas.net/default.git cli.sexy
                              'user': 185290}}
         self.assertEqual(local_conf, expected)
 
-    def test_deploy_no_conf(self):
+    def test_deploy(self):
         result = self.invoke_with_exceptions(paas.deploy, [])
 
         self.assertEqual(result.output, """\
@@ -249,13 +249,9 @@ step      : WAIT
 
     def test_create_default(self):
         args = []
-        with mock.patch('gandi.cli.modules.paas.Paas.init_conf',
-                        create=True) as mock_init_conf:
-            mock_init_conf.return_value = mock.MagicMock()
-
-            result = self.invoke_with_exceptions(paas.create, args,
-                                                 obj=GandiContextHelper(),
-                                                 input='ploki\nploki\n')
+        result = self.invoke_with_exceptions(paas.create, args,
+                                             obj=GandiContextHelper(),
+                                             input='ploki\nploki\n')
 
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
 
