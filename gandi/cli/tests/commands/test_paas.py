@@ -190,6 +190,45 @@ git clone ssh+git://185290@git.dc2.gpaas.net/default.git cli.sexy
                              'user': 185290}}
         self.assertEqual(local_conf, expected)
 
+    def test_attach(self):
+        result = self.invoke_with_exceptions(paas.attach, ['paas_cozycloud'])
+
+        self.assertEqual(result.output, """\
+git remote add gandi ssh+git://185290@git.dc2.gpaas.net/default.git
+Adding remote `gandi` to your local git repository.
+Use `git push gandi master` to push your code to the instance.
+Then `$ gandi deploy` to build and deploy your application.
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+        local_conf = GandiModule._conffiles['local']
+        expected = {'paas': {'access': '185290@git.dc2.gpaas.net',
+                             'deploy_git_host': 'default.git',
+                             'name': 'paas_cozycloud',
+                             'user': 185290}}
+        self.assertEqual(local_conf, expected)
+
+    def test_attach_remote(self):
+        args = ['paas_cozycloud', '--remote', 'production']
+        result = self.invoke_with_exceptions(paas.attach, args)
+
+        self.assertEqual(result.output, """\
+git remote add production ssh+git://185290@git.dc2.gpaas.net/default.git
+Adding remote `production` to your local git repository.
+Use `git push production master` to push your code to the instance.
+Then `$ gandi deploy` to build and deploy your application.
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+        local_conf = GandiModule._conffiles['local']
+        expected = {'paas': {'access': '185290@git.dc2.gpaas.net',
+                             'deploy_git_host': 'default.git',
+                             'name': 'paas_cozycloud',
+                             'user': 185290}}
+        self.assertEqual(local_conf, expected)
+
     def test_deploy(self):
         result = self.invoke_with_exceptions(paas.deploy, [])
 
