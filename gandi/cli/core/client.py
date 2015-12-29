@@ -88,8 +88,8 @@ class JsonClient(object):
 
     """ Class wrapper for JSON calls. """
 
-    @classmethod
-    def request(cls, url, data=None):
+    @staticmethod
+    def request(url, data=None):
         """ Make a json call to remote API. """
         user_agent = 'gandi.cli/%s' % __version__
 

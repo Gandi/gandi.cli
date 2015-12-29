@@ -38,8 +38,8 @@ class Paas(GandiModule, SshkeyHelper):
         """Display information about a PaaS instance."""
         return cls.call('paas.info', cls.usable_id(id))
 
-    @classmethod
-    def quota(cls, id):
+    @staticmethod
+    def quota(id):
         """return disk quota used/free"""
         sampler = {'unit': 'minutes', 'value': 1, 'function': 'avg'}
         query = 'vfs.df.bytes.all'
@@ -56,8 +56,8 @@ class Paas(GandiModule, SshkeyHelper):
                     break
         return df
 
-    @classmethod
-    def cache(cls, id):
+    @staticmethod
+    def cache(id):
         """return the number of query cache for the last 24H"""
         sampler = {'unit': 'days', 'value': 1, 'function': 'sum'}
         query = 'webacc.requests.cache.all'

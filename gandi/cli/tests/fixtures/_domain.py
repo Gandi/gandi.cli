@@ -70,8 +70,6 @@ def available(domains):
     for domain in domains:
         if 'unavailable' in domain:
             ret[domain] = 'unavailable'
-        elif 'pending' in domain:
-            ret[domain] = 'pending'
         else:
             ret[domain] = 'available'
 

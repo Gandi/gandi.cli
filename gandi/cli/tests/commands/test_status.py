@@ -9,7 +9,8 @@ from .base import CommandTestCase
 
 class StatusTestCase(CommandTestCase):
 
-    def _mock_http_request_base(self, status='SUNNY'):
+    @staticmethod
+    def _mock_http_request_base(status='SUNNY'):
 
         response = """{
         "fields": {"status": {"value": [
@@ -119,7 +120,8 @@ class StatusTestCase(CommandTestCase):
                                body=response,
                                status=200)
 
-    def _mock_http_request_incident_no_service(self):
+    @staticmethod
+    def _mock_http_request_incident_no_service():
 
         response = """
         [{"category": "Incident",
