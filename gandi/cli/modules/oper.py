@@ -18,11 +18,6 @@ class Oper(GandiModule):
         return cls.call('operation.list', options)
 
     @classmethod
-    def count(cls, options):
-        """Count operation."""
-        return cls.call('operation.count', options)
-
-    @classmethod
     def info(cls, id):
         """Display information about an operation."""
         return cls.call('operation.info', id)
