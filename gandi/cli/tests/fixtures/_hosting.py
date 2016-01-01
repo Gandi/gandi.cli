@@ -1051,10 +1051,13 @@ def ip_update(ip_id, options):
 def ssh_list(options):
     ret = [{'fingerprint': 'b3:11:67:10:2e:1b:a5:66:ed:16:24:98:3e:2e:ed:f5',
             'id': 134,
-            'name': 'default'},
+            'name': 'default',
+            'value': 'val'},
            {'fingerprint': '09:11:21:e3:90:3c:7d:d5:06:d9:6f:f9:36:e1:99:a6',
             'id': 141,
-            'name': 'mysecretkey'}]
+            'name': 'mysecretkey',
+            'value': 'val2'
+            }]
 
     options.pop('items_per_page', None)
 
@@ -1062,6 +1065,26 @@ def ssh_list(options):
         ret = [vm for vm in ret if vm[fkey] == options[fkey]]
 
     return ret
+
+
+def ssh_info(ssh_id):
+
+    sshs = ssh_list({})
+    sshs = dict([(ssh['id'], ssh) for ssh in sshs])
+    return sshs[ssh_id]
+
+
+def ssh_delete(ssh_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def ssh_create(options):
+
+    if 'return-none' in options.get('name'):
+        return None
+
+    return {'id': 200, 'name': options.get('name'),
+            'value': options.get('value'), 'fingerprint': 'bb01'}
 
 
 def vlan_info(options):
