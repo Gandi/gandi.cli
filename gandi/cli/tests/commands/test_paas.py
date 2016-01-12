@@ -178,7 +178,9 @@ Error: Missing argument "name".
             result = self.invoke_with_exceptions(paas.clone, ['cli.sexy'])
 
         self.assertEqual(result.output, """\
-git clone ssh+git://185290@git.dc2.gpaas.net/default.git cli.sexy
+git clone ssh+git://185290@git.dc2.gpaas.net/default.git cli.sexy --origin gandi
+Use `git push gandi master` to push your code to the instance.
+Then `$ gandi deploy` to build and deploy your application.
 """)
 
         self.assertEqual(result.exit_code, 0)
@@ -199,7 +201,9 @@ git clone ssh+git://185290@git.dc2.gpaas.net/default.git cli.sexy
             result = self.invoke_with_exceptions(paas.clone, args)
 
         self.assertEqual(result.output, """\
-git clone ssh+git://185290@git.dc2.gpaas.net/default.git project
+git clone ssh+git://185290@git.dc2.gpaas.net/default.git project --origin gandi
+Use `git push gandi master` to push your code to the instance.
+Then `$ gandi deploy` to build and deploy your application.
 """)
 
         self.assertEqual(result.exit_code, 0)
@@ -220,7 +224,10 @@ git clone ssh+git://185290@git.dc2.gpaas.net/default.git project
             result = self.invoke_with_exceptions(paas.clone, args)
 
         self.assertEqual(result.output, """\
-git clone ssh+git://185290@git.dc2.gpaas.net/cli.sexy.git cli.sexy
+git clone ssh+git://185290@git.dc2.gpaas.net/cli.sexy.git cli.sexy"""
+""" --origin gandi
+Use `git push gandi master` to push your code to the instance.
+Then `$ gandi deploy` to build and deploy your application.
 """)
 
         self.assertEqual(result.exit_code, 0)
@@ -237,7 +244,7 @@ git clone ssh+git://185290@git.dc2.gpaas.net/cli.sexy.git cli.sexy
 
         self.assertEqual(result.output, """\
 git remote add gandi ssh+git://185290@git.dc2.gpaas.net/default.git
-Adding remote `gandi` to your local git repository.
+Added remote `gandi` to your local git repository.
 Use `git push gandi master` to push your code to the instance.
 Then `$ gandi deploy` to build and deploy your application.
 """)
@@ -257,7 +264,7 @@ Then `$ gandi deploy` to build and deploy your application.
 
         self.assertEqual(result.output, """\
 git remote add production ssh+git://185290@git.dc2.gpaas.net/default.git
-Adding remote `production` to your local git repository.
+Added remote `production` to your local git repository.
 Use `git push production master` to push your code to the instance.
 Then `$ gandi deploy` to build and deploy your application.
 """)

@@ -87,26 +87,26 @@ def info(gandi, resource, stat):
 
 
 @cli.command()
+@click.option('--origin', default='gandi', help="Set the origin remote's name")
 @click.option('--directory', help='Specify the destination directory')
 @click.option('--vhost', required=False, default='default')
 @click.argument('name', required=True)
 @pass_gandi
-def clone(gandi, name, vhost, directory):
+def clone(gandi, name, vhost, directory, origin):
     """Clone a remote vhost in a local git repository."""
     if vhost != 'default':
         directory = vhost
     else:
         directory = name if not directory else directory
 
-    return gandi.paas.clone(name, vhost, directory)
+    return gandi.paas.clone(name, vhost, directory, origin)
 
 
 @cli.command()
 @click.option('--vhost', default='default',
               help="Add a remote for a given instance's vhost to the local "
               "git repository")
-@click.option('--remote', default='gandi',
-              help="Specify the remote's name")
+@click.option('--remote', default='gandi', help="Specify the remote's name")
 @click.argument('name', required=True)
 @pass_gandi
 def attach(gandi, name, vhost, remote):

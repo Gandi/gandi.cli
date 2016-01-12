@@ -32,16 +32,24 @@ class Paas(GandiModule, SshkeyHelper):
         return cls.safe_call('paas.type.list', options)
 
     @classmethod
-    def clone(cls, name, vhost, directory):
+    def clone(cls, name, vhost, directory, origin):
         """Clone a PaaS instance's vhost into a local git repository."""
         paas_info = cls.info(name)
 
         paas_access = '%s@%s' % (paas_info['user'], paas_info['git_server'])
         remote_url = 'ssh+git://%s/%s.git' % (paas_access, vhost)
 
-        init_git = cls.execute('git clone %s %s'
-                               % (remote_url, directory))
+        command = 'git clone %s %s --origin %s' \
+                  % (remote_url, directory, origin)
+
+        init_git = cls.execute(command)
         if init_git:
+            cls.echo('Use `git push %s master` to push your code to the '
+                     'instance.' % (origin))
+            cls.echo('Then `$ gandi deploy` to build and deploy your '
+                     'application.')
+
+
             return cls.save_config(paas_info, paas_access, vhost, directory)
 
     @classmethod
