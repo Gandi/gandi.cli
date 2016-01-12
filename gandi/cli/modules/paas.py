@@ -1,6 +1,7 @@
 """ PaaS commands module. """
 
 import os
+import re
 
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.metric import Metric
@@ -50,8 +51,6 @@ class Paas(GandiModule, SshkeyHelper):
                      'application.')
 
 
-            return cls.save_config(paas_info, paas_access, vhost, directory)
-
     @classmethod
     def attach(cls, name, vhost, remote_name):
         """Attach an instance's vhost to a remote from the local repository."""
@@ -66,41 +65,34 @@ class Paas(GandiModule, SshkeyHelper):
         ret = cls.execute('git remote add %s %s' % (remote_name, remote_url,))
 
         if ret:
-            cls.echo('Adding remote `%s` to your local git repository.'
+            cls.echo('Added remote `%s` to your local git repository.'
                      % (remote_name))
             cls.echo('Use `git push %s master` to push your code to the '
                      'instance.' % (remote_name))
             cls.echo('Then `$ gandi deploy` to build and deploy your '
                      'application.')
 
-            return cls.save_config(paas_info, paas_access, vhost,)
-
     @classmethod
     def deploy(cls):
-        paas_access = cls.get('paas.access')
-        deploy_git_host = cls.get('paas.deploy_git_host')
+        """Deploy a PaaS instance."""
+        get_remote_url = 'git config --get ' \
+                         'remote.$(git config --get branch.master.remote).url'
 
-        if not paas_access:
-            cls.error("Deploy requires a local configuration file.")
-            return
+        remote_url = cls.exec_output(get_remote_url).replace('\n', '')
 
-        cls.execute("ssh %s 'deploy %s'" % (paas_access, deploy_git_host,))
+        if not remote_url or not re.search('gpaas.net|gandi.net', remote_url):
+            cls.error('%s is not a valid Simple Hosting git remote'
+                     % (remote_url))
 
-    @classmethod
-    def save_config(cls, paas_info, paas_access, vhost, directory=None):
-        """Save paas configuration in local directory."""
+        remote_url_no_protocol = remote_url.split('://')[1]
+        splitted_url = remote_url_no_protocol.split('/')
 
-        if directory:
-            current_path = os.getcwd()
-            os.chdir(directory)
+        paas_access = splitted_url[0]
+        deploy_git_host = splitted_url[1]
 
-        cls.configure(False, 'paas.user', paas_info['user'])
-        cls.configure(False, 'paas.name', paas_info['name'])
-        cls.configure(False, 'paas.deploy_git_host', '%s.git' % vhost)
-        cls.configure(False, 'paas.access', paas_access)
+        command = "ssh %s 'deploy %s'" % (paas_access, deploy_git_host)
 
-        if directory:
-            os.chdir(current_path)
+        cls.execute(command)
 
     @classmethod
     def list(cls, options=None):
