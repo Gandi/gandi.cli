@@ -204,6 +204,16 @@ def output_datacenter(gandi, datacenter, justify=14):
     output_line(gandi, 'datacenter', datacenter['name'], justify)
 
 
+def output_cmdline(gandi, cmdline, justify=14):
+    args = []
+    for key in cmdline:
+        if isinstance(cmdline[key], bool):
+            args.append(key)
+        else:
+            args.append('%s=%s' % (key, cmdline[key]))
+    output_line(gandi, 'cmdline', ' '.join(args), justify)
+
+
 def output_disk(gandi, disk, datacenters, vms, profiles, output_keys,
                 justify=10):
     """ Helper to output a disk."""
@@ -211,6 +221,9 @@ def output_disk(gandi, disk, datacenters, vms, profiles, output_keys,
 
     if 'kernel' in output_keys and disk.get('kernel_version'):
         output_line(gandi, 'kernel', disk['kernel_version'], justify)
+
+    if 'cmdline' in output_keys and disk.get('kernel_cmdline'):
+        output_cmdline(gandi, disk.get('kernel_cmdline'), justify)
 
     if 'dc' in output_keys:
         dc_name = None
