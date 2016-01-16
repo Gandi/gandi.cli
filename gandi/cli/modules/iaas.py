@@ -42,7 +42,7 @@ class Iaas(GandiModule, SshkeyHelper):
     @classmethod
     def resource_list(cls):
         """ Get the possible list of resources (hostname, id). """
-        items = cls.list()
+        items = cls.list({'items_per_page': 500})
         ret = [vm['hostname'] for vm in items]
         ret.extend([str(vm['id']) for vm in items])
         return ret

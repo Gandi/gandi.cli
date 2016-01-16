@@ -199,7 +199,7 @@ class Paas(GandiModule, SshkeyHelper):
     @classmethod
     def resource_list(cls):
         """ Get the possible list of resources (name, id and vhosts). """
-        items = cls.list({})
+        items = cls.list({'items_per_page': 500})
         ret = [paas['name'] for paas in items]
         ret.extend([str(paas['id']) for paas in items])
         for paas in items:
@@ -271,7 +271,7 @@ class Paas(GandiModule, SshkeyHelper):
     @classmethod
     def from_hostname(cls, hostname):
         """Retrieve paas instance id associated to a host."""
-        result = cls.list({})
+        result = cls.list({'items_per_page': 500})
         paas_hosts = {}
         for host in result:
             paas_hosts[host['name']] = host['id']
@@ -282,5 +282,5 @@ class Paas(GandiModule, SshkeyHelper):
     def list_names(cls):
         """Retrieve paas id and names."""
         ret = dict([(item['id'], item['name'])
-                    for item in cls.list({})])
+                    for item in cls.list({'items_per_page': 500})])
         return ret

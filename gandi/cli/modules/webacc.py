@@ -282,7 +282,7 @@ class Webacc(GandiModule):
     @classmethod
     def from_name(cls, name):
         """Retrieve webacc id associated to a webacc name."""
-        result = cls.list({})
+        result = cls.list({'items_per_page': 500})
         webaccs = {}
         for webacc in result:
             webaccs[webacc['name']] = webacc['id']
@@ -291,7 +291,7 @@ class Webacc(GandiModule):
     @classmethod
     def from_ip(cls, ip):
         """Retrieve webacc id associated to a webacc ip"""
-        result = cls.list({})
+        result = cls.list({'items_per_page': 500})
         webaccs = {}
         for webacc in result:
             for server in webacc['servers']:
@@ -301,7 +301,7 @@ class Webacc(GandiModule):
     @classmethod
     def from_vhost(cls, vhost):
         """Retrieve webbacc id associated to a webacc vhost"""
-        result = cls.list({})
+        result = cls.list({'items_per_page': 500})
         webaccs = {}
         for webacc in result:
             for vhost in webacc['vhosts']:

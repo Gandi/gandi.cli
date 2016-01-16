@@ -55,7 +55,7 @@ class Ip(GandiModule):
     @classmethod
     def resource_list(cls):
         """ Get the possible list of resources (name, id). """
-        items = cls.list()
+        items = cls.list({'items_per_page': 500})
         ret = [str(ip['id']) for ip in items]
         ret.extend([ip['ip'] for ip in items])
         return ret
@@ -131,7 +131,7 @@ class Ip(GandiModule):
     def from_ip(cls, ip):
         """Retrieve ip id associated to an ip."""
         ips = dict([(ip_['ip'], ip_['id'])
-                    for ip_ in cls.list()])
+                    for ip_ in cls.list({'items_per_page': 500})])
         return ips.get(ip)
 
     @classmethod

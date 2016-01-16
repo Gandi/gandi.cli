@@ -103,7 +103,7 @@ class Certificate(GandiModule):
     @classmethod
     def get_latest_valid(cls, hosts):
         """ Retrieve valid certificates by fqdn. """
-        certs = cls.list({'status': 'valid'})
+        certs = cls.list({'status': 'valid', 'items_per_page': 500})
         possible = None
 
         if not isinstance(hosts, (tuple, list)):
@@ -122,7 +122,8 @@ class Certificate(GandiModule):
     def from_cn(cls, common_name):
         """ Retrieve a certificate by its common name. """
         result = [(cert['id'], [cert['cn']] + cert['altnames'])
-                  for cert in cls.list({'status': ['pending', 'valid']})]
+                  for cert in cls.list({'status': ['pending', 'valid'],
+                                        'items_per_page': 500})]
 
         ret = {}
         for id_, fqdns in result:
