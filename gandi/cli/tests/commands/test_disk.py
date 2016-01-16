@@ -358,6 +358,18 @@ Updating your disk.
         self.assertEqual(self.api_calls['hosting.disk.update'][0][1],
                          {'size': 5120})
 
+    def test_update_size_prefix(self):
+        args = ['data', '--size', '+3G']
+        result = self.invoke_with_exceptions(disk.update, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Updating your disk.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(self.api_calls['hosting.disk.update'][0][1],
+                         {'size': 6144})
+
     def test_update_background(self):
         args = ['data', '--name', 'data2', '--bg']
         result = self.invoke_with_exceptions(disk.update, args)
