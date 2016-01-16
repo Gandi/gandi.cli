@@ -347,17 +347,22 @@ class SizeParamType(click.ParamType):
     suffixes = {'M': 0,
                 'G': 1,
                 'T': 2}
+    prefixes = ['+']
 
     def convert(self, value, param, ctx):
+        prefix = ''
         suffix = ''
         for i, c in enumerate(value):
             if not c.isdigit():
+                if c in self.prefixes:
+                    prefix = c
+                    continue
                 suffix = value[i:]
                 value = value[:i]
                 break
         try:
             mul = self.suffixes[suffix] if suffix else 0
-            return int(value) * (1 << (mul * 10))
+            return prefix, int(value) * (1 << (mul * 10))
         except ValueError:
             self.fail("%r is not an integer" % (value))
         except KeyError:
