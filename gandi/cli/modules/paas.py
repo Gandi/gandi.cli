@@ -203,7 +203,7 @@ class Paas(GandiModule, SshkeyHelper):
         cls.display_progress(result)
 
     @classmethod
-    def create(cls, name, size, type, quantity, duration, datacenter, vhost,
+    def create(cls, name, size, type, quantity, duration, datacenter, vhosts,
                password, snapshot_profile, background, sshkey):
         """Create a new PaaS instance."""
         if not background and not cls.intty():
@@ -239,9 +239,9 @@ class Paas(GandiModule, SshkeyHelper):
             cls.echo('Your PaaS instance %s has been created.' % name)
 
 
-        if vhost:
+        if vhosts:
             paas_info = cls.info(name)
-            Vhost.create(paas_info, vhost, True, background)
+            Vhost.create(paas_info, vhosts, True, background)
 
         return result
 

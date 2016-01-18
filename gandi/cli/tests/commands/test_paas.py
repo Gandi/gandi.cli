@@ -342,7 +342,7 @@ Your PaaS instance 123456 has been created.""")
 
     def test_create_name_vhost(self):
         self.maxDiff = None
-        args = ['--name', '123456', '--vhost', 'ploki.fr', '--ssl']
+        args = ['--name', '123456', '--vhosts', 'ploki.fr', '--ssl']
         with mock.patch('gandi.cli.modules.vhost.os.chdir',
                         create=True) as mock_chdir:
             mock_chdir.return_value = mock.MagicMock()
@@ -369,7 +369,7 @@ Your vhost ploki.fr has been created.""")
 
     def test_create_name_vhost_ssl(self):
         self.maxDiff = None
-        args = ['--name', '123456', '--vhost', 'inter.net', '--ssl']
+        args = ['--name', '123456', '--vhosts', 'inter.net', '--ssl']
         with mock.patch('gandi.cli.modules.vhost.os.chdir',
                         create=True) as mock_chdir:
             mock_chdir.return_value = mock.MagicMock()
