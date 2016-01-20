@@ -37,6 +37,10 @@ class Paas(GandiModule, SshkeyHelper):
         """Clone a PaaS instance's vhost into a local git repository."""
         paas_info = cls.info(name)
 
+        if 'php' in paas_info['type'] and not vhost:
+            cls.error('PHP instances require indicating the VHOST to clone '
+                      'with --vhost <vhost>')
+
         paas_access = '%s@%s' % (paas_info['user'], paas_info['git_server'])
         remote_url = 'ssh+git://%s/%s.git' % (paas_access, vhost)
 
