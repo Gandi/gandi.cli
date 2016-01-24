@@ -708,8 +708,35 @@ def metric_query(query):
          'resource_id': 152967,
          'resource_type': 'vm'}]
 
+    vfs_df_bytes_all = [
+        {'metric': 'vfs.df.bytes',
+         'points': [{'timestamp': '2015-11-18T07:19:00',
+                     'value': 10679488512.0},
+                    {'timestamp': '2015-11-18T07:20:00'}],
+         'resource_id': 163744,
+         'resource_type': 'paas',
+         'size': ['free']},
+        {'metric': 'vfs.df.bytes',
+         'points': [{'timestamp': '2015-11-18T07:19:00',
+                     'value': 57929728.0},
+                    {'timestamp': '2015-11-18T07:20:00'}],
+         'resource_id': 163744,
+         'resource_type': 'paas',
+         'size': ['used']}]
+
+    webacc_requests_cache_all = [
+        {'cache': ['miss'],
+         'metric': 'webacc.requests',
+         'points': [{'timestamp': '2015-11-17T00:00:00', 'value': 2.0},
+                    {'timestamp': '2015-11-18T00:00:00'}],
+         'resource_id': 163744,
+         'resource_type': 'paas',
+         'status': ['2xx']}]
+
     metrics = {'vif.bytes.all': vif_bytes_all,
-               'vbd.bytes.all': vbd_bytes_all}
+               'vbd.bytes.all': vbd_bytes_all,
+               'vfs.df.bytes.all': vfs_df_bytes_all,
+               'webacc.requests.cache.all': webacc_requests_cache_all}
 
     metrics = [item for item in metrics[query['query']]
                if item['resource_id'] == query['resource_id'][0]]

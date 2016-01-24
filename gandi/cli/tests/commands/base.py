@@ -1,3 +1,4 @@
+import os
 from click.testing import CliRunner
 
 from gandi.cli.core.base import GandiModule
@@ -42,3 +43,19 @@ class CommandTestCase(unittest.TestCase):
                                **kwargs):
         return self.runner.invoke(cli, args, catch_exceptions=catch_exceptions,
                                   **kwargs)
+
+    def isolated_invoke_with_exceptions(self, cli, args,
+                                        catch_exceptions=False,
+                                        temp_name=None,
+                                        temp_content=None,
+                                        **kwargs):
+
+        with self.runner.isolated_filesystem():
+            os.mkdir('sandbox')
+
+            with open('sandbox/%s' % (temp_name or 'example.txt'), 'w') as f:
+                f.write(temp_content)
+
+            return self.runner.invoke(cli, args,
+                                      catch_exceptions=catch_exceptions,
+                                      **kwargs)

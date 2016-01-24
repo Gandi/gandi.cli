@@ -98,6 +98,8 @@ def clone(gandi, vhost):
         gandi.vhost.init_vhost(vhost, paas=paas_info)
     else:
         paas_access = gandi.get('paas.access')
+        if not vhost:
+            vhost = gandi.get('paas.deploy_git_host').replace('.git', '')
         gandi.execute('git clone ssh+git://%s/%s.git' % (paas_access, vhost))
 
 
@@ -163,7 +165,7 @@ def delete(gandi, background, force, resource):
               help='Name of the PaaS instance, will be generated if not '
                    'provided.')
 @option('--size', default='s',
-        type=click.Choice(['s', 'm', 'x', 'xl', 'xxl']),
+        type=click.Choice(['s', 'm', 'l', 'xl', 'xxl']),
         help='Size of the PaaS instance.')
 @option('--type', default='pythonpgsql',
         type=PAAS_TYPE,
@@ -213,7 +215,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
                                 confirmation_prompt=True)
 
     if not name:
-        name = randomstring('vm')
+        name = randomstring('paas')
 
     if vhosts and not gandi.hostedcert.activate_ssl(vhosts,
                                                     ssl,

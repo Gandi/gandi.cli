@@ -71,6 +71,55 @@ class GandiCLI(click.Group):
 
         ])
 
+    def resolve_command(self, ctx, args):
+        cmd_name = args[0]
+
+        sub_cmd = False
+        if len(args) > 1:
+            # XXX: dirty hack to handle namespaces by merging the first 2 args
+            # i.e : paas + list = 'paas list'
+            new_cmd_name = ' '.join(args[0:2])
+            cmd = click.Group.get_command(self, ctx, new_cmd_name)
+            if cmd is not None:
+                sub_cmd = True
+                cmd_name = new_cmd_name
+
+        cmd = click.Group.get_command(self, ctx, cmd_name)
+        if cmd is not None:
+            if sub_cmd:
+                del args[1]
+            return cmd_name, cmd, args[1:]
+
+        matches = [x for x in self.list_commands(ctx)
+                   if x.startswith(cmd_name)]
+        if not matches:
+            return None
+        elif len(matches) == 1:
+            if sub_cmd:
+                del args[1]
+            cmd = click.Group.get_command(self, ctx, matches[0])
+            return cmd_name, cmd, args[1:]
+
+        formatter = ctx.make_formatter()
+        rows = []
+        for matched in sorted(matches):
+            cmd = click.Group.get_command(self, ctx, matched)
+            # What is this, the tool lied about a command.  Ignore it
+            if cmd is None:
+                continue
+
+            help = cmd.short_help or ''
+            rows.append((matched, help))
+
+        if rows:
+            formatter.write_dl(rows)
+
+        print(formatter.getvalue().rstrip('\n'))
+        ctx.exit()
+
+        if click.parser.split_opt(cmd_name)[0]:
+            click.Group.parse_args(ctx, ctx.args)
+
     def get_command(self, ctx, cmd_name):
         """ Retrieve command from internal list.
 

@@ -351,8 +351,12 @@ class Certificate(GandiModule):
         fhandle = NamedTemporaryFile()
         fhandle.write(csr.encode('latin1'))
         fhandle.flush()
-        common_name = cls.exec_output('openssl req -noout -subject -in %s' %
-                                      fhandle.name).split('=')[-1].strip()
+        output = cls.exec_output('openssl req -noout -subject -in %s' %
+                                 fhandle.name)
+        if not output:
+            return
+
+        common_name = output.split('=')[-1].strip()
         fhandle.close()
         return common_name
 

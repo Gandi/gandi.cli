@@ -174,8 +174,8 @@ def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=11):
         total = cache['hit'] + cache['miss'] + cache['not'] + cache['pass']
         if total:
             output_line(gandi, 'cache', None, justify)
-            for key, value in cache.items():
-                str_value = '%.1f%%' % (value * 100 / total)
+            for key in sorted(cache):
+                str_value = '%.1f%%' % (cache[key] * 100 / total)
                 output_sub_line(gandi, key, str_value, 5)
 
 

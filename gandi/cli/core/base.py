@@ -93,6 +93,12 @@ class GandiModule(GandiConfig):
         except APICallFailed as err:
             if kwargs.get('safe'):
                 return []
+            if err.code == 530040:
+                cls.echo("Error: It appears you haven't purchased any credits "
+                         "yet.\n"
+                         "Please visit https://www.gandi.net/credit/buy to "
+                         "learn more and buy credits.")
+                sys.exit(1)
             if err.code == 510150:
                 cls.echo("Invalid API key, please use 'gandi setup' command.")
                 sys.exit(1)

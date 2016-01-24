@@ -4,6 +4,7 @@ import math
 import os
 import socket
 import time
+import errno
 
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import randomstring
@@ -369,6 +370,9 @@ class Iaas(GandiModule, SshkeyHelper):
                 sd.connect((ip_addr, 22))
                 sd.recv(1024)
                 return
+            except socket.error as err:
+                if err.errno == errno.ECONNREFUSED:
+                    time.sleep(1)
             except Exception:
                 pass
         cls.error('VM did not spin up')

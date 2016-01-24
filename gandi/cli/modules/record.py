@@ -87,11 +87,11 @@ class Record(GandiModule):
 
         new_record = new_record.split(' ', 4)
         params_newrecord = {'name': new_record[0], 'ttl': int(new_record[1]),
-                            'type': new_record[3], 'value': new_record[4]}
+                            'type': new_record[2], 'value': new_record[3]}
 
         old_record = old_record.split(' ', 4)
         params = {'name': old_record[0], 'ttl': int(old_record[1]),
-                  'type': old_record[3], 'value': old_record[4]}
+                  'type': old_record[2], 'value': old_record[3]}
         record = cls.call('domain.zone.record.list', zone_id, new_version_id,
                           params)
 

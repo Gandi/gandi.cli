@@ -241,6 +241,15 @@ $ gandi certificate export "domain.tld"
         self.assertEqual(result.output, wanted)
         self.assertEqual(result.exit_code, 0)
 
+    def test_create_bad_csr(self):
+        args = ['--csr', 'badpath.csr', '--pk', 'badpath.key',
+                '--package', 'cert_std_3_0_0', '--dcv-method', 'email']
+        result = self.invoke_with_exceptions(certificate.create, args)
+        wanted = """Unable to parse provided csr: badpath.csr
+"""
+        self.assertEqual(result.output, wanted)
+        self.assertEqual(result.exit_code, 0)
+
     def test_create_no_package_and_option(self):
         csr = '''-----BEGIN CERTIFICATE REQUEST-----
 MIICWjCCAUICAQAwFTETMBEGA1UEAwwKZG9tYWluLnRsZDCCASIwDQYJKoZIhvcN
@@ -342,7 +351,11 @@ v0L9Vc0443fop+UbFCabF0NWM6rJ31Nlv7s3mQIA
                         create=True) as mock_open:
             mock_open.return_value = mock.MagicMock()
 
-            result = self.invoke_with_exceptions(certificate.export, args)
+            with mock.patch('gandi.cli.commands.certificate.requests.get',
+                            create=True) as mock_get:
+                mock_get.return_value = mock.MagicMock()
+
+                result = self.invoke_with_exceptions(certificate.export, args)
 
         wanted = """wrote lol.cat.crt
 wrote lol.cat.inter.crt

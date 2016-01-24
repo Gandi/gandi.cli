@@ -323,6 +323,9 @@ def create(gandi, csr, private_key, common_name, country, state, city,
 
     if not common_name:
         common_name = gandi.certificate.get_common_name(csr)
+        if not common_name:
+            gandi.echo('Unable to parse provided csr: %s' % csr)
+            return
 
     if '*' in common_name and altnames and len(altnames) > 1:
         gandi.echo("You can't have a wildcard with multidomain certificate.")

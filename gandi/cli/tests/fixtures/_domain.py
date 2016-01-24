@@ -7,6 +7,8 @@ except ImportError:
     # python2
     from xmlrpclib import DateTime
 
+type_list = list
+
 
 def list(options):
     return [{'authinfo': 'abcdef0001',
@@ -56,7 +58,7 @@ def list(options):
              'status': [],
              'tags': [],
              'tld': 'sexy',
-             'zone_id': 431190141}]
+             'zone_id': None}]
 
 
 def info(id):
@@ -117,3 +119,99 @@ def mailbox_alias_set(domain, login, aliases):
 
 def mailbox_purge(domain, login):
     return {'id': 400, 'step': 'WAIT'}
+
+
+def zone_record_list(zone_id, version, options=None):
+    ret = [{'id': 337085079,
+            'name': '*',
+            'ttl': 10800,
+            'type': 'A',
+            'value': '73.246.104.110'},
+           {'id': 337085078,
+            'name': '@',
+            'ttl': 10800,
+            'type': 'A',
+            'value': '73.246.104.110'},
+           {'id': 337085081,
+            'name': 'much',
+            'ttl': 10800,
+            'type': 'A',
+            'value': '192.243.24.132'},
+           {'id': 337085072,
+            'name': 'blog',
+            'ttl': 10800,
+            'type': 'CNAME',
+            'value': 'blogs.vip.gandi.net.'},
+           {'id': 337085082,
+            'name': 'cloud',
+            'ttl': 10800,
+            'type': 'CNAME',
+            'value': 'gpaas6.dc0.gandi.net.'},
+           {'id': 337085075,
+            'name': 'imap',
+            'ttl': 10800,
+            'type': 'CNAME',
+            'value': 'access.mail.gandi.net.'},
+           {'id': 337085071,
+            'name': 'pop',
+            'ttl': 10800,
+            'type': 'CNAME',
+            'value': 'access.mail.gandi.net.'},
+           {'id': 337085074,
+            'name': 'smtp',
+            'ttl': 10800,
+            'type': 'CNAME',
+            'value': 'relay.mail.gandi.net.'},
+           {'id': 337085073,
+            'name': 'webmail',
+            'ttl': 10800,
+            'type': 'CNAME',
+            'value': 'agent.mail.gandi.net.'},
+           {'id': 337085077,
+            'name': '@',
+            'ttl': 10800,
+            'type': 'MX',
+            'value': '50 fb.mail.gandi.net.'},
+           {'id': 337085076,
+            'name': '@',
+            'ttl': 10800,
+            'type': 'MX',
+            'value': '10 spool.mail.gandi.net.'}]
+
+    options = options or {}
+    options.pop('items_per_page', None)
+
+    def match(zone, options):
+        for fkey in options:
+            if zone[fkey] != options[fkey]:
+                return
+
+        return zone
+
+    ret = [zone for zone in ret if match(zone, options)]
+
+    return ret
+
+
+def zone_version_new(zone_id):
+    return 242424
+
+
+def zone_record_add(zone_id, version, data):
+    return
+
+
+def zone_version_set(zone_id, version):
+    return
+
+
+def zone_record_delete(zone_id, version, data):
+    return
+
+
+def zone_record_update(zone_id, version, opts, data):
+    return
+
+
+def zone_record_set(zone_id, version, data):
+    return

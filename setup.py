@@ -53,6 +53,7 @@ setup(name='gandi.cli',
     zip_safe=False,
     install_requires=requires,
     tests_require=tests_require,
+    test_suite='nose.collector',
     extras_require=extras_require,
     entry_points={
         'console_scripts': [

@@ -31,6 +31,7 @@ def list(gandi, domain, zone_id, output, format):
     if not zone_id:
         gandi.echo('No zone records found, domain %s doesn\'t seems to be '
                    'managed at Gandi.' % domain)
+        return
 
     records = gandi.record.list(zone_id)
 
@@ -41,7 +42,7 @@ def list(gandi, domain, zone_id, output, format):
             output_generic(gandi, rec, output_keys, justify=12)
     elif output:
         zone_filename = domain + "_" + str(zone_id)
-        if os.path.exists(zone_filename):
+        if os.path.isfile(zone_filename):
             open(zone_filename, 'w').close()
         for record in records:
             format_record = ('%s %s IN %s %s' %
@@ -161,6 +162,7 @@ def update(gandi, domain, zone_id, file, record, new_record):
     if not zone_id:
         gandi.echo('No zone records found, domain %s doesn\'t seems to be'
                    ' managed at Gandi.' % domain)
+        return
     if file:
         records = file.read()
         result = gandi.record.zone_update(zone_id, records)
