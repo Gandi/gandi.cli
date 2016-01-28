@@ -293,7 +293,7 @@ Details:
 
 * ``gandi sshkey delete resource`` remove a SSH key. Resource can be a name or the specific id.
 
-* ``gandi sshkey info resource`` show details of an SSH key: name and fingeprint. Possible option are ``--id`` which also show the id of theSSH key and ``--value`` which show the content of the SSH key.
+* ``gandi sshkey info resource`` show details of an SSH key: name and fingeprint in MD5 hash. Possible option are ``--id`` which also show the id of theSSH key and ``--value`` which show the content of the SSH key.
 
 * ``gandi sshkey list`` show all the SSH keys registered. Possible option are ``--id`` which add numeric identificator and ``--limit INTEGER`` which show only a subset of the SSH keys.
 
