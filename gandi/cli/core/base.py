@@ -217,6 +217,8 @@ class GandiModule(GandiConfig):
         if proc.returncode == 0:
             return stdout.decode(encoding)
 
+        return ''
+
     @classmethod
     def update_progress(cls, progress, starttime):
         """ Display an ascii progress bar while processing operation. """
