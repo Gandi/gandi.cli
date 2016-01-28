@@ -46,14 +46,17 @@ class CommandTestCase(unittest.TestCase):
 
     def isolated_invoke_with_exceptions(self, cli, args,
                                         catch_exceptions=False,
+                                        temp_dir=None,
                                         temp_name=None,
                                         temp_content=None,
                                         **kwargs):
 
+        temp_dir = temp_dir or 'sandbox'
+        temp_name = temp_name or 'example.txt'
         with self.runner.isolated_filesystem():
-            os.mkdir('sandbox')
+            os.mkdir(temp_dir)
 
-            with open('sandbox/%s' % (temp_name or 'example.txt'), 'w') as f:
+            with open('%s/%s' % (temp_dir, temp_name), 'w') as f:
                 f.write(temp_content)
 
             return self.runner.invoke(cli, args,
