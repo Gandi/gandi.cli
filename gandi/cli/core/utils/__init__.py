@@ -507,3 +507,9 @@ def output_mailbox(gandi, mailbox, output_keys, justify=16):
         output_line(gandi, 'responder active', responder_status, justify)
         output_line(gandi, 'responder text', mailbox['responder']['text'],
                     justify)
+
+
+def output_forward(gandi, domain, forward, justify=14):
+    """ Helper to output a mail forward information."""
+    for dest in forward['destinations']:
+        output_line(gandi, forward['source'], dest, justify)
