@@ -123,6 +123,27 @@ def mailbox_purge(domain, login):
     return {'id': 400, 'step': 'WAIT'}
 
 
+def forward_list(domain, options):
+    return [{'source': 'admin',
+             'destinations': ['admin@cli.sexy', 'grumpy@cat.lol']},
+            {'source': 'contact',
+             'destinations': ['contact@cli.sexy']}]
+
+
+def forward_create(domain, source, options):
+    return [{'source': source,
+             'destinations': options['destinations']}]
+
+
+def forward_update(domain, source, options):
+    return [{'source': source,
+             'destinations': options['destinations']}]
+
+
+def forward_delete(domain, source):
+    return True
+
+
 def zone_record_list(zone_id, version, options=None):
     ret = [{'id': 337085079,
             'name': '*',
