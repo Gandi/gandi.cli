@@ -90,17 +90,21 @@ class GandiCLI(click.Group):
                 del args[1]
             return cmd_name, cmd, args[1:]
 
+        formatter = ctx.make_formatter()
+
         matches = [x for x in self.list_commands(ctx)
                    if x.startswith(cmd_name)]
         if not matches:
-            return None
+            self.format_commands(ctx, formatter)
+            print(formatter.getvalue().rstrip('\n'))
+            ctx.exit()
+
         elif len(matches) == 1:
             if sub_cmd:
                 del args[1]
             cmd = click.Group.get_command(self, ctx, matches[0])
             return cmd_name, cmd, args[1:]
 
-        formatter = ctx.make_formatter()
         rows = []
         for matched in sorted(matches):
             cmd = click.Group.get_command(self, ctx, matched)
