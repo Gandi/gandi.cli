@@ -6,7 +6,7 @@ import re
 from ..compat import mock
 from .base import CommandTestCase
 from gandi.cli.commands import paas
-from gandi.cli.core.base import GandiModule, GandiContextHelper
+from gandi.cli.core.base import GandiContextHelper
 
 
 class PaasTestCase(CommandTestCase):
@@ -178,7 +178,8 @@ Error: Missing argument "name".
             result = self.invoke_with_exceptions(paas.clone, ['cli.sexy'])
 
         self.assertEqual(result.output, """\
-git clone ssh+git://185290@git.dc2.gpaas.net/default.git cli.sexy --origin gandi
+git clone ssh+git://185290@git.dc2.gpaas.net/default.git cli.sexy \
+--origin gandi
 Use `git push gandi master` to push your code to the instance.
 Then `$ gandi deploy` to build and deploy your application.
 """)
@@ -210,8 +211,8 @@ Then `$ gandi deploy` to build and deploy your application.
             result = self.invoke_with_exceptions(paas.clone, args)
 
         self.assertEqual(result.output, """\
-git clone ssh+git://185290@git.dc2.gpaas.net/cli.sexy.git cli.sexy"""
-""" --origin gandi
+git clone ssh+git://185290@git.dc2.gpaas.net/cli.sexy.git cli.sexy \
+--origin gandi
 Use `git push gandi master` to push your code to the instance.
 Then `$ gandi deploy` to build and deploy your application.
 """)
@@ -243,19 +244,72 @@ Then `$ gandi deploy` to build and deploy your application.
 
         self.assertEqual(result.exit_code, 0)
 
-#     def test_deploy(self):
-#         with mock.patch('gandi.cli.modules.vhost.os.chdir',
-#                         create=True) as mock_chdir:
-#             mock_chdir.return_value = mock.MagicMock()
-#         result = self.invoke_with_exceptions(paas.deploy, [])
+    def test_deploy_invalid_remote_empty(self):
+        args = []
 
-#         self.assertEqual(result.output, """\
-# Usage: deploy [OPTIONS]
+        git_content = """
+[blabla]
+dummy=dududududud
+"""
+        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
+                                                      temp_dir='.git',
+                                                      temp_name='config',
+                                                      temp_content=git_content)
 
-# Error: Deploy requires a local configuration file.
-# """)
+        self.assertEqual(result.output, """\
+Usage: deploy [OPTIONS]
 
-#         self.assertEqual(result.exit_code, 2)
+Error:  is not a valid Simple Hosting git remote
+""")
+
+        self.assertEqual(result.exit_code, 2)
+
+    def test_deploy_invalid_remote_content(self):
+        args = []
+
+        git_content = """
+[remote "origin"]
+        fetch = +refs/heads/*:refs/remotes/origin/*
+        url = https://github.com/Gandi/gandi.cli.git
+[branch "master"]
+        remote = origin
+        merge = refs/heads/master
+"""
+        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
+                                                      temp_dir='.git',
+                                                      temp_name='config',
+                                                      temp_content=git_content)
+
+        self.assertEqual(result.output, """\
+Usage: deploy [OPTIONS]
+
+Error: https://github.com/Gandi/gandi.cli.git \
+is not a valid Simple Hosting git remote
+""")
+
+        self.assertEqual(result.exit_code, 2)
+
+    def test_deploy(self):
+        args = []
+
+        git_content = """
+[remote "origin"]
+        fetch = +refs/heads/*:refs/remotes/origin/*
+        url = ssh+git://185290@git.dc2.gpaas.net/default.git
+[branch "master"]
+        remote = origin
+        merge = refs/heads/master
+"""
+        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
+                                                      temp_dir='.git',
+                                                      temp_name='config',
+                                                      temp_content=git_content)
+
+        self.assertEqual(result.output, """\
+ssh 185290@git.dc2.gpaas.net 'deploy default.git'
+""")
+
+        self.assertEqual(result.exit_code, 0)
 
     def test_delete_unknown(self):
         result = self.invoke_with_exceptions(paas.delete, ['unknown_paas'])
