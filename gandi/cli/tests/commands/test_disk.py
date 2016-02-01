@@ -176,7 +176,7 @@ size      : 3072
 type      : data
 id        : 4969249
 kernel    : 3.12-x86_64 (hvm)
-cmdline   : root=/dev/sda ro console=ttyS0 nosep
+cmdline   : root=/dev/sda ro nosep console=ttyS0
 datacenter: FR-SD2
 vm        : server01
 """)
@@ -200,7 +200,7 @@ size      : 3072
 type      : data
 id        : 4969249
 kernel    : 3.12-x86_64 (hvm)
-cmdline   : root=/dev/sda ro console=ttyS0 nosep
+cmdline   : root=/dev/sda ro nosep console=ttyS0
 datacenter: FR-SD2
 vm        : server01
 """)

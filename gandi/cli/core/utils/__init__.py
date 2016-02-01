@@ -206,7 +206,7 @@ def output_datacenter(gandi, datacenter, justify=14):
 
 def output_cmdline(gandi, cmdline, justify=14):
     args = []
-    for key in cmdline:
+    for key in sorted(cmdline, reverse=True):
         if isinstance(cmdline[key], bool):
             args.append(key)
         else:
