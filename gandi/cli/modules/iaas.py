@@ -241,6 +241,8 @@ class Iaas(GandiModule, SshkeyHelper):
                        'name': disk_name[:15]}
 
         if size:
+            if isinstance(size, tuple):
+                prefix, size = size
             disk_params['size'] = size
 
         sys_disk_id_ = int(Image.usable_id(image, datacenter_id_))

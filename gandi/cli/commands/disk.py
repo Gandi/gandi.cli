@@ -158,10 +158,12 @@ def attach(gandi, disk, vm, position, read_only, background, force):
               help='Kernel cmdline.')
 @click.option('--kernel', type=KERNEL, default=None, help='Kernel for disk.')
 @click.option('--name', type=click.STRING, default=None, help='Disk name.')
-@click.option('--size', default=None, metavar='SIZE[M|G|T]', type=SIZE,
+@click.option('--size', default=None, metavar='[+]SIZE[M|G|T]', type=SIZE,
               help=('Disk size. A size suffix (M for megabytes up to T for '
                     'terabytes) is optional, megabytes is the default if no '
-                    'suffix is present.'),
+                    'suffix is present. A prefix + is optionnal, if provided '
+                    'size value will be added to current disk size, default '
+                    'is to set directly new disk size.'),
               callback=disk_check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE_VM)
