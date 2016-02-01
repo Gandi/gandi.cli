@@ -89,6 +89,10 @@ Namespaces:
 *  domain renew            Renew a domain.
 *  domain info             Display information about a domain.
 *  domain list             List domains.
+*  forward create          Create a domain mail forward.
+*  forward delete          Delete a domain mail forward.
+*  forward list            List mail forwards for a domain.
+*  forward update          Update a domain mail forward.
 *  help                    Display help for a command.
 *  ip list                 List all ips.
 *  ip info                 Display information about an ip.
@@ -228,6 +232,14 @@ Details:
 * ``gandi domain info domain.tld`` show information about the specific domain ``domain.tld`` : owner, admin, billing and technical contacts, fully qualified domain name, nameservers, associated zone, associated tags and more.
 
 * ``gandi domain list`` show all the domains in the Gandi account. Possible option is ``--limit INTEGER`` which will show a subset of the list.
+
+* ``gandi forward create address@domain.tld`` create a new mail forward. Mandatory option is ``-d, --destination TEXT`` to define a forward destination for this domain mail, this option can be used multiple times.
+
+* ``gandi forward delete address@domain.tld`` delete mail forward ``address@domain.tld``. Possible option is ``--force`` (or ``-f``) to bypass the validation question; useful in non-interactive mode when scripting.
+
+* ``gandi forward list domain.tld`` show all existing mail forwards for specific domain ``domain.tld``. Possible option to filter the list: ``--limit INTEGER`` show only a limited amount of mail forwards.
+
+* ``gandi forward update address@domain.tld`` update mail forward ``address@domain.tld``. Possible options are ``-a, --dest-add TEXT`` to add a forward destination for this mail forward, can be used multiple times, ``-d, --dest-del TEXT`` to delete a forward destination for this mail forward, can be used multiple times.
 
 * ``gandi help command`` display help for command, if command is a namespace it will display list of available commands for this namespace.
 
