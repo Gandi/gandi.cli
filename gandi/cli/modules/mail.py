@@ -61,7 +61,8 @@ class Mail(GandiModule):
                     if alias in aliases:
                         aliases.remove(alias)
 
-            if len(current_aliases) != len(aliases):
+            if ((len(current_aliases) != len(aliases))
+                    or (current_aliases != aliases)):
                 cls.echo('Updating aliases.')
                 result = cls.set_alias(domain, login, aliases)
 
