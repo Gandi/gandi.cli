@@ -75,7 +75,6 @@ def info(gandi, resource, id):
 
 
 @cli.command()
-@click.option('--vhost', help='Vhost fqdn.', required=True)
 @click.option('--paas', required=True,
               help='PaaS instance on which to create it.')
 @click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
@@ -87,6 +86,7 @@ def info(gandi, resource, id):
               is_flag=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
+@click.argument('vhost', required=True)
 @pass_gandi
 def create(gandi, vhost, paas, ssl, private_key, alter_zone, poll_cert,
            background):
