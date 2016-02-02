@@ -245,15 +245,16 @@ def delete(gandi, background, force, resource):
 @click.option('--vlan', default=None, help='A vlan to use with this vm.')
 @click.option('--ip', default=None, help='An ip in the vlan for this vm.')
 @click.option('--script', default=None,
-              help='Local script to upload and run on the VM after creation.'
-                   'Instead of spawning an ssh session')
+              help='Local script to upload and run on the VM after creation.')
+@click.option('--script-args', default=None,
+              help='Local script argument line.')
 @click.option('--ssh', default=False, is_flag=True,
               help='Open a SSH session to the machine after creation '
                    '(default=False).')
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
            password, hostname, image, run, background, sshkey, size, vlan, ip,
-           script, ssh):
+           script, script_args, ssh):
     """Create a new virtual machine.
 
     you can specify a configuration entry named 'sshkey' containing
@@ -302,7 +303,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                                bandwidth, login, pwd, hostname,
                                image, run,
                                background,
-                               sshkey, size, vlan, ip, script, ssh)
+                               sshkey, size, vlan, ip, script, script_args, ssh)
     if background:
         gandi.echo('* IAAS backend is now creating your VM and its '
                    'associated resources in the background.')
