@@ -137,9 +137,6 @@ def create(gandi, name, datacenter, subnet, gateway, background):
     """ Create a new vlan """
     result = gandi.vlan.create(name, datacenter, subnet, gateway, background)
 
-    if not result:
-        return
-
     if background:
         gandi.pretty_echo(result)
 
@@ -199,8 +196,5 @@ def update(gandi, resource, name, gateway, create, bandwidth):
         params['gateway'] = ips[0]
 
     result = gandi.vlan.update(resource, params)
-
-    if not result:
-        return
 
     return result
