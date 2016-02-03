@@ -167,6 +167,18 @@ size      : 3072
 
         self.assertEqual(result.exit_code, 0)
 
+    def test_list_filter_datacenter(self):
+        args = ['--datacenter', 'LU-BI1']
+        result = self.invoke_with_exceptions(disk.list, args)
+
+        self.assertEqual(result.output, """\
+name      : sys_1426759833
+state     : created
+size      : 3072
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
     def test_info(self):
         result = self.invoke_with_exceptions(disk.info, ['sys_server01'])
 

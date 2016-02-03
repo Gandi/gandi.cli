@@ -18,11 +18,13 @@ from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE_VM,
 @click.option('--vm', help='Display vms.', is_flag=True)
 @click.option('--snapshotprofile', help='Display snapshot profile.',
               is_flag=True)
+@click.option('--datacenter', default=None, type=DATACENTER,
+              help='Filter results by datacenter.')
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @pass_gandi
 def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
-         limit):
+         datacenter, limit):
     """ List disks. """
     options = {
         'items_per_page': limit,
@@ -32,6 +34,8 @@ def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
         options.setdefault('type', []).append('data')
     if only_snapshot:
         options.setdefault('type', []).append('snapshot')
+    if datacenter:
+        options['datacenter_id'] = gandi.datacenter.usable_id(datacenter)
 
     output_keys = ['name', 'state', 'size']
     if type:
