@@ -267,12 +267,21 @@ class GandiModule(GandiConfig):
         while not updating_done:
             op_score = 0
             for oper in operations:
-                op_step = cls.call('operation.info', oper['id'])['step']
+                op_ret = cls.call('operation.info', oper['id'])
+                op_step = op_ret['step']
                 if op_step in cls._op_scores:
                     op_score += cls._op_scores[op_step]
                 else:
+                    cls.echo('')
                     msg = 'step %s unknown, exiting' % op_step
-                    cls.error(msg)
+                    if op_step == 'ERROR':
+                        msg = ('An error has occured during operation '
+                               'processing: %s' % op_ret['last_error'])
+                    elif op_step == 'SUPPORT':
+                        msg = ('An error has occured during operation '
+                               'processing, you must contact Gandi support.')
+                    cls.echo(msg)
+                    sys.exit(1)
 
             cls.update_progress(float(op_score) / count_operations,
                                 start_crea)
