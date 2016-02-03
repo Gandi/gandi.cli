@@ -188,7 +188,9 @@ def update(gandi, resource, name, gateway, create, bandwidth):
 
         if not ips and create:
             gandi.echo('Will create a new ip in this vlan for vm %s' % gateway)
-            oper = gandi.ip.attach(None, vm['id'], resource, bandwidth)
+            oper = gandi.ip.create('4', vm['datacenter_id'], bandwidth,
+                                   vm['hostname'], resource)
+
             iface_id = oper['iface_id']
             iface = gandi.iface.info(iface_id)
             ips = [ip['ip'] for ip in iface['ips'] if ip['version'] == 4]
