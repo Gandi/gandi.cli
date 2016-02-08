@@ -1,5 +1,5 @@
 Name: gandicli
-Version: 0.16
+Version: 0.17
 Release: 1%{?dist}
 Summary: Gandi CLI as a service
 Group: System Management
