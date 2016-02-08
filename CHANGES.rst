@@ -1,6 +1,44 @@
 Changelog
 =========
 
+0.17
+----
+
+* Gandi CLI now supports python3.5
+* Update 'gandi paas' namespace:
+  - Add new command 'gandi paas attach' to add an instance vhost's git
+    remote to local git repository.
+  - Update 'gandi deploy' command:
+    - don't need a local configuration file anymore
+    - need to be called on attached paas instance
+  - Update 'gandi paas clone' command:
+    - you can now specify which vhost and local directory to use
+  - Use correct prefix for name generation in create command
+* Convert 'gandi config' command to a namespace to allow configuration
+  display and edition
+* Fixes bug with 'gandi account' command which was broken sometimes
+* Fixes a bug with 'gandi vlan update' command when using --create flag
+* Fixes a bug with mail alias update when using same number of alias
+  add/del parameters.
+* Fixes a bug when using a resource name and having more than 100 items of
+  this resource type
+* Fixes size parameter choices for 'gandi paas create' command.
+* Fixes bug with 'gandi record update' command and argument parsing
+* Fixes bug with 'gandi record' commands:
+  - must always exit if wrong/missing input parameter.
+* Always display CLI full help message when requesting an unknown command
+* Be less aggressive when trying to connect via SSH during 'gandi vm create'
+* Better handling of no hosting credits error.
+* Add more unittests.
+* Fixes #108
+* Fixes #128
+* Fixes #140
+* Fixes #157
+* Fixes #161
+* Fixes #165
+* Fixes #170
+* Fixes #173
+
 0.16
 ----
 
