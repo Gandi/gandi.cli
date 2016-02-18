@@ -77,12 +77,16 @@ class Paas(GandiModule, SshkeyHelper):
                      'application.')
 
     @classmethod
-    def deploy(cls):
+    def deploy(cls, remote_name, branch):
         """Deploy a PaaS instance."""
-        get_remote_url = 'git config --get ' \
-                         'remote.$(git config --get branch.master.remote).url'
+        def get_remote_url(remote):
+          return 'git config --get remote.%s.url' % (remote)
 
-        remote_url = cls.exec_output(get_remote_url).replace('\n', '')
+        remote_url = cls.exec_output(get_remote_url(remote_name)).replace('\n', '')
+
+        if not remote_url or not re.search('gpaas.net|gandi.net', remote_url):
+            remote_name = '$(git config --get branch.%s.remote)' % branch
+            remote_url = cls.exec_output(get_remote_url(remote_name)).replace('\n', '')
 
         if not remote_url or not re.search('gpaas.net|gandi.net', remote_url):
             cls.error('%s is not a valid Simple Hosting git remote'
@@ -94,7 +98,7 @@ class Paas(GandiModule, SshkeyHelper):
         paas_access = splitted_url[0]
         deploy_git_host = splitted_url[1]
 
-        command = "ssh %s 'deploy %s'" % (paas_access, deploy_git_host)
+        command = "ssh %s 'deploy %s %s'" % (paas_access, deploy_git_host, branch)
 
         cls.execute(command)
 
