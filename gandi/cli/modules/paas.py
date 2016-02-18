@@ -54,7 +54,6 @@ class Paas(GandiModule, SshkeyHelper):
             cls.echo('Then `$ gandi deploy` to build and deploy your '
                      'application.')
 
-
     @classmethod
     def attach(cls, name, vhost, remote_name):
         """Attach an instance's vhost to a remote from the local repository."""
@@ -62,7 +61,8 @@ class Paas(GandiModule, SshkeyHelper):
 
         if not paas_access:
             paas_info = cls.info(name)
-            paas_access = '%s@%s' % (paas_info['user'], paas_info['git_server'])
+            paas_access = '%s@%s' \
+                          % (paas_info['user'], paas_info['git_server'])
 
         remote_url = 'ssh+git://%s/%s.git' % (paas_access, vhost)
 
@@ -80,17 +80,19 @@ class Paas(GandiModule, SshkeyHelper):
     def deploy(cls, remote_name, branch):
         """Deploy a PaaS instance."""
         def get_remote_url(remote):
-          return 'git config --get remote.%s.url' % (remote)
+            return 'git config --get remote.%s.url' % (remote)
 
-        remote_url = cls.exec_output(get_remote_url(remote_name)).replace('\n', '')
+        remote_url = cls.exec_output(get_remote_url(remote_name)) \
+            .replace('\n', '')
 
         if not remote_url or not re.search('gpaas.net|gandi.net', remote_url):
             remote_name = '$(git config --get branch.%s.remote)' % branch
-            remote_url = cls.exec_output(get_remote_url(remote_name)).replace('\n', '')
+            remote_url = cls.exec_output(get_remote_url(remote_name)) \
+                .replace('\n', '')
 
         if not remote_url or not re.search('gpaas.net|gandi.net', remote_url):
             cls.error('%s is not a valid Simple Hosting git remote'
-                     % (remote_url))
+                      % (remote_url))
 
         remote_url_no_protocol = remote_url.split('://')[1]
         splitted_url = remote_url_no_protocol.split('/')
@@ -98,7 +100,8 @@ class Paas(GandiModule, SshkeyHelper):
         paas_access = splitted_url[0]
         deploy_git_host = splitted_url[1]
 
-        command = "ssh %s 'deploy %s %s'" % (paas_access, deploy_git_host, branch)
+        command = "ssh %s 'deploy %s %s'" \
+                  % (paas_access, deploy_git_host, branch)
 
         cls.execute(command)
 
@@ -245,7 +248,6 @@ class Paas(GandiModule, SshkeyHelper):
             cls.echo('Creating your PaaS instance.')
             cls.display_progress(result)
             cls.echo('Your PaaS instance %s has been created.' % name)
-
 
         if vhosts:
             paas_info = cls.info(name)
