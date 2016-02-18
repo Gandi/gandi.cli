@@ -293,12 +293,9 @@ is not a valid Simple Hosting git remote
         args = []
 
         git_content = """
-[remote "origin"]
+[remote "gandi"]
         fetch = +refs/heads/*:refs/remotes/origin/*
         url = ssh+git://185290@git.dc2.gpaas.net/default.git
-[branch "master"]
-        remote = origin
-        merge = refs/heads/master
 """
         result = self.isolated_invoke_with_exceptions(paas.deploy, args,
                                                       temp_dir='.git',
@@ -306,7 +303,7 @@ is not a valid Simple Hosting git remote
                                                       temp_content=git_content)
 
         self.assertEqual(result.output, """\
-ssh 185290@git.dc2.gpaas.net 'deploy default.git'
+ssh 185290@git.dc2.gpaas.net 'deploy default.git master'
 """)
 
         self.assertEqual(result.exit_code, 0)
