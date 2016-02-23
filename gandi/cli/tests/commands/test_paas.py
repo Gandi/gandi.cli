@@ -257,9 +257,16 @@ dummy=dududududud
                                                       temp_content=git_content)
 
         self.assertEqual(result.output, """\
-Usage: deploy [OPTIONS]
+Error: Could not find git remote to extract deploy url from.
+This usually happens when:
+- the current directory has no Simple Hosting git remote attached,
+  in this case, please see $ gandi paas attach --help
+- the local branch being deployed hasn't been pushed \
+to the remote repository yet,
+  in this case, please try $ git push <remote> master
 
-Error:  is not a valid Simple Hosting git remote
+Otherwise, it's recommended to use the --remote and/or --branch options:
+$ gandi deploy --remote <remote> [--branch <branch>]
 """)
 
         self.assertEqual(result.exit_code, 2)
@@ -281,10 +288,17 @@ Error:  is not a valid Simple Hosting git remote
                                                       temp_content=git_content)
 
         self.assertEqual(result.output, """\
-Usage: deploy [OPTIONS]
-
 Error: https://github.com/Gandi/gandi.cli.git \
-is not a valid Simple Hosting git remote
+is not a valid Simple Hosting git remote.
+This usually happens when:
+- the current directory has no Simple Hosting git remote attached,
+  in this case, please see $ gandi paas attach --help
+- the local branch being deployed hasn't been pushed \
+to the remote repository yet,
+  in this case, please try $ git push <remote> master
+
+Otherwise, it's recommended to use the --remote and/or --branch options:
+$ gandi deploy --remote <remote> [--branch <branch>]
 """)
 
         self.assertEqual(result.exit_code, 2)
@@ -357,7 +371,6 @@ ssh 185290@git.dc2.gpaas.net 'deploy default.git stable'
 """)
 
         self.assertEqual(result.exit_code, 0)
-
 
     def test_delete_unknown(self):
         result = self.invoke_with_exceptions(paas.delete, ['unknown_paas'])

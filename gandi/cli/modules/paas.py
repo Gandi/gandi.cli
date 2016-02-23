@@ -2,6 +2,7 @@
 
 import os
 import re
+import sys
 
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.metric import Metric
@@ -90,9 +91,28 @@ class Paas(GandiModule, SshkeyHelper):
             remote_url = cls.exec_output(get_remote_url(remote_name)) \
                 .replace('\n', '')
 
-        if not remote_url or not re.search('gpaas.net|gandi.net', remote_url):
-            cls.error('%s is not a valid Simple Hosting git remote'
-                      % (remote_url))
+        error = None
+
+        if not remote_url:
+            error = True
+            cls.echo('Error: Could not find git remote '
+                     'to extract deploy url from.')
+        elif not re.search('gpaas.net|gandi.net', remote_url):
+            error = True
+            cls.echo('Error: %s is not a valid Simple Hosting git remote.'
+                     % (remote_url))
+        if error:
+            cls.echo("""This usually happens when:
+- the current directory has no Simple Hosting git remote attached,
+  in this case, please see $ gandi paas attach --help
+- the local branch being deployed hasn't been pushed to the \
+remote repository yet,
+  in this case, please try $ git push <remote> %s
+""" % (branch))
+            cls.echo('Otherwise, it\'s recommended to use'
+                     ' the --remote and/or --branch options:\n'
+                     '$ gandi deploy --remote <remote> [--branch <branch>]')
+            sys.exit(2)
 
         remote_url_no_protocol = remote_url.split('://')[1]
         splitted_url = remote_url_no_protocol.split('/')
