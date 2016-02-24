@@ -257,9 +257,16 @@ dummy=dududududud
                                                       temp_content=git_content)
 
         self.assertEqual(result.output, """\
-Usage: deploy [OPTIONS]
+Error: Could not find git remote to extract deploy url from.
+This usually happens when:
+- the current directory has no Simple Hosting git remote attached,
+  in this case, please see $ gandi paas attach --help
+- the local branch being deployed hasn't been pushed \
+to the remote repository yet,
+  in this case, please try $ git push <remote> master
 
-Error:  is not a valid Simple Hosting git remote
+Otherwise, it's recommended to use the --remote and/or --branch options:
+$ gandi deploy --remote <remote> [--branch <branch>]
 """)
 
         self.assertEqual(result.exit_code, 2)
@@ -281,16 +288,42 @@ Error:  is not a valid Simple Hosting git remote
                                                       temp_content=git_content)
 
         self.assertEqual(result.output, """\
-Usage: deploy [OPTIONS]
-
 Error: https://github.com/Gandi/gandi.cli.git \
-is not a valid Simple Hosting git remote
+is not a valid Simple Hosting git remote.
+This usually happens when:
+- the current directory has no Simple Hosting git remote attached,
+  in this case, please see $ gandi paas attach --help
+- the local branch being deployed hasn't been pushed \
+to the remote repository yet,
+  in this case, please try $ git push <remote> master
+
+Otherwise, it's recommended to use the --remote and/or --branch options:
+$ gandi deploy --remote <remote> [--branch <branch>]
 """)
 
         self.assertEqual(result.exit_code, 2)
 
     def test_deploy(self):
         args = []
+
+        git_content = """
+[remote "gandi"]
+        fetch = +refs/heads/*:refs/remotes/gandi/*
+        url = ssh+git://185290@git.dc2.gpaas.net/default.git
+"""
+        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
+                                                      temp_dir='.git',
+                                                      temp_name='config',
+                                                      temp_content=git_content)
+
+        self.assertEqual(result.output, """\
+ssh 185290@git.dc2.gpaas.net 'deploy default.git master'
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_deploy_remote(self):
+        args = ['--remote', 'origin']
 
         git_content = """
 [remote "origin"]
@@ -306,7 +339,35 @@ is not a valid Simple Hosting git remote
                                                       temp_content=git_content)
 
         self.assertEqual(result.output, """\
-ssh 185290@git.dc2.gpaas.net 'deploy default.git'
+ssh 185290@git.dc2.gpaas.net 'deploy default.git master'
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_deploy_guess_remote_with_branch(self):
+        args = ['--branch', 'stable']
+
+        git_content = """
+[remote "origin"]
+        fetch = +refs/heads/*:refs/remotes/origin/*
+        url = https://github.com/Gandi/gandi.cli.git
+[remote "production"]
+        fetch = +refs/heads/*:refs/remotes/production/*
+        url = ssh+git://185290@git.dc2.gpaas.net/default.git
+[branch "master"]
+        remote = origin
+        merge = refs/heads/master
+[branch "stable"]
+        remote = production
+        merge = refs/heads/stable
+"""
+        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
+                                                      temp_dir='.git',
+                                                      temp_name='config',
+                                                      temp_content=git_content)
+
+        self.assertEqual(result.output, """\
+ssh 185290@git.dc2.gpaas.net 'deploy default.git stable'
 """)
 
         self.assertEqual(result.exit_code, 0)

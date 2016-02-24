@@ -116,12 +116,14 @@ def attach(gandi, name, vhost, remote):
 
 
 @cli.command(root=True)
+@click.option('--remote', default='gandi', help="Specify the remote's name")
+@click.option('--branch', default='master', help="Specify the branch to deploy")
 @pass_gandi
-def deploy(gandi):
+def deploy(gandi, remote, branch):
     """Deploy code on the instance's remote vhost corresponding to current
     directory.
     """
-    return gandi.paas.deploy()
+    return gandi.paas.deploy(remote, branch)
 
 
 @cli.command()
