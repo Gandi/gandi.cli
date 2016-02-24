@@ -511,6 +511,19 @@ Updating your PaaS instance.
 
         self.assertEqual(result.exit_code, 0)
 
+    def test_update_for_upgrade(self):
+        args = ['paas_owncloud', '--upgrade']
+        result = self.invoke_with_exceptions(paas.update, args)
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Updating your PaaS instance.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['paas.update'][0][1]
+        self.assertEqual(params['upgrade'], True)
+
     def test_update_snapshotprofile_conflict(self):
         args = ['paas_owncloud', '--delete-snapshotprofile',
                 '--snapshotprofile', '7']
@@ -541,6 +554,8 @@ Updating your PaaS instance.
 \rProgress: [###] 100.00%  00:00:00""")
 
         self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['paas.update'][0][1]
+        self.assertFalse('upgrade' in params)
 
     def test_update_background(self):
         args = ['paas_owncloud', '--bg']

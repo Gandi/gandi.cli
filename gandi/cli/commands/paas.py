@@ -246,7 +246,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
               help='Password of the PaaS instance.')
 @click.option('--sshkey', multiple=True,
               help='Authorize ssh authentication for the given ssh key.')
-@click.option('--upgrade', default=None,
+@click.option('--upgrade', default=False, is_flag=True,
               help='Upgrade the instance to the last system image if needed.')
 @click.option('--console', default=None,
               help='Activate or deactivate the Console.')
