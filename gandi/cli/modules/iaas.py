@@ -362,7 +362,7 @@ class Iaas(GandiModule, SshkeyHelper):
         listening"""
         cls.echo('Waiting for the vm to come online')
         version, ip_addr = cls.vm_ip(vm_id)
-        give_up = time.time() + 120
+        give_up = time.time() + 300
         while time.time() < give_up:
             try:
                 inet = socket.AF_INET
