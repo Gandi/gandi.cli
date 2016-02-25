@@ -1,7 +1,6 @@
 """ Virtual hosts namespace commands. """
 
 import click
-import os
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_generic, output_vhost
@@ -96,9 +95,6 @@ def create(gandi, vhost, paas, ssl, private_key, alter_zone, poll_cert,
 
     paas_info = gandi.paas.info(paas)
     result = gandi.vhost.create(paas_info, vhost, alter_zone, background)
-
-    if not result:
-        return
 
     if background:
         gandi.pretty_echo(result)
