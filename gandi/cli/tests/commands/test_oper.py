@@ -11,6 +11,14 @@ class OperTestCase(CommandTestCase):
         result = self.invoke_with_exceptions(oper.list, [])
 
         self.assertEqual(result.output, """\
+id        : 100303
+type      : certificate_update
+step      : WAIT
+----------
+id        : 100302
+type      : certificate_update
+step      : RUN
+----------
 id        : 100300
 type      : certificate_update
 step      : RUN
