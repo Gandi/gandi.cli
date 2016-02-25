@@ -388,7 +388,7 @@ class Certificate(GandiModule):
     @classmethod
     def pretty_format_cert(cls, cert):
         """ Pretty display of a certificate."""
-        crt = cert['cert']
+        crt = cert.get('cert')
         if crt:
             crt = ('-----BEGIN CERTIFICATE-----\n' +
                    '\n'.join([crt[index * 64:(index + 1) * 64]
