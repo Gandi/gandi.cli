@@ -1,6 +1,21 @@
 Changelog
 =========
 
+0.18
+----
+
+* Update 'gandi paas update' command: --upgrade parameter is now a boolean flag
+* Update 'gandi deploy' command:
+  - new '--remote' and '--branch' options
+  - better handling of case when git configuration is not configured as expected
+  - will try and use the gandi remote by default to extract deploy url
+  - will deploy the branch master by default
+  - will fallback to guessing the Simple Hosting remote from git configuration
+    of the branch to deploy
+  - improve error message when unable to execute
+* Update VM spin up timeout to 5min (from 2min) for bigger VM.
+* Add more unittests.
+
 0.17
 ----
 
