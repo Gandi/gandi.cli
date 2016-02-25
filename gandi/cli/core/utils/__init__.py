@@ -394,13 +394,13 @@ def output_list(gandi, val):
 
 def date_handler(obj):
     """ Serialize date for json output """
-    return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+    return obj.isoformat() if hasattr(obj, 'isoformat') else str(obj)
 
 
 def output_json(gandi, format, value):
     """ Helper to show json output """
     if format == 'json':
-        gandi.echo(json.dumps(value, default=date_handler))
+        gandi.echo(json.dumps(value, default=date_handler, sort_keys=True))
     elif format == 'pretty-json':
         gandi.echo(json.dumps(value, default=date_handler, sort_keys=True,
                    indent=2, separators=(',', ': ')))
