@@ -54,8 +54,9 @@ def list(gandi, limit, format):
                 server['name'] = vm_info['hostname']
                 output_servers = ['name', 'ip', 'port', 'state']
             except Exception:
-                warningmsg = ('\tBackend with ip address %s no longer \
-                    exists.\n\tYou should remove it.' % server['ip'])
+                warningmsg = ('\tBackend with ip address %s no longer '
+                              'exists.\n\tYou should remove it.'
+                              % server['ip'])
                 gandi.echo(warningmsg)
                 output_servers = ['ip', 'port', 'state']
             output_sub_generic(gandi, server, output_servers,
@@ -102,8 +103,8 @@ def info(gandi, resource, format):
             server['name'] = gandi.iaas.info(iface['vm_id'])['hostname']
             output_servers = ['name', 'ip', 'port', 'state']
         except:
-            warningmsg = ('\tBackend with ip address %s no longer exists.\
-                \n\tYou should remove it.' % server['ip'])
+            warningmsg = ('\tBackend with ip address %s no longer exists.'
+                          '\n\tYou should remove it.' % server['ip'])
             gandi.echo(warningmsg)
             output_servers = ['ip', 'port', 'state']
         output_sub_generic(gandi, server, output_servers, justify=14)
