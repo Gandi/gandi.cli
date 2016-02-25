@@ -78,6 +78,30 @@ def list(options):
                               '0eWfyJJTOypoToCtdGoye507GOsgIysfRWaExay5'
                               '-----END CERTIFICATE REQUEST-----',
                        'remote_addr': '127.0.0.1'}},
+           {'step': 'RUN',
+            'cert_id': 706,
+            'id': 100302,
+            'type': 'certificate_update',
+            'params': {'cert_id': 706,
+                       'param_type': 'certificate_update',
+                       'prepaid_id': 100000,
+                       'inner_step': 'comodo_oper_updated',
+                       'dcv_method': 'dns',
+                       'csr': '-----BEGIN CERTIFICATE REQUEST-----'
+                              'MIICxjCCAa4CAQAwgYAxCzAJBgNVBAYTAkZSMQsw'
+                              '0eWfyJJTOypoToCtdGoye507GOsgIysfRWaExay5'
+                              '-----END CERTIFICATE REQUEST-----',
+                       'remote_addr': '127.0.0.1'}},
+           {'step': 'WAIT',
+            'cert_id': 701,
+            'id': 100303,
+            'type': 'certificate_update',
+            'params': {'cert_id': 706,
+                       'param_type': 'certificate_update',
+                       'prepaid_id': 100000,
+                       'inner_step': 'check_email_sent',
+                       'dcv_method': 'dns',
+                       'remote_addr': '127.0.0.1'}},
            ]
 
     options.pop('sort_by', None)

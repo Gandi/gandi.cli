@@ -1224,7 +1224,6 @@ def ip_list(options):
 
 
 def ip_info(ip_id):
-
     ips = ip_list({})
     ips = dict([(ip['id'], ip) for ip in ips])
     return ips[ip_id]
@@ -1237,7 +1236,8 @@ def ip_update(ip_id, options):
 def ssh_list(options):
     ret = [{'fingerprint': 'b3:11:67:10:2e:1b:a5:66:ed:16:24:98:3e:2e:ed:f5',
             'id': 134,
-            'name': 'default'},
+            'name': 'default',
+            'value': 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC63QZAW3tusdv+JuyzOoXTND9/wxKogMwZbxBPPtoN7Hjnyn0kUUHMJ6ji5xpbatRYKOeGAoZDW2TXojvbJdQj7tWsRr7ES0qB9qhDGVSDIJWRQ6f9MQCCLjV5tpBTAwb unknown@lol.cat'}, # noqa
            {'fingerprint': '09:11:21:e3:90:3c:7d:d5:06:d9:6f:f9:36:e1:99:a6',
             'id': 141,
             'name': 'mysecretkey'}]
@@ -1248,6 +1248,23 @@ def ssh_list(options):
         ret = [vm for vm in ret if vm[fkey] == options[fkey]]
 
     return ret
+
+
+def ssh_info(key_id):
+    keys = ssh_list({})
+    keys = dict([(key['id'], key) for key in keys])
+    return keys[key_id]
+
+
+def ssh_delete(key_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def ssh_create(params):
+    return {'fingerprint': 'b3:11:67:10:2e:1b:a5:55:ed:16:24:98:3e:2e:ed:f5',
+            'id': 145,
+            'name': params['name'],
+            'value': params['value']}
 
 
 def snapshotprofile_list(options):
@@ -1273,3 +1290,203 @@ def snapshotprofile_list(options):
         ret = [snp for snp in ret if snp[fkey] == options[fkey]]
 
     return ret
+
+
+def rproxy_list(options):
+
+    ret = [{'datacenter_id': 3,
+            'date_created': DateTime('20160115T162658'),
+            'id': 12138,
+            'name': 'webacc01',
+            'probe': {'enable': True,
+                      'host': None,
+                      'interval': None,
+                      'method': None,
+                      'response': None,
+                      'threshold': None,
+                      'timeout': None,
+                      'url': None,
+                      'window': None},
+            'servers': [{'fallback': False,
+                         'id': 14988,
+                         'ip': '195.142.160.181',
+                         'port': 80,
+                         'rproxy_id': 132691,
+                         'state': 'running'}],
+            'ssl_enable': False,
+            'state': 'running',
+            'uuid': 12138,
+            'vhosts': []},
+           {'datacenter_id': 1,
+            'date_created': DateTime('20160115T162658'),
+            'id': 13263,
+            'name': 'testwebacc',
+            'probe': {'enable': True,
+                      'host': '95.142.160.181',
+                      'interval': 10,
+                      'method': 'GET',
+                      'response': 200,
+                      'threshold': 3,
+                      'timeout': 5,
+                      'url': '/',
+                      'window': 5},
+            'servers': [{'fallback': False,
+                         'id': 4988,
+                         'ip': '95.142.160.181',
+                         'port': 80,
+                         'rproxy_id': 13269,
+                         'state': 'running'}],
+            'ssl_enable': False,
+            'state': 'running',
+            'uuid': 13263,
+            'vhosts': [{'cert_id': None,
+                        'id': 5171,
+                        'name': 'pouet.iheartcli.com',
+                        'rproxy_id': 13263,
+                        'state': 'running'}]}]
+
+    options.pop('items_per_page', None)
+
+    for fkey in options:
+        ret = [rpx for rpx in ret if rpx[fkey] == options[fkey]]
+
+    return ret
+
+
+def rproxy_delete(rproxy_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_info(rproxy_id):
+    ret = [{'datacenter': {'country': 'France',
+                           'dc_code': 'FR-SD2',
+                           'id': 1,
+                           'iso': 'FR',
+                           'name': 'Equinix Paris'},
+            'date_created': DateTime('20160115T162658'),
+            'id': 13263,
+            'lb': {'algorithm': 'client-ip'},
+            'name': 'testwebacc',
+            'probe': {'enable': True,
+                      'host': '95.142.160.181',
+                      'interval': 10,
+                      'method': 'GET',
+                      'response': 200,
+                      'threshold': 3,
+                      'timeout': 5,
+                      'url': '/',
+                      'window': 5},
+            'servers': [{'fallback': False,
+                         'id': 4988,
+                         'ip': '95.142.160.181',
+                         'port': 80,
+                         'rproxy_id': 13269,
+                         'state': 'running'}],
+            'ssl_enable': False,
+            'state': 'running',
+            'uuid': 13263,
+            'vhosts': [{'cert_id': None,
+                        'id': 5171,
+                        'name': 'pouet.iheartcli.com',
+                        'rproxy_id': 13263,
+                        'state': 'running'}]},
+           {'datacenter': {'country': 'France',
+                           'dc_code': 'FR-SD2',
+                           'id': 1,
+                           'iso': 'FR',
+                           'name': 'Equinix Paris'},
+            'date_created': DateTime('20160115T162658'),
+            'id': 12138,
+            'lb': {'algorithm': 'client-ip'},
+            'name': 'webacc01',
+            'probe': {'enable': True,
+                      'host': None,
+                      'interval': None,
+                      'method': None,
+                      'response': None,
+                      'threshold': None,
+                      'timeout': None,
+                      'url': None,
+                      'window': None},
+            'servers': [{'fallback': False,
+                         'id': 14988,
+                         'ip': '195.142.160.181',
+                         'port': 80,
+                         'rproxy_id': 132691,
+                         'state': 'running'}],
+            'ssl_enable': False,
+            'state': 'running',
+            'uuid': 12138,
+            'vhosts': []}]
+
+    rpx = dict([(rpx['id'], rpx) for rpx in ret])
+    return rpx[rproxy_id]
+
+
+def rproxy_update(rproxy_id, params):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_create(params):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_probe_disable(rproxy_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_probe_enable(rproxy_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_vhost_list():
+    ret = [{'cert_id': None,
+            'id': 5177,
+            'name': 'pouet.iheartcli.com',
+            'rproxy_id': 13269,
+            'state': 'running'}]
+
+    return ret
+
+
+def rproxy_vhost_delete(vhost):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_vhost_create(rproxy_id, vhost):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_probe_test(rproxy_id, params):
+    return {'servers': [{'server': 4988, 'status': 200, 'timeout': 1.0}],
+            'status': 200,
+            'timeout': 1.0}
+
+
+def rproxy_probe_update(rproxy_id, params):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_server_create(rproxy_id, params):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_server_list(params):
+    return [{'fallback': False,
+             'id': 14988,
+             'ip': '195.142.160.181',
+             'port': 80,
+             'rproxy_id': 132691,
+             'state': 'running'}]
+
+
+def rproxy_server_delete(server_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_server_enable(server_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_server_disable(server_id):
+    return {'id': 200, 'step': 'WAIT'}

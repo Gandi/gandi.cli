@@ -1,8 +1,6 @@
 """ Hosted certificate commands module. """
 
 import os
-import re
-from click import UsageError
 from gandi.cli.core.base import GandiModule
 
 
