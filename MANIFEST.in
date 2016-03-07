@@ -2,3 +2,5 @@ include README.md
 include CHANGES.rst
 include LICENSE
 recursive-include gandi *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
