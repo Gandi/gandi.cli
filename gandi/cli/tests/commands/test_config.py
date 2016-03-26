@@ -93,4 +93,4 @@ class ConfigTestCase(CommandTestCase):
                                                           '/usr/bin/vi'])
         result = self.invoke_with_exceptions(config.list, [])
         self.assertEqual(result.exit_code, 0)
-        self.assertEqual(result.output, u"{'editor': '/usr/bin/vi'}\n")
+        self.assertEqual(result.output, u"{u'editor': u'/usr/bin/vi'}\n")
