@@ -12,6 +12,7 @@ class AccountTestCase(CommandTestCase):
 
         self.assertEqual(result.output, """\
 handle           : PXP561-GANDI
+prepaid          : 1337.42 EUR
 credits          :
         available: 2335360
         usage    : 633/h

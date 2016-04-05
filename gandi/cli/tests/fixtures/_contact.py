@@ -6,7 +6,9 @@ def list(options):
             {'handle': 'AA4-GANDI'},
             {'handle': 'AA5-GANDI'},
             {'handle': 'TEST1-GANDI'},
-            {'handle': 'PXP561-GANDI', 'id': 2920674},
+            {'handle': 'PXP561-GANDI', 'id': 2920674,
+             'prepaid': {'amount': '1337.42',
+                         'currency': 'EUR'}}
             ]
 
 
@@ -43,3 +45,9 @@ def create_dry_run(params):
                                  'Saturn, Uranus, Neptune'})
 
     return errors
+
+
+def balance(id='PXP561-GANDI'):
+
+    contact = dict([(contact['handle'], contact) for contact in list({})])
+    return contact[id]
