@@ -207,6 +207,8 @@ def output_image(gandi, image, datacenters, output_keys, justify=14):
     """ Helper to output a disk image."""
     output_generic(gandi, image, output_keys, justify)
 
+    dc_name = 'Nowhere'
+
     if 'dc' in output_keys:
         for dc in datacenters:
             if dc['id'] == image['datacenter_id']:
