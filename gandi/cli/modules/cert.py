@@ -381,7 +381,8 @@ class Certificate(GandiModule):
             csr = cls.create_csr(common_name, private_key, params)
 
         if csr and os.path.exists(csr):
-            csr = open(csr).read()
+            with open(csr) as fcsr:
+                csr = fcsr.read()
 
         return csr
 
