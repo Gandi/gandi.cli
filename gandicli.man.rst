@@ -296,7 +296,7 @@ Details:
 
 * ``gandi record create domain.tld`` will create new DNS zone record entry for specific domain ``domain.tld`` in a new zone version and activate it. Mandatory options are ``--zone-id INTEGER`` to specify a zone id to use, if not provided default zone will be used, ``--name TEXT`` to set record relative name, may contains leading wildcard, use @ for empty name, ``--type A|AAAA|CNAME|MX|NS|TXT|WKS|SRV|LOC|SPF`` to set record type, ``--value TEXT`` to set record value, may contains up to 1024 ascii characters. Possible options are ``--ttl INTEGER`` to set record time to live value.
 
-* ``gandi record list domain.tld`` show the list of DNS zone records for specific domain ``domain.tld``. Possible options are ``--zone-id INTEGER`` to specify a zone id to use, if not provided default zone will be used.
+* ``gandi record list domain.tld`` show the list of DNS zone records for specific domain ``domain.tld``. Possible options are ``--zone-id INTEGER`` to specify a zone id to use, if not provided default zone will be used, ``--limit INTEGER`` show a subset of the list.
 
 * ``gandi setup`` initialize the configuration for the tool.
 
