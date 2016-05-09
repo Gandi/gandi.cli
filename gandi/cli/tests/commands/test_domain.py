@@ -74,6 +74,8 @@ Your domain idontlike.website has been created.""")
                                               '--admin', 'ADMIN1-GANDI',
                                               '--tech', 'TECH1-GANDI',
                                               '--bill', 'BILL1-GANDI',
+                                              '--nameserver', 'a.domain.tld',
+                                              '--nameserver', 'b.domain.tld',
                                               ])
 
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
