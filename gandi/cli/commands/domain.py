@@ -50,12 +50,14 @@ def info(gandi, resource):
               help='Technical contact handle.')
 @click.option('--bill', default=None,
               help='Billing contact handle.')
+@click.option('--nameserver', default=None,
+              help='Nameserver', multiple=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', metavar='DOMAIN', required=False)
 @pass_gandi
 def create(gandi, resource, domain, duration, owner, admin, tech, bill,
-           background):
+           nameserver, background):
     """Buy a domain."""
     if domain:
         gandi.echo('/!\ --domain option is deprecated and will be removed '
@@ -73,7 +75,7 @@ def create(gandi, resource, domain, duration, owner, admin, tech, bill,
         _domain = click.prompt('Name of the domain')
 
     result = gandi.domain.create(_domain, duration, owner, admin, tech, bill,
-                                 background)
+                                 nameserver, background)
     if background:
         gandi.pretty_echo(result)
 
