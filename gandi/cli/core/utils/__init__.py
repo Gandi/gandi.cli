@@ -449,6 +449,29 @@ def output_hostedcert(gandi, hcert, output_keys, justify=12):
             output_sub_line(gandi, 'type', vhost['type'], 10)
 
 
+def output_domain_check(gandi, domain, justify=12):
+    """ Helper to output a domain information."""
+
+    if (domain['available'] == 'available'):
+        output_line(gandi, 'Domain', domain['extension'], justify)
+        for domains_avail in domain['prices']:
+            r_phase = str(domains_avail['action']['param']['tld_phase'])
+            for domain_prices in domains_avail['unit_price']:
+                output_line (gandi, 'Phase', r_phase, justify)
+                output_line (gandi, 'Min Duration', str(domain_prices['min_duration']), justify)
+                output_line (gandi, 'Max Duration', str(domain_prices['min_duration']), justify)
+                output_line (gandi, 'Price',  str(domain_prices['price']), justify)
+                output_line (gandi, 'Currency', str(domain_prices['currency']), justify)
+                output_line (gandi, 'Price Type', str(domain_prices['price_type']), justify)
+        for phases in domain['phases']:
+            tldphase = "Start: " + str(phases['date_start']) + " "
+            tldphase += "Start Gandi: " + str(phases['date_start_gandi']) + " ";
+            tldphase += "End: " + str(phases['date_end']);
+            output_line(gandi, str(phases['phase']), tldphase, justify)
+    else:
+         output_line (gandi, 'Status', str(domain['available']), justify)
+
+
 def output_domain(gandi, domain, output_keys, justify=12):
     """ Helper to output a domain information."""
     if 'nameservers' in domain:

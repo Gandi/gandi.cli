@@ -85,6 +85,7 @@ Namespaces:
 *  disk rollback           Rollback a disk from a snapshot.
 *  disk update             Update a disk.
 *  docker                  Manage docker instances.
+*  domain check            Check domain availability and price.
 *  domain create           Buy a domain.
 *  domain renew            Renew a domain.
 *  domain info             Display information about a domain.

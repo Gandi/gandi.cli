@@ -3,7 +3,7 @@
 import click
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_contact_info, output_domain
+from gandi.cli.core.utils import output_contact_info, output_domain, output_domain_check
 from gandi.cli.core.params import pass_gandi
 
 
@@ -33,6 +33,18 @@ def info(gandi, resource):
     result = gandi.domain.info(resource)
     output_contact_info(gandi, result['contacts'], contact_field, justify=12)
     output_domain(gandi, result, output_keys, justify=12)
+
+    return result
+
+
+@cli.command()
+@click.argument('resource', metavar='DOMAIN', required=False)
+@pass_gandi
+def check(gandi, resource):
+    """Check domain availability and price."""
+
+    result = gandi.domain.check(resource)
+    output_domain_check(gandi, result, justify=12)
 
     return result
 
