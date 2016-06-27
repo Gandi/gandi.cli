@@ -488,6 +488,9 @@ def output_mailbox(gandi, mailbox, output_keys, justify=16):
     if responder:
         output_keys.pop(output_keys.index('responder'))
 
+    if 'aliases' in output_keys:
+        mailbox['aliases'] = sorted(mailbox['aliases'])
+
     output_generic(gandi, mailbox, output_keys, justify)
 
     if 'fallback' in output_keys:
