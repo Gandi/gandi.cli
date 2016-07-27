@@ -500,6 +500,45 @@ Please give the private key for certificate id 706 (CN: inter.net)""")
 
         self.assertEqual(result.exit_code, 0)
 
+    def test_create_datacenter_limited(self):
+        args = ['--datacenter', 'FR-SD3']
+        result = self.invoke_with_exceptions(paas.create, args,
+                                             obj=GandiContextHelper(),
+                                             input='ploki\nploki\n')
+
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'paas\d+', 'paas', output), """\
+/!\ Datacenter FR-SD3 will be closed on 25/12/2016, please consider using \
+another datacenter.
+password: \nRepeat for confirmation: \n\
+Creating your PaaS instance.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your PaaS instance paas has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['paas.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 4)
+        self.assertEqual(params['size'], 's')
+        self.assertEqual(params['duration'], '1m')
+        self.assertEqual(params['password'], 'ploki')
+        self.assertTrue(params['name'].startswith('paas'))
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_datacenter_closed(self):
+        args = ['--datacenter', 'US-BA1']
+        result = self.invoke_with_exceptions(paas.create, args,
+                                             obj=GandiContextHelper(),
+                                             input='ploki\nploki\n')
+
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'paas\d+', 'paas', output), """\
+Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
+
+        self.assertEqual(result.exit_code, 1)
+
     def test_update(self):
         args = ['paas_owncloud']
         result = self.invoke_with_exceptions(paas.update, args)

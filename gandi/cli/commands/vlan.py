@@ -4,8 +4,10 @@ import click
 from IPy import IP
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import (output_vlan, output_generic, output_iface,
-                                  output_ip, output_line)
+from gandi.cli.core.utils import (
+    output_vlan, output_generic, output_iface, output_ip, output_line,
+    DatacenterLimited
+)
 from gandi.cli.core.params import option, pass_gandi, DATACENTER
 
 
@@ -135,6 +137,13 @@ def delete(gandi, background, force, resource):
 @pass_gandi
 def create(gandi, name, datacenter, subnet, gateway, background):
     """ Create a new vlan """
+    try:
+        gandi.datacenter.is_opened(datacenter, 'iaas')
+    except DatacenterLimited as exc:
+        gandi.echo('/!\ Datacenter %s will be closed on %s, '
+                   'please consider using another datacenter.' %
+                   (datacenter, exc.date))
+
     result = gandi.vlan.create(name, datacenter, subnet, gateway, background)
 
     if background:

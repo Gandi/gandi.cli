@@ -4,7 +4,9 @@ import click
 from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_ip
+from gandi.cli.core.utils import (
+    output_ip, DatacenterLimited
+)
 from gandi.cli.core.params import (pass_gandi, DATACENTER,
                                    IP_TYPE, option, IntChoice)
 
@@ -189,6 +191,13 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
 
     if not datacenter:
         datacenter = vm_['datacenter_id'] if vm_ else 'LU'
+
+    try:
+        gandi.datacenter.is_opened(datacenter, 'iaas')
+    except DatacenterLimited as exc:
+        gandi.echo('/!\ Datacenter %s will be closed on %s, '
+                   'please consider using another datacenter.' %
+                   (datacenter, exc.date))
 
     return gandi.ip.create(ip_version, datacenter, bandwidth, attach,
                            vlan, ip, background)

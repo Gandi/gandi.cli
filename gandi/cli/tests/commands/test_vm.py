@@ -179,6 +179,8 @@ iso       : US
 name      : Level3 Baltimore
 country   : United States of America
 dc_code   : US-BA1
+closing on: 25/12/2016
+closed for: vm, paas
 ----------
 iso       : LU
 name      : Bissen
@@ -189,6 +191,7 @@ iso       : FR
 name      : France, Paris
 country   : France
 dc_code   : FR-SD3
+closing on: 25/12/2016
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -208,6 +211,8 @@ name      : Level3 Baltimore
 country   : United States of America
 dc_code   : US-BA1
 id        : 2
+closing on: 25/12/2016
+closed for: vm, paas
 ----------
 iso       : LU
 name      : Bissen
@@ -220,6 +225,7 @@ name      : France, Paris
 country   : France
 dc_code   : FR-SD3
 id        : 4
+closing on: 25/12/2016
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -992,7 +998,7 @@ Your Virtual Machine vm has been created.""")
         self.assertEqual(result.exit_code, 0)
 
     def test_create_dc_code_ok(self):
-        args = ['--datacenter', 'FR-SD3']
+        args = ['--datacenter', 'FR-SD2']
         result = self.invoke_with_exceptions(vm.create, args,
                                              obj=GandiContextHelper(),
                                              input='plokiploki\nplokiploki\n')
@@ -1000,6 +1006,38 @@ Your Virtual Machine vm has been created.""")
 
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
 password: \nRepeat for confirmation: \n* root user will be created.
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
+(HVM), hostname: vm, datacenter: FR-SD2
+Creating your Virtual Machine vm.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your Virtual Machine vm has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_datacenter_closed(self):
+        args = ['--datacenter', 'US-BA1']
+        result = self.invoke_with_exceptions(vm.create, args,
+                                             obj=GandiContextHelper(),
+                                             input='plokiploki\nplokiploki\n')
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
+Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
+
+        self.assertEqual(result.exit_code, 1)
+
+    def test_create_datacenter_limited(self):
+        args = ['--datacenter', 'FR-SD3']
+        result = self.invoke_with_exceptions(vm.create, args,
+                                             obj=GandiContextHelper(),
+                                             input='plokiploki\nplokiploki\n')
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
+/!\ Datacenter FR-SD3 will be closed on 25/12/2016, please consider \
+using another datacenter.
+password: \nRepeat for confirmation: \n\
+* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
 (HVM), hostname: vm, datacenter: FR-SD3
 Creating your Virtual Machine vm.

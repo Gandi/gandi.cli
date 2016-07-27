@@ -163,6 +163,37 @@ Creating your webaccelerator webacc2
         self.assertEqual(params['zone_alter'], False)
         self.assertEqual(params['override'], True)
 
+    def test_create_datacenter_limited(self):
+        args = ['webacc2', '--datacenter', 'FR-SD3']
+        result = self.invoke_with_exceptions(webacc.create, args)
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+/!\ Datacenter FR-SD3 will be closed on 25/12/2016, please consider using \
+another datacenter.
+Creating your webaccelerator webacc2
+\rProgress: [###] 100.00%  00:00:00  \
+\nYour webaccelerator have been created""")
+
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.rproxy.create'][0][0]
+        self.assertEqual(params['name'], 'webacc2')
+        self.assertEqual(params['datacenter_id'], 4)
+        self.assertEqual(params['ssl_enable'], False)
+        self.assertEqual(params['lb'], {'algorithm': 'client-ip'})
+        self.assertEqual(params['zone_alter'], False)
+        self.assertEqual(params['override'], True)
+
+    def test_create_datacenter_closed(self):
+        args = ['webacc2', '--datacenter', 'US-BA1']
+        result = self.invoke_with_exceptions(webacc.create, args)
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
+
+        self.assertEqual(result.exit_code, 1)
+
     def test_create_ssl_ok(self):
         args = ['webacc2', '--datacenter', 'FR', '--vhost', 'pouet.lol.cat',
                 '--ssl']

@@ -8,6 +8,7 @@ from datetime import datetime
 
 import json
 from click.formatting import measure_table
+from click import ClickException
 
 from .ascii_sparks import sparks
 
@@ -37,6 +38,24 @@ class DomainNotAvailable(Exception):
     def __init__(self, errors):
         """ Initialize exception."""
         self.errors = errors
+
+
+class DatacenterClosed(ClickException):
+
+    """Raise when datacenter is closed: ALL"""
+
+    def __init__(self, message):
+        """ Initialize exception."""
+        self.message = message
+
+
+class DatacenterLimited(Exception):
+
+    """Raise when datacenter will soon be closed: NEW"""
+
+    def __init__(self, date):
+        """ Initialize exception."""
+        self.date = date
 
 
 def format_list(data):
@@ -205,8 +224,30 @@ def output_kernels(gandi, flavor, name_list, justify=14):
         output_line(gandi, 'version', name, justify)
 
 
-def output_datacenter(gandi, datacenter, justify=14):
-    output_line(gandi, 'datacenter', datacenter['name'], justify)
+def output_datacenter(gandi, datacenter, output_keys, justify=14):
+    """ Helper to output datacenter information."""
+    output_generic(gandi, datacenter, output_keys, justify)
+
+    if 'dc_name' in output_keys:
+        output_line(gandi, 'datacenter', datacenter['name'], justify)
+
+    if 'status' in output_keys:
+        deactivate_at = datacenter.get('deactivate_at')
+        if deactivate_at:
+            output_line(gandi, 'closing on',
+                        deactivate_at.strftime('%d/%m/%Y'), justify)
+
+        closing = []
+        iaas_closed_for = datacenter.get('iaas_closed_for')
+        if iaas_closed_for == 'ALL':
+            closing.append('vm')
+
+        paas_closed_for = datacenter.get('paas_closed_for')
+        if paas_closed_for == 'ALL':
+            closing.append('paas')
+
+        if closing:
+            output_line(gandi, 'closed for', ', '.join(closing), justify)
 
 
 def output_cmdline(gandi, cmdline, justify=14):
