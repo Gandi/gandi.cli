@@ -506,6 +506,36 @@ Creating your disk.
         self.assertEqual(params['name'], 'newdisk')
         self.assertEqual(params['snapshot_profile'], 3)
 
+    def test_create_datacenter_closed(self):
+        args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'US-BA1',
+                '--snapshotprofile', '3']
+        result = self.invoke_with_exceptions(disk.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
+        self.assertEqual(result.exit_code, 1)
+
+    def test_create_datacenter_limited(self):
+        args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'FR-SD3',
+                '--snapshotprofile', '3']
+        result = self.invoke_with_exceptions(disk.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+/!\ Datacenter FR-SD3 will be closed on 25/12/2016, please consider using \
+another datacenter.
+Creating your disk.
+\rProgress: [###] 100.00%  00:00:00""")
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.disk.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 4)
+        self.assertEqual(params['size'], 5120)
+        self.assertEqual(params['name'], 'newdisk')
+        self.assertEqual(params['snapshot_profile'], 3)
+
     def test_create_params_snapshot_ko(self):
         args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'FR',
                 '--snapshotprofile', '7']

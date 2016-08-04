@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import os
-import posix
 import pwd
 import socket
 import select
@@ -44,7 +43,7 @@ class FdPipe:
 
         (rl, wl, el) = select.select([], [outfd], [outfd])
         if outfd in wl:
-            length = posix.write(outfd, self.out_buf[outfd])
+            length = os.write(outfd, self.out_buf[outfd])
             self.out_buf[outfd] = self.out_buf[outfd][length:]
             if not self.out_buf[outfd]:
                 self.select_for_read(outfd)
@@ -72,9 +71,9 @@ class FdPipe:
                 self.poller.unregister(fd)
                 ret = False
             if ev & select.POLLIN:
-                data = posix.read(fd, 4096)
+                data = os.read(fd, 4096)
                 if not data:
-                    posix.close(self.fd_map[fd])
+                    os.close(self.fd_map[fd])
                     ret = False
                 self.queue_write(self.fd_map[fd], data)
             if ev & select.POLLOUT:
@@ -110,7 +109,7 @@ def tcp4_to_unix(local_port, unix_path):
         (rl, wl, el) = select.select([server], [], [server], 1)
         if server in rl:
             (client, _) = server.accept()
-            if not posix.fork():
+            if not os.fork():
                 unix = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
                 try:
                     unix.connect(unix_path)
@@ -122,7 +121,7 @@ def tcp4_to_unix(local_port, unix_path):
                 return
             client.close()
         try:
-            posix.waitpid(-1, posix.WNOHANG)
+            os.waitpid(-1, os.WNOHANG)
         except OSError:
             pass
 

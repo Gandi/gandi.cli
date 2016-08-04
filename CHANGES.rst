@@ -1,6 +1,21 @@
 Changelog
 =========
 
+0.19
+----
+
+* Update create commands for namespaces: vm, paas, ip, disk, vlan, webacc
+  to handle new datacenter status:
+  - prevent using a closed datacenter for creation
+  - display a warning when using a datacenter which will be closed
+    in the future
+* Update 'gandi mailbox info' command: aliases are now sorted
+* Fixes #178: 'gandi account info' command now display prepaid amount
+* Fixes #185: 'gandi domain create' command can now change nameservers
+* Fixes #187: 'gandi record list' command has a --limit parameter
+* Fixes #188: broken links in README
+* Fixes certificate unittest for python3
+
 0.18
 ----
 

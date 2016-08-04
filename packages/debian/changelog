@@ -1,3 +1,19 @@
+gandicli (0.19) unstable; urgency=medium
+
+  * Update create commands for namespaces: vm, paas, ip, disk, vlan, webacc
+    to handle new datacenter status:
+    - prevent using a closed datacenter for creation
+    - display a warning when using a datacenter which will be closed
+      in the future
+  * Update 'gandi mailbox info' command: aliases are now sorted
+  * Fixes #178: 'gandi account info' command now display prepaid amount
+  * Fixes #185: 'gandi domain create' command can now change nameservers
+  * Fixes #187: 'gandi record list' command has a --limit parameter
+  * Fixes #188: broken links in README
+  * Fixes certificate unittest for python3
+
+ -- Dejan Filipovic <sayoun@gandi.net>  Thu, 28 Jul 2016 15:28:14 +0200
+
 gandicli (0.18) unstable; urgency=medium
 
   * Update 'gandi paas update' command: --upgrade parameter is now a boolean flag

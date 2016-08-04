@@ -6,7 +6,10 @@ import click
 from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_paas, output_generic, randomstring
+from gandi.cli.core.utils import (
+    output_paas, output_generic, randomstring,
+    DatacenterLimited
+)
 from gandi.cli.core.params import (
     pass_gandi, DATACENTER, SNAPSHOTPROFILE_PAAS, PAAS_TYPE, option,
 )
@@ -215,6 +218,13 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     $ gandi paas types
 
     """
+    try:
+        gandi.datacenter.is_opened(datacenter, 'paas')
+    except DatacenterLimited as exc:
+        gandi.echo('/!\ Datacenter %s will be closed on %s, '
+                   'please consider using another datacenter.' %
+                   (datacenter, exc.date))
+
     if not password:
         password = click.prompt('password', hide_input=True,
                                 confirmation_prompt=True)

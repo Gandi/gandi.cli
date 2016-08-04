@@ -4,7 +4,10 @@ import click
 from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_disk, output_generic, randomstring
+from gandi.cli.core.utils import (
+    output_disk, output_generic, randomstring,
+    DatacenterLimited
+)
 from gandi.cli.core.utils.size import disk_check_size
 from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE_VM,
                                    KERNEL, SIZE, option, DISK_IMAGE)
@@ -249,6 +252,13 @@ def delete(gandi, resource, force, background):
 def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
            background):
     """ Create a new disk. """
+    try:
+        gandi.datacenter.is_opened(datacenter, 'iaas')
+    except DatacenterLimited as exc:
+        gandi.echo('/!\ Datacenter %s will be closed on %s, '
+                   'please consider using another datacenter.' %
+                   (datacenter, exc.date))
+
     output_keys = ['id', 'type', 'step']
     name = name or randomstring('vdi')
 

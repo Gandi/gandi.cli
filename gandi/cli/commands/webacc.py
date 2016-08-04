@@ -4,7 +4,8 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (
-    output_generic, output_json, output_sub_generic
+    output_generic, output_json, output_sub_generic,
+    DatacenterLimited
 )
 from gandi.cli.core.params import (
     pass_gandi, BACKEND, DATACENTER, WEBACC_NAME, WEBACC_VHOST_NAME
@@ -147,6 +148,13 @@ def info(gandi, resource, format):
 def create(gandi, name, datacenter, backend, port, vhost, algorithm,
            ssl_enable, zone_alter, ssl, private_key, poll_cert):
     """ Create a webaccelerator """
+    try:
+        gandi.datacenter.is_opened(datacenter, 'iaas')
+    except DatacenterLimited as exc:
+        gandi.echo('/!\ Datacenter %s will be closed on %s, '
+                   'please consider using another datacenter.' %
+                   (datacenter, exc.date))
+
     backends = backend
     for backend in backends:
         # Check if a port is set for each backend, else set a default port

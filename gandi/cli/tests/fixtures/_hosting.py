@@ -1,3 +1,5 @@
+from datetime import datetime
+
 try:
     # python3
     from xmlrpc.client import DateTime
@@ -252,26 +254,43 @@ def datacenter_list(options):
             'name': 'Equinix Paris',
             'id': 1,
             'country': 'France',
+            'deactivate_at': None,
+            'iaas_closed_for': 'NONE',
+            'paas_closed_for': 'NONE',
             'dc_code': 'FR-SD2'},
            {'iso': 'US',
             'name': 'Level3 Baltimore',
             'id': 2,
             'country': 'United States of America',
+            'deactivate_at': datetime(2016, 12, 25, 0, 0, 0),
+            'iaas_closed_for': 'ALL',
+            'paas_closed_for': 'ALL',
             'dc_code': 'US-BA1'},
            {'iso': 'LU',
             'name': 'Bissen',
             'id': 3,
             'country': 'Luxembourg',
+            'deactivate_at': None,
+            'iaas_closed_for': 'NONE',
+            'paas_closed_for': 'NONE',
             'dc_code': 'LU-BI1'},
            {'iso': 'FR',
             'name': 'France, Paris',
             'id': 4,
             'country': 'France',
+            'deactivate_at': datetime(2016, 12, 25, 0, 0, 0),
+            'iaas_closed_for': 'NEW',
+            'paas_closed_for': 'NEW',
             'dc_code': 'FR-SD3'}]
 
     options.pop('sort_by', None)
     for fkey in options:
-        ret = [dc for dc in ret if dc[fkey] == options[fkey]]
+        if (fkey == 'iaas_opened') or (fkey == 'paas_opened'):
+            fkey = '%s_closed_for' % fkey[:4]
+            ret = [dc for dc in ret if dc[fkey] in ['NONE', 'NEW']]
+        else:
+            ret = [dc for dc in ret if dc[fkey] == options[fkey]]
+
     return ret
 
 
