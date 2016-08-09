@@ -38,7 +38,7 @@ class Domain(GandiModule):
             time.sleep(1)
             result = cls.call('domain.price', [fqdn])
 
-        return (result[0])
+        return result[0]
 
     @classmethod
     def create(cls, fqdn, duration, owner, admin, tech, bill, nameserver,
