@@ -38,15 +38,15 @@ def info(gandi, resource):
 
 
 @cli.command()
-@click.argument('resource', metavar='DOMAIN', required=False)
+@click.argument('resource', metavar='DOMAIN')
 @pass_gandi
 def check(gandi, resource):
     """Check domain availability and price."""
 
-    result = gandi.domain.check(resource)
-    output_domain_check(gandi, result, justify=12)
+    result_check = gandi.domain.check(resource)
+    output_domain_check(gandi, result_check, justify=12)
 
-    return result
+    return result_check
 
 
 @cli.command()
