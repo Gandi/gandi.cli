@@ -85,7 +85,7 @@ def info(gandi, resource):
               help='Private key used to generate this CRT.')
 @click.option('--crt', '--certificate', required=False,
               help='The certificate.')
-@click.option('--crt-id', '--certificate-id', required=False,
+@click.option('--crt-id', '--certificate-id', type=click.INT, required=False,
               help='The certificate.')
 @pass_gandi
 def create(gandi, private_key, certificate, certificate_id):
