@@ -229,7 +229,7 @@ Details:
 
 * ``gandi domain create domain.tld`` helps register a domain. Options are ``--domain domain.tld`` for the domain you want to get (/!\ this option is deprecated and will be removed upon next release), ``--duration INTEGER RANGE`` for the registration period, ``--owner TEXT``, ``--admin TEXT``, ``--tech TEXT``, ``--bill TEXT`` for the four contacts to pass to the creation process, ``--nameserver TEXT`` for adding custom nameservers. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
-* ``gandi  domain check omain.tld`` Check information about the specific domain availability and price.
+* ``gandi  domain check domain.tld`` Retrieve information about the specific domain availability and price.
 
 * ``gandi domain renew domain.tld`` will renew a domain. Available option is ``--duration INTEGER RANGE`` for the registration period. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 

@@ -44,7 +44,7 @@ def check(gandi, resource):
     """Check domain availability and price."""
 
     result_check = gandi.domain.check(resource)
-    output_domain_check(gandi, result_check, justify=12)
+    output_domain_check(gandi, result_check)
 
     return result_check
 
