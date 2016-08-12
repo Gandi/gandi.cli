@@ -179,6 +179,50 @@ size      : 3072
 
         self.assertEqual(result.exit_code, 0)
 
+    def test_list_attached(self):
+
+        result = self.invoke_with_exceptions(disk.list, ['--attached'])
+
+        self.assertEqual(result.output, """\
+name      : sys_1426759833
+state     : created
+size      : 3072
+----------
+name      : sys_server01
+state     : created
+size      : 3072
+----------
+name      : data
+state     : created
+size      : 3072
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_list_detached(self):
+
+        result = self.invoke_with_exceptions(disk.list, ['--detached'])
+
+        self.assertEqual(result.output, """\
+name      : snaptest
+state     : created
+size      : 3072
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_list_attached_detached_ko(self):
+        args = ['--detached', '--attached']
+        result = self.invoke_with_exceptions(disk.list, args)
+
+        self.assertEqual(result.output, """\
+Usage: disk list [OPTIONS]
+
+Error: You cannot use both --attached and --detached.
+""")
+
+        self.assertEqual(result.exit_code, 2)
+
     def test_info(self):
         result = self.invoke_with_exceptions(disk.info, ['sys_server01'])
 

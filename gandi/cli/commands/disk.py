@@ -16,6 +16,9 @@ from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE_VM,
 @cli.command()
 @click.option('--only-data', help='Only display data disks.', is_flag=True)
 @click.option('--only-snapshot', help='Only display snapshots.', is_flag=True)
+@click.option('--attached', help='Only display disks attached to a VM',
+              is_flag=True)
+@click.option('--detached', help='Only display detached disks', is_flag=True)
 @click.option('--type', help='Display types.', is_flag=True)
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--vm', help='Display vms.', is_flag=True)
@@ -26,12 +29,15 @@ from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE_VM,
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @pass_gandi
-def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
-         datacenter, limit):
+def list(gandi, only_data, only_snapshot, attached, detached, type, id, vm,
+         snapshotprofile, datacenter, limit):
     """ List disks. """
     options = {
         'items_per_page': limit,
     }
+
+    if attached and detached:
+        raise UsageError('You cannot use both --attached and --detached.')
 
     if only_data:
         options.setdefault('type', []).append('data')
@@ -56,7 +62,16 @@ def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
     result = gandi.disk.list(options)
     vms = dict([(vm_['id'], vm_) for vm_ in gandi.iaas.list()])
 
-    for num, disk in enumerate(result):
+    # filter results per attached/detached
+    disks = []
+    for disk in result:
+        if attached and not disk['vms_id']:
+            continue
+        if detached and disk['vms_id']:
+            continue
+        disks.append(disk)
+
+    for num, disk in enumerate(disks):
         if num:
             gandi.separator_line()
         output_disk(gandi, disk, [], vms, profiles, output_keys)
