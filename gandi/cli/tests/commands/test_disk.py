@@ -608,6 +608,7 @@ step      : WAIT""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
+/!\ VM server01 datacenter will be used instead of LU-BI1.
 Creating your disk.
 \rProgress: [###] 100.00%  00:00:00  \
 \nAttaching your disk.
@@ -616,6 +617,7 @@ Creating your disk.
         params = self.api_calls['hosting.disk.create'][0][0]
         self.assertEqual(params['type'], 'data')
         self.assertEqual(params['size'], 3072)
+        self.assertEqual(params['datacenter_id'], 1)
         self.assertTrue(params['name'].startswith('vdi'))
 
     def test_create_source(self):

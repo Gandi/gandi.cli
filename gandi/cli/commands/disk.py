@@ -274,6 +274,15 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
                    'please consider using another datacenter.' %
                    (datacenter, exc.date))
 
+    if vm:
+        vm_dc = gandi.iaas.info(vm)
+        vm_dc_id = vm_dc['datacenter_id']
+        dc_id = int(gandi.datacenter.usable_id(datacenter))
+        if vm_dc_id != dc_id:
+            gandi.echo('/!\ VM %s datacenter will be used instead of %s.'
+                       % (vm, datacenter))
+        datacenter = vm_dc_id
+
     output_keys = ['id', 'type', 'step']
     name = name or randomstring('vdi')
 
