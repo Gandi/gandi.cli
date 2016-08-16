@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import os
-import pwd
 import socket
 import select
 import subprocess
@@ -128,6 +127,7 @@ def tcp4_to_unix(local_port, unix_path):
 
 def find_port(addr, user):
     """Find local port in existing tunnels"""
+    import pwd
     home = pwd.getpwuid(os.getuid()).pw_dir
     for name in os.listdir('%s/.ssh/' % home):
         if name.startswith('unixpipe_%s@%s_' % (user, addr,)):
