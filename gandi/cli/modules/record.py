@@ -28,9 +28,10 @@ class Record(GandiModule):
     """
 
     @classmethod
-    def list(cls, zone_id):
+    def list(cls, zone_id, options=None):
         """List zone records for a zone."""
-        return cls.call('domain.zone.record.list', zone_id, 0)
+        options = options if options else {}
+        return cls.call('domain.zone.record.list', zone_id, 0, options)
 
     @classmethod
     def add(cls, zone_id, version_id, record):

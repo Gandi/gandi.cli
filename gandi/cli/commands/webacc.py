@@ -4,7 +4,8 @@ import click
 
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (
-    output_generic, output_json, output_sub_generic
+    output_generic, output_json, output_sub_generic,
+    DatacenterLimited
 )
 from gandi.cli.core.params import (
     pass_gandi, BACKEND, DATACENTER, WEBACC_NAME, WEBACC_VHOST_NAME
@@ -54,8 +55,9 @@ def list(gandi, limit, format):
                 server['name'] = vm_info['hostname']
                 output_servers = ['name', 'ip', 'port', 'state']
             except Exception:
-                warningmsg = ('\tBackend with ip address %s no longer \
-                    exists.\n\tYou should remove it.' % server['ip'])
+                warningmsg = ('\tBackend with ip address %s no longer '
+                              'exists.\n\tYou should remove it.'
+                              % server['ip'])
                 gandi.echo(warningmsg)
                 output_servers = ['ip', 'port', 'state']
             output_sub_generic(gandi, server, output_servers,
@@ -102,8 +104,8 @@ def info(gandi, resource, format):
             server['name'] = gandi.iaas.info(iface['vm_id'])['hostname']
             output_servers = ['name', 'ip', 'port', 'state']
         except:
-            warningmsg = ('\tBackend with ip address %s no longer exists.\
-                \n\tYou should remove it.' % server['ip'])
+            warningmsg = ('\tBackend with ip address %s no longer exists.'
+                          '\n\tYou should remove it.' % server['ip'])
             gandi.echo(warningmsg)
             output_servers = ['ip', 'port', 'state']
         output_sub_generic(gandi, server, output_servers, justify=14)
@@ -146,6 +148,13 @@ def info(gandi, resource, format):
 def create(gandi, name, datacenter, backend, port, vhost, algorithm,
            ssl_enable, zone_alter, ssl, private_key, poll_cert):
     """ Create a webaccelerator """
+    try:
+        gandi.datacenter.is_opened(datacenter, 'iaas')
+    except DatacenterLimited as exc:
+        gandi.echo('/!\ Datacenter %s will be closed on %s, '
+                   'please consider using another datacenter.' %
+                   (datacenter, exc.date))
+
     backends = backend
     for backend in backends:
         # Check if a port is set for each backend, else set a default port

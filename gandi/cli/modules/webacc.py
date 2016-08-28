@@ -141,17 +141,20 @@ class Webacc(GandiModule):
 
     @classmethod
     def backend_enable(cls, backend):
-        """ Enable a probe for a server """
+        """ Enable a backend for a server """
         server = cls.backend_list(backend)
-        oper = cls.call('hosting.rproxy.server.enable', server[0]['id'])
-        cls.echo('Activating backend %s' % server[0]['ip'])
-        cls.display_progress(oper)
-        cls.echo('Backend activated')
-        return oper
+        if server:
+            oper = cls.call('hosting.rproxy.server.enable', server[0]['id'])
+            cls.echo('Activating backend %s' % server[0]['ip'])
+            cls.display_progress(oper)
+            cls.echo('Backend activated')
+            return oper
+        else:
+            return cls.echo('No backend found')
 
     @classmethod
     def backend_disable(cls, backend):
-        """ Enable a probe for a backend """
+        """ Disable a backend for a server """
         server = cls.backend_list(backend)
         oper = cls.call('hosting.rproxy.server.disable',
                         server[0]['id'])
@@ -282,7 +285,7 @@ class Webacc(GandiModule):
     @classmethod
     def from_name(cls, name):
         """Retrieve webacc id associated to a webacc name."""
-        result = cls.list({})
+        result = cls.list({'items_per_page': 500})
         webaccs = {}
         for webacc in result:
             webaccs[webacc['name']] = webacc['id']
@@ -291,7 +294,7 @@ class Webacc(GandiModule):
     @classmethod
     def from_ip(cls, ip):
         """Retrieve webacc id associated to a webacc ip"""
-        result = cls.list({})
+        result = cls.list({'items_per_page': 500})
         webaccs = {}
         for webacc in result:
             for server in webacc['servers']:
@@ -301,7 +304,7 @@ class Webacc(GandiModule):
     @classmethod
     def from_vhost(cls, vhost):
         """Retrieve webbacc id associated to a webacc vhost"""
-        result = cls.list({})
+        result = cls.list({'items_per_page': 500})
         webaccs = {}
         for webacc in result:
             for vhost in webacc['vhosts']:

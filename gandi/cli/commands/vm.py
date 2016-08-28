@@ -5,7 +5,8 @@ import click
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (
     output_vm, output_image, output_generic, output_datacenter,
-    output_kernels, output_metric
+    output_kernels, output_metric,
+    DatacenterLimited
 )
 from gandi.cli.core.utils.size import disk_check_size
 from gandi.cli.core.params import (
@@ -245,15 +246,16 @@ def delete(gandi, background, force, resource):
 @click.option('--vlan', default=None, help='A vlan to use with this vm.')
 @click.option('--ip', default=None, help='An ip in the vlan for this vm.')
 @click.option('--script', default=None,
-              help='Local script to upload and run on the VM after creation.'
-                   'Instead of spawning an ssh session')
+              help='Local script to upload and run on the VM after creation.')
+@click.option('--script-args', default=None,
+              help='Local script argument line.')
 @click.option('--ssh', default=False, is_flag=True,
               help='Open a SSH session to the machine after creation '
                    '(default=False).')
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
            password, hostname, image, run, background, sshkey, size, vlan, ip,
-           script, ssh):
+           script, script_args, ssh):
     """Create a new virtual machine.
 
     you can specify a configuration entry named 'sshkey' containing
@@ -270,6 +272,13 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     $ gandi vm images
 
     """
+    try:
+        gandi.datacenter.is_opened(datacenter, 'iaas')
+    except DatacenterLimited as exc:
+        gandi.echo('/!\ Datacenter %s will be closed on %s, '
+                   'please consider using another datacenter.' %
+                   (datacenter, exc.date))
+
     pwd = None
     if password or not sshkey:
         pwd = click.prompt('password', hide_input=True,
@@ -302,7 +311,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                                bandwidth, login, pwd, hostname,
                                image, run,
                                background,
-                               sshkey, size, vlan, ip, script, ssh)
+                               sshkey, size, vlan, ip, script, script_args, ssh)
     if background:
         gandi.echo('* IAAS backend is now creating your VM and its '
                    'associated resources in the background.')
@@ -452,7 +461,7 @@ def kernels(gandi, vm, datacenter, flavor, match):
     for num, dc in enumerate(dc_list):
         if num:
             gandi.echo('\n')
-        output_datacenter(gandi, dc)
+        output_datacenter(gandi, dc, ['dc_name'])
         kmap = gandi.kernel.list(dc['id'], flavor, match)
         for _flavor in kmap:
             gandi.separator_line()
@@ -464,7 +473,7 @@ def kernels(gandi, vm, datacenter, flavor, match):
 @pass_gandi
 def datacenters(gandi, id):
     """List available datacenters."""
-    output_keys = ['iso', 'name', 'country', 'dc_code']
+    output_keys = ['iso', 'name', 'country', 'dc_code', 'status']
     if id:
         output_keys.append('id')
 
@@ -472,6 +481,6 @@ def datacenters(gandi, id):
     for num, dc in enumerate(result):
         if num:
             gandi.separator_line()
-        output_generic(gandi, dc, output_keys)
+        output_datacenter(gandi, dc, output_keys, justify=10)
 
     return result

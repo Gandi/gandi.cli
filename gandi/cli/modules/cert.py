@@ -103,7 +103,7 @@ class Certificate(GandiModule):
     @classmethod
     def get_latest_valid(cls, hosts):
         """ Retrieve valid certificates by fqdn. """
-        certs = cls.list({'status': 'valid'})
+        certs = cls.list({'status': 'valid', 'items_per_page': 500})
         possible = None
 
         if not isinstance(hosts, (tuple, list)):
@@ -121,9 +121,18 @@ class Certificate(GandiModule):
     @classmethod
     def from_cn(cls, common_name):
         """ Retrieve a certificate by its common name. """
-        result = [(cert['id'], [cert['cn']] + cert['altnames'])
-                  for cert in cls.list({'status': ['pending', 'valid']})]
+        # search with cn
+        result_cn = [(cert['id'], [cert['cn']] + cert['altnames'])
+                     for cert in cls.list({'status': ['pending', 'valid'],
+                                           'items_per_page': 500,
+                                           'cn': common_name})]
+        # search with altname
+        result_alt = [(cert['id'], [cert['cn']] + cert['altnames'])
+                      for cert in cls.list({'status': ['pending', 'valid'],
+                                            'items_per_page': 500,
+                                            'altname': common_name})]
 
+        result = result_cn + result_alt
         ret = {}
         for id_, fqdns in result:
             for fqdn in fqdns:
@@ -139,11 +148,12 @@ class Certificate(GandiModule):
     def usable_ids(cls, id, accept_multi=True):
         """ Retrieve id from input which can be an id or a cn."""
         try:
-            qry_id = cls.from_cn(id)
-            if not qry_id:
-                qry_id = [int(id)]
-        except Exception:
-            qry_id = None
+            qry_id = [int(id)]
+        except ValueError:
+            try:
+                qry_id = cls.from_cn(id)
+            except Exception:
+                qry_id = None
 
         if not qry_id or not accept_multi and len(qry_id) != 1:
             msg = 'unknown identifier %s' % id
@@ -186,7 +196,7 @@ class Certificate(GandiModule):
     @classmethod
     def info(cls, id):
         """ Display information about a certificate."""
-        return cls.call('cert.info', cls.usable_id(id))
+        return cls.call('cert.info', id)
 
     @classmethod
     def get_package(cls, common_name, type='std', max_altname=None,
@@ -380,14 +390,15 @@ class Certificate(GandiModule):
             csr = cls.create_csr(common_name, private_key, params)
 
         if csr and os.path.exists(csr):
-            csr = open(csr).read()
+            with open(csr) as fcsr:
+                csr = fcsr.read()
 
         return csr
 
     @staticmethod
     def pretty_format_cert(cert):
         """ Pretty display of a certificate."""
-        crt = cert['cert']
+        crt = cert.get('cert')
         if crt:
             crt = ('-----BEGIN CERTIFICATE-----\n' +
                    '\n'.join([crt[index * 64:(index + 1) * 64]

@@ -42,7 +42,7 @@ class Iaas(GandiModule, SshkeyHelper):
     @classmethod
     def resource_list(cls):
         """ Get the possible list of resources (hostname, id). """
-        items = cls.list()
+        items = cls.list({'items_per_page': 500})
         ret = [vm['hostname'] for vm in items]
         ret.extend([str(vm['id']) for vm in items])
         return ret
@@ -195,7 +195,7 @@ class Iaas(GandiModule, SshkeyHelper):
     @classmethod
     def create(cls, datacenter, memory, cores, ip_version, bandwidth,
                login, password, hostname, image, run, background, sshkey,
-               size, vlan, ip, script, ssh):
+               size, vlan, ip, script, script_args, ssh):
         """Create a new virtual machine."""
         from gandi.cli.modules.network import Ip, Iface
         if not background and not cls.intty():
@@ -232,6 +232,8 @@ class Iaas(GandiModule, SshkeyHelper):
         if script:
             with open(script) as fd:
                 vm_params['script'] = fd.read()
+            if script_args:
+                vm_params['script_args'] = script_args
 
         vm_params.update(cls.convert_sshkey(sshkey))
 
@@ -241,6 +243,8 @@ class Iaas(GandiModule, SshkeyHelper):
                        'name': disk_name[:15]}
 
         if size:
+            if isinstance(size, tuple):
+                prefix, size = size
             disk_params['size'] = size
 
         sys_disk_id_ = int(Image.usable_id(image, datacenter_id_))
@@ -358,7 +362,7 @@ class Iaas(GandiModule, SshkeyHelper):
         listening"""
         cls.echo('Waiting for the vm to come online')
         version, ip_addr = cls.vm_ip(vm_id)
-        give_up = time.time() + 120
+        give_up = time.time() + 300
         while time.time() < give_up:
             try:
                 inet = socket.AF_INET

@@ -4,8 +4,10 @@ import click
 from IPy import IP
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import (output_vlan, output_generic, output_iface,
-                                  output_ip, output_line)
+from gandi.cli.core.utils import (
+    output_vlan, output_generic, output_iface, output_ip, output_line,
+    DatacenterLimited
+)
 from gandi.cli.core.params import option, pass_gandi, DATACENTER
 
 
@@ -135,10 +137,14 @@ def delete(gandi, background, force, resource):
 @pass_gandi
 def create(gandi, name, datacenter, subnet, gateway, background):
     """ Create a new vlan """
-    result = gandi.vlan.create(name, datacenter, subnet, gateway, background)
+    try:
+        gandi.datacenter.is_opened(datacenter, 'iaas')
+    except DatacenterLimited as exc:
+        gandi.echo('/!\ Datacenter %s will be closed on %s, '
+                   'please consider using another datacenter.' %
+                   (datacenter, exc.date))
 
-    if not result:
-        return
+    result = gandi.vlan.create(name, datacenter, subnet, gateway, background)
 
     if background:
         gandi.pretty_echo(result)
@@ -191,7 +197,9 @@ def update(gandi, resource, name, gateway, create, bandwidth):
 
         if not ips and create:
             gandi.echo('Will create a new ip in this vlan for vm %s' % gateway)
-            oper = gandi.ip.attach(None, vm['id'], resource, bandwidth)
+            oper = gandi.ip.create('4', vm['datacenter_id'], bandwidth,
+                                   vm['hostname'], resource)
+
             iface_id = oper['iface_id']
             iface = gandi.iface.info(iface_id)
             ips = [ip['ip'] for ip in iface['ips'] if ip['version'] == 4]
@@ -199,8 +207,5 @@ def update(gandi, resource, name, gateway, create, bandwidth):
         params['gateway'] = ips[0]
 
     result = gandi.vlan.update(resource, params)
-
-    if not result:
-        return
 
     return result

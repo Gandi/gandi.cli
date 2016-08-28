@@ -1,9 +1,9 @@
 """ Datacenter commands module. """
 
 from __future__ import print_function
-import sys
 
 from gandi.cli.core.base import GandiModule
+from gandi.cli.core.utils import DatacenterClosed, DatacenterLimited
 
 
 class Datacenter(GandiModule):
@@ -17,6 +17,26 @@ class Datacenter(GandiModule):
     def list(cls, options=None):
         """List available datacenters."""
         return cls.safe_call('hosting.datacenter.list', options or {})
+
+    @classmethod
+    def is_opened(cls, dc_code, type_):
+        """List opened datacenters for given type."""
+        options = {'dc_code': dc_code, '%s_opened' % type_: True}
+        datacenters = cls.safe_call('hosting.datacenter.list', options)
+        if not datacenters:
+            # try with ISO code
+            options = {'iso': dc_code, '%s_opened' % type_: True}
+            datacenters = cls.safe_call('hosting.datacenter.list', options)
+            if not datacenters:
+                raise DatacenterClosed('/!\ Datacenter %s is closed, please '
+                                       'choose another datacenter.' % dc_code)
+
+        datacenter = datacenters[0]
+        if datacenter.get('%s_closed_for' % type_) == 'NEW':
+            dc_close_date = datacenter.get('deactivate_at', '')
+            if dc_close_date:
+                dc_close_date = dc_close_date.strftime('%d/%m/%Y')
+            raise DatacenterLimited(dc_close_date)
 
     @classmethod
     def filtered_list(cls, name=None, obj=None):

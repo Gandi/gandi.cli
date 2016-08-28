@@ -8,6 +8,7 @@ from datetime import datetime
 
 import json
 from click.formatting import measure_table
+from click import ClickException
 
 from .ascii_sparks import sparks
 
@@ -37,6 +38,24 @@ class DomainNotAvailable(Exception):
     def __init__(self, errors):
         """ Initialize exception."""
         self.errors = errors
+
+
+class DatacenterClosed(ClickException):
+
+    """Raise when datacenter is closed: ALL"""
+
+    def __init__(self, message):
+        """ Initialize exception."""
+        self.message = message
+
+
+class DatacenterLimited(Exception):
+
+    """Raise when datacenter will soon be closed: NEW"""
+
+    def __init__(self, date):
+        """ Initialize exception."""
+        self.date = date
 
 
 def format_list(data):
@@ -77,6 +96,11 @@ def output_generic(gandi, data, output_keys, justify=10):
 def output_account(gandi, account, output_keys, justify=17):
     """ Helper to output an account information."""
     output_generic(gandi, account, output_keys, justify)
+
+    if 'prepaid' in output_keys:
+        prepaid = '%s %s' % (account['prepaid_info']['amount'],
+                             account['prepaid_info']['currency'])
+        output_line(gandi, 'prepaid', prepaid, justify)
 
     if 'credit' in output_keys:
         output_line(gandi, 'credits', None, justify)
@@ -200,8 +224,40 @@ def output_kernels(gandi, flavor, name_list, justify=14):
         output_line(gandi, 'version', name, justify)
 
 
-def output_datacenter(gandi, datacenter, justify=14):
-    output_line(gandi, 'datacenter', datacenter['name'], justify)
+def output_datacenter(gandi, datacenter, output_keys, justify=14):
+    """ Helper to output datacenter information."""
+    output_generic(gandi, datacenter, output_keys, justify)
+
+    if 'dc_name' in output_keys:
+        output_line(gandi, 'datacenter', datacenter['name'], justify)
+
+    if 'status' in output_keys:
+        deactivate_at = datacenter.get('deactivate_at')
+        if deactivate_at:
+            output_line(gandi, 'closing on',
+                        deactivate_at.strftime('%d/%m/%Y'), justify)
+
+        closing = []
+        iaas_closed_for = datacenter.get('iaas_closed_for')
+        if iaas_closed_for == 'ALL':
+            closing.append('vm')
+
+        paas_closed_for = datacenter.get('paas_closed_for')
+        if paas_closed_for == 'ALL':
+            closing.append('paas')
+
+        if closing:
+            output_line(gandi, 'closed for', ', '.join(closing), justify)
+
+
+def output_cmdline(gandi, cmdline, justify=14):
+    args = []
+    for key in sorted(cmdline, reverse=True):
+        if isinstance(cmdline[key], bool):
+            args.append(key)
+        else:
+            args.append('%s=%s' % (key, cmdline[key]))
+    output_line(gandi, 'cmdline', ' '.join(args), justify)
 
 
 def output_disk(gandi, disk, datacenters, vms, profiles, output_keys,
@@ -211,6 +267,9 @@ def output_disk(gandi, disk, datacenters, vms, profiles, output_keys,
 
     if 'kernel' in output_keys and disk.get('kernel_version'):
         output_line(gandi, 'kernel', disk['kernel_version'], justify)
+
+    if 'cmdline' in output_keys and disk.get('kernel_cmdline'):
+        output_cmdline(gandi, disk.get('kernel_cmdline'), justify)
 
     if 'dc' in output_keys:
         dc_name = None
@@ -381,13 +440,13 @@ def output_list(gandi, val):
 
 def date_handler(obj):
     """ Serialize date for json output """
-    return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+    return obj.isoformat() if hasattr(obj, 'isoformat') else str(obj)
 
 
 def output_json(gandi, format, value):
     """ Helper to show json output """
     if format == 'json':
-        gandi.echo(json.dumps(value, default=date_handler))
+        gandi.echo(json.dumps(value, default=date_handler, sort_keys=True))
     elif format == 'pretty-json':
         gandi.echo(json.dumps(value, default=date_handler, sort_keys=True,
                    indent=2, separators=(',', ': ')))
@@ -475,6 +534,9 @@ def output_mailbox(gandi, mailbox, output_keys, justify=16):
     if responder:
         output_keys.pop(output_keys.index('responder'))
 
+    if 'aliases' in output_keys:
+        mailbox['aliases'] = sorted(mailbox['aliases'])
+
     output_generic(gandi, mailbox, output_keys, justify)
 
     if 'fallback' in output_keys:
@@ -494,3 +556,9 @@ def output_mailbox(gandi, mailbox, output_keys, justify=16):
         output_line(gandi, 'responder active', responder_status, justify)
         output_line(gandi, 'responder text', mailbox['responder']['text'],
                     justify)
+
+
+def output_forward(gandi, domain, forward, justify=14):
+    """ Helper to output a mail forward information."""
+    for dest in forward['destinations']:
+        output_line(gandi, forward['source'], dest, justify)

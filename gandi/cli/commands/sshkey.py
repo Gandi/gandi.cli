@@ -75,8 +75,6 @@ def create(gandi, name, value=None, filename=None):
         value = filename.read()
 
     ret = gandi.sshkey.create(name, value)
-    if not ret:
-        return
 
     output_keys = ['id', 'name', 'fingerprint']
     return output_sshkey(gandi, ret, output_keys)

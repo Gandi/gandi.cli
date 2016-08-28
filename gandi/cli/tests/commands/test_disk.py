@@ -167,6 +167,62 @@ size      : 3072
 
         self.assertEqual(result.exit_code, 0)
 
+    def test_list_filter_datacenter(self):
+        args = ['--datacenter', 'LU-BI1']
+        result = self.invoke_with_exceptions(disk.list, args)
+
+        self.assertEqual(result.output, """\
+name      : sys_1426759833
+state     : created
+size      : 3072
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_list_attached(self):
+
+        result = self.invoke_with_exceptions(disk.list, ['--attached'])
+
+        self.assertEqual(result.output, """\
+name      : sys_1426759833
+state     : created
+size      : 3072
+----------
+name      : sys_server01
+state     : created
+size      : 3072
+----------
+name      : data
+state     : created
+size      : 3072
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_list_detached(self):
+
+        result = self.invoke_with_exceptions(disk.list, ['--detached'])
+
+        self.assertEqual(result.output, """\
+name      : snaptest
+state     : created
+size      : 3072
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_list_attached_detached_ko(self):
+        args = ['--detached', '--attached']
+        result = self.invoke_with_exceptions(disk.list, args)
+
+        self.assertEqual(result.output, """\
+Usage: disk list [OPTIONS]
+
+Error: You cannot use both --attached and --detached.
+""")
+
+        self.assertEqual(result.exit_code, 2)
+
     def test_info(self):
         result = self.invoke_with_exceptions(disk.info, ['sys_server01'])
 
@@ -176,6 +232,7 @@ size      : 3072
 type      : data
 id        : 4969249
 kernel    : 3.12-x86_64 (hvm)
+cmdline   : root=/dev/sda ro nosep console=ttyS0
 datacenter: FR-SD2
 vm        : server01
 """)
@@ -199,6 +256,7 @@ size      : 3072
 type      : data
 id        : 4969249
 kernel    : 3.12-x86_64 (hvm)
+cmdline   : root=/dev/sda ro nosep console=ttyS0
 datacenter: FR-SD2
 vm        : server01
 """)
@@ -358,6 +416,18 @@ Updating your disk.
         self.assertEqual(self.api_calls['hosting.disk.update'][0][1],
                          {'size': 5120})
 
+    def test_update_size_prefix(self):
+        args = ['data', '--size', '+3G']
+        result = self.invoke_with_exceptions(disk.update, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Updating your disk.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(self.api_calls['hosting.disk.update'][0][1],
+                         {'size': 6144})
+
     def test_update_background(self):
         args = ['data', '--name', 'data2', '--bg']
         result = self.invoke_with_exceptions(disk.update, args)
@@ -480,6 +550,36 @@ Creating your disk.
         self.assertEqual(params['name'], 'newdisk')
         self.assertEqual(params['snapshot_profile'], 3)
 
+    def test_create_datacenter_closed(self):
+        args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'US-BA1',
+                '--snapshotprofile', '3']
+        result = self.invoke_with_exceptions(disk.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
+        self.assertEqual(result.exit_code, 1)
+
+    def test_create_datacenter_limited(self):
+        args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'FR-SD3',
+                '--snapshotprofile', '3']
+        result = self.invoke_with_exceptions(disk.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+/!\ Datacenter FR-SD3 will be closed on 25/12/2016, please consider using \
+another datacenter.
+Creating your disk.
+\rProgress: [###] 100.00%  00:00:00""")
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.disk.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 4)
+        self.assertEqual(params['size'], 5120)
+        self.assertEqual(params['name'], 'newdisk')
+        self.assertEqual(params['snapshot_profile'], 3)
+
     def test_create_params_snapshot_ko(self):
         args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'FR',
                 '--snapshotprofile', '7']
@@ -508,6 +608,7 @@ step      : WAIT""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
+/!\ VM server01 datacenter will be used instead of LU-BI1.
 Creating your disk.
 \rProgress: [###] 100.00%  00:00:00  \
 \nAttaching your disk.
@@ -516,6 +617,7 @@ Creating your disk.
         params = self.api_calls['hosting.disk.create'][0][0]
         self.assertEqual(params['type'], 'data')
         self.assertEqual(params['size'], 3072)
+        self.assertEqual(params['datacenter_id'], 1)
         self.assertTrue(params['name'].startswith('vdi'))
 
     def test_create_source(self):

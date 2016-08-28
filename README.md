@@ -18,7 +18,7 @@ Use `$ gandi` to easily create and manage web resources from the command line.
   * [Use cases](#use-cases)
     * [Registering a Domain Name](#registering-a-domain-name)
     * [Creating a Virtual Machine](#creating-a-virtual-machine)
-    * [Deploying a Web Application](#deploying-a-web-application)
+    * [Deploying a Web Application with Simple Hosting](#deploying-a-web-application-with-simple-hosting)
     * [Creating a SSL Certificate](#creating-a-ssl-certificate)
     * [Adding a Web Application vhost with SSL](#adding-a-web-application-vhost-with-ssl)
     * [Creating a Private VLAN](#creating-a-private-vlan)
@@ -26,7 +26,6 @@ Use `$ gandi` to easily create and manage web resources from the command line.
     * [All Commands](#all-commands)
     * [Build manpage](#build-manpage)
     * [Configuration](#configuration)
-    * [Development](#development)
   * [Contributing](#contributing)
   * [Code status](#code-status)
   * [License](#license)
@@ -34,7 +33,7 @@ Use `$ gandi` to easily create and manage web resources from the command line.
 ## Requirements
 
 * A compatible operating system (Linux, BSD, Mac OS X/Darwin, Windows)
-* Python 2.6/2.7/3.2/3.3/3.4
+* Python 2.6/2.7/3.2/3.3/3.4/3.5
 * openssl
 * openssh
 * git
@@ -81,7 +80,7 @@ See the [Advanced Usage](#advanced-usage) section for more details on configurat
 
   * [Registering a domain name](#registering-a-domain-name)
   * [Creating a virtual machine](#creating-a-virtual-machine)
-  * [Deploying a web application](#deploying-a-web-application)
+  * [Deploying a web application with Simple Hosting](#deploying-a-web-application-with-simple-hosting)
   * [Creating a SSL Certificate](#creating-a-ssl-certificate)
   * [Adding a Web Application vhost with SSL](#adding-a-web-application-vhost-with-ssl)
   * [Creating a Private VLAN](#creating-a-private-vlan)
@@ -206,7 +205,7 @@ This command will setup the above VM, and install docker by running `curl -sSL h
     $ gandi vm info docker
 
 
-### Deploying a Web Application
+### Deploying a Web Application with Simple Hosting
 
 Gandi Simple Hosting is a PaaS (Platform as a Service) offering fast code deployment and easy scaling, powering over 50,000 apps since its inception in 2012.
 
@@ -214,21 +213,29 @@ Instances can run apps in 4 languages (PHP, Python, Node.js and Ruby) along with
 
 Plans cover all scales, from small to world-class projects. [Check out the website for more information](https://www.gandi.net/hosting/simple).
 
-#### 1. Create an instance for your app
+#### 1. Create a Simple Hosting instance
 
+    $ gandi paas create --name myapp --type nodejspgsql --size S --datacenter FR --duration 1
 
-    $ gandi paas create --name myapp --type phpmysql --size S --datacenter FR --duration 1
+#### 2. Attach and push to your instance's git repository
 
+Simple Hosting offers two "modes": the **App mode**, where an instance offers a single git repository (`default.git`) and the **Sites mode**, where you can have multiple git repositories per instance (one for each VHOST, for example `www.myapp.com.git`).
 
-#### 2. Update code and deploy
+Node.js, Python and Ruby instances run in App mode, whereas PHP instances run in Sites mode by default.
+Note: If you create a wildcard VHOST for your PHP instance, the App mode will be activated.
 
-    $ cd myapp
-    $ git init .
-    $ git add .
-    $ git commit -m 'first commit'
+Assuming you have local directory called `app` where you have placed your code base, you can use the following commands to create a git remote (called "gandi" by default) and push your code.
+
+    $ cd app
+    $ gandi paas attach myapp # App mode
+    $ gandi paas attach myapp --vhost www.myapp.com # Sites mode
     $ git push gandi master
-    $ gandi deploy
 
+#### 3. Deploy your code
+
+Still inside the `app` folder, you can use the following command to start the deploy process, which will checkout your code, install dependencies and launch (or relaunch) the app process:
+
+    $ gandi deploy
 
 ### Creating a SSL Certificate
 
@@ -310,7 +317,7 @@ Gandi allow you to associate a certificate with your vhost.
 
 Just create the vhost giving it the private key used to generate that certificate.
 
-    $ gandi vhost create --vhost "domain.tld" --paas "PaasName" \
+    $ gandi vhost create domain.tld --paas "PaasName" \
         --ssl --private-key "domain.tld.key"
 
 
@@ -323,7 +330,7 @@ Declare the hosted certificate.
 
 And then create the vhost.
 
-    $ gandi vhost create --vhost "domain.tld" --paas "PaasName" --ssl
+    $ gandi vhost create domain.tld --paas "PaasName" --ssl
 
 
 #### 3. You don't have any certificate and plan to get it at Gandi
@@ -335,7 +342,7 @@ Create the certificate.
 
 And then create the vhost.
 
-    $ gandi vhost create --vhost "domain.tld" --paas "PaasName" \
+    $ gandi vhost create domain.tld --paas "PaasName" \
         --ssl --private-key "domain.tld.key"
 
 

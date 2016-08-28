@@ -18,10 +18,15 @@ from gandi.cli.core.params import pass_gandi, StringConstraint
               help='Write the records into a file.')
 @click.option('--format', '-f', type=click.Choice(['text', 'json']),
               help='Choose the output format', required=False)
+@click.option('--limit', help='Limit number of results.', default=100,
+              show_default=True)
 @click.argument('domain', required=True)
 @pass_gandi
-def list(gandi, domain, zone_id, output, format):
+def list(gandi, domain, zone_id, output, format, limit):
     """List DNS zone records for a domain."""
+    options = {
+        'items_per_page': limit,
+    }
     output_keys = ['name', 'type', 'value', 'ttl']
 
     if not zone_id:
@@ -33,7 +38,7 @@ def list(gandi, domain, zone_id, output, format):
                    'managed at Gandi.' % domain)
         return
 
-    records = gandi.record.list(zone_id)
+    records = gandi.record.list(zone_id, options)
 
     if not output and not format:
         for num, rec in enumerate(records):

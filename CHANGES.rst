@@ -1,6 +1,74 @@
 Changelog
 =========
 
+0.19
+----
+
+* Update create commands for namespaces: vm, paas, ip, disk, vlan, webacc
+  to handle new datacenter status:
+  - prevent using a closed datacenter for creation
+  - display a warning when using a datacenter which will be closed
+    in the future
+* Update 'gandi mailbox info' command: aliases are now sorted
+* Fixes #178: 'gandi account info' command now display prepaid amount
+* Fixes #185: 'gandi domain create' command can now change nameservers
+* Fixes #187: 'gandi record list' command has a --limit parameter
+* Fixes #188: broken links in README
+* Fixes certificate unittest for python3
+
+0.18
+----
+
+* Update 'gandi paas update' command: --upgrade parameter is now a boolean flag
+* Update 'gandi deploy' command:
+  - new '--remote' and '--branch' options
+  - better handling of case when git configuration is not configured as expected
+  - will try and use the gandi remote by default to extract deploy url
+  - will deploy the branch master by default
+  - will fallback to guessing the Simple Hosting remote from git configuration
+    of the branch to deploy
+  - improve error message when unable to execute
+* Update VM spin up timeout to 5min (from 2min) for bigger VM.
+* Add more unittests.
+
+0.17
+----
+
+* Gandi CLI now supports python3.5
+* Update 'gandi paas' namespace:
+  - Add new command 'gandi paas attach' to add an instance vhost's git
+    remote to local git repository.
+  - Update 'gandi deploy' command:
+    - don't need a local configuration file anymore
+    - need to be called on attached paas instance
+  - Update 'gandi paas clone' command:
+    - you can now specify which vhost and local directory to use
+  - Use correct prefix for name generation in create command
+* Convert 'gandi config' command to a namespace to allow configuration
+  display and edition
+* Fixes bug with 'gandi account' command which was broken sometimes
+* Fixes a bug with 'gandi vlan update' command when using --create flag
+* Fixes a bug with mail alias update when using same number of alias
+  add/del parameters.
+* Fixes a bug when using a resource name and having more than 100 items of
+  this resource type
+* Fixes size parameter choices for 'gandi paas create' command.
+* Fixes bug with 'gandi record update' command and argument parsing
+* Fixes bug with 'gandi record' commands:
+  - must always exit if wrong/missing input parameter.
+* Always display CLI full help message when requesting an unknown command
+* Be less aggressive when trying to connect via SSH during 'gandi vm create'
+* Better handling of no hosting credits error.
+* Add more unittests.
+* Fixes #108
+* Fixes #128
+* Fixes #140
+* Fixes #157
+* Fixes #161
+* Fixes #165
+* Fixes #170
+* Fixes #173
+
 0.16
 ----
 

@@ -110,6 +110,13 @@ class Disk(GandiModule):
     def update(cls, resource, name, size, snapshot_profile,
                background, cmdline=None, kernel=None):
         """ Update this disk. """
+        if isinstance(size, tuple):
+            prefix, size = size
+            if prefix == '+':
+                disk_info = cls.info(resource)
+                current_size = disk_info['size']
+                size = current_size + size
+
         disk_params = cls.disk_param(name, size, snapshot_profile,
                                      cmdline, kernel)
 
@@ -229,6 +236,9 @@ class Disk(GandiModule):
     def create(cls, name, vm, size, snapshotprofile, datacenter,
                source, disk_type='data', background=False):
         """ Create a disk and attach it to a vm. """
+        if isinstance(size, tuple):
+            prefix, size = size
+
         if source:
             size = None
         disk_params = cls.disk_param(name, size, snapshotprofile)

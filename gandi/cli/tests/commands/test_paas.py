@@ -6,7 +6,7 @@ import re
 from ..compat import mock
 from .base import CommandTestCase
 from gandi.cli.commands import paas
-from gandi.cli.core.base import GandiModule, GandiContextHelper
+from gandi.cli.core.base import GandiContextHelper
 
 
 class PaasTestCase(CommandTestCase):
@@ -163,14 +163,14 @@ ssh 185290@console.dc2.gpaas.net""")
         result = self.invoke_with_exceptions(paas.clone, [])
 
         self.assertEqual(result.output, """\
-Usage: paas clone [OPTIONS] [VHOST]
+Usage: paas clone [OPTIONS] NAME
 
-Error: missing VHOST parameter
+Error: Missing argument "name".
 """)
 
         self.assertEqual(result.exit_code, 2)
 
-    def test_clone_no_conf(self):
+    def test_clone(self):
         with mock.patch('gandi.cli.modules.vhost.os.chdir',
                         create=True) as mock_chdir:
             mock_chdir.return_value = mock.MagicMock()
@@ -178,58 +178,197 @@ Error: missing VHOST parameter
             result = self.invoke_with_exceptions(paas.clone, ['cli.sexy'])
 
         self.assertEqual(result.output, """\
-git clone ssh+git://185290@git.dc2.gpaas.net/default.git
+git clone ssh+git://185290@git.dc2.gpaas.net/default.git cli.sexy \
+--origin gandi
+Use `git push gandi master` to push your code to the instance.
+Then `$ gandi deploy` to build and deploy your application.
 """)
 
         self.assertEqual(result.exit_code, 0)
 
-        local_conf = GandiModule._conffiles['local']
-        expected = {'paas': {'access': '185290@git.dc2.gpaas.net',
-                             'deploy_git_host': 'default.git',
-                             'name': 'paas_cozycloud',
-                             'user': 185290}}
-        self.assertEqual(local_conf, expected)
-
-    def test_clone_conf(self):
-        GandiModule._conffiles['local'] = {
-            'paas': {'access': '185290@git.dc2.gpaas.net',
-                     'deploy_git_host': 'default.git',
-                     'name': 'paas_cozycloud',
-                     'user': 185290}}
-
-        result = self.invoke_with_exceptions(paas.clone, [])
-
-        self.assertEqual(result.output, """\
-git clone ssh+git://185290@git.dc2.gpaas.net/default.git
-""")
-
-        self.assertEqual(result.exit_code, 0)
-
-    def test_deploy_no_conf(self):
-        result = self.invoke_with_exceptions(paas.deploy, [])
-
-        self.assertEqual(result.output, """\
-Usage: deploy [OPTIONS] [VHOST]
-
-Error: missing VHOST parameter
-""")
-
-        self.assertEqual(result.exit_code, 2)
-
-    def test_deploy_no_conf_vhost(self):
+    def test_clone_directory(self):
         with mock.patch('gandi.cli.modules.vhost.os.chdir',
                         create=True) as mock_chdir:
             mock_chdir.return_value = mock.MagicMock()
 
-            result = self.invoke_with_exceptions(paas.deploy, ['cli.sexy'])
+            args = ['cli.sexy', '--directory', 'project']
+            result = self.invoke_with_exceptions(paas.clone, args)
 
-        self.assertEqual(re.sub(r'\[#+\]', '[###]',
-                                result.output.strip()), """\
-Creating a new vhost.
-\rProgress: [###] 100.00%  00:00:00  \n\
-Your vhost cli.sexy has been created.
-git clone ssh+git://185290@git.dc2.gpaas.net/default.git
-ssh 185290@git.dc2.gpaas.net 'deploy default.git'""")
+        self.assertEqual(result.output, """\
+git clone ssh+git://185290@git.dc2.gpaas.net/default.git project --origin gandi
+Use `git push gandi master` to push your code to the instance.
+Then `$ gandi deploy` to build and deploy your application.
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_clone_vhost(self):
+        with mock.patch('gandi.cli.modules.vhost.os.chdir',
+                        create=True) as mock_chdir:
+            mock_chdir.return_value = mock.MagicMock()
+
+            args = ['paas_cozycloud', '--vhost', 'cli.sexy']
+            result = self.invoke_with_exceptions(paas.clone, args)
+
+        self.assertEqual(result.output, """\
+git clone ssh+git://185290@git.dc2.gpaas.net/cli.sexy.git cli.sexy \
+--origin gandi
+Use `git push gandi master` to push your code to the instance.
+Then `$ gandi deploy` to build and deploy your application.
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_attach(self):
+        result = self.invoke_with_exceptions(paas.attach, ['paas_cozycloud'])
+
+        self.assertEqual(result.output, """\
+git remote add gandi ssh+git://185290@git.dc2.gpaas.net/default.git
+Added remote `gandi` to your local git repository.
+Use `git push gandi master` to push your code to the instance.
+Then `$ gandi deploy` to build and deploy your application.
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_attach_remote(self):
+        args = ['paas_cozycloud', '--remote', 'production']
+        result = self.invoke_with_exceptions(paas.attach, args)
+
+        self.assertEqual(result.output, """\
+git remote add production ssh+git://185290@git.dc2.gpaas.net/default.git
+Added remote `production` to your local git repository.
+Use `git push production master` to push your code to the instance.
+Then `$ gandi deploy` to build and deploy your application.
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_deploy_invalid_remote_empty(self):
+        args = []
+
+        git_content = """
+[blabla]
+dummy=dududududud
+"""
+        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
+                                                      temp_dir='.git',
+                                                      temp_name='config',
+                                                      temp_content=git_content)
+
+        self.assertEqual(result.output, """\
+Error: Could not find git remote to extract deploy url from.
+This usually happens when:
+- the current directory has no Simple Hosting git remote attached,
+  in this case, please see $ gandi paas attach --help
+- the local branch being deployed hasn't been pushed \
+to the remote repository yet,
+  in this case, please try $ git push <remote> master
+
+Otherwise, it's recommended to use the --remote and/or --branch options:
+$ gandi deploy --remote <remote> [--branch <branch>]
+""")
+
+        self.assertEqual(result.exit_code, 2)
+
+    def test_deploy_invalid_remote_content(self):
+        args = []
+
+        git_content = """
+[remote "origin"]
+        fetch = +refs/heads/*:refs/remotes/origin/*
+        url = https://github.com/Gandi/gandi.cli.git
+[branch "master"]
+        remote = origin
+        merge = refs/heads/master
+"""
+        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
+                                                      temp_dir='.git',
+                                                      temp_name='config',
+                                                      temp_content=git_content)
+
+        self.assertEqual(result.output, """\
+Error: https://github.com/Gandi/gandi.cli.git \
+is not a valid Simple Hosting git remote.
+This usually happens when:
+- the current directory has no Simple Hosting git remote attached,
+  in this case, please see $ gandi paas attach --help
+- the local branch being deployed hasn't been pushed \
+to the remote repository yet,
+  in this case, please try $ git push <remote> master
+
+Otherwise, it's recommended to use the --remote and/or --branch options:
+$ gandi deploy --remote <remote> [--branch <branch>]
+""")
+
+        self.assertEqual(result.exit_code, 2)
+
+    def test_deploy(self):
+        args = []
+
+        git_content = """
+[remote "gandi"]
+        fetch = +refs/heads/*:refs/remotes/gandi/*
+        url = ssh+git://185290@git.dc2.gpaas.net/default.git
+"""
+        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
+                                                      temp_dir='.git',
+                                                      temp_name='config',
+                                                      temp_content=git_content)
+
+        self.assertEqual(result.output, """\
+ssh 185290@git.dc2.gpaas.net 'deploy default.git master'
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_deploy_remote(self):
+        args = ['--remote', 'origin']
+
+        git_content = """
+[remote "origin"]
+        fetch = +refs/heads/*:refs/remotes/origin/*
+        url = ssh+git://185290@git.dc2.gpaas.net/default.git
+[branch "master"]
+        remote = origin
+        merge = refs/heads/master
+"""
+        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
+                                                      temp_dir='.git',
+                                                      temp_name='config',
+                                                      temp_content=git_content)
+
+        self.assertEqual(result.output, """\
+ssh 185290@git.dc2.gpaas.net 'deploy default.git master'
+""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_deploy_guess_remote_with_branch(self):
+        args = ['--branch', 'stable']
+
+        git_content = """
+[remote "origin"]
+        fetch = +refs/heads/*:refs/remotes/origin/*
+        url = https://github.com/Gandi/gandi.cli.git
+[remote "production"]
+        fetch = +refs/heads/*:refs/remotes/production/*
+        url = ssh+git://185290@git.dc2.gpaas.net/default.git
+[branch "master"]
+        remote = origin
+        merge = refs/heads/master
+[branch "stable"]
+        remote = production
+        merge = refs/heads/stable
+"""
+        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
+                                                      temp_dir='.git',
+                                                      temp_name='config',
+                                                      temp_content=git_content)
+
+        self.assertEqual(result.output, """\
+ssh 185290@git.dc2.gpaas.net 'deploy default.git stable'
+""")
 
         self.assertEqual(result.exit_code, 0)
 
@@ -281,13 +420,9 @@ step      : WAIT
 
     def test_create_default(self):
         args = []
-        with mock.patch('gandi.cli.modules.paas.Paas.init_conf',
-                        create=True) as mock_init_conf:
-            mock_init_conf.return_value = mock.MagicMock()
-
-            result = self.invoke_with_exceptions(paas.create, args,
-                                                 obj=GandiContextHelper(),
-                                                 input='ploki\nploki\n')
+        result = self.invoke_with_exceptions(paas.create, args,
+                                             obj=GandiContextHelper(),
+                                             input='ploki\nploki\n')
 
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
 
@@ -343,8 +478,7 @@ Creating your PaaS instance.
 Your PaaS instance 123456 has been created.
 Creating a new vhost.
 \rProgress: [###] 100.00%  00:00:00  \n\
-Your vhost ploki.fr has been created.
-git clone ssh+git://1185290@git.dc2.gpaas.net/default.git""")
+Your vhost ploki.fr has been created.""")
 
         self.assertEqual(result.exit_code, 0)
 
@@ -366,6 +500,45 @@ Please give the private key for certificate id 706 (CN: inter.net)""")
 
         self.assertEqual(result.exit_code, 0)
 
+    def test_create_datacenter_limited(self):
+        args = ['--datacenter', 'FR-SD3']
+        result = self.invoke_with_exceptions(paas.create, args,
+                                             obj=GandiContextHelper(),
+                                             input='ploki\nploki\n')
+
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'paas\d+', 'paas', output), """\
+/!\ Datacenter FR-SD3 will be closed on 25/12/2016, please consider using \
+another datacenter.
+password: \nRepeat for confirmation: \n\
+Creating your PaaS instance.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your PaaS instance paas has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['paas.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 4)
+        self.assertEqual(params['size'], 's')
+        self.assertEqual(params['duration'], '1m')
+        self.assertEqual(params['password'], 'ploki')
+        self.assertTrue(params['name'].startswith('paas'))
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_datacenter_closed(self):
+        args = ['--datacenter', 'US-BA1']
+        result = self.invoke_with_exceptions(paas.create, args,
+                                             obj=GandiContextHelper(),
+                                             input='ploki\nploki\n')
+
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'paas\d+', 'paas', output), """\
+Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
+
+        self.assertEqual(result.exit_code, 1)
+
     def test_update(self):
         args = ['paas_owncloud']
         result = self.invoke_with_exceptions(paas.update, args)
@@ -376,6 +549,19 @@ Updating your PaaS instance.
 \rProgress: [###] 100.00%  00:00:00""")
 
         self.assertEqual(result.exit_code, 0)
+
+    def test_update_for_upgrade(self):
+        args = ['paas_owncloud', '--upgrade']
+        result = self.invoke_with_exceptions(paas.update, args)
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Updating your PaaS instance.
+\rProgress: [###] 100.00%  00:00:00""")
+
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['paas.update'][0][1]
+        self.assertEqual(params['upgrade'], True)
 
     def test_update_snapshotprofile_conflict(self):
         args = ['paas_owncloud', '--delete-snapshotprofile',
@@ -407,6 +593,8 @@ Updating your PaaS instance.
 \rProgress: [###] 100.00%  00:00:00""")
 
         self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['paas.update'][0][1]
+        self.assertFalse('upgrade' in params)
 
     def test_update_background(self):
         args = ['paas_owncloud', '--bg']

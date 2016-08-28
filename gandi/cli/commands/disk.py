@@ -4,7 +4,10 @@ import click
 from click.exceptions import UsageError
 
 from gandi.cli.core.cli import cli
-from gandi.cli.core.utils import output_disk, output_generic, randomstring
+from gandi.cli.core.utils import (
+    output_disk, output_generic, randomstring,
+    DatacenterLimited
+)
 from gandi.cli.core.utils.size import disk_check_size
 from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE_VM,
                                    KERNEL, SIZE, option, DISK_IMAGE)
@@ -13,25 +16,35 @@ from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE_VM,
 @cli.command()
 @click.option('--only-data', help='Only display data disks.', is_flag=True)
 @click.option('--only-snapshot', help='Only display snapshots.', is_flag=True)
+@click.option('--attached', help='Only display disks attached to a VM',
+              is_flag=True)
+@click.option('--detached', help='Only display detached disks', is_flag=True)
 @click.option('--type', help='Display types.', is_flag=True)
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--vm', help='Display vms.', is_flag=True)
 @click.option('--snapshotprofile', help='Display snapshot profile.',
               is_flag=True)
+@click.option('--datacenter', default=None, type=DATACENTER,
+              help='Filter results by datacenter.')
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @pass_gandi
-def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
-         limit):
+def list(gandi, only_data, only_snapshot, attached, detached, type, id, vm,
+         snapshotprofile, datacenter, limit):
     """ List disks. """
     options = {
         'items_per_page': limit,
     }
 
+    if attached and detached:
+        raise UsageError('You cannot use both --attached and --detached.')
+
     if only_data:
         options.setdefault('type', []).append('data')
     if only_snapshot:
         options.setdefault('type', []).append('snapshot')
+    if datacenter:
+        options['datacenter_id'] = gandi.datacenter.usable_id(datacenter)
 
     output_keys = ['name', 'state', 'size']
     if type:
@@ -49,7 +62,16 @@ def list(gandi, only_data, only_snapshot, type, id, vm, snapshotprofile,
     result = gandi.disk.list(options)
     vms = dict([(vm_['id'], vm_) for vm_ in gandi.iaas.list()])
 
-    for num, disk in enumerate(result):
+    # filter results per attached/detached
+    disks = []
+    for disk in result:
+        if attached and not disk['vms_id']:
+            continue
+        if detached and disk['vms_id']:
+            continue
+        disks.append(disk)
+
+    for num, disk in enumerate(disks):
         if num:
             gandi.separator_line()
         output_disk(gandi, disk, [], vms, profiles, output_keys)
@@ -66,7 +88,7 @@ def info(gandi, resource):
     Resource can be a disk name or ID
     """
     output_keys = ['name', 'state', 'size', 'type', 'id', 'dc', 'vm',
-                   'profile', 'kernel']
+                   'profile', 'kernel', 'cmdline']
 
     resource = sorted(tuple(set(resource)))
     vms = dict([(vm['id'], vm) for vm in gandi.iaas.list()])
@@ -158,10 +180,12 @@ def attach(gandi, disk, vm, position, read_only, background, force):
               help='Kernel cmdline.')
 @click.option('--kernel', type=KERNEL, default=None, help='Kernel for disk.')
 @click.option('--name', type=click.STRING, default=None, help='Disk name.')
-@click.option('--size', default=None, metavar='SIZE[M|G|T]', type=SIZE,
+@click.option('--size', default=None, metavar='[+]SIZE[M|G|T]', type=SIZE,
               help=('Disk size. A size suffix (M for megabytes up to T for '
                     'terabytes) is optional, megabytes is the default if no '
-                    'suffix is present.'),
+                    'suffix is present. A prefix + is optionnal, if provided '
+                    'size value will be added to current disk size, default '
+                    'is to set directly new disk size.'),
               callback=disk_check_size)
 @click.option('--snapshotprofile', help='Selected snapshot profile.',
               default=None, type=SNAPSHOTPROFILE_VM)
@@ -243,6 +267,22 @@ def delete(gandi, resource, force, background):
 def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
            background):
     """ Create a new disk. """
+    try:
+        gandi.datacenter.is_opened(datacenter, 'iaas')
+    except DatacenterLimited as exc:
+        gandi.echo('/!\ Datacenter %s will be closed on %s, '
+                   'please consider using another datacenter.' %
+                   (datacenter, exc.date))
+
+    if vm:
+        vm_dc = gandi.iaas.info(vm)
+        vm_dc_id = vm_dc['datacenter_id']
+        dc_id = int(gandi.datacenter.usable_id(datacenter))
+        if vm_dc_id != dc_id:
+            gandi.echo('/!\ VM %s datacenter will be used instead of %s.'
+                       % (vm, datacenter))
+        datacenter = vm_dc_id
+
     output_keys = ['id', 'type', 'step']
     name = name or randomstring('vdi')
 

@@ -22,3 +22,8 @@ class Contact(GandiModule):
         """Create a new contact."""
         return cls.call('contact.create', dict(params), empty_key=True,
                         dry_run=True, return_dry_run=True)
+
+    @classmethod
+    def balance(cls):
+        """Retrieve balance status for a Contact."""
+        return cls.call('contact.balance')

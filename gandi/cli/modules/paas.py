@@ -1,5 +1,9 @@
 """ PaaS commands module. """
 
+import os
+import re
+import sys
+
 from gandi.cli.core.base import GandiModule
 from gandi.cli.modules.metric import Metric
 from gandi.cli.modules.vhost import Vhost
@@ -11,6 +15,7 @@ class Paas(GandiModule, SshkeyHelper):
 
     """ Module to handle CLI commands.
 
+    $ gandi paas attach
     $ gandi paas clone
     $ gandi paas console
     $ gandi paas create
@@ -27,6 +32,98 @@ class Paas(GandiModule, SshkeyHelper):
     def type_list(cls, options=None):
         """List type of PaaS instances."""
         return cls.safe_call('paas.type.list', options)
+
+    @classmethod
+    def clone(cls, name, vhost, directory, origin):
+        """Clone a PaaS instance's vhost into a local git repository."""
+        paas_info = cls.info(name)
+
+        if 'php' in paas_info['type'] and not vhost:
+            cls.error('PHP instances require indicating the VHOST to clone '
+                      'with --vhost <vhost>')
+
+        paas_access = '%s@%s' % (paas_info['user'], paas_info['git_server'])
+        remote_url = 'ssh+git://%s/%s.git' % (paas_access, vhost)
+
+        command = 'git clone %s %s --origin %s' \
+                  % (remote_url, directory, origin)
+
+        init_git = cls.execute(command)
+        if init_git:
+            cls.echo('Use `git push %s master` to push your code to the '
+                     'instance.' % (origin))
+            cls.echo('Then `$ gandi deploy` to build and deploy your '
+                     'application.')
+
+    @classmethod
+    def attach(cls, name, vhost, remote_name):
+        """Attach an instance's vhost to a remote from the local repository."""
+        paas_access = cls.get('paas_access')
+
+        if not paas_access:
+            paas_info = cls.info(name)
+            paas_access = '%s@%s' \
+                          % (paas_info['user'], paas_info['git_server'])
+
+        remote_url = 'ssh+git://%s/%s.git' % (paas_access, vhost)
+
+        ret = cls.execute('git remote add %s %s' % (remote_name, remote_url,))
+
+        if ret:
+            cls.echo('Added remote `%s` to your local git repository.'
+                     % (remote_name))
+            cls.echo('Use `git push %s master` to push your code to the '
+                     'instance.' % (remote_name))
+            cls.echo('Then `$ gandi deploy` to build and deploy your '
+                     'application.')
+
+    @classmethod
+    def deploy(cls, remote_name, branch):
+        """Deploy a PaaS instance."""
+        def get_remote_url(remote):
+            return 'git config --get remote.%s.url' % (remote)
+
+        remote_url = cls.exec_output(get_remote_url(remote_name)) \
+            .replace('\n', '')
+
+        if not remote_url or not re.search('gpaas.net|gandi.net', remote_url):
+            remote_name = '$(git config --get branch.%s.remote)' % branch
+            remote_url = cls.exec_output(get_remote_url(remote_name)) \
+                .replace('\n', '')
+
+        error = None
+
+        if not remote_url:
+            error = True
+            cls.echo('Error: Could not find git remote '
+                     'to extract deploy url from.')
+        elif not re.search('gpaas.net|gandi.net', remote_url):
+            error = True
+            cls.echo('Error: %s is not a valid Simple Hosting git remote.'
+                     % (remote_url))
+        if error:
+            cls.echo("""This usually happens when:
+- the current directory has no Simple Hosting git remote attached,
+  in this case, please see $ gandi paas attach --help
+- the local branch being deployed hasn't been pushed to the \
+remote repository yet,
+  in this case, please try $ git push <remote> %s
+""" % (branch))
+            cls.echo('Otherwise, it\'s recommended to use'
+                     ' the --remote and/or --branch options:\n'
+                     '$ gandi deploy --remote <remote> [--branch <branch>]')
+            sys.exit(2)
+
+        remote_url_no_protocol = remote_url.split('://')[1]
+        splitted_url = remote_url_no_protocol.split('/')
+
+        paas_access = splitted_url[0]
+        deploy_git_host = splitted_url[1]
+
+        command = "ssh %s 'deploy %s %s'" \
+                  % (paas_access, deploy_git_host, branch)
+
+        cls.execute(command)
 
     @classmethod
     def list(cls, options=None):
@@ -172,7 +269,10 @@ class Paas(GandiModule, SshkeyHelper):
             cls.display_progress(result)
             cls.echo('Your PaaS instance %s has been created.' % name)
 
-        cls.init_conf(name, created=not background, vhosts=vhosts)
+        if vhosts:
+            paas_info = cls.info(name)
+            Vhost.create(paas_info, vhosts, True, background)
+
         return result
 
     @classmethod
@@ -199,7 +299,7 @@ class Paas(GandiModule, SshkeyHelper):
     @classmethod
     def resource_list(cls):
         """ Get the possible list of resources (name, id and vhosts). """
-        items = cls.list({})
+        items = cls.list({'items_per_page': 500})
         ret = [paas['name'] for paas in items]
         ret.extend([str(paas['id']) for paas in items])
         for paas in items:
@@ -217,26 +317,6 @@ class Paas(GandiModule, SshkeyHelper):
         console_url = Paas.info(cls.usable_id(id))['console']
         access = 'ssh %s' % console_url
         cls.execute(access)
-
-    @classmethod
-    def init_conf(cls, id, vhost=None, created=True, vhosts=None,
-                  background=False):
-        """ Initialize local configuration with PaaS information. """
-        paas = Paas.info(cls.usable_id(id))
-        cls.debug('save PaaS instance information to local configuration')
-
-        if vhost and not vhosts:
-            vhosts = [vhost]
-        if not vhosts:
-            if 'php' not in paas['type']:
-                vhost = 'default'
-            elif paas['vhosts']:
-                vhosts = [vht['name'] for vht in paas['vhosts']]
-            else:
-                return
-
-        for vhost in vhosts:
-            Vhost.create(paas, vhost, True, background)
 
     @classmethod
     def usable_id(cls, id):
@@ -271,7 +351,7 @@ class Paas(GandiModule, SshkeyHelper):
     @classmethod
     def from_hostname(cls, hostname):
         """Retrieve paas instance id associated to a host."""
-        result = cls.list({})
+        result = cls.list({'items_per_page': 500})
         paas_hosts = {}
         for host in result:
             paas_hosts[host['name']] = host['id']
@@ -282,5 +362,5 @@ class Paas(GandiModule, SshkeyHelper):
     def list_names(cls):
         """Retrieve paas id and names."""
         ret = dict([(item['id'], item['name'])
-                    for item in cls.list({})])
+                    for item in cls.list({'items_per_page': 500})])
         return ret

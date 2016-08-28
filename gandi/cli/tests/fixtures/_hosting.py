@@ -1,3 +1,5 @@
+from datetime import datetime
+
 try:
     # python3
     from xmlrpc.client import DateTime
@@ -252,26 +254,43 @@ def datacenter_list(options):
             'name': 'Equinix Paris',
             'id': 1,
             'country': 'France',
+            'deactivate_at': None,
+            'iaas_closed_for': 'NONE',
+            'paas_closed_for': 'NONE',
             'dc_code': 'FR-SD2'},
            {'iso': 'US',
             'name': 'Level3 Baltimore',
             'id': 2,
             'country': 'United States of America',
+            'deactivate_at': datetime(2016, 12, 25, 0, 0, 0),
+            'iaas_closed_for': 'ALL',
+            'paas_closed_for': 'ALL',
             'dc_code': 'US-BA1'},
            {'iso': 'LU',
             'name': 'Bissen',
             'id': 3,
             'country': 'Luxembourg',
+            'deactivate_at': None,
+            'iaas_closed_for': 'NONE',
+            'paas_closed_for': 'NONE',
             'dc_code': 'LU-BI1'},
            {'iso': 'FR',
             'name': 'France, Paris',
             'id': 4,
             'country': 'France',
+            'deactivate_at': datetime(2016, 12, 25, 0, 0, 0),
+            'iaas_closed_for': 'NEW',
+            'paas_closed_for': 'NEW',
             'dc_code': 'FR-SD3'}]
 
     options.pop('sort_by', None)
     for fkey in options:
-        ret = [dc for dc in ret if dc[fkey] == options[fkey]]
+        if (fkey == 'iaas_opened') or (fkey == 'paas_opened'):
+            fkey = '%s_closed_for' % fkey[:4]
+            ret = [dc for dc in ret if dc[fkey] in ['NONE', 'NEW']]
+        else:
+            ret = [dc for dc in ret if dc[fkey] == options[fkey]]
+
     return ret
 
 
@@ -301,6 +320,10 @@ def disk_list(options):
               'date_updated': DateTime('20150319T11:14:29'),
               'id': 4969249,
               'is_boot_disk': True,
+              'kernel_cmdline': {'console': 'ttyS0',
+                                 'nosep': True,
+                                 'ro': True,
+                                 'root': '/dev/sda'},
               'kernel_version': '3.12-x86_64 (hvm)',
               'label': 'Debian 7 64 bits (HVM)',
               'name': 'sys_server01',
@@ -582,6 +605,79 @@ def vm_info(id):
             'probes': [],
             'state': 'running',
             'triggers': [],
+            'vm_max_memory': 2048},
+           {'ai_active': 0,
+            'console': 0,
+            'console_url': 'console.gandi.net',
+            'cores': 1,
+            'datacenter_id': 4,
+            'date_created': DateTime('20160115T162658'),
+            'date_updated': DateTime('20160115T162658'),
+            'description': None,
+            'disks': [],
+            'disks_id': [4969250],
+            'flex_shares': 0,
+            'graph_urls': {'vcpu': [''], 'vdi': [''], 'vif': ['', '']},
+            'hostname': 'server02',
+            'hvm_state': 'unknown',
+            'id': 152968,
+            'ifaces': [{'bandwidth': 102400.0,
+                        'datacenter_id': 4,
+                        'date_created': DateTime('20160115T162658'),
+                        'date_updated': DateTime('20160115T162658'),
+                        'id': 1274919,
+                        'ips': [{'datacenter_id': 4,
+                                 'date_created': DateTime('20160115T162658'),
+                                 'date_updated': DateTime('20160115T162658'),
+                                 'id': 351155,
+                                 'iface_id': 1274919,
+                                 'ip': '213.167.231.3',
+                                 'num': 0,
+                                 'reverse': 'xvm-231-3.sd3.ghst.net',
+                                 'state': 'created',
+                                 'version': 4},
+                                {'datacenter_id': 4,
+                                 'date_created': DateTime('20160115T162658'),
+                                 'date_updated': DateTime('20160115T162658'),
+                                 'id': 352862,
+                                 'iface_id': 1274919,
+                                 'ip': '2001:4b98:c001:1:216:3eff:fec5:c104',
+                                 'num': 1,
+                                 'reverse': 'xvm6-c001-fec5-c104.ghst.net',
+                                 'state': 'created',
+                                 'version': 6}],
+                        'ips_id': [351155, 352862],
+                        'num': 0,
+                        'state': 'used',
+                        'type': 'public',
+                        'vlan': {'id': 717, 'name': 'pouet'},
+                        'vm_id': 227627},
+                       {'bandwidth': 102400.0,
+                        'datacenter_id': 4,
+                        'date_created': DateTime('20160115T162658'),
+                        'date_updated': DateTime('20160115T162658'),
+                        'id': 1416,
+                        'ips': [{'datacenter_id': 1,
+                                 'date_created': DateTime('20160115T162658'),
+                                 'date_updated': DateTime('20160115T162702'),
+                                 'id': 2361,
+                                 'iface_id': 1416,
+                                 'ip': '192.168.232.252',
+                                 'num': 0,
+                                 'reverse': '',
+                                 'state': 'created',
+                                 'version': 4}],
+                        'ips_id': [2361],
+                        'num': 1,
+                        'state': 'used',
+                        'type': 'private',
+                        'vlan': {'id': 717, 'name': 'pouet'},
+                        'vm_id': 227627}],
+            'ifaces_id': [1274919, 1416],
+            'memory': 236,
+            'probes': [],
+            'state': 'halted',
+            'triggers': [],
             'vm_max_memory': 2048}]
 
     vms = dict([(vm['id'], vm) for vm in ret])
@@ -848,6 +944,9 @@ def vm_iface_attach(vm_id, iface_id):
     if vm_id == 152967 and iface_id == 156572:
         return {'id': 200, 'step': 'WAIT'}
 
+    if vm_id == 152967 and iface_id == 156573:
+        return {'id': 200, 'step': 'WAIT', 'iface_id': 156573}
+
 
 def vm_disk_attach(vm_id, disk_id, options):
     if vm_id == 152967 and disk_id == 663497:
@@ -890,20 +989,53 @@ def vm_create_from(vm_spec, disk_spec, src_disk_id):
 
 
 def vlan_list(options):
-    return [{'datacenter_id': 1,
-             'gateway': None,
-             'id': 123,
-             'name': 'vlantest',
-             'state': 'created',
-             'subnet': None,
-             'uuid': 321},
-            {'datacenter_id': 1,
-             'gateway': None,
-             'id': 717,
-             'name': 'pouet',
-             'state': 'created',
-             'subnet': None,
-             'uuid': 720}]
+
+    ret = [{'datacenter_id': 1,
+            'gateway': '10.7.13.254',
+            'id': 123,
+            'name': 'vlantest',
+            'state': 'created',
+            'subnet': '10.7.13.0/24',
+            'uuid': 321},
+           {'datacenter_id': 1,
+            'gateway': '192.168.232.254',
+            'id': 717,
+            'name': 'pouet',
+            'state': 'created',
+            'subnet': '192.168.232.0/24',
+            'uuid': 720},
+           {'datacenter_id': 4,
+            'gateway': '10.7.242.254',
+            'id': 999,
+            'name': 'intranet',
+            'state': 'created',
+            'subnet': '10.7.242.0/24',
+            'uuid': 421}]
+
+    options.pop('items_per_page', None)
+
+    for fkey in options:
+        ret = [vlan for vlan in ret if vlan[fkey] == options[fkey]]
+
+    return ret
+
+
+def vlan_info(id):
+    vlans = vlan_list({})
+    vlans = dict([(vlan['id'], vlan) for vlan in vlans])
+    return vlans[id]
+
+
+def vlan_delete(vlan_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def vlan_create(options):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def vlan_update(vlan_id, options):
+    return {'id': 200, 'step': 'WAIT'}
 
 
 def iface_create(options):
@@ -955,23 +1087,43 @@ def iface_list(options):
             'date_created': DateTime('20141009T00:00:00'),
             'date_updated': DateTime('20141105T00:00:00'),
             'id': 1416,
-            'ips_id': [],
+            'ips_id': [2361],
+            'ips': [{'datacenter_id': 1,
+                     'date_created': DateTime('20160115T162658'),
+                     'date_updated': DateTime('20160115T162702'),
+                     'id': 2361,
+                     'iface_id': 1416,
+                     'ip': '192.168.232.252',
+                     'num': 0,
+                     'reverse': '',
+                     'state': 'created',
+                     'version': 4}],
             'num': None,
-            'state': 'free',
+            'state': 'used',
             'type': 'private',
             'vlan': {'id': 717, 'name': 'pouet'},
-            'vm_id': None},
+            'vm_id': 152968},
            {'bandwidth': 204800.0,
             'datacenter_id': 1,
             'date_created': DateTime('20150105T00:00:00'),
             'date_updated': DateTime('20150105T00:00:00'),
             'id': 1914,
+            'ips': [{'datacenter_id': 1,
+                     'date_created': DateTime('20160115T162658'),
+                     'date_updated': DateTime('20160115T162702'),
+                     'id': 2361,
+                     'iface_id': 1914,
+                     'ip': '192.168.232.253',
+                     'num': 0,
+                     'reverse': '',
+                     'state': 'created',
+                     'version': 4}],
             'ips_id': [2361],
             'num': None,
-            'state': 'free',
+            'state': 'used',
             'type': 'private',
             'vlan': {'id': 717, 'name': 'pouet'},
-            'vm_id': None},
+            'vm_id': 152968},
            {'bandwidth': 204800.0,
             'datacenter_id': 1,
             'date_created': DateTime('20150105T00:00:00'),
@@ -991,7 +1143,7 @@ def iface_list(options):
             'num': None,
             'state': 'free',
             'type': 'private',
-            'vlan': {'id': 717, 'name': 'pouet'},
+            'vlan': None,
             'vm_id': None}]
 
     options.pop('items_per_page', None)
@@ -1001,6 +1153,12 @@ def iface_list(options):
             ret_ = []
             for iface in ret:
                 if iface['vlan'] and iface['vlan']['name'] == options['vlan']:
+                    ret_.append(iface)
+            ret = ret_
+        elif fkey == 'vlan_id':
+            ret_ = []
+            for iface in ret:
+                if iface['vlan'] and iface['vlan']['id'] == options['vlan_id']:
                     ret_.append(iface)
             ret = ret_
         else:
@@ -1047,7 +1205,27 @@ def ip_list(options):
             'num': 1,
             'reverse': 'xvm6-dc0-feb2-3862.ghst.net',
             'state': 'created',
-            'version': 6}]
+            'version': 6},
+           {'datacenter_id': 1,
+            'date_created': DateTime('20160115T162658'),
+            'date_updated': DateTime('20160115T162702'),
+            'id': 2361,
+            'iface_id': 1914,
+            'ip': '192.168.232.253',
+            'num': 0,
+            'reverse': '',
+            'state': 'created',
+            'version': 4},
+           {'datacenter_id': 1,
+            'date_created': DateTime('20160115T162658'),
+            'date_updated': DateTime('20160115T162702'),
+            'id': 2361,
+            'iface_id': 1416,
+            'ip': '192.168.232.252',
+            'num': 0,
+            'reverse': '',
+            'state': 'created',
+            'version': 4}]
 
     options.pop('items_per_page', None)
 
@@ -1065,7 +1243,6 @@ def ip_list(options):
 
 
 def ip_info(ip_id):
-
     ips = ip_list({})
     ips = dict([(ip['id'], ip) for ip in ips])
     return ips[ip_id]
@@ -1079,7 +1256,7 @@ def ssh_list(options):
     ret = [{'fingerprint': 'b3:11:67:10:2e:1b:a5:66:ed:16:24:98:3e:2e:ed:f5',
             'id': 134,
             'name': 'default',
-            'value': 'val'},
+            'value': 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC63QZAW3tusdv+JuyzOoXTND9/wxKogMwZbxBPPtoN7Hjnyn0kUUHMJ6ji5xpbatRYKOeGAoZDW2TXojvbJdQj7tWsRr7ES0qB9qhDGVSDIJWRQ6f9MQCCLjV5tpBTAwb unknown@lol.cat'}, # noqa
            {'fingerprint': '09:11:21:e3:90:3c:7d:d5:06:d9:6f:f9:36:e1:99:a6',
             'id': 141,
             'name': 'mysecretkey',
@@ -1094,37 +1271,21 @@ def ssh_list(options):
     return ret
 
 
-def ssh_info(ssh_id):
+def ssh_info(key_id):
+    keys = ssh_list({})
+    keys = dict([(key['id'], key) for key in keys])
+    return keys[key_id]
 
-    sshs = ssh_list({})
-    sshs = dict([(ssh['id'], ssh) for ssh in sshs])
-    return sshs[ssh_id]
 
-
-def ssh_delete(ssh_id):
+def ssh_delete(key_id):
     return {'id': 200, 'step': 'WAIT'}
 
 
-def ssh_create(options):
-
-    if 'return-none' in options.get('name'):
-        return None
-
-    return {'id': 200, 'name': options.get('name'),
-            'value': options.get('value'), 'fingerprint': 'bb01'}
-
-
-def vlan_info(options):
-    return {'datacenter': {'country': 'Luxembourg',
-                           'id': 3,
-                           'iso': 'LU',
-                           'name': 'Bissen'},
-            'gateway': None,
-            'id': 123,
-            'name': 'vlantest',
-            'state': 'created',
-            'subnet': '192.168.0.0/24',
-            'uuid': 321}
+def ssh_create(params):
+    return {'fingerprint': 'b3:11:67:10:2e:1b:a5:55:ed:16:24:98:3e:2e:ed:f5',
+            'id': 145,
+            'name': params['name'],
+            'value': params['value']}
 
 
 def snapshotprofile_list(options):
@@ -1150,3 +1311,203 @@ def snapshotprofile_list(options):
         ret = [snp for snp in ret if snp[fkey] == options[fkey]]
 
     return ret
+
+
+def rproxy_list(options):
+
+    ret = [{'datacenter_id': 3,
+            'date_created': DateTime('20160115T162658'),
+            'id': 12138,
+            'name': 'webacc01',
+            'probe': {'enable': True,
+                      'host': None,
+                      'interval': None,
+                      'method': None,
+                      'response': None,
+                      'threshold': None,
+                      'timeout': None,
+                      'url': None,
+                      'window': None},
+            'servers': [{'fallback': False,
+                         'id': 14988,
+                         'ip': '195.142.160.181',
+                         'port': 80,
+                         'rproxy_id': 132691,
+                         'state': 'running'}],
+            'ssl_enable': False,
+            'state': 'running',
+            'uuid': 12138,
+            'vhosts': []},
+           {'datacenter_id': 1,
+            'date_created': DateTime('20160115T162658'),
+            'id': 13263,
+            'name': 'testwebacc',
+            'probe': {'enable': True,
+                      'host': '95.142.160.181',
+                      'interval': 10,
+                      'method': 'GET',
+                      'response': 200,
+                      'threshold': 3,
+                      'timeout': 5,
+                      'url': '/',
+                      'window': 5},
+            'servers': [{'fallback': False,
+                         'id': 4988,
+                         'ip': '95.142.160.181',
+                         'port': 80,
+                         'rproxy_id': 13269,
+                         'state': 'running'}],
+            'ssl_enable': False,
+            'state': 'running',
+            'uuid': 13263,
+            'vhosts': [{'cert_id': None,
+                        'id': 5171,
+                        'name': 'pouet.iheartcli.com',
+                        'rproxy_id': 13263,
+                        'state': 'running'}]}]
+
+    options.pop('items_per_page', None)
+
+    for fkey in options:
+        ret = [rpx for rpx in ret if rpx[fkey] == options[fkey]]
+
+    return ret
+
+
+def rproxy_delete(rproxy_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_info(rproxy_id):
+    ret = [{'datacenter': {'country': 'France',
+                           'dc_code': 'FR-SD2',
+                           'id': 1,
+                           'iso': 'FR',
+                           'name': 'Equinix Paris'},
+            'date_created': DateTime('20160115T162658'),
+            'id': 13263,
+            'lb': {'algorithm': 'client-ip'},
+            'name': 'testwebacc',
+            'probe': {'enable': True,
+                      'host': '95.142.160.181',
+                      'interval': 10,
+                      'method': 'GET',
+                      'response': 200,
+                      'threshold': 3,
+                      'timeout': 5,
+                      'url': '/',
+                      'window': 5},
+            'servers': [{'fallback': False,
+                         'id': 4988,
+                         'ip': '95.142.160.181',
+                         'port': 80,
+                         'rproxy_id': 13269,
+                         'state': 'running'}],
+            'ssl_enable': False,
+            'state': 'running',
+            'uuid': 13263,
+            'vhosts': [{'cert_id': None,
+                        'id': 5171,
+                        'name': 'pouet.iheartcli.com',
+                        'rproxy_id': 13263,
+                        'state': 'running'}]},
+           {'datacenter': {'country': 'France',
+                           'dc_code': 'FR-SD2',
+                           'id': 1,
+                           'iso': 'FR',
+                           'name': 'Equinix Paris'},
+            'date_created': DateTime('20160115T162658'),
+            'id': 12138,
+            'lb': {'algorithm': 'client-ip'},
+            'name': 'webacc01',
+            'probe': {'enable': True,
+                      'host': None,
+                      'interval': None,
+                      'method': None,
+                      'response': None,
+                      'threshold': None,
+                      'timeout': None,
+                      'url': None,
+                      'window': None},
+            'servers': [{'fallback': False,
+                         'id': 14988,
+                         'ip': '195.142.160.181',
+                         'port': 80,
+                         'rproxy_id': 132691,
+                         'state': 'running'}],
+            'ssl_enable': False,
+            'state': 'running',
+            'uuid': 12138,
+            'vhosts': []}]
+
+    rpx = dict([(rpx['id'], rpx) for rpx in ret])
+    return rpx[rproxy_id]
+
+
+def rproxy_update(rproxy_id, params):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_create(params):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_probe_disable(rproxy_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_probe_enable(rproxy_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_vhost_list():
+    ret = [{'cert_id': None,
+            'id': 5177,
+            'name': 'pouet.iheartcli.com',
+            'rproxy_id': 13269,
+            'state': 'running'}]
+
+    return ret
+
+
+def rproxy_vhost_delete(vhost):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_vhost_create(rproxy_id, vhost):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_probe_test(rproxy_id, params):
+    return {'servers': [{'server': 4988, 'status': 200, 'timeout': 1.0}],
+            'status': 200,
+            'timeout': 1.0}
+
+
+def rproxy_probe_update(rproxy_id, params):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_server_create(rproxy_id, params):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_server_list(params):
+    return [{'fallback': False,
+             'id': 14988,
+             'ip': '195.142.160.181',
+             'port': 80,
+             'rproxy_id': 132691,
+             'state': 'running'}]
+
+
+def rproxy_server_delete(server_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_server_enable(server_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def rproxy_server_disable(server_id):
+    return {'id': 200, 'step': 'WAIT'}

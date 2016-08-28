@@ -218,6 +218,18 @@ def vhost_list(options):
     return ret
 
 
+def vhost_info(name):
+    vhosts = vhost_list({})
+    vhosts = dict([(vhost['name'], vhost) for vhost in vhosts])
+    return vhosts[name]
+
+
+def vhost_delete(name):
+    return {'id': 200, 'step': 'WAIT', 'name': 'rproxy_update',
+            'paas_id': 1177220,
+            'date_creation': DateTime('20150728T17:50:56')}
+
+
 def type_list(options):
 
     ret = [{'database': 'MySQL',

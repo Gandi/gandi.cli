@@ -20,13 +20,24 @@ datacenter : FR-SD2
 ----------
 ip         : 2001:4b98:dc2:43:216:3eff:fece:e25f
 state      : created
-type       : private
-vlan       : pouet
+type       : public
 datacenter : LU-BI1
 ----------
 ip         : 2001:4b98:dc0:47:216:3eff:feb2:3862
 state      : created
 type       : public
+datacenter : FR-SD2
+----------
+ip         : 192.168.232.253
+state      : created
+type       : private
+vlan       : pouet
+datacenter : FR-SD2
+----------
+ip         : 192.168.232.252
+state      : created
+type       : private
+vlan       : pouet
 datacenter : FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
@@ -50,8 +61,7 @@ state      : created
 id         : 204557
 version    : 6
 reverse    : xvm6-dc2-fece-e25f.ghst.net
-type       : private
-vlan       : pouet
+type       : public
 datacenter : LU-BI1
 ----------
 ip         : 2001:4b98:dc0:47:216:3eff:feb2:3862
@@ -61,6 +71,26 @@ version    : 6
 reverse    : xvm6-dc0-feb2-3862.ghst.net
 type       : public
 vm         : server01
+datacenter : FR-SD2
+----------
+ip         : 192.168.232.253
+state      : created
+id         : 2361
+version    : 4
+reverse    :
+type       : private
+vlan       : pouet
+vm         : server02
+datacenter : FR-SD2
+----------
+ip         : 192.168.232.252
+state      : created
+id         : 2361
+version    : 4
+reverse    :
+type       : private
+vlan       : pouet
+vm         : server02
 datacenter : FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
@@ -79,6 +109,18 @@ ip         : 2001:4b98:dc0:47:216:3eff:feb2:3862
 state      : created
 type       : public
 datacenter : FR-SD2
+----------
+ip         : 192.168.232.253
+state      : created
+type       : private
+vlan       : pouet
+datacenter : FR-SD2
+----------
+ip         : 192.168.232.252
+state      : created
+type       : private
+vlan       : pouet
+datacenter : FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -89,8 +131,7 @@ datacenter : FR-SD2
         self.assertEqual(result.output, """\
 ip         : 2001:4b98:dc2:43:216:3eff:fece:e25f
 state      : created
-type       : private
-vlan       : pouet
+type       : public
 datacenter : LU-BI1
 """)
         self.assertEqual(result.exit_code, 0)
@@ -102,9 +143,20 @@ datacenter : LU-BI1
         self.assertEqual(result.output, """\
 ip         : 2001:4b98:dc2:43:216:3eff:fece:e25f
 state      : created
+type       : public
+datacenter : LU-BI1
+----------
+ip         : 192.168.232.253
+state      : created
 type       : private
 vlan       : pouet
-datacenter : LU-BI1
+datacenter : FR-SD2
+----------
+ip         : 192.168.232.252
+state      : created
+type       : private
+vlan       : pouet
+datacenter : FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -122,6 +174,18 @@ ip         : 2001:4b98:dc0:47:216:3eff:feb2:3862
 state      : created
 type       : public
 datacenter : FR-SD2
+----------
+ip         : 192.168.232.253
+state      : created
+type       : private
+vlan       : pouet
+datacenter : FR-SD2
+----------
+ip         : 192.168.232.252
+state      : created
+type       : private
+vlan       : pouet
+datacenter : FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -130,11 +194,17 @@ datacenter : FR-SD2
         result = self.invoke_with_exceptions(ip.list, ['--vlan', 'pouet'])
 
         self.assertEqual(result.output, """\
-ip         : 2001:4b98:dc2:43:216:3eff:fece:e25f
+ip         : 192.168.232.253
 state      : created
 type       : private
 vlan       : pouet
-datacenter : LU-BI1
+datacenter : FR-SD2
+----------
+ip         : 192.168.232.252
+state      : created
+type       : private
+vlan       : pouet
+datacenter : FR-SD2
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -262,6 +332,40 @@ ip6:\t2001:4b98:dc0:47:216:3eff:feb2:3862""")
         self.assertEqual(params['datacenter_id'], 3)
         self.assertEqual(params['bandwidth'], 102400)
         self.assertEqual(params['ip_version'], 4)
+
+    def test_create_datacenter_limited(self):
+        args = ['--datacenter', 'FR-SD3', '--bandwidth', '51200',
+                '--ip-version', '6']
+        result = self.invoke_with_exceptions(ip.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+/!\ Datacenter FR-SD3 will be closed on 25/12/2016, please consider using \
+another datacenter.
+Creating your iface.
+\rProgress: [###] 100.00%  00:00:00  \
+\nYour iface has been created with the following IP addresses:
+ip4:\t95.142.160.181
+ip6:\t2001:4b98:dc0:47:216:3eff:feb2:3862""")
+
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.iface.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 4)
+        self.assertEqual(params['bandwidth'], 51200)
+        self.assertEqual(params['ip_version'], 6)
+
+    def test_create_datacenter_closed(self):
+        args = ['--datacenter', 'US-BA1', '--bandwidth', '51200',
+                '--ip-version', '6']
+        result = self.invoke_with_exceptions(ip.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
+
+        self.assertEqual(result.exit_code, 1)
 
     def test_create_params(self):
         args = ['--datacenter', 'FR', '--bandwidth', '51200',
@@ -445,9 +549,10 @@ Will detach it.
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Sorry interface 395.142.160.181 does not exist
-Please use one of the following: ['203968', '204557', '204558', \
-'95.142.160.181', '2001:4b98:dc2:43:216:3eff:fece:e25f', \
-'2001:4b98:dc0:47:216:3eff:feb2:3862']""")
+Please use one of the following: ['203968', '204557', '204558', '2361', \
+'2361', '95.142.160.181', '2001:4b98:dc2:43:216:3eff:fece:e25f', \
+'2001:4b98:dc0:47:216:3eff:feb2:3862', '192.168.232.253', '192.168.232.252'\
+]""")
 
         self.assertEqual(result.exit_code, 0)
 
