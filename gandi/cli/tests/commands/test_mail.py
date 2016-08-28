@@ -49,6 +49,23 @@ Creating aliases.
         self.assertEqual(params['quota'], 2)
         self.assertEqual(params['fallback_email'], 'admin@cli.sexy')
 
+    def test_create_with_password(self):
+        args = ['contact2@iheartcli.com', '--quota', '2', '--fallback',
+                'admin@cli.sexy', '--alias', 'god@iheartcli.com',
+                '--password', 'password_for_create']
+        result = self.invoke_with_exceptions(mail.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(result.output, """Creating your mailbox.
+Creating aliases.
+""")
+
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['domain.mailbox.create'][0][2]
+        self.assertEqual(params['password'], 'password_for_create')
+        self.assertEqual(params['quota'], 2)
+        self.assertEqual(params['fallback_email'], 'admin@cli.sexy')
+
     def test_delete_force(self):
         args = ['admin@iheartcli.com', '--force']
         result = self.invoke_with_exceptions(mail.delete, args)
