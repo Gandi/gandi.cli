@@ -218,3 +218,48 @@ Duration [1]: \n\
                            '--tech', 'TECH1-GANDI',
                            '--bill', 'BILL1-GANDI',
                            ])
+
+    def test_domain_info(self):
+            with mock.patch('gandi.cli.core.utils.datetime') as mock_datetime:
+                mock_datetime.now.return_value = datetime(2015, 7, 1)
+                mock_datetime.side_effect = lambda *args, **kw: datetime(*args,
+                                                                         **kw)
+
+                result = self.invoke_with_exceptions(domain.info,
+                                                     ['iheartcli.com'])
+
+            self.assertEqual(result.output, """owner       : AA1-GANDI
+    admin       : AA2-GANDI
+    bill        : AA3-GANDI
+    tech        : AA5-GANDI
+    reseller    : AA4-GANDI
+    fqdn        : iheartcli.com
+    nameservers : a.dns.gandi.net, b.dns.gandi.net, c.dns.gandi.net
+    services    : gandidns
+    zone_id     : 424242
+    tags        : bla
+    created     : 2010-09-22 15:06:18
+    expires     : 2015-09-22 00:00:00 (in 83 days)
+    updated     : 2014-09-21 03:10:07
+    """)
+            self.assertEqual(result.exit_code, 0)
+
+    def test_domain_check(self):
+        result = self.invoke_with_exceptions(domain.check,
+                                             ['idontlike.website'])
+        self.assertEqual(output, """Domain      : idontlike.website
+    Phase       : golive
+    Min Duration: 1
+    Max Duration: 1
+    Price       : 0.99
+    Currency    : EUR
+    Price Type  : None
+    Phase       : golive
+    Min Duration: 1
+    Max Duration: 1
+    Price       : 16.16
+    Currency    : EUR
+    Price Type  : None
+    golive      : Start: 2014-09-18 18:00:00 Start Gandi: 2014-07-01 10:19:56 End: None
+    """)
+        self.assertEqual(result.exit_code, 0)
