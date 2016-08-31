@@ -222,7 +222,7 @@ Duration [1]: \n\
     def test_domain_check(self):
         result = self.invoke_with_exceptions(domain.check,
                                              ['idontlike.website'])
-        self.assertEqual(output, """Domain      : idontlike.website
+        self.assertEqual(result.output, """Domain      : idontlike.website
     Phase       : golive
     Min Duration: 1
     Max Duration: 1
