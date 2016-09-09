@@ -258,7 +258,7 @@ Details:
 
 * ``gandi ip update`` update an ip. The only available parameter is now ``--reverse``, to specify a reverse (PTR record) name for this ip address.
 
-* ``gandi mail create login@domain.tld`` create a new mailbox. Possible options are ``-q, --quota INTEGER`` to define a quota for this mailbox, ``-f, --fallback TEXT`` to define a fallback addresse, ``-a, --alias TEXT`` to add an alias for this mailbox, this last option can be used multiple times.
+* ``gandi mail create login@domain.tld`` create a new mailbox. Possible options are ``-q, --quota INTEGER`` to define a quota for this mailbox, ``-f, --fallback TEXT`` to define a fallback addresse, ``-a, --alias TEXT`` to add an alias for this mailbox, this option can be used multiple times, ``-p, --password TEXT`` to provide a password for this mailbox.
 
 * ``gandi mail delete login@domain.tld`` delete mailbox ``login@domain.tld``. Possible option is ``--force`` (or ``-f``) to bypass the validation question; useful in non-interactive mode when scripting.
 
