@@ -41,20 +41,23 @@ def info(gandi, email):
               default=None)
 @click.option('--alias', '-a', help='Add mailbox alias.',
               multiple=True, required=False)
+@click.option('--password', '-p', default=None, type=click.STRING,
+              required=False, help='Prompt a password to create a mailbox.')
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
-def create(gandi, email, quota, fallback, alias):
+def create(gandi, email, quota, fallback, alias, password):
     """Create a mailbox."""
     login, domain = email
     options = {}
-    password = click.prompt('password', hide_input=True,
-                            confirmation_prompt=True)
+
+    if not password:
+        password = click.prompt('password', hide_input=True,
+                                confirmation_prompt=True)
     options['password'] = password
     if quota is not None:
         options['quota'] = quota
     if fallback is not None:
         options['fallback_email'] = fallback
-    options['password'] = password
 
     result = gandi.mail.create(domain, login, options, alias)
 
