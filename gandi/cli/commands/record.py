@@ -149,7 +149,7 @@ def delete(gandi, domain, zone_id, name, type, value):
 
 @cli.command()
 @click.option('--zone-id', '-z', default=None, type=click.INT,
-              help='Zone ID tu use, if not set, default zone will be used.')
+              help='Zone ID to use, if not set, default zone will be used.')
 @click.option('--file', '-f', type=click.File('r'),
               required=False, help='Filename of the zone file.')
 @click.option('--record', '-r', default=None, required=False,
