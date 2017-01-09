@@ -67,8 +67,7 @@ URLS = {
                 'der': ['http://crt.gandi.net/GandiStandardSSLCA2.crt',
                         'http://crt.usertrust.com/USERTrustRSAAddTrustCA.crt'],
                 'pem': [
-                    'http://www.gandi.net/static/CAs/GandiStandardSSLCA2.pem',
-                    CROSSED_PEM],
+                    'http://www.gandi.net/static/CAs/GandiStandardSSLCA2.pem'],
 
             },
         },
