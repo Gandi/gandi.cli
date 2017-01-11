@@ -526,6 +526,8 @@ class GandiOption(click.Option):
                 value = self.type.convert_deprecated_value(value)
             if not previous_value or needs_update:
                 gandi.configure(global_=True, key=self.name, val=value)
+        opts[self.name] = value
+        value, args = click.Option.handle_parse_result(self, ctx, opts, args)
         return value, args
 
 
