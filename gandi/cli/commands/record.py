@@ -114,7 +114,7 @@ def create(gandi, domain, zone_id, name, type, value, ttl):
 
 @cli.command()
 @click.option('--zone-id', '-z', default=None, type=click.INT,
-              help='Zone ID tu use, if not set, default zone will be used.')
+              help='Zone ID to use, if not set, default zone will be used.')
 @click.option('--name', default=None,
               help='Relative name of the record to delete.')
 @click.option('--type', default=None,
