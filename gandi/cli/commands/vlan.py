@@ -159,7 +159,7 @@ def create(gandi, name, datacenter, subnet, gateway, background):
               help='If gateway is a vm and does not have any ip in the good '
                    'vlan, we will start by putting an ip in the vlan.')
 @option('--bandwidth', type=click.INT, default=102400,
-        help="Network bandwidth in bit/s used to create the VM's ip in this "
+        help="Network bandwidth in kbit/s used to create the VM's ip in this "
              'vlan.')
 @click.argument('resource')
 @pass_gandi

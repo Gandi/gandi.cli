@@ -218,7 +218,7 @@ def delete(gandi, background, force, resource):
 @click.option('--ip-version', type=IntChoice(['4', '6']), default=None,
               help='Version of created IP.')
 @option('--bandwidth', type=click.INT, default=102400,
-        help="Network bandwidth in bit/s used to create the VM's first "
+        help="Network bandwidth in kbit/s used to create the VM's first "
              "network interface.")
 @click.option('--login', default=None,
               help='Login to create on the VM.')

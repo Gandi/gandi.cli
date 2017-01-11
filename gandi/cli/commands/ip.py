@@ -158,7 +158,7 @@ def attach(gandi, ip, vm, background, force):
 @click.option('--datacenter', type=DATACENTER,
               help='Datacenter where the ip will be created.')
 @option('--bandwidth', type=click.INT, default=102400,
-        help="Network bandwidth in bit/s used to create the VM's first "
+        help="Network bandwidth in kbit/s used to create the VM's first "
              "network interface.")
 @option('--ip-version', type=IntChoice(['4', '6']), default=4,
         help='Version of created IP.')
