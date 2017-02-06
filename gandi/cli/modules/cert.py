@@ -402,7 +402,7 @@ class Certificate(GandiModule):
         if crt:
             crt = ('-----BEGIN CERTIFICATE-----\n' +
                    '\n'.join([crt[index * 64:(index + 1) * 64]
-                              for index in range(int(len(crt) / 64) + 1)]) +
+                              for index in range(int(len(crt) / 64) + 1)]).rstrip('\n') +
                    '\n-----END CERTIFICATE-----')
         return crt
 
