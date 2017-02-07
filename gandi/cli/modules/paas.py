@@ -81,13 +81,14 @@ class Paas(GandiModule, SshkeyHelper):
     def deploy(cls, remote_name, branch):
         """Deploy a PaaS instance."""
         def get_remote_url(remote):
-            return 'git config --get remote.%s.url' % (remote)
+            return 'git config --local --get remote.%s.url' % (remote)
 
         remote_url = cls.exec_output(get_remote_url(remote_name)) \
             .replace('\n', '')
 
         if not remote_url or not re.search('gpaas.net|gandi.net', remote_url):
-            remote_name = '$(git config --get branch.%s.remote)' % branch
+            remote_name = ('$(git config --local --get branch.%s.remote)' %
+                           branch)
             remote_url = cls.exec_output(get_remote_url(remote_name)) \
                 .replace('\n', '')
 
