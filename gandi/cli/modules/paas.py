@@ -1,6 +1,5 @@
 """ PaaS commands module. """
 
-import os
 import re
 import sys
 
@@ -159,7 +158,7 @@ remote repository yet,
         """return the number of query cache for the last 24H"""
         sampler = {'unit': 'days', 'value': 1, 'function': 'sum'}
         query = 'webacc.requests.cache.all'
-        metrics = Metric.query(id, 60*60*24, query, 'paas', sampler)
+        metrics = Metric.query(id, 60 * 60 * 24, query, 'paas', sampler)
 
         cache = {'hit': 0, 'miss': 0, 'not': 0, 'pass': 0}
         for metric in metrics:
