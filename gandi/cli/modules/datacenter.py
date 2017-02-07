@@ -28,7 +28,7 @@ class Datacenter(GandiModule):
             options = {'iso': dc_code, '%s_opened' % type_: True}
             datacenters = cls.safe_call('hosting.datacenter.list', options)
             if not datacenters:
-                raise DatacenterClosed('/!\ Datacenter %s is closed, please '
+                raise DatacenterClosed(r'/!\ Datacenter %s is closed, please '
                                        'choose another datacenter.' % dc_code)
 
         datacenter = datacenters[0]

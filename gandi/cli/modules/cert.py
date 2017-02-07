@@ -341,7 +341,7 @@ class Certificate(GandiModule):
         cmd, private_key = cls.gen_pk(common_name, private_key)
 
         if private_key.endswith('.crt') or private_key.endswith('.key'):
-            csr_file = re.sub('\.(crt|key)$', '.csr', private_key)
+            csr_file = re.sub(r'\.(crt|key)$', '.csr', private_key)
         else:
             csr_file = private_key + '.csr'
 
@@ -402,7 +402,7 @@ class Certificate(GandiModule):
         if crt:
             crt = ('-----BEGIN CERTIFICATE-----\n' +
                    '\n'.join([crt[index * 64:(index + 1) * 64]
-                              for index in range(int(len(crt) / 64) + 1)]).rstrip('\n') +
+                              for index in range(int(len(crt) / 64) + 1)]).rstrip('\n') +  # noqa
                    '\n-----END CERTIFICATE-----')
         return crt
 
