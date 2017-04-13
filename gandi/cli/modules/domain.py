@@ -10,6 +10,7 @@ class Domain(GandiModule):
 
     """ Module to handle CLI commands.
 
+    $ gandi domain check
     $ gandi domain create
     $ gandi domain info
     $ gandi domain list
@@ -25,6 +26,19 @@ class Domain(GandiModule):
     def info(cls, fqdn):
         """Display information about a domain."""
         return cls.call('domain.info', fqdn)
+
+    @classmethod
+    def check(cls, fqdn):
+        """Check domain availability and price."""
+        fqdn = fqdn.lower()
+
+        result = cls.call('domain.price', [fqdn])
+
+        while result[0]['available'] == 'pending':
+            time.sleep(1)
+            result = cls.call('domain.price', [fqdn])
+
+        return result[0]
 
     @classmethod
     def create(cls, fqdn, duration, owner, admin, tech, bill, nameserver,
