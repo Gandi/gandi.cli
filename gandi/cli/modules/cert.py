@@ -395,8 +395,8 @@ class Certificate(GandiModule):
 
         return csr
 
-    @classmethod
-    def pretty_format_cert(cls, cert):
+    @staticmethod
+    def pretty_format_cert(cert):
         """ Pretty display of a certificate."""
         crt = cert.get('cert')
         if crt:

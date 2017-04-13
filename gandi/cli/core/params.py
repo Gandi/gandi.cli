@@ -42,7 +42,8 @@ class GandiChoice(click.Choice):
         self.gandi = ctx.obj
         return click.Choice.convert(self, value, param, ctx)
 
-    def convert_deprecated_value(self, value):
+    @staticmethod
+    def convert_deprecated_value(value):
         """ To override when needed """
         return value
 
@@ -69,7 +70,8 @@ class DatacenterParamType(GandiChoice):
         value = value.upper()
         return click.Choice.convert(self, value, param, ctx)
 
-    def convert_deprecated_value(self, value):
+    @staticmethod
+    def convert_deprecated_value(value):
         """ To update the configuration with the new datacenter naming """
         convert = {
             'FR': 'FR-SD2',

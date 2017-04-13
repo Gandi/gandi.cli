@@ -84,3 +84,13 @@ class ConfigTestCase(CommandTestCase):
         self.assertEqual(result.output, """/usr/bin/vi
 """)
         self.assertEqual(result.exit_code, 0)
+
+    def test_list(self):
+        result = self.invoke_with_exceptions(config.list, [])
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.output, '')
+        result = self.invoke_with_exceptions(config.set, ['editor',
+                                                          '/usr/bin/vi'])
+        result = self.invoke_with_exceptions(config.list, [])
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.output, u"{u'editor': u'/usr/bin/vi'}\n")

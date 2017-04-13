@@ -35,8 +35,8 @@ class Ip(GandiModule):
         """ Get information about an up."""
         return cls._info(cls.usable_id(resource))
 
-    @classmethod
-    def create(cls, ip_version, datacenter, bandwidth, vm=None, vlan=None,
+    @staticmethod
+    def create(ip_version, datacenter, bandwidth, vm=None, vlan=None,
                ip=None, background=False):
         """ Create a public ip and attach it if vm is given. """
         return Iface.create(ip_version, datacenter, bandwidth, vlan, vm, ip,

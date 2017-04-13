@@ -193,7 +193,8 @@ class GandiCLI(click.Group):
             return cmd
         return decorator
 
-    def load_commands(self):
+    @staticmethod
+    def load_commands():
         """ Load cli commands from submodules. """
         command_folder = os.path.join(os.path.dirname(__file__),
                                       '..', 'commands')

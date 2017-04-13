@@ -131,8 +131,8 @@ class GandiModule(GandiConfig):
             cls.echo('An error occured during call: %s' % err.errors)
             sys.exit(1)
 
-    @classmethod
-    def intty(cls):
+    @staticmethod
+    def intty():
         """ Check if we are in a tty. """
         # XXX: temporary hack until we can detect if we are in a pipe or not
         return True
@@ -183,12 +183,12 @@ class GandiModule(GandiConfig):
             msg = '[INFO] %s' % message
             cls.echo(msg)
 
-    @classmethod
-    def deprecated(cls, message):
+    @staticmethod
+    def deprecated(message):
         print('[deprecated]: %s' % message, file=sys.stderr)
 
-    @classmethod
-    def error(cls, msg):
+    @staticmethod
+    def error(msg):
         """ Raise click UsageError exception using msg. """
         raise UsageError(msg)
 
@@ -202,8 +202,8 @@ class GandiModule(GandiConfig):
         except CalledProcessError:
             return False
 
-    @classmethod
-    def exec_output(cls, command, shell=True, encoding='utf-8'):
+    @staticmethod
+    def exec_output(command, shell=True, encoding='utf-8'):
         """ Return execution output
 
         :param encoding: charset used to decode the stdout
