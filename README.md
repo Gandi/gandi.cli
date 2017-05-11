@@ -176,7 +176,7 @@ Gandi Server measures consumption by the hour and uses a prepaid credit system. 
     * root user will be created.
     * SSH key authorization will be used.
     * No password supplied for vm (required to enable emergency web console access).
-    * Configuration used: 1 cores, 256Mb memory, ip v4+v6, image Debian 7, hostname: temp1415183684, datacenter: LU
+    * Configuration used: 1 cores, 256Mb memory, ip v4+v6, image Debian 8, hostname: temp1415183684, datacenter: LU
 
 Create a virtual machine with the default configuration and a random hostname.
 
