@@ -283,7 +283,7 @@ def export(gandi, resource, output, force, intermediate):
 @click.option('--branch', required=False,
               help='The generated CSR branch (OU).')
 @click.option('-d', '--duration', default=1,
-              type=IntChoice(['1', '2', '3', '4', '5']),
+              type=IntChoice(['1', '2']),
               help='The certificate duration in year.')
 @click.option('--package', type=CERTIFICATE_PACKAGE,
               help='Certificate package.')
