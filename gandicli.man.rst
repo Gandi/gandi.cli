@@ -391,7 +391,7 @@ AUTHORS
 =======
 
 Originaly created by Dejan Filipovic for Gandi S.A.S.
-Copyright (c) 2014-2015 - Gandi S.A.S
+Copyright (c) 2014-2017 - Gandi S.A.S
 
 CONTRIBUTORS
 ============
