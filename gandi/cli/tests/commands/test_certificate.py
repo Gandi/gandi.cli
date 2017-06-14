@@ -240,7 +240,7 @@ v0L9Vc0443fop+UbFCabF0NWM6rJ31Nlv7s3mQIA
 
         result = self.invoke_with_exceptions(certificate.create,
                                              ['--csr', csr,
-                                              '--duration', 5,
+                                              '--duration', 2,
                                               '--max-altname', '5',
                                               ])
 
@@ -273,7 +273,7 @@ v0L9Vc0443fop+UbFCabF0NWM6rJ31Nlv7s3mQIA
 
         result = self.invoke_with_exceptions(certificate.create,
                                              ['--csr', csr,
-                                              '--duration', 5,
+                                              '--duration', 2,
                                               '--package', 'cert_std_1_0_0',
                                               ])
 
@@ -292,7 +292,7 @@ $ gandi certificate export "domain.tld"
 
     def test_create_no_csr(self):
         result = self.invoke_with_exceptions(certificate.create,
-                                             ['--duration', 5,
+                                             ['--duration', 2,
                                               '--max-altname', '5',
                                               ])
 
@@ -330,7 +330,7 @@ v0L9Vc0443fop+UbFCabF0NWM6rJ31Nlv7s3mQIA
 
         result = self.invoke_with_exceptions(certificate.create,
                                              ['--csr', csr,
-                                              '--duration', 5,
+                                              '--duration', 2,
                                               '--max-altname', '5',
                                               '--package', 'cert_std_1_0_0',
                                               ])
@@ -361,7 +361,7 @@ v0L9Vc0443fop+UbFCabF0NWM6rJ31Nlv7s3mQIA
 
         result = self.invoke_with_exceptions(certificate.create,
                                              ['--csr', csr,
-                                              '--duration', 5,
+                                              '--duration', 2,
                                               '--max-altname', '5',
                                               '--type', 'std',
                                               '--warranty', '250',
@@ -392,7 +392,7 @@ v0L9Vc0443fop+UbFCabF0NWM6rJ31Nlv7s3mQIA
 
         result = self.invoke_with_exceptions(certificate.create,
                                              ['--csr', csr,
-                                              '--duration', 5,
+                                              '--duration', 2,
                                               '--max-altname', '5',
                                               '--cn', '*.lol.cat',
                                               '--altnames', 'pouet.lol.cat',
@@ -408,7 +408,7 @@ You can't have a wildcard with multidomain certificate.
 
     def test_create_csr_empty(self):
         args = ['--csr', 'sandbox/example.txt',
-                '--duration', 5,
+                '--duration', 2,
                 '--max-altname', '5',
                 '--cn', '*.lol.cat',
                 '--altnames', 'pouet.lol.cat',
@@ -440,7 +440,7 @@ v0L9Vc0443fop+UbFCabF0NWM6rJ31Nlv7s3mQIA
 
         result = self.invoke_with_exceptions(certificate.create,
                                              ['--csr', csr,
-                                              '--duration', 5,
+                                              '--duration', 2,
                                               '--max-altname', '5',
                                               '--type', 'pro',
                                               '--warranty', '250',

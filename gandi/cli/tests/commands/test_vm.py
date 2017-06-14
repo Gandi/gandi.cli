@@ -419,7 +419,7 @@ version       : 3.12-x86_64 (hvm)
         self.assertEqual(result.exit_code, 0)
 
     def test_images(self):
-
+        self.maxDiff = None
         result = self.invoke_with_exceptions(vm.images, [])
 
         self.assertEqual(result.output, """\
@@ -500,6 +500,24 @@ os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 3315992
 datacenter    : US-BA1
+----------
+label         : Debian 8
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 3316070
+datacenter    : FR-SD2
+----------
+label         : Debian 8
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 3316070
+datacenter    : LU-BI1
+----------
+label         : Debian 8
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 3316070
+datacenter    : FR-SD3
 ----------
 label         : Debian 8 (testing) 64 bits (HVM)
 os_arch       : x86-64
@@ -885,8 +903,8 @@ ssh root@95.142.160.181 sudo reboot""")
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* root user will be created.
-* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: server500, datacenter: LU-BI1
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
+, hostname: server500, datacenter: LU-BI1
 Creating your Virtual Machine server500.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine server500 has been created.""")
@@ -902,8 +920,8 @@ Your Virtual Machine server500 has been created.""")
 
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
 password: \nRepeat for confirmation: \n* root user will be created.
-* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: vm, datacenter: LU-BI1
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
+, hostname: vm, datacenter: LU-BI1
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -937,8 +955,8 @@ Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your iface has been created with the following IP addresses:
 ip4:\t10.50.10.10
-* Configuration used: 1 cores, 256Mb memory, ip private, image Debian 7 64 \
-bits (HVM), hostname: server400, datacenter: LU-BI1
+* Configuration used: 1 cores, 256Mb memory, ip private, image Debian 8\
+, hostname: server400, datacenter: LU-BI1
 Creating your Virtual Machine server400.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine server400 has been created.""")
@@ -955,8 +973,8 @@ Your Virtual Machine server400 has been created.""")
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
 password: \nRepeat for confirmation: \n\
 * root and administrator users will be created.
-* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: vm, datacenter: LU-BI1
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
+, hostname: vm, datacenter: LU-BI1
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -971,8 +989,8 @@ Your Virtual Machine vm has been created.""")
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* root user will be created.
-* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: server500, datacenter: LU-BI1
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
+, hostname: server500, datacenter: LU-BI1
 * IAAS backend is now creating your VM and its associated resources in the \
 background.""")
 
@@ -989,8 +1007,8 @@ background.""")
 * SSH key authorization will be used.
 * No password supplied for vm (required to enable emergency web console \
 access).
-* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: vm, datacenter: LU-BI1
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
+, hostname: vm, datacenter: LU-BI1
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -1006,8 +1024,8 @@ Your Virtual Machine vm has been created.""")
 
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
 password: \nRepeat for confirmation: \n* root user will be created.
-* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: vm, datacenter: FR-SD2
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
+, hostname: vm, datacenter: FR-SD2
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -1038,8 +1056,8 @@ Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
 using another datacenter.
 password: \nRepeat for confirmation: \n\
 * root user will be created.
-* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
-(HVM), hostname: vm, datacenter: FR-SD3
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
+, hostname: vm, datacenter: FR-SD3
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
