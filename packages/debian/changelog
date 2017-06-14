@@ -1,3 +1,21 @@
+gandicli (0.20) unstable; urgency=medium
+
+  * Add support for python3.6
+  * Debian 8 is the new default VM image
+  * FR-SD3 is the new default datacenter
+  * Update 'gandi mail create' command to allow passing password as parameter
+  * Update 'gandi certificate create' command: duration is now limited to 2 years
+  * Update 'gandi ip create' command to fix bad units in help message
+  * Fixes #182: 'gandi disk create' will detect datacenter when creating a new VM disk
+  * Fixes #184: 'gandi disk list' can now filter for attach/detach state
+  * Fixes #192: 'gandi certificate info' now still works after 500 certificates
+  * Fixes #201: 'gandi certificate export' was duplicating intermediate certificate
+  * Fixes #211: 'gandi paas deploy' tests should work again when using git commands
+  * Fixes a bug with options not using corrected value when deprecated
+  * Update unixpipe module to remove usage of posix and non portable imports
+
+ -- Dejan Filipovic <sayoun@gandi.net>  Wed, 14 Jun 2017 12:27:07 +0200
+
 gandicli (0.19) unstable; urgency=medium
 
   * Update create commands for namespaces: vm, paas, ip, disk, vlan, webacc
