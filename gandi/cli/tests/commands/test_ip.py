@@ -334,14 +334,14 @@ ip6:\t2001:4b98:dc0:47:216:3eff:feb2:3862""")
         self.assertEqual(params['ip_version'], 4)
 
     def test_create_datacenter_limited(self):
-        args = ['--datacenter', 'FR-SD3', '--bandwidth', '51200',
+        args = ['--datacenter', 'FR-SD2', '--bandwidth', '51200',
                 '--ip-version', '6']
         result = self.invoke_with_exceptions(ip.create, args,
                                              obj=GandiContextHelper())
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Datacenter FR-SD3 will be closed on 25/12/2016, please consider using \
+/!\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider using \
 another datacenter.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
@@ -351,7 +351,7 @@ ip6:\t2001:4b98:dc0:47:216:3eff:feb2:3862""")
 
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.iface.create'][0][0]
-        self.assertEqual(params['datacenter_id'], 4)
+        self.assertEqual(params['datacenter_id'], 1)
         self.assertEqual(params['bandwidth'], 51200)
         self.assertEqual(params['ip_version'], 6)
 
@@ -375,6 +375,8 @@ Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
+/!\ Datacenter FR will be closed on 25/12/2017, please consider using \
+another datacenter.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
 \nYour iface has been created with the following IP addresses:
@@ -406,6 +408,8 @@ You must have an --ip-version to 4 when having a vlan.""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
+/!\ Datacenter FR will be closed on 25/12/2017, please consider using \
+another datacenter.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
 \nYour iface has been created with the following IP addresses:
@@ -438,6 +442,8 @@ You must have a --vlan when giving an --ip.""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
+/!\ Datacenter FR will be closed on 25/12/2017, please consider using \
+another datacenter.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
 \nYour iface has been created with the following IP addresses:
@@ -471,6 +477,8 @@ vm you want to attach to.""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
+/!\ Datacenter FR will be closed on 25/12/2017, please consider using \
+another datacenter.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
 \nYour iface has been created with the following IP addresses:
@@ -490,11 +498,14 @@ Attaching your iface.
                 '--ip-version', '4', '--ip', '10.50.10.10',
                 '--vlan', 'pouet', '--attach', 'server01',
                 '--background']
+        self.maxDiff = None
         result = self.invoke_with_exceptions(ip.create, args,
                                              obj=GandiContextHelper())
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
+/!\ Datacenter FR will be closed on 25/12/2017, please consider using \
+another datacenter.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
 \nYour iface has been created with the following IP addresses:

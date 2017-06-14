@@ -534,7 +534,7 @@ Creating your disk.
         self.assertTrue(params['name'].startswith('vdi'))
 
     def test_create_params(self):
-        args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'FR',
+        args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'FR-SD3',
                 '--snapshotprofile', '3']
         result = self.invoke_with_exceptions(disk.create, args,
                                              obj=GandiContextHelper())
@@ -545,7 +545,7 @@ Creating your disk.
 \rProgress: [###] 100.00%  00:00:00""")
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.disk.create'][0][0]
-        self.assertEqual(params['datacenter_id'], 1)
+        self.assertEqual(params['datacenter_id'], 4)
         self.assertEqual(params['size'], 5120)
         self.assertEqual(params['name'], 'newdisk')
         self.assertEqual(params['snapshot_profile'], 3)
@@ -562,20 +562,20 @@ Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
         self.assertEqual(result.exit_code, 1)
 
     def test_create_datacenter_limited(self):
-        args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'FR-SD3',
+        args = ['--name', 'newdisk', '--size', '5G', '--datacenter', 'FR-SD2',
                 '--snapshotprofile', '3']
         result = self.invoke_with_exceptions(disk.create, args,
                                              obj=GandiContextHelper())
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Datacenter FR-SD3 will be closed on 25/12/2016, please consider using \
+/!\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider using \
 another datacenter.
 Creating your disk.
 \rProgress: [###] 100.00%  00:00:00""")
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.disk.create'][0][0]
-        self.assertEqual(params['datacenter_id'], 4)
+        self.assertEqual(params['datacenter_id'], 1)
         self.assertEqual(params['size'], 5120)
         self.assertEqual(params['name'], 'newdisk')
         self.assertEqual(params['snapshot_profile'], 3)
@@ -608,7 +608,7 @@ step      : WAIT""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ VM server01 datacenter will be used instead of LU-BI1.
+/!\ VM server01 datacenter will be used instead of FR-SD3.
 Creating your disk.
 \rProgress: [###] 100.00%  00:00:00  \
 \nAttaching your disk.

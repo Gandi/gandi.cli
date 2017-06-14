@@ -145,32 +145,11 @@ Probe :
         self.assertEqual(result.exit_code, 0)
 
     def test_create(self):
-        args = ['webacc2', '--datacenter', 'FR']
-        result = self.invoke_with_exceptions(webacc.create, args)
-
-        self.assertEqual(re.sub(r'\[#+\]', '[###]',
-                                result.output.strip()), """\
-Creating your webaccelerator webacc2
-\rProgress: [###] 100.00%  00:00:00  \
-\nYour webaccelerator have been created""")
-
-        self.assertEqual(result.exit_code, 0)
-        params = self.api_calls['hosting.rproxy.create'][0][0]
-        self.assertEqual(params['name'], 'webacc2')
-        self.assertEqual(params['datacenter_id'], 1)
-        self.assertEqual(params['ssl_enable'], False)
-        self.assertEqual(params['lb'], {'algorithm': 'client-ip'})
-        self.assertEqual(params['zone_alter'], False)
-        self.assertEqual(params['override'], True)
-
-    def test_create_datacenter_limited(self):
         args = ['webacc2', '--datacenter', 'FR-SD3']
         result = self.invoke_with_exceptions(webacc.create, args)
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Datacenter FR-SD3 will be closed on 25/12/2016, please consider using \
-another datacenter.
 Creating your webaccelerator webacc2
 \rProgress: [###] 100.00%  00:00:00  \
 \nYour webaccelerator have been created""")
@@ -179,6 +158,27 @@ Creating your webaccelerator webacc2
         params = self.api_calls['hosting.rproxy.create'][0][0]
         self.assertEqual(params['name'], 'webacc2')
         self.assertEqual(params['datacenter_id'], 4)
+        self.assertEqual(params['ssl_enable'], False)
+        self.assertEqual(params['lb'], {'algorithm': 'client-ip'})
+        self.assertEqual(params['zone_alter'], False)
+        self.assertEqual(params['override'], True)
+
+    def test_create_datacenter_limited(self):
+        args = ['webacc2', '--datacenter', 'FR-SD2']
+        result = self.invoke_with_exceptions(webacc.create, args)
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+/!\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider using \
+another datacenter.
+Creating your webaccelerator webacc2
+\rProgress: [###] 100.00%  00:00:00  \
+\nYour webaccelerator have been created""")
+
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.rproxy.create'][0][0]
+        self.assertEqual(params['name'], 'webacc2')
+        self.assertEqual(params['datacenter_id'], 1)
         self.assertEqual(params['ssl_enable'], False)
         self.assertEqual(params['lb'], {'algorithm': 'client-ip'})
         self.assertEqual(params['zone_alter'], False)
@@ -195,8 +195,8 @@ Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
         self.assertEqual(result.exit_code, 1)
 
     def test_create_ssl_ok(self):
-        args = ['webacc2', '--datacenter', 'FR', '--vhost', 'pouet.lol.cat',
-                '--ssl']
+        args = ['webacc2', '--datacenter', 'FR-SD3', '--vhost',
+                'pouet.lol.cat', '--ssl']
         result = self.invoke_with_exceptions(webacc.create, args)
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
@@ -206,7 +206,7 @@ Please give the private key for certificate id 710 (CN: lol.cat)""")
         self.assertEqual(result.exit_code, 0)
 
     def test_create_backend_prompt(self):
-        args = ['webacc2', '--datacenter', 'FR',
+        args = ['webacc2', '--datacenter', 'FR-SD3',
                 '--backend', '195.142.160.181']
         result = self.invoke_with_exceptions(webacc.create, args,
                                              input='8080\n')
@@ -222,7 +222,7 @@ Creating your webaccelerator webacc2
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.rproxy.create'][0][0]
         self.assertEqual(params['name'], 'webacc2')
-        self.assertEqual(params['datacenter_id'], 1)
+        self.assertEqual(params['datacenter_id'], 4)
         self.assertEqual(params['ssl_enable'], False)
         self.assertEqual(params['lb'], {'algorithm': 'client-ip'})
         self.assertEqual(params['zone_alter'], False)
@@ -231,7 +231,7 @@ Creating your webaccelerator webacc2
                                               'port': 8080},))
 
     def test_create_backend_port_ok(self):
-        args = ['webacc2', '--datacenter', 'FR',
+        args = ['webacc2', '--datacenter', 'FR-SD3',
                 '--backend', '195.142.160.181', '--port', 9000]
         result = self.invoke_with_exceptions(webacc.create, args)
 
@@ -244,7 +244,7 @@ Creating your webaccelerator webacc2
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.rproxy.create'][0][0]
         self.assertEqual(params['name'], 'webacc2')
-        self.assertEqual(params['datacenter_id'], 1)
+        self.assertEqual(params['datacenter_id'], 4)
         self.assertEqual(params['ssl_enable'], False)
         self.assertEqual(params['lb'], {'algorithm': 'client-ip'})
         self.assertEqual(params['zone_alter'], False)

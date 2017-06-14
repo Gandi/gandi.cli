@@ -174,6 +174,7 @@ iso       : FR
 name      : Equinix Paris
 country   : France
 dc_code   : FR-SD2
+closing on: 25/12/2017
 ----------
 iso       : US
 name      : Level3 Baltimore
@@ -191,7 +192,7 @@ iso       : FR
 name      : France, Paris
 country   : France
 dc_code   : FR-SD3
-closing on: 25/12/2016
+closed for: paas
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -205,6 +206,7 @@ name      : Equinix Paris
 country   : France
 dc_code   : FR-SD2
 id        : 1
+closing on: 25/12/2017
 ----------
 iso       : US
 name      : Level3 Baltimore
@@ -225,7 +227,7 @@ name      : France, Paris
 country   : France
 dc_code   : FR-SD3
 id        : 4
-closing on: 25/12/2016
+closed for: paas
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -904,7 +906,7 @@ ssh root@95.142.160.181 sudo reboot""")
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
-, hostname: server500, datacenter: LU-BI1
+, hostname: server500, datacenter: FR-SD3
 Creating your Virtual Machine server500.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine server500 has been created.""")
@@ -921,7 +923,7 @@ Your Virtual Machine server500 has been created.""")
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
-, hostname: vm, datacenter: LU-BI1
+, hostname: vm, datacenter: FR-SD3
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -956,7 +958,7 @@ Creating your iface.
 Your iface has been created with the following IP addresses:
 ip4:\t10.50.10.10
 * Configuration used: 1 cores, 256Mb memory, ip private, image Debian 8\
-, hostname: server400, datacenter: LU-BI1
+, hostname: server400, datacenter: FR-SD3
 Creating your Virtual Machine server400.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine server400 has been created.""")
@@ -974,7 +976,7 @@ Your Virtual Machine server400 has been created.""")
 password: \nRepeat for confirmation: \n\
 * root and administrator users will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
-, hostname: vm, datacenter: LU-BI1
+, hostname: vm, datacenter: FR-SD3
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -990,7 +992,7 @@ Your Virtual Machine vm has been created.""")
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
-, hostname: server500, datacenter: LU-BI1
+, hostname: server500, datacenter: FR-SD3
 * IAAS backend is now creating your VM and its associated resources in the \
 background.""")
 
@@ -1008,7 +1010,7 @@ background.""")
 * No password supplied for vm (required to enable emergency web console \
 access).
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
-, hostname: vm, datacenter: LU-BI1
+, hostname: vm, datacenter: FR-SD3
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -1016,7 +1018,7 @@ Your Virtual Machine vm has been created.""")
         self.assertEqual(result.exit_code, 0)
 
     def test_create_dc_code_ok(self):
-        args = ['--datacenter', 'FR-SD2']
+        args = ['--datacenter', 'FR-SD3']
         result = self.invoke_with_exceptions(vm.create, args,
                                              obj=GandiContextHelper(),
                                              input='plokiploki\nplokiploki\n')
@@ -1025,7 +1027,7 @@ Your Virtual Machine vm has been created.""")
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
-, hostname: vm, datacenter: FR-SD2
+, hostname: vm, datacenter: FR-SD3
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -1045,19 +1047,19 @@ Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
         self.assertEqual(result.exit_code, 1)
 
     def test_create_datacenter_limited(self):
-        args = ['--datacenter', 'FR-SD3']
+        args = ['--datacenter', 'FR-SD2']
         result = self.invoke_with_exceptions(vm.create, args,
                                              obj=GandiContextHelper(),
                                              input='plokiploki\nplokiploki\n')
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
 
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
-/!\ Datacenter FR-SD3 will be closed on 25/12/2016, please consider \
+/!\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider \
 using another datacenter.
 password: \nRepeat for confirmation: \n\
 * root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
-, hostname: vm, datacenter: FR-SD3
+, hostname: vm, datacenter: FR-SD2
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")

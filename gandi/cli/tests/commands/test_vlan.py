@@ -164,25 +164,6 @@ Are you sure to delete vlan 'intranet'? [y/N]:""")
         self.assertEqual(result.exit_code, 0)
 
     def test_create(self):
-        args = ['--name', 'testvlan', '--datacenter', 'FR-SD2',
-                '--subnet', '10.7.70.0/24', '--gateway', '10.7.70.254']
-        result = self.invoke_with_exceptions(vlan.create, args,
-                                             obj=GandiContextHelper())
-
-        self.assertEqual(re.sub(r'\[#+\]', '[###]',
-                                result.output.strip()), """\
-Creating your vlan.
-\rProgress: [###] 100.00%  00:00:00  \
-\nYour vlan testvlan has been created.""")
-
-        self.assertEqual(result.exit_code, 0)
-        params = self.api_calls['hosting.vlan.create'][0][0]
-        self.assertEqual(params['datacenter_id'], 1)
-        self.assertEqual(params['subnet'], '10.7.70.0/24')
-        self.assertEqual(params['name'], 'testvlan')
-        self.assertEqual(params['gateway'], '10.7.70.254')
-
-    def test_create_datacenter_limited(self):
         args = ['--name', 'testvlan', '--datacenter', 'FR-SD3',
                 '--subnet', '10.7.70.0/24', '--gateway', '10.7.70.254']
         result = self.invoke_with_exceptions(vlan.create, args,
@@ -190,8 +171,6 @@ Creating your vlan.
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Datacenter FR-SD3 will be closed on 25/12/2016, please consider using \
-another datacenter.
 Creating your vlan.
 \rProgress: [###] 100.00%  00:00:00  \
 \nYour vlan testvlan has been created.""")
@@ -199,6 +178,27 @@ Creating your vlan.
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.vlan.create'][0][0]
         self.assertEqual(params['datacenter_id'], 4)
+        self.assertEqual(params['subnet'], '10.7.70.0/24')
+        self.assertEqual(params['name'], 'testvlan')
+        self.assertEqual(params['gateway'], '10.7.70.254')
+
+    def test_create_datacenter_limited(self):
+        args = ['--name', 'testvlan', '--datacenter', 'FR-SD2',
+                '--subnet', '10.7.70.0/24', '--gateway', '10.7.70.254']
+        result = self.invoke_with_exceptions(vlan.create, args,
+                                             obj=GandiContextHelper())
+
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+/!\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider using \
+another datacenter.
+Creating your vlan.
+\rProgress: [###] 100.00%  00:00:00  \
+\nYour vlan testvlan has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['hosting.vlan.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 1)
         self.assertEqual(params['subnet'], '10.7.70.0/24')
         self.assertEqual(params['name'], 'testvlan')
         self.assertEqual(params['gateway'], '10.7.70.254')
@@ -225,7 +225,7 @@ Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
 
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.vlan.create'][0][0]
-        self.assertEqual(params['datacenter_id'], 3)
+        self.assertEqual(params['datacenter_id'], 4)
         self.assertEqual(params['name'], 'testvlanbg')
 
     def test_update(self):
