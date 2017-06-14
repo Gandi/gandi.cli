@@ -209,7 +209,7 @@ def delete(gandi, background, force, resource):
 
 
 @cli.command()
-@option('--datacenter', type=DATACENTER, default='LU-BI1',
+@option('--datacenter', type=DATACENTER, default='FR-SD3',
         help='Datacenter where the VM will be spawned.')
 @option('--memory', type=click.INT, default=256,
         help='Quantity of RAM in Megabytes to allocate.')

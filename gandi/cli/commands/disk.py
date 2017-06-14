@@ -259,7 +259,7 @@ def delete(gandi, resource, force, background):
               default=None, type=SNAPSHOTPROFILE_VM)
 @click.option('--source', default=None, type=DISK_IMAGE,
               help='Create a disk from a disk or a snapshot.')
-@option('--datacenter', type=DATACENTER, default='LU-BI1',
+@option('--datacenter', type=DATACENTER, default='FR-SD3',
         help='Datacenter where the disk will be created.')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
