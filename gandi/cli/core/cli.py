@@ -4,12 +4,18 @@
 import os
 import os.path
 import inspect
+import platform
 from functools import update_wrapper
 
 import click
 
 from .base import GandiContextHelper
 from gandi.cli import __version__
+
+try:
+    use_man_epilog = platform.system() == 'Linux'
+except:
+    pass
 
 
 # XXX: dirty hack of click help command to allow short help -h
@@ -187,6 +193,9 @@ class GandiCLI(click.Group):
             else:
                 new_name = '%s %s' % (namespace, name)
             kwargs['name'] = new_name
+            if use_man_epilog:
+                kwargs['epilog'] = ('For detailed documentation, '
+                                    'use `man gandi`.')
             _args = args[1:] if args else args
             cmd = click.command(*_args, **kwargs)(f)
             self.add_command(cmd)
