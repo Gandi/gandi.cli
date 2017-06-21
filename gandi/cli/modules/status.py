@@ -22,7 +22,7 @@ class Status(GandiModule):
     @classmethod
     def descriptions(cls):
         """ Retrieve status descriptions from status.gandi.net. """
-        schema = cls.json_call('%s/status/schema' % cls.api_url)
+        schema = cls.json_get('%s/status/schema' % cls.api_url)
         descs = {}
         for val in schema['fields']['status']['value']:
             descs.update(val)
@@ -31,12 +31,12 @@ class Status(GandiModule):
     @classmethod
     def services(cls):
         """Retrieve services statuses from status.gandi.net."""
-        return cls.json_call('%s/services' % cls.api_url)
+        return cls.json_get('%s/services' % cls.api_url)
 
     @classmethod
     def status(cls):
         """Retrieve global status from status.gandi.net."""
-        return cls.json_call('%s/status' % cls.api_url)
+        return cls.json_get('%s/status' % cls.api_url)
 
     @classmethod
     def events(cls, filters):
@@ -47,7 +47,7 @@ class Status(GandiModule):
             current_params = [('current', 'true')]
 
         filter_url = uparse.urlencode(list(filters.items()) + current_params)
-        events = cls.json_call('%s/events?%s' % (cls.api_url, filter_url))
+        events = cls.json_get('%s/events?%s' % (cls.api_url, filter_url))
         return events
 
     @classmethod
