@@ -121,15 +121,46 @@ class GandiModule(GandiConfig):
         return cls.call(method, *args, safe=True)
 
     @classmethod
-    def json_call(cls, url):
+    def json_call(cls, method, url, **kwargs):
         """ Call a remote api using json format """
-        # make the call
-        cls.debug('calling url: %s' % url)
+        # retrieve api key if needed
+        empty_key = kwargs.pop('empty_key', False)
         try:
-            return JsonClient.request(url)
+            apikey = cls.get('apirest.key')
+            if not apikey and not empty_key:
+                cls.echo("No apikey found for REST API, please use "
+                         "'gandi setup' command")
+                sys.exit(1)
+            if 'headers' in kwargs:
+                kwargs['headers'].update({'X-Api-Key': apikey})
+            else:
+                kwargs['headers'] = {'X-Api-Key': apikey}
+        except MissingConfiguration:
+            if not empty_key:
+                return []
+        # make the call
+        cls.debug('calling url: %s %s' % (method, url))
+        cls.debug('with params: %r' % kwargs)
+        try:
+            return JsonClient.request(method, url, **kwargs)
         except APICallFailed as err:
             cls.echo('An error occured during call: %s' % err.errors)
             sys.exit(1)
+
+    @classmethod
+    def json_get(cls, url, **kwargs):
+        """ Helper for GET json request """
+        return cls.json_call('GET', url, **kwargs)
+
+    @classmethod
+    def json_post(cls, url, **kwargs):
+        """ Helper for POST json request """
+        return cls.json_call('POST', url, **kwargs)
+
+    @classmethod
+    def json_delete(cls, url, **kwargs):
+        """ Helper for DELETE json request """
+        return cls.json_call('DELETE', url, **kwargs)
 
     @classmethod
     def intty(cls):

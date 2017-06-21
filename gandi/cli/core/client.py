@@ -4,7 +4,6 @@
 from __future__ import print_function
 
 import sys
-import json
 import socket
 
 try:
@@ -89,20 +88,42 @@ class JsonClient(object):
     """ Class wrapper for JSON calls. """
 
     @classmethod
-    def request(cls, url, data=None):
-        """ Make a json call to remote API. """
+    def format_errors(cls, errors):
+        return '\n'.join([err['description'] for err in errors])
+
+    @classmethod
+    def request(cls, method, url, **kwargs):
+        """Make a http call to a remote API and return a json response."""
         user_agent = 'gandi.cli/%s' % __version__
 
         headers = {'User-Agent': user_agent,
                    'Content-Type': 'application/json; charset=utf-8'}
+        if kwargs.get('headers'):
+            headers.update(kwargs.pop('headers'))
         try:
-            response = requests.get(url, data=json.dumps(data),
-                                    headers=headers)
+            response = requests.request(method, url, headers=headers,
+                                        **kwargs)
             response.raise_for_status()
-            return json.loads(response.content.decode())
+            try:
+                return response.json()
+            except ValueError as err:
+                return response.text
         except (socket.error, requests.exceptions.ConnectionError):
             msg = 'Remote API service is unreachable'
             raise APICallFailed(msg)
         except Exception as err:
-            msg = 'An unknown error has occurred: %s' % err
+            if isinstance(err, requests.HTTPError):
+                try:
+                    resp = response.json()
+                except:
+                    msg = 'An unknown error has occurred: %s' % err
+                    raise APICallFailed(msg)
+
+                if resp.get('message'):
+                    error = resp.get('message')
+                if resp.get('errors'):
+                    error = cls.format_errors(resp.get('errors'))
+                msg = '%s: %s' % (err, error)
+            else:
+                msg = 'An unknown error has occurred: %s' % err
             raise APICallFailed(msg)
