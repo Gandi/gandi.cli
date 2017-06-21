@@ -72,6 +72,7 @@ def format_list(data):
     if isinstance(data, (list, tuple)):
         to_clean = ['[', ']', '(', ')', "'"]
         for item in to_clean:
+            data = str(data).replace("u\"", "\"").replace("u\'", "\'")
             data = str(data).replace(item, '')
     return data
 
@@ -580,3 +581,14 @@ def output_forward(gandi, domain, forward, justify=14):
     """ Helper to output a mail forward information."""
     for dest in forward['destinations']:
         output_line(gandi, forward['source'], dest, justify)
+
+
+def output_dns_records(gandi, records, output_keys, justify=12):
+    """ Helper to output a dns records information."""
+    for key in output_keys:
+        real_key = 'rrset_%s' % key
+        if real_key in records:
+            val = records[real_key]
+            if key == 'values':
+                val = format_list(records[real_key])
+            output_line(gandi, key, val, justify)

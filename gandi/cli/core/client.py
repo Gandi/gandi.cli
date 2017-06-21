@@ -105,9 +105,9 @@ class JsonClient(object):
                                         **kwargs)
             response.raise_for_status()
             try:
-                return response.json()
+                return response.json(), response.headers
             except ValueError as err:
-                return response.text
+                return response.text, response.headers
         except (socket.error, requests.exceptions.ConnectionError):
             msg = 'Remote API service is unreachable'
             raise APICallFailed(msg)

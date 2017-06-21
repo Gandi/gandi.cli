@@ -450,6 +450,23 @@ class OperStepParamType(click.Choice):
         pass
 
 
+class DNSRecordsParamType(GandiChoice):
+
+    """ Choice parameter to select a DNS record type. """
+
+    name = 'dns record'
+
+    def _get_choices(self, gandi):
+        """ Internal method to get choices list """
+        return [item for item in gandi.dns.type_list()]
+
+    def convert(self, value, param, ctx):
+        """ Convert value to uppercase. """
+        self.gandi = ctx.obj
+        value = value.upper()
+        return click.Choice.convert(self, value, param, ctx)
+
+
 DATACENTER = DatacenterParamType()
 PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
@@ -469,6 +486,7 @@ BACKEND = BackendParamType()
 WEBACC_NAME = WebAccNameParamType()
 WEBACC_VHOST_NAME = WebAccVhostParamType()
 OPER_STEP = OperStepParamType()
+DNS_RECORDS = DNSRecordsParamType()
 
 
 class GandiOption(click.Option):

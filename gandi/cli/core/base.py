@@ -128,6 +128,7 @@ class GandiModule(GandiConfig):
         # retrieve api key if needed
         empty_key = kwargs.pop('empty_key', False)
         send_key = kwargs.pop('send_key', True)
+        return_header = kwargs.pop('return_header', False)
         try:
             apikey = cls.get('apirest.key')
             if not apikey and not empty_key:
@@ -146,8 +147,10 @@ class GandiModule(GandiConfig):
         cls.debug('calling url: %s %s' % (method, url))
         cls.debug('with params: %r' % kwargs)
         try:
-            resp = JsonClient.request(method, url, **kwargs)
+            resp, resp_headers = JsonClient.request(method, url, **kwargs)
             cls.dump('responded: %r' % resp)
+            if return_header:
+                return resp, resp_headers
             return resp
         except APICallFailed as err:
             cls.echo('An error occured during call: %s' % err.errors)
@@ -162,6 +165,11 @@ class GandiModule(GandiConfig):
     def json_post(cls, url, **kwargs):
         """ Helper for POST json request """
         return cls.json_call('POST', url, **kwargs)
+
+    @classmethod
+    def json_put(cls, url, **kwargs):
+        """ Helper for PUT json request """
+        return cls.json_call('PUT', url, **kwargs)
 
     @classmethod
     def json_delete(cls, url, **kwargs):
