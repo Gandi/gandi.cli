@@ -181,10 +181,10 @@ class GandiConfig(object):
         scopes = ['global'] if global_ else ['local', 'global']
         for scope in scopes:
             ret = cls._get(scope, key, default, separator)
-            if ret is not None:
+            if ret is not None and ret != default:
                 return ret
 
-        if ret is None:
+        if ret is None or ret == default:
             return default
 
     @classmethod
@@ -221,7 +221,12 @@ class GandiConfig(object):
             config = cls.load(config_file, 'global')
             cls._del('global', 'api.env')
 
-            apikey = click.prompt('Api key')
+            hidden_apikey = '%s...' % cls.get('api.key')[:6]
+            apikey = click.prompt('Api key (xmlrpc)',
+                                  default=hidden_apikey)
+            if apikey == hidden_apikey:
+                # if default value then use actual value not hidden one
+                apikey = cls.get('api.key')
             env_choice = click.Choice(list(cls.apienvs.keys()))
             apienv = click.prompt('Environnment [production]/ote',
                                   default=cls.default_apienv,
@@ -229,11 +234,21 @@ class GandiConfig(object):
                                   show_default=False)
             sshkey = click.prompt('SSH keyfile',
                                   default='~/.ssh/id_rsa.pub')
+            hidden_apikeyrest = '%s...' % cls.get('apirest.key', '')[:6]
+            apikeyrest = click.prompt('Api key (REST)',
+                                      default=hidden_apikeyrest)
+            if apikeyrest == hidden_apikeyrest:
+                # if default value then use actual value not hidden one
+                apikeyrest = cls.get('apirest.key')
 
             config.update({
                 'api': {'key': apikey,
                         'host': cls.apienvs[apienv]},
             })
+            if apikeyrest:
+                config.update({
+                    'apirest': {'key': apikeyrest},
+                })
 
             if sshkey is not None:
                 sshkey_file = os.path.expanduser(sshkey)
