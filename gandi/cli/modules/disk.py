@@ -98,7 +98,7 @@ class Disk(GandiModule):
         if name:
             disk_params['name'] = name
 
-        if snapshot_profile:
+        if snapshot_profile is not None:
             disk_params['snapshot_profile'] = snapshot_profile
 
         if size:
