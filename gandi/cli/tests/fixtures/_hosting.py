@@ -286,6 +286,7 @@ def datacenter_list(options):
     ret = [{'iso': 'FR',
             'name': 'Equinix Paris',
             'id': 1,
+            'can_migrate_to': [4],
             'country': 'France',
             'deactivate_at': datetime(2017, 12, 25, 0, 0, 0),
             'iaas_closed_for': 'NEW',
@@ -294,6 +295,7 @@ def datacenter_list(options):
            {'iso': 'US',
             'name': 'Level3 Baltimore',
             'id': 2,
+            'can_migrate_to': [],
             'country': 'United States of America',
             'deactivate_at': datetime(2016, 12, 25, 0, 0, 0),
             'iaas_closed_for': 'ALL',
@@ -302,6 +304,7 @@ def datacenter_list(options):
            {'iso': 'LU',
             'name': 'Bissen',
             'id': 3,
+            'can_migrate_to': [],
             'country': 'Luxembourg',
             'deactivate_at': None,
             'iaas_closed_for': 'NONE',
@@ -310,6 +313,7 @@ def datacenter_list(options):
            {'iso': 'FR',
             'name': 'France, Paris',
             'id': 4,
+            'can_migrate_to': [],
             'country': 'France',
             'deactivate_at': None,
             'iaas_closed_for': 'NONE',
@@ -404,6 +408,24 @@ def disk_list(options):
               'total_size': 3072,
               'type': 'snapshot',
               'visibility': 'private',
+              'vms_id': []},
+             {'can_snapshot': True,
+              'datacenter_id': 3,
+              'date_created': DateTime('20150319T11:10:34'),
+              'date_updated': DateTime('20150319T11:10:58'),
+              'id': 4969233,
+              'is_boot_disk': True,
+              'kernel_version': '3.12-x86_64 (hvm)',
+              'label': 'Debian 7 64 bits (HVM)',
+              'name': 'newdisk',
+              'size': 3072,
+              'snapshot_profile_id': None,
+              'snapshots_id': [],
+              'source': 1401327,
+              'state': 'created',
+              'total_size': 3072,
+              'type': 'data',
+              'visibility': 'private',
               'vms_id': []}]
 
     options.pop('items_per_page', None)
@@ -436,6 +458,10 @@ def disk_delete(disk_id):
 
 
 def disk_rollback_from(disk_id):
+    return {'id': 200, 'step': 'WAIT'}
+
+
+def disk_migrate(disk_id, datacenter_id):
     return {'id': 200, 'step': 'WAIT'}
 
 

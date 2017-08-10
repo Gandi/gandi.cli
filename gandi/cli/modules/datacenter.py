@@ -19,6 +19,17 @@ class Datacenter(GandiModule):
         return cls.safe_call('hosting.datacenter.list', options or {})
 
     @classmethod
+    def list_migration_choice(cls, datacenter):
+        """List available datacenters for migration from given datacenter."""
+        datacenter_id = cls.usable_id(datacenter)
+        dc_list = cls.list()
+        available_dcs = [dc for dc in dc_list
+                         if dc['id'] == datacenter_id][0]['can_migrate_to']
+        choices = [dc for dc in dc_list
+                   if dc['id'] in available_dcs]
+        return choices
+
+    @classmethod
     def is_opened(cls, dc_code, type_):
         """List opened datacenters for given type."""
         options = {'dc_code': dc_code, '%s_opened' % type_: True}

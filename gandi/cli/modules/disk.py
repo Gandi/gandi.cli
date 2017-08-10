@@ -283,3 +283,16 @@ class Disk(GandiModule):
         cls.echo('Disk rollback in progress.')
         cls.display_progress(result)
         return result
+
+    @classmethod
+    def migrate(cls, resource, datacenter_id, background=False):
+        """ Migrate a disk to another datacenter. """
+        disk_id = cls.usable_id(resource)
+        result = cls.call('hosting.disk.migrate', disk_id, datacenter_id)
+
+        if background:
+            return result
+
+        cls.echo('Disk migration in progress.')
+        cls.display_progress(result)
+        return result

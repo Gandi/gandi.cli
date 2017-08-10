@@ -588,6 +588,11 @@ label         : Debian 7 64 bits
 kernel_version: 3.2-x86_64
 name          : snaptest
 datacenter    : FR-SD2
+----------
+label         : Debian 7 64 bits (HVM)
+kernel_version: 3.12-x86_64 (hvm)
+name          : newdisk
+datacenter    : LU-BI1
 """)
         self.assertEqual(result.exit_code, 0)
 

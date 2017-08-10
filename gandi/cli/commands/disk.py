@@ -329,3 +329,60 @@ def rollback(gandi, resource, background):
     if background:
         gandi.pretty_echo(result)
     return result
+
+
+@cli.command()
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False).')
+@click.argument('resource', required=True)
+@pass_gandi
+def migrate(gandi, resource, force, background):
+    """ Migrate a disk to another datacenter. """
+    # check it's not attached
+    source_info = gandi.disk.info(resource)
+    if source_info['vms_id']:
+        click.echo('Cannot start the migration: disk %s is attached. '
+                   'Please detach the disk before starting the migration.'
+                   % resource)
+        return
+
+    disk_datacenter = source_info['datacenter_id']
+    dc_choices = gandi.datacenter.list_migration_choice(disk_datacenter)
+    if not dc_choices:
+        click.echo('No datacenter is available for migration')
+        return
+    elif len(dc_choices) == 1:
+        # use the only one available
+        datacenter_id = dc_choices[0]['id']
+    else:
+        dc_choice = click.Choice(list([dc['dc_code'] for dc in dc_choices]))
+        dc_chosen = click.prompt('Select a datacenter',
+                                 type=dc_choice,
+                                 show_default=True)
+        datacenter_id = [dc['id'] for dc in dc_choices
+                         if dc['dc_code'] == dc_chosen][0]
+
+    if not force:
+        proceed = click.confirm('Are you sure you want to migrate disk %s ?'
+                                % resource)
+        if not proceed:
+            return
+
+    datacenters = gandi.datacenter.list()
+    dc_from = [dc['dc_code']
+               for dc in datacenters if dc['id'] == disk_datacenter][0]
+    dc_to = [dc['dc_code']
+             for dc in datacenters if dc['id'] == datacenter_id][0]
+    migration_msg = ('* Starting the migration of disk %s from datacenter %s '
+                     'to %s' % (resource, dc_from, dc_to))
+    gandi.echo(migration_msg)
+
+    output_keys = ['id', 'type', 'step']
+    oper = gandi.disk.migrate(resource, datacenter_id, background)
+    if background:
+        output_generic(gandi, oper, output_keys)
+
+    return oper

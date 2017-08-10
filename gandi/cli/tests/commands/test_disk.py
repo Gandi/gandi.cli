@@ -29,6 +29,10 @@ size      : 3072
 name      : snaptest
 state     : created
 size      : 3072
+----------
+name      : newdisk
+state     : created
+size      : 3072
 """)
 
         self.assertEqual(result.exit_code, 0)
@@ -53,6 +57,10 @@ size      : 3072
 vm        : server01
 ----------
 name      : snaptest
+state     : created
+size      : 3072
+----------
+name      : newdisk
 state     : created
 size      : 3072
 """)
@@ -82,6 +90,11 @@ name      : snaptest
 state     : created
 size      : 3072
 id        : 663497
+----------
+name      : newdisk
+state     : created
+size      : 3072
+id        : 4969233
 """)
 
         self.assertEqual(result.exit_code, 0)
@@ -109,6 +122,11 @@ name      : snaptest
 state     : created
 size      : 3072
 type      : snapshot
+----------
+name      : newdisk
+state     : created
+size      : 3072
+type      : data
 """)
 
         self.assertEqual(result.exit_code, 0)
@@ -126,6 +144,10 @@ state     : created
 size      : 3072
 ----------
 name      : data
+state     : created
+size      : 3072
+----------
+name      : newdisk
 state     : created
 size      : 3072
 """)
@@ -163,6 +185,10 @@ profile   : minimal
 name      : snaptest
 state     : created
 size      : 3072
+----------
+name      : newdisk
+state     : created
+size      : 3072
 """)
 
         self.assertEqual(result.exit_code, 0)
@@ -173,6 +199,10 @@ size      : 3072
 
         self.assertEqual(result.output, """\
 name      : sys_1426759833
+state     : created
+size      : 3072
+----------
+name      : newdisk
 state     : created
 size      : 3072
 """)
@@ -205,6 +235,10 @@ size      : 3072
 
         self.assertEqual(result.output, """\
 name      : snaptest
+state     : created
+size      : 3072
+----------
+name      : newdisk
 state     : created
 size      : 3072
 """)
@@ -488,6 +522,51 @@ Disk rollback in progress.
         args = ['snaptest', '--bg']
         result = self.invoke_with_exceptions(disk.rollback, args)
         self.assertEqual(result.output.strip(), "{'id': 200, 'step': 'WAIT'}")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_migrate(self):
+        args = ['snaptest']
+        result = self.invoke_with_exceptions(disk.migrate, args, input='y\n')
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Are you sure you want to migrate disk snaptest ? [y/N]: y\
+\n* Starting the migration of disk snaptest from datacenter FR-SD2 to FR-SD3
+Disk migration in progress.
+\rProgress: [###] 100.00%  00:00:00""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_migrate_background(self):
+        args = ['snaptest', '--bg', '-f']
+        result = self.invoke_with_exceptions(disk.migrate, args)
+        self.assertEqual(result.output.strip(), """\
+* Starting the migration of disk snaptest from datacenter FR-SD2 to FR-SD3
+id        : 200
+step      : WAIT""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_migrate_not_available(self):
+        args = ['newdisk']
+        result = self.invoke_with_exceptions(disk.migrate, args, input='y\n')
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+No datacenter is available for migration""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_migrate_noconfirm(self):
+        args = ['snaptest']
+        result = self.invoke_with_exceptions(disk.migrate, args, input='\n')
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Are you sure you want to migrate disk snaptest ? [y/N]:""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_migrate_attached(self):
+        args = ['data']
+        result = self.invoke_with_exceptions(disk.migrate, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Cannot start the migration: disk data is attached. \
+Please detach the disk before starting the migration.""")
         self.assertEqual(result.exit_code, 0)
 
     def test_snapshot(self):
