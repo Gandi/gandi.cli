@@ -27,7 +27,8 @@ class CommandTestCase(unittest.TestCase):
         GandiModule._api = Api()
         GandiModule._api._calls = {}
         GandiModule._conffiles = {'global': {'api': {'env': 'test',
-                                                     'key': 'apikey0001'}}}
+                                                     'key': 'apikey0001'},
+                                             'apirest': {'key': 'apikey002'}}}
         GandiModule._poll_freq = 0.1
 
         self.api_calls = GandiModule._api._calls
