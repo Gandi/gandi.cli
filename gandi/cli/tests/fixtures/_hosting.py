@@ -119,7 +119,7 @@ def image_list(options):
             'label': 'Debian 7 64 bits (HVM)',
             'os_arch': 'x86-64',
             'size': 3072,
-            'visibility': 'all'},
+            'visibility': 'deprecated'},
            {'author_id': 248842,
             'datacenter_id': 3,
             'date_created': DateTime('20140417T18:38:53'),

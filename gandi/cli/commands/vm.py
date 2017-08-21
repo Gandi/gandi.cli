@@ -76,7 +76,8 @@ def info(gandi, resource, stat):
         for num, disk in enumerate(vm['disks']):
             gandi.echo('')
             disk_out_keys = ['label', 'kernel_version', 'name', 'size']
-            output_image(gandi, disk, datacenters, disk_out_keys, justify)
+            output_image(gandi, disk, datacenters, disk_out_keys, justify,
+                         warn_deprecated=False)
         if stat is True:
             metrics_vif = gandi.metric.query(vm['id'], time_range, query_vif,
                                              'vm', sampler)
@@ -228,7 +229,8 @@ def delete(gandi, background, force, resource):
 @click.option('--hostname', default=None,
               help='Hostname of the VM, will be generated if not provided.')
 @option('--image', type=DISK_IMAGE, default='Debian 8',
-        help='Disk image used to boot the VM.')
+        help='Disk image used to boot the VM. A * prefix means the image is '
+             'deprecated and will soon be unavailable.')
 @click.option('--run', default=None,
               help='Shell command that will run at the first startup of a VM.'
                    'This command will run with root privileges in the ``/`` '
@@ -278,6 +280,10 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
         gandi.echo('/!\ Datacenter %s will be closed on %s, '
                    'please consider using another datacenter.' %
                    (datacenter, exc.date))
+
+    if gandi.image.is_deprecated(image, datacenter):
+        gandi.echo('/!\ Image %s is deprecated and will soon be unavailable.'
+                   % image)
 
     pwd = None
     if password or not sshkey:

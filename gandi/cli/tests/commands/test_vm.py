@@ -479,7 +479,7 @@ kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 1401491
 datacenter    : US-BA1
 ----------
-label         : Debian 7 64 bits (HVM)
+label         : Debian 7 64 bits (HVM) /!\ DEPRECATED
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 1349810
@@ -1016,6 +1016,30 @@ background.""")
 access).
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
 , hostname: vm, datacenter: FR-SD3
+Creating your Virtual Machine vm.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your Virtual Machine vm has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_image_deprecated(self):
+        args = ['--image', 'Debian 7 64 bits (HVM)',
+                '--sshkey', 'mysecretkey',
+                '--datacenter', 'FR-SD2']
+        result = self.invoke_with_exceptions(vm.create, args,
+                                             obj=GandiContextHelper())
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
+/!\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider \
+using another datacenter.
+/!\ Image Debian 7 64 bits (HVM) is deprecated and will soon be unavailable.
+* root user will be created.
+* SSH key authorization will be used.
+* No password supplied for vm (required to enable emergency web console \
+access).
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 7 64 bits \
+(HVM), hostname: vm, datacenter: FR-SD2
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")

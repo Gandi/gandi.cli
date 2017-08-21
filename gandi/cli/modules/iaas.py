@@ -485,6 +485,14 @@ class Image(GandiModule):
                 if label.lower() in img['label'].lower()]
 
     @classmethod
+    def is_deprecated(cls, label, datacenter=None):
+        """Check if image if flagged as deprecated."""
+        images = cls.list(datacenter, label)
+        images_visibility = dict([(image['label'], image['visibility'])
+                                  for image in images])
+        return images_visibility.get(label, 'all') == 'deprecated'
+
+    @classmethod
     def from_label(cls, label, datacenter=None):
         """Retrieve disk image id associated to a label."""
         result = cls.list(datacenter=datacenter)

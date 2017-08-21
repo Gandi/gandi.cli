@@ -203,9 +203,16 @@ def output_paas(gandi, paas, datacenters, vhosts, output_keys, justify=11):
                 output_sub_line(gandi, key, str_value, 5)
 
 
-def output_image(gandi, image, datacenters, output_keys, justify=14):
+def output_image(gandi, image, datacenters, output_keys, justify=14,
+                 warn_deprecated=True):
     """ Helper to output a disk image."""
-    output_generic(gandi, image, output_keys, justify)
+
+    for key in output_keys:
+        if key in image:
+            if (key == 'label' and image['visibility'] == 'deprecated' and
+                    warn_deprecated):
+                image[key] = '%s /!\ DEPRECATED' % image[key]
+            output_line(gandi, key, image[key], justify)
 
     dc_name = 'Nowhere'
 

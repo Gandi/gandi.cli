@@ -115,26 +115,34 @@ class DiskImageParamType(GandiChoice):
 
     def _get_choices(self, gandi):
         """ Internal method to get choices list """
-        image_list = [item['label'] for item in gandi.image.list()]
+        image_list = []
+        for item in gandi.image.list():
+            label = item['label']
+            if item['visibility'] == 'deprecated':
+                label = '*%s' % label
+            image_list.append(label)
         disk_list = [item['name'] for item in gandi.disk.list_create()]
         return sorted(tuple(set(image_list))) + disk_list
 
     def convert(self, value, param, ctx):
         """ Try to find correct disk image regarding version. """
         self.gandi = ctx.obj
+        # remove deprecated * prefix
+        choices = [choice.replace('*', '') for choice in self.choices]
+        value = value.replace('*', '')
         # Exact match
-        if value in self.choices:
+        if value in choices:
             return value
 
         # Try to find 64 bits version
         new_value = '%s 64 bits' % value
-        if new_value in self.choices:
+        if new_value in choices:
             return new_value
 
         # Try to find without specific bits version
         p = re.compile(' (64|32) bits')
         new_value = p.sub('', value)
-        if new_value in self.choices:
+        if new_value in choices:
             return new_value
 
         self.fail('invalid choice: %s. (choose from %s)' %
