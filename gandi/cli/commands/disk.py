@@ -208,6 +208,13 @@ def update(gandi, resource, cmdline, kernel, name, size,
     if delete_snapshotprofile:
         snapshotprofile = ''
 
+    if kernel:
+        source_info = gandi.disk.info(resource)
+        available = gandi.kernel.is_available(source_info, kernel)
+        if not available:
+            raise UsageError('Kernel %s is not available for disk %s' %
+                             (kernel, resource))
+
     result = gandi.disk.update(resource, name, size, snapshotprofile,
                                background, cmdline, kernel)
     if background:

@@ -397,6 +397,18 @@ Updating your disk.
 
         self.assertEqual(result.exit_code, 0)
 
+    def test_update_kernel_unavailable(self):
+        args = ['data', '--kernel', '3.12-x86_64']
+        result = self.invoke_with_exceptions(disk.update, args)
+
+        self.assertEqual(result.output, """\
+Usage: disk update [OPTIONS] RESOURCE
+
+Error: Kernel 3.12-x86_64 is not available for disk data
+""")
+
+        self.assertEqual(result.exit_code, 2)
+
     def test_update_cmdline(self):
         args = ['data', '--cmdline',
                 'root=/dev/xvda1 loglevel=4 console=hvc0 nosep ro']

@@ -149,7 +149,7 @@ class KernelParamType(GandiChoice):
 
     def _get_choices(self, gandi):
         """ Internal method to get choices list """
-        kernel_families = list(gandi.kernel.list(1).values())
+        kernel_families = list(gandi.kernel.list().values())
         return [kernel for klist in kernel_families for kernel in klist]
 
     def convert(self, value, param, ctx):

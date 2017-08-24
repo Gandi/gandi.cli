@@ -948,7 +948,8 @@ def disk_list_kernels(dc_id):
                       '3.2-x86_64',
                       '3.2-x86_64-grsec',
                       '3.10-x86_64',
-                      '3.10-i386'],
+                      '3.10-i386',
+                      '3.12-x86_64'],
             'linux-hvm': ['3.12-x86_64 (hvm)', 'grub', 'raw']}}
 
     return ret[dc_id]

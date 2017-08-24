@@ -521,18 +521,40 @@ class Kernel(GandiModule):
     """ Module to handle Gandi Kernels. """
 
     @classmethod
-    def list(cls, datacenter, flavor=None, match=''):
+    def list(cls, datacenter=None, flavor=None, match='', exact_match=False):
         """ List available kernels for datacenter."""
-        dc_id = Datacenter.usable_id(datacenter)
-        kmap = cls.safe_call('hosting.disk.list_kernels', dc_id)
+        if not datacenter:
+            dc_ids = [dc['id'] for dc in Datacenter.filtered_list()]
+            kmap = {}
+            for dc_id in dc_ids:
+                vals = cls.safe_call('hosting.disk.list_kernels', dc_id)
+                for key in vals:
+                    kmap.setdefault(key, []).extend(vals.get(key, []))
+            # remove duplicates
+            for key in kmap:
+                kmap[key] = list(set(kmap[key]))
+        else:
+            dc_id = Datacenter.usable_id(datacenter)
+            kmap = cls.safe_call('hosting.disk.list_kernels', dc_id)
 
         if match:
             for flav in kmap:
-                kmap[flav] = [x for x in kmap[flav] if match in x]
-
+                if exact_match:
+                    kmap[flav] = [x for x in kmap[flav] if match == x]
+                else:
+                    kmap[flav] = [x for x in kmap[flav] if match in x]
         if flavor:
             if flavor not in kmap:
                 cls.error('flavor %s not supported here' % flavor)
             return dict([(flavor, kmap[flavor])])
 
         return kmap
+
+    @classmethod
+    def is_available(cls, disk, kernel):
+        """ Check if kernel is available for disk."""
+        kmap = cls.list(disk['datacenter_id'], None, kernel, True)
+        for flavor in kmap:
+            if kernel in kmap[flavor]:
+                return True
+        return False
