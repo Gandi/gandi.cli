@@ -86,10 +86,12 @@ class GandiModule(GandiConfig):
         for arg in args:
             cls.debug('with params: %r' % arg)
         try:
-            return api.request(method, apikey, *args,
+            resp = api.request(method, apikey, *args,
                                **{'dry_run': kwargs.get('dry_run', False),
                                   'return_dry_run':
                                   kwargs.get('return_dry_run', False)})
+            cls.dump('responded: %r' % resp)
+            return resp
         except APICallFailed as err:
             if kwargs.get('safe'):
                 return []
@@ -199,6 +201,13 @@ class GandiModule(GandiConfig):
         """ Display a separator line. """
         if cls.intty():
             cls.echo("\t" + sep * size)
+
+    @classmethod
+    def dump(cls, message):
+        """ Display dump message if verbose level allows it. """
+        if cls.verbose > 2:
+            msg = '[DUMP] %s' % message
+            cls.echo(msg)
 
     @classmethod
     def debug(cls, message):
