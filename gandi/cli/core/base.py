@@ -127,16 +127,18 @@ class GandiModule(GandiConfig):
         """ Call a remote api using json format """
         # retrieve api key if needed
         empty_key = kwargs.pop('empty_key', False)
+        send_key = kwargs.pop('send_key', True)
         try:
             apikey = cls.get('apirest.key')
             if not apikey and not empty_key:
                 cls.echo("No apikey found for REST API, please use "
                          "'gandi setup' command")
                 sys.exit(1)
-            if 'headers' in kwargs:
-                kwargs['headers'].update({'X-Api-Key': apikey})
-            else:
-                kwargs['headers'] = {'X-Api-Key': apikey}
+            if send_key:
+                if 'headers' in kwargs:
+                    kwargs['headers'].update({'X-Api-Key': apikey})
+                else:
+                    kwargs['headers'] = {'X-Api-Key': apikey}
         except MissingConfiguration:
             if not empty_key:
                 return []
@@ -144,7 +146,9 @@ class GandiModule(GandiConfig):
         cls.debug('calling url: %s %s' % (method, url))
         cls.debug('with params: %r' % kwargs)
         try:
-            return JsonClient.request(method, url, **kwargs)
+            resp = JsonClient.request(method, url, **kwargs)
+            cls.dump('responded: %r' % resp)
+            return resp
         except APICallFailed as err:
             cls.echo('An error occured during call: %s' % err.errors)
             sys.exit(1)
