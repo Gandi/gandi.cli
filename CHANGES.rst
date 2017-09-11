@@ -1,6 +1,31 @@
 Changelog
 =========
 
+0.21
+----
+
+* Add new 'gandi disk migrate' command
+* Update 'gandi setup' command to ask for apikey for REST API
+* Handle deprecated images
+  - Add a warning during 'gandi vm create' command
+  - Display a * before image labels on 'gandi vm create' help
+  - Display a /!\ DEPRECATED on 'gandi vm images' command
+* Fixes #220: gandi record update issues
+  - Do not cast to int the id of the record, use the retrieve value
+  - Handle both record syntax with 'IN' or not when parsing
+  - Delete created zone if record.update call fail from xmlrpc API
+* Fixes #219: Can't remove disk snapshot profile
+* vm: delete: Fix delete when we reach the list limit
+  - Fixed a bug when deleting a vm that wasn't listed in the first 500 results
+    of gandi.iaas.list.
+* Fix issue when updating disk kernel with a kernel from another datacenter
+  - CLI was proposing only kernels available on datacenter 1, but some kernels
+    are available only on other datacenters, so we list everything for --kernel
+    parameters, and for disk update command we add a new check if this kernel is
+    available for this disk on this datacenter.
+* Add epilog to help messages to notify user about man documentation
+* Add one new verbose level for dumping data
+
 0.20
 ----
 
