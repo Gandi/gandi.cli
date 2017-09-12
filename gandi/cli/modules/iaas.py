@@ -264,7 +264,7 @@ class Iaas(GandiModule, SshkeyHelper):
                 except Exception:
                     pass
                 else:
-                    if not Ip.check_and_detach(ip_, None, force=False):
+                    if not Ip._check_and_detach(ip_, None):
                         return
             if ip_:
                 iface_id = ip_['iface_id']
