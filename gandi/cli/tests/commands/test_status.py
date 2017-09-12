@@ -1,148 +1,147 @@
-import httpretty
+import json
+from functools import partial
+from ..compat import mock
+from .base import CommandTestCase
+from gandi.cli.commands import root
+
 # disable SSL requests warning for tests
 import requests.packages.urllib3
 requests.packages.urllib3.disable_warnings()
 
-from gandi.cli.commands import root
-from .base import CommandTestCase
+
+RESPONSES = {
+    'https://status.gandi.net/api/status/schema': {
+        'status': 200,
+        'headers': 'application/json',
+        'body': """{"fields": {"status": {"value": [
+                   {"SUNNY": "All services are up and running"},
+                   {"CLOUDY": "A scheduled maintenance ongoing"},
+                   {"FOGGY": "Incident which are not impacting our services."},
+                   {"STORMY": "An incident ongoing"}]}}}"""
+    },
+}
+
+
+def _mock_requests(status, method, url, *args, **kwargs):
+    content = None
+    if status == 'SUNNY':
+        if url == 'https://status.gandi.net/api/services':
+            content = """[{"description": "IAAS",
+                           "name": "IAAS",
+                           "status": "SUNNY"},
+                          {"description": "PAAS",
+                           "name": "PAAS",
+                           "status": "SUNNY"},
+                          {"description": "Site",
+                          "name": "Site",
+                          "status": "SUNNY"},
+                          {"description": "API",
+                          "name": "API",
+                          "status": "SUNNY"},
+                          {"description": "SSL",
+                          "name": "SSL",
+                          "status": "SUNNY"},
+                          {"description": "Domain",
+                          "name": "Domain",
+                          "status": "SUNNY"},
+                          {"description": "Email",
+                          "name": "Email",
+                          "status": "SUNNY"}]"""
+        if url == 'https://status.gandi.net/api/events?category=Incident&current=true': # noqa
+            content = """[]"""
+
+    if status == 'STORMY':
+        if url == 'https://status.gandi.net/api/services':
+            content = """[{"description": "IAAS",
+                           "name": "IAAS",
+                           "status": "SUNNY"},
+                          {"description": "PAAS",
+                           "name": "PAAS",
+                           "status": "STORMY"},
+                          {"description": "Site",
+                          "name": "Site",
+                          "status": "SUNNY"},
+                          {"description": "API",
+                          "name": "API",
+                          "status": "SUNNY"},
+                          {"description": "SSL",
+                          "name": "SSL",
+                          "status": "SUNNY"},
+                          {"description": "Domain",
+                          "name": "Domain",
+                          "status": "SUNNY"},
+                          {"description": "Email",
+                          "name": "Email",
+                          "status": "SUNNY"}]"""
+        if url == 'https://status.gandi.net/api/events?category=Incident&services=PAAS&current=true': # noqa
+            content = """
+                [{"category": "Incident",
+                "date_end": "2014-10-08T06:20:00+00:00",
+                "date_start": "2014-10-07T18:00:00+00:00",
+                "duration": 740,
+                "estimate_date_end": "2014-10-08T06:20:00+00:00",
+                "id": "7",
+                "services": [
+                    "IAAS",
+                    "PAAS"
+                ],
+                "title": "Incident on a storage unit on Paris datacenter"}]
+                """
+
+    if status == 'FOGGY':
+        if url == 'https://status.gandi.net/api/services':
+            content = """[{"description": "IAAS",
+                           "name": "IAAS",
+                           "status": "SUNNY"},
+                          {"description": "PAAS",
+                           "name": "PAAS",
+                           "status": "SUNNY"},
+                          {"description": "Site",
+                          "name": "Site",
+                          "status": "SUNNY"},
+                          {"description": "API",
+                          "name": "API",
+                          "status": "SUNNY"},
+                          {"description": "SSL",
+                          "name": "SSL",
+                          "status": "SUNNY"},
+                          {"description": "Domain",
+                          "name": "Domain",
+                          "status": "SUNNY"},
+                          {"description": "Email",
+                          "name": "Email",
+                          "status": "SUNNY"}]"""
+        if url == 'https://status.gandi.net/api/events?category=Incident&current=true': # noqa
+            content = """
+                [{"category": "Incident",
+                "date_end": "2015-04-15T22:06:43+00:00",
+                "date_start": "2015-04-15T21:30:00+00:00",
+                "duration": 36,
+                "estimate_date_end": "2015-04-15T22:30:00+00:00",
+                "id": "15",
+                "services": [],
+                "title": "Reachability issue on our website"
+                }]
+                """
+
+    if url == 'https://status.gandi.net/api/status':
+        content = """{"status": "%s"}""" % status
+    elif not content:
+        content = RESPONSES[url]['body']
+
+    content = json.loads(content)
+    mock_resp = mock.Mock()
+    mock_resp.status_code = 200
+    mock_resp.content = content
+    mock_resp.json = mock.Mock(return_value=content)
+    return mock_resp
 
 
 class StatusTestCase(CommandTestCase):
 
-    def _mock_http_request_base(self, status='SUNNY'):
-
-        response = """{
-        "fields": {"status": {"value": [
-                {"SUNNY": "All services are up and running"},
-                {"CLOUDY": "A scheduled maintenance ongoing"},
-                {"FOGGY": "Incident which are not impacting our services."},
-                {"STORMY": "An incident ongoing"}]}}}
-        """
-        httpretty.register_uri(httpretty.GET,
-                               'https://status.gandi.net/api/status/schema',
-                               body=response,
-                               status=200)
-
-        response = """{"status": "%s"}""" % status
-        httpretty.register_uri(httpretty.GET,
-                               'https://status.gandi.net/api/status',
-                               body=response,
-                               status=200)
-
-    def _mock_http_request_working(self, status='SUNNY'):
-
-        self._mock_http_request_base(status)
-        response = """[
-        {"description": "IAAS",
-         "name": "IAAS",
-         "status": "SUNNY"},
-        {"description": "PAAS",
-         "name": "PAAS",
-         "status": "SUNNY"},
-        {"description": "Site",
-        "name": "Site",
-        "status": "SUNNY"},
-        {"description": "API",
-        "name": "API",
-        "status": "SUNNY"},
-        {"description": "SSL",
-        "name": "SSL",
-        "status": "SUNNY"},
-        {"description": "Domain",
-        "name": "Domain",
-        "status": "SUNNY"},
-        {"description": "Email",
-        "name": "Email",
-        "status": "SUNNY"}]"""
-        httpretty.register_uri(httpretty.GET,
-                               'https://status.gandi.net/api/services',
-                               body=response,
-                               status=200)
-
-        response = """[]"""
-
-        incident_url = ('https://status.gandi.net/api/events?category='
-                        'Incident&current=true')
-        httpretty.register_uri(httpretty.GET,
-                               incident_url,
-                               body=response,
-                               status=200)
-
-    def _mock_http_request_incident(self, status='STORMY'):
-
-        self._mock_http_request_base(status)
-        response = """[
-        {"description": "IAAS",
-         "name": "IAAS",
-         "status": "SUNNY"},
-        {"description": "PAAS",
-         "name": "PAAS",
-         "status": "STORMY"},
-        {"description": "Site",
-        "name": "Site",
-        "status": "SUNNY"},
-        {"description": "API",
-        "name": "API",
-        "status": "SUNNY"},
-        {"description": "SSL",
-        "name": "SSL",
-        "status": "SUNNY"},
-        {"description": "Domain",
-        "name": "Domain",
-        "status": "SUNNY"},
-        {"description": "Email",
-        "name": "Email",
-        "status": "SUNNY"}]"""
-        httpretty.register_uri(httpretty.GET,
-                               'https://status.gandi.net/api/services',
-                               body=response,
-                               status=200)
-
-        response = """
-        [{"category": "Incident",
-        "date_end": "2014-10-08T06:20:00+00:00",
-        "date_start": "2014-10-07T18:00:00+00:00",
-        "duration": 740,
-        "estimate_date_end": "2014-10-08T06:20:00+00:00",
-        "id": "7",
-        "services": [
-            "IAAS",
-            "PAAS"
-        ],
-        "title": "Incident on a storage unit on Paris datacenter"}]
-        """
-
-        incident_url = ('https://status.gandi.net/api/events?category='
-                        'Incident&services=PAAS&current=true')
-        httpretty.register_uri(httpretty.GET,
-                               incident_url,
-                               body=response,
-                               status=200)
-
-    def _mock_http_request_incident_no_service(self):
-
-        response = """
-        [{"category": "Incident",
-        "date_end": "2015-04-15T22:06:43+00:00",
-        "date_start": "2015-04-15T21:30:00+00:00",
-        "duration": 36,
-        "estimate_date_end": "2015-04-15T22:30:00+00:00",
-        "id": "15",
-        "services": [],
-        "title": "Reachability issue on our website"
-        }]
-        """
-
-        incident_url_2 = ('https://status.gandi.net/api/events?category='
-                          'Incident&current=true')
-        httpretty.register_uri(httpretty.GET,
-                               incident_url_2,
-                               body=response,
-                               status=200)
-
-    @httpretty.activate
-    def test_status(self):
-        self._mock_http_request_working()
+    @mock.patch('gandi.cli.core.client.requests.request')
+    def test_status(self, mock_request):
+        mock_request.side_effect = partial(_mock_requests, 'SUNNY')
 
         result = self.invoke_with_exceptions(root.status, [])
 
@@ -160,9 +159,9 @@ Email     : All services are up and running
 
         self.assertEqual(result.exit_code, 0)
 
-    @httpretty.activate
-    def test_status_service(self):
-        self._mock_http_request_working()
+    @mock.patch('gandi.cli.core.client.requests.request')
+    def test_status_service(self, mock_request):
+        mock_request.side_effect = partial(_mock_requests, 'SUNNY')
 
         result = self.invoke_with_exceptions(root.status, ['ssl'])
 
@@ -174,9 +173,9 @@ SSL       : All services are up and running
 
         self.assertEqual(result.exit_code, 0)
 
-    @httpretty.activate
-    def test_status_service_incident(self):
-        self._mock_http_request_incident('STORMY')
+    @mock.patch('gandi.cli.core.client.requests.request')
+    def test_status_service_incident(self, mock_request):
+        mock_request.side_effect = partial(_mock_requests, 'STORMY')
 
         result = self.invoke_with_exceptions(root.status, ['paas'])
 
@@ -189,10 +188,9 @@ PAAS      : Incident on a storage unit on Paris datacenter - %s
 
         self.assertEqual(result.exit_code, 0)
 
-    @httpretty.activate
-    def test_status_no_service_incident(self):
-        self._mock_http_request_working('FOGGY')
-        self._mock_http_request_incident_no_service()
+    @mock.patch('gandi.cli.core.client.requests.request')
+    def test_status_no_service_incident(self, mock_request):
+        mock_request.side_effect = partial(_mock_requests, 'FOGGY')
 
         result = self.invoke_with_exceptions(root.status, [])
 
