@@ -221,7 +221,7 @@ class GandiConfig(object):
             config = cls.load(config_file, 'global')
             cls._del('global', 'api.env')
 
-            hidden_apikey = '%s...' % cls.get('api.key')[:6]
+            hidden_apikey = '%s...' % cls.get('api.key', '')[:6]
             apikey = click.prompt('Api key (xmlrpc)',
                                   default=hidden_apikey)
             if apikey == hidden_apikey:
