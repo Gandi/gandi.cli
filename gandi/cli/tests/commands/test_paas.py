@@ -1,12 +1,44 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from functools import partial
 
 import re
 
-from ..compat import mock
+from ..compat import mock, StringIO, ConfigParser
 from .base import CommandTestCase
 from gandi.cli.commands import paas
 from gandi.cli.core.base import GandiContextHelper
+
+
+def _mock_output(git_content, command, *args, **kwargs):
+    buf = StringIO(git_content)
+    config = ConfigParser.ConfigParser()
+    config.readfp(buf)
+    if command == 'git config --local --get remote.gandi.url':
+        try:
+            return config.get('remote "gandi"', 'url')
+        except:
+            return ''
+
+    if command == 'git config --local --get remote.origin.url':
+        try:
+            return config.get('remote "origin"', 'url')
+        except:
+            return ''
+
+    if command == 'git config --local --get remote.$(git config --local --get branch.stable.remote).url': # noqa
+        try:
+            return config.get('remote "production"', 'url')
+        except:
+            return ''
+
+    if command == 'git config --local --get remote.$(git config --local --get branch.master.remote).url': # noqa
+        try:
+            return config.get('remote "origin"', 'url')
+        except:
+            return ''
+
+    return ''
 
 
 class PaasTestCase(CommandTestCase):
@@ -244,17 +276,16 @@ Then `$ gandi deploy` to build and deploy your application.
 
         self.assertEqual(result.exit_code, 0)
 
-    def test_deploy_invalid_remote_empty(self):
+    @mock.patch('gandi.cli.core.base.GandiModule.exec_output')
+    def test_deploy_invalid_remote_empty(self, mock_exec_output):
         args = []
 
         git_content = """
 [blabla]
 dummy=dududududud
 """
-        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
-                                                      temp_dir='.git',
-                                                      temp_name='config',
-                                                      temp_content=git_content)
+        mock_exec_output.side_effect = partial(_mock_output, git_content)
+        result = self.invoke_with_exceptions(paas.deploy, args)
 
         self.assertEqual(result.output, """\
 Error: Could not find git remote to extract deploy url from.
@@ -271,21 +302,21 @@ $ gandi deploy --remote <remote> [--branch <branch>]
 
         self.assertEqual(result.exit_code, 2)
 
-    def test_deploy_invalid_remote_content(self):
+    @mock.patch('gandi.cli.core.base.GandiModule.exec_output')
+    def test_deploy_invalid_remote_content(self, mock_exec_output):
         args = []
+        self.maxDiff = None
 
         git_content = """
 [remote "origin"]
-        fetch = +refs/heads/*:refs/remotes/origin/*
-        url = https://github.com/Gandi/gandi.cli.git
+fetch = +refs/heads/*:refs/remotes/origin/*
+url = https://github.com/Gandi/gandi.cli.git
 [branch "master"]
-        remote = origin
-        merge = refs/heads/master
+remote = origin
+merge = refs/heads/master
 """
-        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
-                                                      temp_dir='.git',
-                                                      temp_name='config',
-                                                      temp_content=git_content)
+        mock_exec_output.side_effect = partial(_mock_output, git_content)
+        result = self.invoke_with_exceptions(paas.deploy, args)
 
         self.assertEqual(result.output, """\
 Error: https://github.com/Gandi/gandi.cli.git \
@@ -303,18 +334,17 @@ $ gandi deploy --remote <remote> [--branch <branch>]
 
         self.assertEqual(result.exit_code, 2)
 
-    def test_deploy(self):
+    @mock.patch('gandi.cli.core.base.GandiModule.exec_output')
+    def test_deploy(self, mock_exec_output):
         args = []
 
         git_content = """
 [remote "gandi"]
-        fetch = +refs/heads/*:refs/remotes/gandi/*
-        url = ssh+git://185290@git.dc2.gpaas.net/default.git
+fetch = +refs/heads/*:refs/remotes/gandi/*
+url = ssh+git://185290@git.dc2.gpaas.net/default.git
 """
-        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
-                                                      temp_dir='.git',
-                                                      temp_name='config',
-                                                      temp_content=git_content)
+        mock_exec_output.side_effect = partial(_mock_output, git_content)
+        result = self.invoke_with_exceptions(paas.deploy, args)
 
         self.assertEqual(result.output, """\
 ssh 185290@git.dc2.gpaas.net 'deploy default.git master'
@@ -322,21 +352,20 @@ ssh 185290@git.dc2.gpaas.net 'deploy default.git master'
 
         self.assertEqual(result.exit_code, 0)
 
-    def test_deploy_remote(self):
+    @mock.patch('gandi.cli.core.base.GandiModule.exec_output')
+    def test_deploy_remote(self, mock_exec_output):
         args = ['--remote', 'origin']
 
         git_content = """
 [remote "origin"]
-        fetch = +refs/heads/*:refs/remotes/origin/*
-        url = ssh+git://185290@git.dc2.gpaas.net/default.git
+fetch = +refs/heads/*:refs/remotes/origin/*
+url = ssh+git://185290@git.dc2.gpaas.net/default.git
 [branch "master"]
-        remote = origin
-        merge = refs/heads/master
+remote = origin
+merge = refs/heads/master
 """
-        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
-                                                      temp_dir='.git',
-                                                      temp_name='config',
-                                                      temp_content=git_content)
+        mock_exec_output.side_effect = partial(_mock_output, git_content)
+        result = self.invoke_with_exceptions(paas.deploy, args)
 
         self.assertEqual(result.output, """\
 ssh 185290@git.dc2.gpaas.net 'deploy default.git master'
@@ -344,27 +373,26 @@ ssh 185290@git.dc2.gpaas.net 'deploy default.git master'
 
         self.assertEqual(result.exit_code, 0)
 
-    def test_deploy_guess_remote_with_branch(self):
+    @mock.patch('gandi.cli.core.base.GandiModule.exec_output')
+    def test_deploy_guess_remote_with_branch(self, mock_exec_output):
         args = ['--branch', 'stable']
 
         git_content = """
 [remote "origin"]
-        fetch = +refs/heads/*:refs/remotes/origin/*
-        url = https://github.com/Gandi/gandi.cli.git
+fetch = +refs/heads/*:refs/remotes/origin/*
+url = https://github.com/Gandi/gandi.cli.git
 [remote "production"]
-        fetch = +refs/heads/*:refs/remotes/production/*
-        url = ssh+git://185290@git.dc2.gpaas.net/default.git
+fetch = +refs/heads/*:refs/remotes/production/*
+url = ssh+git://185290@git.dc2.gpaas.net/default.git
 [branch "master"]
-        remote = origin
-        merge = refs/heads/master
+remote = origin
+merge = refs/heads/master
 [branch "stable"]
-        remote = production
-        merge = refs/heads/stable
+remote = production
+merge = refs/heads/stable
 """
-        result = self.isolated_invoke_with_exceptions(paas.deploy, args,
-                                                      temp_dir='.git',
-                                                      temp_name='config',
-                                                      temp_content=git_content)
+        mock_exec_output.side_effect = partial(_mock_output, git_content)
+        result = self.invoke_with_exceptions(paas.deploy, args)
 
         self.assertEqual(result.output, """\
 ssh 185290@git.dc2.gpaas.net 'deploy default.git stable'
