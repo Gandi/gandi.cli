@@ -1,3 +1,11 @@
+gandicli (0.22) unstable; urgency=medium
+
+  * Fixes #223: 'gandi setup' command error
+  * Fixes #222: AttributeError during vm creation on a private vlan
+  * Fixes tests for 'gandi deploy' and 'gandi status' commands 
+
+ -- Dejan Filipovic <sayoun@gandi.net>  Wed, 13 Sep 2017 14:35:20 +0200
+
 gandicli (0.21) unstable; urgency=medium
 
   * Add new 'gandi disk migrate' command

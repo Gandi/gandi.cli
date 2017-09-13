@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.22
+----
+
+* Fixes #223: 'gandi setup' command error
+* Fixes #222: AttributeError during vm creation on a private vlan
+* Fixes tests for 'gandi deploy' and 'gandi status' commands
+
 0.21
 ----
 
