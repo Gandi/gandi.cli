@@ -147,6 +147,7 @@ Namespaces:
 *  vm info                 Display information about a virtual machine.
 *  vm kernels              List available kernels for virtual machines.
 *  vm list                 List virtual machines.
+*  vm migrate              Migrate a virtual machine to another datacenter.
 *  vm reboot               Reboot a virtual machine.
 *  vm ssh                  Spawn an SSH session to virtual machine.
 *  vm start                Start a virtual machine.
@@ -348,6 +349,8 @@ Details:
 * ``gandi vm kernel pattern`` list all the available kernels whos name contains the pattern. Possible options are ``--flavor TEXT`` to filter given kernel flavors, ``--vm TEXT`` to only show kernels available for a given vm, ``--datacenter FR-SD2|LU-BI1|FR-SD3`` to specify a given datacenter.
 
 * ``gandi vm list`` show all the virtual machine created in Gandi hosting for the account. Possible options are ``--state`` which filter the output according to define virtual machine state, ``--datacenter`` which filter the output according to virtual machine datacenter, ``--id`` to obtain the id of each virtual machine, ``--limit INTEGER`` which list only a subset of the full list of virtual machines.
+
+* ``gandi vm migrate resource`` will migrate a virtual machine from current datacenter to a new one. This modification can be done as background process using the option ``--background`` (or ``--bg``). Possible option is ``--finalize`` to finalize migration when migration process requires this action, ``--force`` (or ``-f``) to bypass the validation question; useful in non-interactive mode when scripting.
 
 * ``gandi vm info resource`` show details of a specific operation. Use ``--stat`` in order to get general statistics of the VM's resources.
 

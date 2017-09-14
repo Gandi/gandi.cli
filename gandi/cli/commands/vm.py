@@ -490,3 +490,32 @@ def datacenters(gandi, id):
         output_datacenter(gandi, dc, output_keys, justify=10)
 
     return result
+
+
+@cli.command()
+@click.option('--bg', '--background', default=False, is_flag=True,
+              help='Run command in background mode (default=False).')
+@click.option('--force', '-f', is_flag=True,
+              help='This is a dangerous option that will cause CLI to continue'
+                   ' without prompting. (default=False).')
+@click.option('--finalize', default=False, is_flag=True,
+              help='Finalize migration.')
+@click.argument('resource', required=True)
+@pass_gandi
+def migrate(gandi, resource, force, background, finalize):
+    """ Migrate a virtual machine to another datacenter. """
+    if not force:
+        proceed = click.confirm('Are you sure you want to migrate VM %s ?'
+                                % resource)
+        if not proceed:
+            return
+
+    if finalize:
+        gandi.iaas.need_finalize(resource)
+
+    output_keys = ['id', 'type', 'step']
+    oper = gandi.iaas.migrate(resource, background, finalize=finalize)
+    if background:
+        output_generic(gandi, oper, output_keys)
+
+    return oper

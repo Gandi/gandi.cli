@@ -102,6 +102,16 @@ def list(options):
                        'inner_step': 'check_email_sent',
                        'dcv_method': 'dns',
                        'remote_addr': '127.0.0.1'}},
+           {'step': 'RUN',
+            'id': 99001,
+            'vm_id': 152967,
+            'type': 'hosting_migration_vm',
+            'params': {'inner_step': 'wait_sync'}},
+           {'step': 'RUN',
+            'id': 99002,
+            'vm_id': 152966,
+            'type': 'hosting_migration_vm',
+            'params': {'inner_step': 'wait_finalize'}},
            ]
 
     options.pop('sort_by', None)
@@ -113,7 +123,7 @@ def list(options):
         return op == option
 
     for fkey in options:
-        ret = [op for op in ret if compare(op[fkey], options[fkey])]
+        ret = [op for op in ret if compare(op.get(fkey), options[fkey])]
 
     return ret
 
@@ -135,5 +145,13 @@ def info(id):
                            'param_type': 'certificate_update',
                            'prepaid_id': 100000,
                            'remote_addr': '127.0.0.1'}}
+
+    if id == 9900:
+        return {'step': 'DONE',
+                'type': 'hosting_migration_disk',
+                'params': {'to_dc_id': 3,
+                           'from_dc_id': 1,
+                           'inner_step': 'wait_finalize'},
+                'id': 9900}
 
     return [oper for oper in list({}) if oper['id'] == id][0]

@@ -1094,3 +1094,63 @@ Creating your Virtual Machine vm.
 Your Virtual Machine vm has been created.""")
 
         self.assertEqual(result.exit_code, 0)
+
+    def test_migrate_ok(self):
+        args = ['server02', '-f']
+        result = self.invoke_with_exceptions(vm.migrate, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+* Starting the migration of VM server02 from datacenter FR-SD2 to LU-BI1
+VM migration in progress.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your VM server02 has been migrated.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_migrate_noconfirm(self):
+        args = ['server02']
+        result = self.invoke_with_exceptions(vm.migrate, args, input='\n')
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Are you sure you want to migrate VM server02 ? [y/N]:""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_migrate_background(self):
+        args = ['server02', '--bg', '-f']
+        result = self.invoke_with_exceptions(vm.migrate, args)
+        self.assertEqual(result.output.strip(), """\
+* Starting the migration of VM server02 from datacenter FR-SD2 to LU-BI1
+id        : 9900
+step      : WAIT""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_migrate_finalize_not_found(self):
+        args = ['server02', '-f', '--finalize']
+        result = self.invoke_with_exceptions(vm.migrate, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Error: Cannot find VM server02 migration operation.""")
+
+        self.assertEqual(result.exit_code, 1)
+
+    def test_migrate_finalize_not_needed(self):
+        args = ['server01', '-f', '--finalize']
+        result = self.invoke_with_exceptions(vm.migrate, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Error: VM server01 migration does not need finalization.""")
+
+        self.assertEqual(result.exit_code, 1)
+
+    def test_migrate_finalize_ok(self):
+        args = ['vm1426759833', '-f', '--finalize']
+        result = self.invoke_with_exceptions(vm.migrate, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+* Finalizing the migration of VM vm1426759833 from datacenter FR-SD2 to LU-BI1
+VM migration in progress.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your VM vm1426759833 has been migrated.""")
+
+        self.assertEqual(result.exit_code, 0)

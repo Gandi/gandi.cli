@@ -473,6 +473,10 @@ def disk_create(options):
     return {'id': 200, 'step': 'WAIT', 'disk_id': 9000}
 
 
+def vm_migrate(vm_id, finalize=False):
+    return {'id': 9900, 'step': 'WAIT'}
+
+
 def vm_list(options):
 
     ret = [{'ai_active': 0,

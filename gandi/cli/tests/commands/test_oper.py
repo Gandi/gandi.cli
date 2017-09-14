@@ -9,8 +9,15 @@ class OperTestCase(CommandTestCase):
     def test_list(self):
 
         result = self.invoke_with_exceptions(oper.list, [])
-
         self.assertEqual(result.output, """\
+id        : 99002
+type      : hosting_migration_vm
+step      : RUN
+----------
+id        : 99001
+type      : hosting_migration_vm
+step      : RUN
+----------
 id        : 100303
 type      : certificate_update
 step      : WAIT

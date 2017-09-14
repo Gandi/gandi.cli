@@ -10,6 +10,7 @@ from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import randomstring
 from gandi.cli.modules.datacenter import Datacenter
 from gandi.cli.modules.sshkey import SshkeyHelper
+from gandi.cli.core.utils import MigrationNotFinalized
 
 
 class Iaas(GandiModule, SshkeyHelper):
@@ -319,6 +320,54 @@ class Iaas(GandiModule, SshkeyHelper):
             if ssh:
                 cls.ssh_keyscan(vm_id)
                 cls.ssh(vm_id, 'root', None)
+
+    @classmethod
+    def need_finalize(cls, resource):
+        """Check if vm migration need to be finalized."""
+        vm_id = cls.usable_id(resource)
+        params = {'type': 'hosting_migration_vm',
+                  'step': 'RUN',
+                  'vm_id': vm_id}
+        result = cls.call('operation.list', params)
+        if not result or len(result) > 1:
+            raise MigrationNotFinalized('Cannot find VM %s '
+                                        'migration operation.' % resource)
+
+        need_finalize = result[0]['params']['inner_step'] == 'wait_finalize'
+        if not need_finalize:
+            raise MigrationNotFinalized('VM %s migration does not need '
+                                        'finalization.' % resource)
+
+    @classmethod
+    def migrate(cls, resource, background=False, finalize=False):
+        """ Migrate a virtual machine to another datacenter. """
+        vm_id = cls.usable_id(resource)
+        if finalize:
+            verb = 'Finalizing'
+            result = cls.call('hosting.vm.migrate', vm_id, True)
+        else:
+            verb = 'Starting'
+            result = cls.call('hosting.vm.migrate', vm_id)
+
+        dcs = {}
+        for dc in Datacenter.list():
+            dcs[dc['id']] = dc['dc_code']
+
+        oper = cls.call('operation.info', result['id'])
+        dc_from = dcs[oper['params']['from_dc_id']]
+        dc_to = dcs[oper['params']['to_dc_id']]
+        migration_msg = ('* %s the migration of VM %s '
+                         'from datacenter %s to %s'
+                         % (verb, resource, dc_from, dc_to))
+        cls.echo(migration_msg)
+
+        if background:
+            return result
+
+        cls.echo('VM migration in progress.')
+        cls.display_progress(result)
+        cls.echo('Your VM %s has been migrated.' % resource)
+        return result
 
     @classmethod
     def from_hostname(cls, hostname):

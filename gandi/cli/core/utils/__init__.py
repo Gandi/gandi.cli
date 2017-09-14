@@ -58,6 +58,15 @@ class DatacenterLimited(Exception):
         self.date = date
 
 
+class MigrationNotFinalized(ClickException):
+
+    """Raise when VM migration does not need to be finalized."""
+
+    def __init__(self, message):
+        """ Initialize exception."""
+        self.message = message
+
+
 def format_list(data):
     """ Remove useless characters to output a clean list."""
     if isinstance(data, (list, tuple)):
