@@ -13,7 +13,10 @@ from gandi.cli.core.base import GandiContextHelper
 def _mock_output(git_content, command, *args, **kwargs):
     buf = StringIO(git_content)
     config = ConfigParser.ConfigParser()
-    config.readfp(buf)
+    try:
+        config.read_file(buf)
+    except:
+        config.readfp(buf)
     if command == 'git config --local --get remote.gandi.url':
         try:
             return config.get('remote "gandi"', 'url')
