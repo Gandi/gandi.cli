@@ -16,7 +16,13 @@ from gandi.cli.core.utils import output_hostedcert
 from gandi.cli.core.params import pass_gandi
 
 
-@cli.command()
+@cli.group(name='certstore')
+@pass_gandi
+def certstore(gandi):
+    """Commands related to certificate store."""
+
+
+@certstore.command()
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--vhosts', help='Display related vhosts.', is_flag=True)
 @click.option('--dates', help='Display dates.', is_flag=True)
@@ -60,7 +66,7 @@ def list(gandi, id, vhosts, dates, fqdns, limit):
     return result
 
 
-@cli.command()
+@certstore.command()
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def info(gandi, resource):
@@ -80,7 +86,7 @@ def info(gandi, resource):
     return result
 
 
-@cli.command()
+@certstore.command()
 @click.option('--pk', '--private-key', required=True,
               help='Private key used to generate this CRT.')
 @click.option('--crt', '--certificate', required=False,
@@ -118,7 +124,7 @@ def create(gandi, private_key, certificate, certificate_id):
     return result
 
 
-@cli.command()
+@certstore.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'

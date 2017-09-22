@@ -250,7 +250,7 @@ size      : 3072
         result = self.invoke_with_exceptions(disk.list, args)
 
         self.assertEqual(result.output, """\
-Usage: disk list [OPTIONS]
+Usage: list [OPTIONS]
 
 Error: You cannot use both --attached and --detached.
 """)
@@ -402,7 +402,7 @@ Updating your disk.
         result = self.invoke_with_exceptions(disk.update, args)
 
         self.assertEqual(result.output, """\
-Usage: disk update [OPTIONS] RESOURCE
+Usage: update [OPTIONS] RESOURCE
 
 Error: Kernel 3.12-x86_64 is not available for disk data
 """)

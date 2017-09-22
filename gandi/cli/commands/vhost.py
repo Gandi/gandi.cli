@@ -7,7 +7,13 @@ from gandi.cli.core.utils import output_generic, output_vhost
 from gandi.cli.core.params import pass_gandi
 
 
-@cli.command()
+@cli.group(name='vhost')
+@pass_gandi
+def vhost(gandi):
+    """Commands related to Simple Hosting virtual hosts."""
+
+
+@vhost.command()
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @click.option('--id', help='Display ids.', is_flag=True)
@@ -39,7 +45,7 @@ def list(gandi, limit, id, names):
     return result
 
 
-@cli.command()
+@vhost.command()
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
@@ -73,7 +79,7 @@ def info(gandi, resource, id):
     return ret
 
 
-@cli.command()
+@vhost.command()
 @click.option('--paas', required=True,
               help='PaaS instance on which to create it.')
 @click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
@@ -102,7 +108,7 @@ def create(gandi, vhost, paas, ssl, private_key, alter_zone, poll_cert,
     return result
 
 
-@cli.command()
+@vhost.command()
 @click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
 @click.option('--pk', '--private-key',
               help='Private key used to generate the ssl Certificate.')
@@ -118,7 +124,7 @@ def update(gandi, resource, ssl, private_key, poll_cert):
     gandi.hostedcert.activate_ssl(resource, ssl, private_key, poll_cert)
 
 
-@cli.command()
+@vhost.command()
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')

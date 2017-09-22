@@ -7,7 +7,13 @@ from gandi.cli.core.utils import output_forward
 from gandi.cli.core.params import pass_gandi, EMAIL_TYPE
 
 
-@cli.command()
+@cli.group(name='forward')
+@pass_gandi
+def forward(gandi):
+    """Commands related to domain mail forwards."""
+
+
+@forward.command()
 @click.option('--limit', help='Limit number of results.',
               default=100, show_default=True)
 @click.argument('domain', metavar='domain.tld')
@@ -21,7 +27,7 @@ def list(gandi, domain, limit):
     return result
 
 
-@cli.command()
+@forward.command()
 @click.option('--destination', '-d', help='Add forward destination.',
               multiple=True, required=True)
 @click.argument('address', type=EMAIL_TYPE, metavar='address@domain.tld')
@@ -35,7 +41,7 @@ def create(gandi, address, destination):
     return result
 
 
-@cli.command()
+@forward.command()
 @click.option('--dest-add', '-a', help='Add forward destination.',
               multiple=True, required=False)
 @click.option('--dest-del', '-d', help='Delete forward destination.',
@@ -56,7 +62,7 @@ def update(gandi, address, dest_add, dest_del):
     return result
 
 
-@cli.command()
+@forward.command()
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')

@@ -13,7 +13,13 @@ from gandi.cli.core.params import (pass_gandi, DATACENTER, SNAPSHOTPROFILE_VM,
                                    KERNEL, SIZE, option, DISK_IMAGE)
 
 
-@cli.command()
+@cli.group(name='disk')
+@pass_gandi
+def disk(gandi):
+    """Commands related to hosting disks."""
+
+
+@disk.command()
 @click.option('--only-data', help='Only display data disks.', is_flag=True)
 @click.option('--only-snapshot', help='Only display snapshots.', is_flag=True)
 @click.option('--attached', help='Only display disks attached to a VM',
@@ -79,7 +85,7 @@ def list(gandi, only_data, only_snapshot, attached, detached, type, id, vm,
     return result
 
 
-@cli.command()
+@disk.command()
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def info(gandi, resource):
@@ -105,7 +111,7 @@ def info(gandi, resource):
     return result
 
 
-@cli.command()
+@disk.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
@@ -132,7 +138,7 @@ def detach(gandi, resource, background, force):
     return result
 
 
-@cli.command()
+@disk.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('-r', '--read-only', default=False, is_flag=True,
@@ -175,7 +181,7 @@ def attach(gandi, disk, vm, position, read_only, background, force):
     return result
 
 
-@cli.command()
+@disk.command()
 @click.option('--cmdline', type=click.STRING, default=None,
               help='Kernel cmdline.')
 @click.option('--kernel', type=KERNEL, default=None, help='Kernel for disk.')
@@ -223,7 +229,7 @@ def update(gandi, resource, cmdline, kernel, name, size,
     return result
 
 
-@cli.command()
+@disk.command()
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')
@@ -252,7 +258,7 @@ def delete(gandi, resource, force, background):
     return opers
 
 
-@cli.command()
+@disk.command()
 @click.option('--name', type=click.STRING, default=None,
               help='Disk name, will be generated if not provided.')
 @click.option('--vm', default=None, type=click.STRING,
@@ -303,7 +309,7 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
     return oper
 
 
-@cli.command()
+@disk.command()
 @click.option('--name', type=click.STRING, default=None,
               help='Snapshot name, will be generated if not provided.')
 @click.option('--bg', '--background', default=False, is_flag=True,
@@ -324,7 +330,7 @@ def snapshot(gandi, name, resource, background):
     return result
 
 
-@cli.command()
+@disk.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', required=True)
@@ -338,7 +344,7 @@ def rollback(gandi, resource, background):
     return result
 
 
-@cli.command()
+@disk.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,

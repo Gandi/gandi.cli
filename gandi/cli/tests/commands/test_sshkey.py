@@ -50,7 +50,7 @@ ssh-rsa LjV5tpBTAwb unknown@inter.net
                                                       temp_content=content)
 
         self.assertEqual(result.output, """\
-Usage: sshkey create [OPTIONS]
+Usage: create [OPTIONS]
 
 Error: You must not set value AND filename.
 """)
@@ -62,7 +62,7 @@ Error: You must not set value AND filename.
         result = self.invoke_with_exceptions(sshkey.create, args)
 
         self.assertEqual(result.output, """\
-Usage: sshkey create [OPTIONS]
+Usage: create [OPTIONS]
 
 Error: You must set value OR filename.
 """)

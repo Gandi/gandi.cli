@@ -8,7 +8,7 @@ from gandi.cli.core.cli import cli
 from gandi.cli.core.params import pass_gandi
 
 
-@cli.command(root=True)
+@cli.command()
 @click.option('--vm', help='Use given VM for docker connection')
 @click.argument('args', nargs=-1)
 @pass_gandi

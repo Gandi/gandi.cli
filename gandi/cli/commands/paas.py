@@ -15,7 +15,13 @@ from gandi.cli.core.params import (
 )
 
 
-@cli.command()
+@cli.group(name='paas')
+@pass_gandi
+def paas(gandi):
+    """Commands related to Simple Hosting."""
+
+
+@paas.command()
 @click.option('--state', default=None, help='Filter results by state.')
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--vhosts', help='Display vhosts.', default=True, is_flag=True)
@@ -56,7 +62,7 @@ def list(gandi, state, id, vhosts, type, limit):
     return result
 
 
-@cli.command()
+@paas.command()
 @click.argument('resource')
 @click.option('--stat', default=False, is_flag=True,
               help='Display cached page statistic based on the last 24 hours.')
@@ -89,7 +95,7 @@ def info(gandi, resource, stat):
     return paas
 
 
-@cli.command()
+@paas.command()
 @click.option('--origin', default='gandi', help="Set the origin remote's name")
 @click.option('--directory', help='Specify the destination directory')
 @click.option('--vhost', required=False, default='default')
@@ -105,7 +111,7 @@ def clone(gandi, name, vhost, directory, origin):
     return gandi.paas.clone(name, vhost, directory, origin)
 
 
-@cli.command()
+@paas.command()
 @click.option('--vhost', default='default',
               help="Add a remote for a given instance's vhost to the local "
               "git repository")
@@ -118,7 +124,7 @@ def attach(gandi, name, vhost, remote):
     return gandi.paas.attach(name, vhost, remote)
 
 
-@cli.command(root=True)
+@cli.command()
 @click.option('--remote', default='gandi', help="Specify the remote's name")
 @click.option('--branch', default='master', help="Specify the branch to deploy")
 @pass_gandi
@@ -129,7 +135,7 @@ def deploy(gandi, remote, branch):
     return gandi.paas.deploy(remote, branch)
 
 
-@cli.command()
+@paas.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
@@ -168,7 +174,7 @@ def delete(gandi, background, force, resource):
     return opers
 
 
-@cli.command()
+@paas.command()
 @click.option('--name', default=None,
               help='Name of the PaaS instance, will be generated if not '
                    'provided.')
@@ -244,7 +250,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     return result
 
 
-@cli.command()
+@paas.command()
 @click.option('--name', type=click.STRING, default=None,
               help='Name of the PaaS instance.')
 @click.option('--size', default=None,
@@ -299,7 +305,7 @@ def update(gandi, resource, name, size, quantity, password, sshkey,
     return result
 
 
-@cli.command()
+@paas.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
@@ -338,7 +344,7 @@ def restart(gandi, resource, background, force):
     return opers
 
 
-@cli.command()
+@paas.command()
 @pass_gandi
 def types(gandi):
     """List types PaaS instances."""
@@ -350,7 +356,7 @@ def types(gandi):
     return types
 
 
-@cli.command()
+@paas.command()
 @click.argument('resource')
 @pass_gandi
 def console(gandi, resource):

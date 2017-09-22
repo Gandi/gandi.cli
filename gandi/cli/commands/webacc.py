@@ -12,7 +12,14 @@ from gandi.cli.core.params import (
 )
 
 
-@cli.command()
+@cli.group(name='webacc')
+@pass_gandi
+def webacc(gandi):
+    """Commands related to hosting web accelerators."""
+
+
+
+@webacc.command()
 @click.option('--limit', help="Limit the number of results", default=100,
               show_default=True)
 @click.option('--format', type=click.Choice(['json', 'pretty-json']),
@@ -66,7 +73,7 @@ def list(gandi, limit, format):
     return result
 
 
-@cli.command()
+@webacc.command()
 @click.option('--format', type=click.Choice(['json', 'pretty-json']),
               required=False, help="Choose the output format")
 @click.argument('resource', type=WEBACC_NAME)
@@ -121,7 +128,7 @@ def info(gandi, resource, format):
     return result
 
 
-@cli.command()
+@webacc.command()
 @click.option('--datacenter', '-dc', type=DATACENTER,
               help="Datacenter where the webaccelerator will be created",
               required=True)
@@ -179,7 +186,7 @@ def create(gandi, name, datacenter, backend, port, vhost, algorithm,
     return result
 
 
-@cli.command()
+@webacc.command()
 @click.option('--name', '-n', help="The name of the webaccelerator")
 @click.option('--algorithm', type=click.Choice(['client-ip', 'round-robin']),
               help="Choose the loadbalancer algorithm")
@@ -196,7 +203,7 @@ def update(gandi, resource, name, algorithm, ssl_enable, ssl_disable):
     return result
 
 
-@cli.command()
+@webacc.command()
 @click.option('--vhost', '-v', help="Remove vhosts in the webaccelerator",
               multiple=True, type=WEBACC_VHOST_NAME)
 @click.option('--backend', '-b', help="Remove backends in the webaccelerator",
@@ -234,7 +241,7 @@ def delete(gandi, webacc, vhost, backend, port):
     return result
 
 
-@cli.command()
+@webacc.command()
 @click.option('--vhost', '-v', help="Add vhosts in the webaccelerator",
               multiple=True)
 @click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
@@ -283,7 +290,7 @@ def add(gandi, resource, vhost, zone_alter, backend, port, ssl, private_key,
     return result
 
 
-@cli.command()
+@webacc.command()
 @click.option('--backend', '-b', help="Enable backends in the webaccelerator",
               multiple=True, type=BACKEND)
 @click.option('--port', '-p', type=click.INT, required=False,
@@ -318,7 +325,7 @@ def enable(gandi, resource, backend, port, probe):
     return result
 
 
-@cli.command()
+@webacc.command()
 @click.option('--backend', '-b', help="Disable backends in the webaccelerator",
               multiple=True, type=BACKEND)
 @click.option('--port', '-p', type=click.INT, required=False,
@@ -353,7 +360,7 @@ def disable(gandi, resource, backend, port, probe):
     return result
 
 
-@cli.command()
+@webacc.command()
 @click.option('--enable', '-e', is_flag=True,
               help="Enable the probe on the webaccelerator")
 @click.option('--disable', '-d', is_flag=True,

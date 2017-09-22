@@ -77,29 +77,90 @@ class GandiCLI(click.Group):
 
         ])
 
+    def format_commands(self, ctx, formatter):
+        """Extra format methods for multi methods that adds all the commands
+        after the options.
+
+        Display custom help for all subcommands.
+        """
+        rows = []
+
+        for subcommand in self.list_commands(ctx):
+            cmd = self.get_command(ctx, subcommand)
+            # What is this, the tool lied about a command.  Ignore it
+            if cmd is None:  # pragma: no cover
+                continue
+
+            if isinstance(cmd, click.core.Group):
+                for sub_cmd in cmd.list_commands(ctx):
+                    sub = cmd.get_command(ctx, sub_cmd)
+                    help = sub.short_help or ''
+                    rows.append(('%s %s' % (subcommand, sub_cmd), help))
+            else:
+                help = cmd.short_help or ''
+                rows.append((subcommand, help))
+
+        if rows:
+            with formatter.section('Commands'):
+                formatter.write_dl(rows)
+
+    def list_sub_commmands(self, cmd_name, cmd):
+        """Return all commands for a group"""
+        ret = {}
+        if isinstance(cmd, click.core.Group):
+            for sub_cmd_name in cmd.commands:
+                sub_cmd = cmd.commands[sub_cmd_name]
+                sub = self.list_sub_commmands(sub_cmd_name, sub_cmd)
+                if sub:
+                    ret['%s %s' % (cmd_name, sub[0])] = sub[1]
+        elif isinstance(cmd, click.core.Command):
+            # XXX: patch each command with an epilog
+            if cmd.epilog is None and use_man_epilog:
+                cmd.epilog = 'For detailed documentation, use `man gandi`.'
+            return (cmd.name, cmd)
+        return ret
+
+    def list_all_commands(self, ctx):
+        ret = {}
+        for cmd_name in self.commands:
+            cmd = self.commands[cmd_name]
+            sub = self.list_sub_commmands(cmd_name, cmd)
+            if sub:
+                if isinstance(sub, tuple):
+                    ret[sub[0]] = sub[1]
+                else:
+                    ret.update(sub)
+        return ret
+
     def resolve_command(self, ctx, args):
         cmd_name = args[0]
+        all_cmds = self.list_all_commands(ctx)
+
+        # Get the command
+        cmd = click.Group.get_command(self, ctx, cmd_name)
 
         sub_cmd = False
         if len(args) > 1:
-            # XXX: dirty hack to handle namespaces by merging the first 2 args
+            ns_len = 1
+            if isinstance(cmd, click.core.Group):
+                ns_len = getattr(cmd, 'ns_len', 2)
+            # XXX: dirty hack to handle namespaces by merging all args
             # i.e : paas + list = 'paas list'
-            new_cmd_name = ' '.join(args[0:2])
-            cmd = click.Group.get_command(self, ctx, new_cmd_name)
+            new_cmd_name = ' '.join(args[0:ns_len])
+            cmd = all_cmds.get(new_cmd_name)
             if cmd is not None:
                 sub_cmd = True
                 cmd_name = new_cmd_name
 
-        cmd = click.Group.get_command(self, ctx, cmd_name)
-        if cmd is not None:
+        cmd = all_cmds.get(cmd_name)
+        if cmd is not None and not isinstance(cmd, click.core.Group):
             if sub_cmd:
                 del args[1]
             return cmd_name, cmd, args[1:]
 
         formatter = ctx.make_formatter()
 
-        matches = [x for x in self.list_commands(ctx)
-                   if x.startswith(cmd_name)]
+        matches = [x for x in all_cmds if x.startswith(cmd_name)]
         if not matches:
             self.format_commands(ctx, formatter)
             print(formatter.getvalue().rstrip('\n'))
@@ -108,12 +169,12 @@ class GandiCLI(click.Group):
         elif len(matches) == 1:
             if sub_cmd:
                 del args[1]
-            cmd = click.Group.get_command(self, ctx, matches[0])
+            cmd = all_cmds[matches[0]]
             return cmd_name, cmd, args[1:]
 
         rows = []
         for matched in sorted(matches):
-            cmd = click.Group.get_command(self, ctx, matched)
+            cmd = all_cmds.get(matched)
             # What is this, the tool lied about a command.  Ignore it
             if cmd is None:
                 continue
@@ -130,74 +191,16 @@ class GandiCLI(click.Group):
         if click.parser.split_opt(cmd_name)[0]:
             click.Group.parse_args(ctx, ctx.args)
 
-    def get_command(self, ctx, cmd_name):
-        """ Retrieve command from internal list.
-
-        Handle custom namespace commands.
-        Display custom help when no command was found in a namespace.
-        """
-        sub_cmd = False
-        if len(ctx.args) > 1:
-            # XXX: dirty hack to handle namespaces by merging the first 2 args
-            # i.e : paas + list = 'paas list'
-            new_cmd_name = ' '.join(ctx.args[0:2])
-            rv = click.Group.get_command(self, ctx, new_cmd_name)
-            if rv is not None:
-                sub_cmd = True
-                cmd_name = new_cmd_name
-        rv = click.Group.get_command(self, ctx, cmd_name)
-        if rv is not None:
-            if sub_cmd:
-                del ctx.args[1]
-            return rv
-        matches = [x for x in self.list_commands(ctx)
-                   if x.startswith(cmd_name)]
-        if not matches:
-            return None
-        elif len(matches) == 1:
-            if sub_cmd:
-                del ctx.args[1]
-            return click.Group.get_command(self, ctx, matches[0])
-
-        formatter = ctx.make_formatter()
-        rows = []
-        for matched in sorted(matches):
-            rv = click.Group.get_command(self, ctx, matched)
-            # What is this, the tool lied about a command.  Ignore it
-            if rv is None:
-                continue
-
-            help = rv.short_help or ''
-            rows.append((matched, help))
-
-        if rows:
-            formatter.write_dl(rows)
-
-        print(formatter.getvalue().rstrip('\n'))
-        ctx.exit()
-
-    def command(self, *args, **kwargs):
-        """Decorator for declaring and attaching a command to the group.
-
-        This takes the same arguments as :func:`command` but
+    def group(self, *args, **kwargs):
+        """A shortcut decorator for declaring and attaching a group to
+        the group.  This takes the same arguments as :func:`group` but
         immediately registers the created command with this instance by
         calling into :meth:`add_command`.
         """
         def decorator(f):
-            namespace = f.__module__.rsplit('.', 1)[1]
-            name = args[0] if args else kwargs.get('name', f.__name__.lower())
-            # XXX: hack for handling commands without namespaces (root)
-            if namespace == 'root' or 'root' in kwargs:
-                new_name = '%s' % name
-                kwargs.pop('root', None)
-            else:
-                new_name = '%s %s' % (namespace, name)
-            kwargs['name'] = new_name
-            if use_man_epilog:
-                kwargs['epilog'] = ('For detailed documentation, '
-                                    'use `man gandi`.')
-            _args = args[1:] if args else args
-            cmd = click.command(*_args, **kwargs)(f)
+            ns_len = kwargs.pop('ns_len', 2)
+            cmd = click.group(*args, **kwargs)(f)
+            cmd.ns_len = ns_len
             self.add_command(cmd)
             return cmd
         return decorator

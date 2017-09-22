@@ -11,7 +11,13 @@ from gandi.cli.core.cli import cli
 from gandi.cli.core.params import pass_gandi
 
 
-@cli.command()
+@cli.group(name='config')
+@pass_gandi
+def config(gandi):
+    """Commands related to Gandi CLI configuration."""
+
+
+@config.command()
 @click.option('-g', help='Get from global configuration only '
                          '(default=env -> local -> global).',
               is_flag=True, default=False)
@@ -26,7 +32,7 @@ def get(gandi, g, key):
     gandi.echo(val)
 
 
-@cli.command()
+@config.command()
 @click.option('-g', help='Edit global configuration (default=local).',
               is_flag=True, default=False)
 @click.argument('key')
@@ -37,7 +43,7 @@ def set(gandi, g, key, value):
     gandi.configure(global_=g, key=key, val=value)
 
 
-@cli.command()
+@config.command()
 @click.option('-g', help='Edit global configuration (default=local).',
               is_flag=True, default=False)
 @pass_gandi
@@ -60,7 +66,7 @@ or the $EDITOR environment variable to configure it.""")
     subprocess.call([editor, path])
 
 
-@cli.command()
+@config.command()
 @click.option('-g', help='Delete on global configuration (default=local).',
               is_flag=True, default=False)
 @click.argument('key')
@@ -70,7 +76,7 @@ def delete(gandi, g, key):
     gandi.delete(global_=g, key=key)
 
 
-@cli.command()
+@config.command()
 @click.option('-g', help='Display global configuration (default=local).',
               is_flag=True, default=False)
 @pass_gandi

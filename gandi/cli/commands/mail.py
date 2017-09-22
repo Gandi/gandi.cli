@@ -7,7 +7,13 @@ from gandi.cli.core.utils import output_mailbox, output_list
 from gandi.cli.core.params import pass_gandi, EMAIL_TYPE
 
 
-@cli.command()
+@cli.group(name='mail')
+@pass_gandi
+def mail(gandi):
+    """Commands related to domain mailboxes."""
+
+
+@mail.command()
 @click.option('--limit', help='Limit number of results.',
               default=100, show_default=True)
 @click.argument('domain', metavar='domain.tld')
@@ -20,7 +26,7 @@ def list(gandi, domain, limit):
     return mailboxes
 
 
-@cli.command()
+@mail.command()
 @click.argument('email', type=EMAIL_TYPE, metavar='login@domain.tld')
 @pass_gandi
 def info(gandi, email):
@@ -34,7 +40,7 @@ def info(gandi, email):
     return mailbox
 
 
-@cli.command()
+@mail.command()
 @click.option('--quota', '-q', help='Set quota on mailbox. 0 is unlimited.',
               default=None, type=click.INT)
 @click.option('--fallback', '-f', help='Add fallback address.',
@@ -64,7 +70,7 @@ def create(gandi, email, quota, fallback, alias, password):
     return result
 
 
-@cli.command()
+@mail.command()
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')
@@ -86,7 +92,7 @@ def delete(gandi, email, force):
     return result
 
 
-@cli.command()
+@mail.command()
 @click.option('--password', '-p', help='Prompt a password to set a mailbox.',
               is_flag=True)
 @click.option('--quota', '-q', help='Set quota on mailbox. 0 is unlimited.',
@@ -121,7 +127,7 @@ def update(gandi, email, password, quota, fallback, alias_add, alias_del):
     return result
 
 
-@cli.command()
+@mail.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,

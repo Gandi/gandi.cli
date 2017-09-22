@@ -11,7 +11,13 @@ from gandi.cli.core.params import (pass_gandi, DATACENTER,
                                    IP_TYPE, option, IntChoice)
 
 
-@cli.command()
+@cli.group(name='ip')
+@pass_gandi
+def ip(gandi):
+    """Commands related to hosting IPs."""
+
+
+@ip.command()
 @click.option('--datacenter', type=DATACENTER, default=None,
               help='Filter by datacenter.')
 @click.option('--type', default=None, type=IP_TYPE,
@@ -79,7 +85,7 @@ def list(gandi, datacenter, type, id, attached, detached, version, reverse,
     return ips
 
 
-@cli.command()
+@ip.command()
 @click.argument('resource')
 @pass_gandi
 def info(gandi, resource):
@@ -104,7 +110,7 @@ def info(gandi, resource):
     return ip
 
 
-@cli.command()
+@ip.command()
 @click.argument('ip')
 @click.option('--reverse', help='Update reverse (PTR record) for this IP')
 @click.option('--bg', '--background', default=False, is_flag=True,
@@ -117,7 +123,7 @@ def update(gandi, ip, reverse, background):
     return gandi.ip.update(ip, {'reverse': reverse}, background)
 
 
-@cli.command()
+@ip.command()
 @click.argument('ip')
 @click.argument('vm')
 @click.option('--bg', '--background', default=False, is_flag=True,
@@ -154,7 +160,7 @@ def attach(gandi, ip, vm, background, force):
     return gandi.ip.attach(ip, vm, background, force)
 
 
-@cli.command()
+@ip.command()
 @click.option('--datacenter', type=DATACENTER,
               help='Datacenter where the ip will be created.')
 @option('--bandwidth', type=click.INT, default=102400,
@@ -203,7 +209,7 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
                            vlan, ip, background)
 
 
-@cli.command()
+@ip.command()
 @click.argument('resource')
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
@@ -225,7 +231,7 @@ def detach(gandi, resource, background, force):
     return gandi.ip.detach(resource, background, force)
 
 
-@cli.command()
+@ip.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')

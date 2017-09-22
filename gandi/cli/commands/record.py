@@ -11,7 +11,13 @@ from gandi.cli.core.utils import (
 from gandi.cli.core.params import pass_gandi, StringConstraint
 
 
-@cli.command()
+@cli.group(name='record')
+@pass_gandi
+def record(gandi):
+    """Commands related to DNS zone records (xmlrpc)."""
+
+
+@record.command()
 @click.option('--zone-id', '-z', default=None, type=click.INT,
               help='Zone ID to use, if not set default zone will be used.')
 @click.option('--output', '-o', is_flag=True,
@@ -71,7 +77,7 @@ def list(gandi, domain, zone_id, output, format, limit):
     return records
 
 
-@cli.command()
+@record.command()
 @click.option('--zone-id', '-z', default=None, type=click.INT,
               help='Zone ID to use, if not set, default zone will be used.')
 @click.option('--name', default=None, required=True,
@@ -112,7 +118,7 @@ def create(gandi, domain, zone_id, name, type, value, ttl):
     return result
 
 
-@cli.command()
+@record.command()
 @click.option('--zone-id', '-z', default=None, type=click.INT,
               help='Zone ID to use, if not set, default zone will be used.')
 @click.option('--name', default=None,
@@ -147,7 +153,7 @@ def delete(gandi, domain, zone_id, name, type, value):
     return result
 
 
-@cli.command()
+@record.command()
 @click.option('--zone-id', '-z', default=None, type=click.INT,
               help='Zone ID to use, if not set, default zone will be used.')
 @click.option('--file', '-f', type=click.File('r'),

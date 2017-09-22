@@ -14,7 +14,13 @@ from gandi.cli.core.params import (
 )
 
 
-@cli.command()
+@cli.group(name='vm')
+@pass_gandi
+def vm(gandi):
+    """Commands related to hosting virtual machines."""
+
+
+@vm.command()
 @click.option('--state', default=None, help='Filter results by state.')
 @click.option('--datacenter', default=None, type=DATACENTER,
               help='Filter results by datacenter.')
@@ -45,7 +51,7 @@ def list(gandi, state, id, limit, datacenter):
     return result
 
 
-@cli.command()
+@vm.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('--stat', default=False, is_flag=True,
               help='Display general vm statistic')
@@ -92,7 +98,7 @@ def info(gandi, resource, stat):
     return ret
 
 
-@cli.command()
+@vm.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', nargs=-1, required=True)
@@ -113,7 +119,7 @@ def stop(gandi, background, resource):
     return opers
 
 
-@cli.command()
+@vm.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', nargs=-1, required=True)
@@ -134,7 +140,7 @@ def start(gandi, background, resource):
     return opers
 
 
-@cli.command()
+@vm.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', nargs=-1, required=True)
@@ -155,7 +161,7 @@ def reboot(gandi, background, resource):
     return opers
 
 
-@cli.command()
+@vm.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
@@ -209,7 +215,7 @@ def delete(gandi, background, force, resource):
     return opers
 
 
-@cli.command()
+@vm.command()
 @option('--datacenter', type=DATACENTER, default='FR-SD3',
         help='Datacenter where the VM will be spawned.')
 @option('--memory', type=click.INT, default=256,
@@ -325,7 +331,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     return result
 
 
-@cli.command()
+@vm.command()
 @click.option('--memory', type=click.INT, default=None,
               help='Quantity of RAM in Megabytes to allocate.')
 @click.option('--cores', type=click.INT, default=None,
@@ -369,7 +375,7 @@ def update(gandi, resource, memory, cores, console, password, background,
     return result
 
 
-@cli.command()
+@vm.command()
 @click.argument('resource')
 @pass_gandi
 def console(gandi, resource):
@@ -385,7 +391,7 @@ def console(gandi, resource):
     gandi.iaas.console(resource)
 
 
-@cli.command()
+@vm.command()
 @click.option('--wait', default=False, is_flag=True,
               help='Wait for virtual machine sshd to come up (timeout 2min).')
 @click.option('--wipe-key', default=False, is_flag=True,
@@ -411,7 +417,7 @@ def ssh(gandi, resource, login, identity, wipe_key, wait, args):
     gandi.iaas.ssh(resource, login, identity, args)
 
 
-@cli.command()
+@vm.command()
 @click.option('--datacenter', type=DATACENTER, default=None,
               help='Filter by datacenter.')
 @click.argument('label', required=False)
@@ -447,7 +453,7 @@ def images(gandi, label, datacenter):
     return result
 
 
-@cli.command()
+@vm.command()
 @click.option('--vm', default=None,
               help='Output available kernels for given vm.')
 @click.option('--datacenter', type=DATACENTER, default=None,
@@ -474,7 +480,7 @@ def kernels(gandi, vm, datacenter, flavor, match):
             output_kernels(gandi, _flavor, kmap[_flavor])
 
 
-@cli.command(root=True)
+@cli.command()
 @click.option('--id', help='Display ids.', is_flag=True)
 @pass_gandi
 def datacenters(gandi, id):
@@ -492,7 +498,7 @@ def datacenters(gandi, id):
     return result
 
 
-@cli.command()
+@vm.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,

@@ -7,7 +7,13 @@ from gandi.cli.core.utils import output_contact_info, output_domain
 from gandi.cli.core.params import pass_gandi
 
 
-@cli.command()
+@cli.group(name='domain')
+@pass_gandi
+def domain(gandi):
+    """Commands related to domains."""
+
+
+@domain.command()
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @pass_gandi
@@ -21,7 +27,7 @@ def list(gandi, limit):
     return domains
 
 
-@cli.command()
+@domain.command()
 @click.argument('resource')
 @pass_gandi
 def info(gandi, resource):
@@ -37,7 +43,7 @@ def info(gandi, resource):
     return result
 
 
-@cli.command()
+@domain.command()
 @click.option('--domain', default=None, help='Name of the domain.')
 @click.option('--duration', default=1, prompt=True,
               type=click.IntRange(min=1, max=10),
@@ -82,7 +88,7 @@ def create(gandi, resource, domain, duration, owner, admin, tech, bill,
     return result
 
 
-@cli.command()
+@domain.command()
 @click.option('--duration', default=1, prompt=True,
               type=click.IntRange(min=1, max=10),
               help='Registration period in years, between 1 and 10.')

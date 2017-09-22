@@ -7,7 +7,13 @@ from gandi.cli.core.utils import output_snapshot_profile
 from gandi.cli.core.params import pass_gandi
 
 
-@cli.command()
+@cli.group(name='snapshotprofile')
+@pass_gandi
+def snapshotprofile(gandi):
+    """Commands related to hosting snapshot profiles."""
+
+
+@snapshotprofile.command()
 @click.option('--only-paas', help='Only display PaaS profiles.', is_flag=True)
 @click.option('--only-vm', help='Only display vm profile.s', is_flag=True)
 @pass_gandi
@@ -30,7 +36,7 @@ def list(gandi, only_paas, only_vm):
     return result
 
 
-@cli.command()
+@snapshotprofile.command()
 @click.argument('resource')
 @pass_gandi
 def info(gandi, resource):

@@ -5,7 +5,13 @@ from gandi.cli.core.utils import output_account
 from gandi.cli.core.params import pass_gandi
 
 
-@cli.command()
+@cli.group(name='account')
+@pass_gandi
+def account(gandi):
+    """Commands related to accounts."""
+
+
+@account.command()
 @pass_gandi
 def info(gandi):
     """Display information about hosting account.

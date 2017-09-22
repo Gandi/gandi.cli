@@ -7,7 +7,13 @@ from gandi.cli.core.utils import output_generic
 from gandi.cli.core.params import pass_gandi, OPER_STEP
 
 
-@cli.command()
+@cli.group(name='oper')
+@pass_gandi
+def oper(gandi):
+    """Commands related to Gandi operations."""
+
+
+@oper.command()
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
 @click.option('--step', '-s', type=OPER_STEP, help='Filter the result by step',
@@ -33,7 +39,7 @@ def list(gandi, limit, step):
     return result
 
 
-@cli.command()
+@oper.command()
 @click.argument('id', type=click.INT)
 @pass_gandi
 def info(gandi, id):

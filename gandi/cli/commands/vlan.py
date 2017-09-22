@@ -11,7 +11,13 @@ from gandi.cli.core.utils import (
 from gandi.cli.core.params import option, pass_gandi, DATACENTER
 
 
-@cli.command()
+@cli.group(name='vlan')
+@pass_gandi
+def vlan(gandi):
+    """Commands related to hosting virtual lan networks."""
+
+
+@vlan.command()
 @click.option('--datacenter', type=DATACENTER, default=None,
               help='Filter by datacenter.')
 @click.option('--id', help='Display ids.', is_flag=True)
@@ -39,7 +45,7 @@ def list(gandi, datacenter, id, subnet, gateway):
     return vlans
 
 
-@cli.command()
+@vlan.command()
 @click.option('--ip', help='Display ips.', is_flag=True)
 @click.argument('resource')
 @pass_gandi
@@ -87,7 +93,7 @@ def info(gandi, resource, ip):
     return vlan
 
 
-@cli.command()
+@vlan.command()
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
@@ -126,7 +132,7 @@ def delete(gandi, background, force, resource):
     return opers
 
 
-@cli.command()
+@vlan.command()
 @click.option('--name', required=True, help='Name of the vlan.')
 @option('--datacenter', type=DATACENTER, default='FR-SD3',
         help='Datacenter where the vlan will be spawned.')
@@ -152,7 +158,7 @@ def create(gandi, name, datacenter, subnet, gateway, background):
     return result
 
 
-@cli.command()
+@vlan.command()
 @click.option('--name', help='Name of the vlan.')
 @click.option('--gateway', help='Gateway of the vlan.')
 @click.option('--create', default=False, is_flag=True,

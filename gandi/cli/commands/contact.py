@@ -63,7 +63,13 @@ def ask_field(gandi, contact, field, label, checks):
         contact[field] = convert(value)
 
 
-@cli.command()
+@cli.group(name='contact')
+@pass_gandi
+def contact(gandi):
+    """Commands related to contacts."""
+
+
+@contact.command()
 @pass_gandi
 def create(gandi):
     """ Create a new contact.

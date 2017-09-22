@@ -8,7 +8,13 @@ from gandi.cli.core.utils import output_sshkey
 from gandi.cli.core.params import pass_gandi
 
 
-@cli.command()
+@cli.group(name='sshkey')
+@pass_gandi
+def sshkey(gandi):
+    """Commands related to hosting sshkeys."""
+
+
+@sshkey.command()
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
@@ -33,7 +39,7 @@ def list(gandi, id, limit):
     return result
 
 
-@cli.command()
+@sshkey.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--value', help='Display value.', is_flag=True)
@@ -58,7 +64,7 @@ def info(gandi, resource, id, value):
     return ret
 
 
-@cli.command()
+@sshkey.command()
 @click.option('--name', help='SSH key name.', required=True)
 @click.option('--value', help='Content of the SSH key.')
 @click.option('--filename', type=click.File('r'), help='SSH key file.')
@@ -80,7 +86,7 @@ def create(gandi, name, value=None, filename=None):
     return output_sshkey(gandi, ret, output_keys)
 
 
-@cli.command()
+@sshkey.command()
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
 def delete(gandi, resource):

@@ -21,7 +21,13 @@ from gandi.cli.core.params import (pass_gandi, IntChoice,
                                    CERTIFICATE_PACKAGE_WARRANTY)
 
 
-@cli.command()
+@cli.group(name='certificate')
+@pass_gandi
+def certificate(gandi):
+    """Commands related to certificates."""
+
+
+@certificate.command()
 @pass_gandi
 def packages(gandi):
     """ List certificate packages.
@@ -32,7 +38,7 @@ def packages(gandi):
     return _plans(gandi, with_name=True)
 
 
-@cli.command()
+@certificate.command()
 @pass_gandi
 def plans(gandi):
     """ List certificate plans. """
@@ -94,7 +100,7 @@ def _plans(gandi, with_name=False):
     return ret
 
 
-@cli.command()
+@certificate.command()
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--altnames', help='Display altnames.', is_flag=True)
 @click.option('--csr', help='Display CSR.', is_flag=True)
@@ -143,7 +149,7 @@ def list(gandi, id, altnames, csr, cert, all_status, status, dates, limit):
     return result
 
 
-@cli.command()
+@certificate.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--altnames', help='Display altnames.', is_flag=True)
@@ -188,7 +194,7 @@ def info(gandi, resource, id, altnames, csr, cert, all_status):
     return result
 
 
-@cli.command()
+@certificate.command()
 @click.argument('resource', nargs=-1, required=True)
 @click.option('-o', '--output', help='The file to write the cert.')
 @click.option('--force', '-f', is_flag=True,
@@ -264,7 +270,7 @@ def export(gandi, resource, output, force, intermediate):
         return crt
 
 
-@cli.command()
+@certificate.command()
 @click.option('--csr', required=False,
               help='Csr of the new certificate (filename or content).')
 @click.option('--pk', '--private-key', required=False,
@@ -360,7 +366,7 @@ def create(gandi, csr, private_key, common_name, country, state, city,
     return result
 
 
-@cli.command()
+@certificate.command()
 @click.argument('resource', nargs=1, required=True)
 @click.option('--csr', help='New csr for the certificate.', required=False)
 @click.option('--pk', '--private-key', required=False,
@@ -411,7 +417,7 @@ def update(gandi, resource, csr, private_key, country, state, city,
     return result
 
 
-@cli.command()
+@certificate.command()
 @click.argument('resource', nargs=1, required=True)
 @pass_gandi
 def follow(gandi, resource):
@@ -425,7 +431,7 @@ def follow(gandi, resource):
     return oper
 
 
-@cli.command('change-dcv')
+@certificate.command('change-dcv')
 @click.argument('resource', nargs=1, required=True)
 @click.option('--dcv-method', required=True, type=CERTIFICATE_DCV_METHOD,
               help='Give the updated DCV method to use.')
@@ -466,7 +472,7 @@ def change_dcv(gandi, resource, dcv_method):
     gandi.certificate.advice_dcv_method(csr, package, altnames, dcv_method)
 
 
-@cli.command('resend-dcv')
+@certificate.command('resend-dcv')
 @click.argument('resource', nargs=1, required=True)
 @pass_gandi
 def resend_dcv(gandi, resource):
@@ -503,7 +509,7 @@ def resend_dcv(gandi, resource):
     gandi.certificate.resend_dcv(oper['id'])
 
 
-@cli.command()
+@certificate.command()
 @click.argument('resource', nargs=1, required=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
