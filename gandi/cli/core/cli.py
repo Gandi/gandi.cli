@@ -25,6 +25,16 @@ def add_help_option(self):
 
 click.Command.add_help_option = add_help_option
 
+# XXX: patch each command with an epilog
+if use_man_epilog:
+    def format_epilog(self, ctx, formatter):
+        """Writes the epilog into the formatter if it exists."""
+        self.epilog = 'For detailed documentation, use `man gandi`.'
+        formatter.write_paragraph()
+        with formatter.indentation():
+            formatter.write_text(self.epilog)
+    click.Command.format_epilog = format_epilog
+
 
 def compatcallback(f):
     """ Compatibility callback decorator for older click version.
@@ -85,24 +95,44 @@ class GandiCLI(click.Group):
         """
         rows = []
 
-        for subcommand in self.list_commands(ctx):
-            cmd = self.get_command(ctx, subcommand)
-            # What is this, the tool lied about a command.  Ignore it
-            if cmd is None:  # pragma: no cover
-                continue
-
-            if isinstance(cmd, click.core.Group):
-                for sub_cmd in cmd.list_commands(ctx):
-                    sub = cmd.get_command(ctx, sub_cmd)
-                    help = sub.short_help or ''
-                    rows.append(('%s %s' % (subcommand, sub_cmd), help))
-            else:
-                help = cmd.short_help or ''
-                rows.append((subcommand, help))
+        all_cmds = self.list_all_commands(ctx)
+        for cmd_name in sorted(all_cmds):
+            cmd = all_cmds[cmd_name]
+            help = cmd.short_help or ''
+            rows.append((cmd_name, help))
 
         if rows:
             with formatter.section('Commands'):
                 formatter.write_dl(rows)
+
+    def list_sub_commmands(self, cmd_name, cmd):
+        """Return all commands for a group"""
+        ret = {}
+        if isinstance(cmd, click.core.Group):
+            for sub_cmd_name in cmd.commands:
+                sub_cmd = cmd.commands[sub_cmd_name]
+                sub = self.list_sub_commmands(sub_cmd_name, sub_cmd)
+                if sub:
+                    if isinstance(sub, dict):
+                        for n, c in sub.items():
+                            ret['%s %s' % (cmd_name, n)] = c
+                    else:
+                        ret['%s %s' % (cmd_name, sub[0])] = sub[1]
+        elif isinstance(cmd, click.core.Command):
+            return (cmd.name, cmd)
+        return ret
+
+    def list_all_commands(self, ctx):
+        ret = {}
+        for cmd_name in self.commands:
+            cmd = self.commands[cmd_name]
+            sub = self.list_sub_commmands(cmd_name, cmd)
+            if sub:
+                if isinstance(sub, tuple):
+                    ret[sub[0]] = sub[1]
+                else:
+                    ret.update(sub)
+        return ret
 
     def load_commands(self):
         """ Load cli commands from submodules. """
