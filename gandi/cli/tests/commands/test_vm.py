@@ -23,6 +23,9 @@ class VmTestCase(CommandTestCase):
         self.assertEqual(result.output, """hostname  : vm1426759833
 state     : running
 ----------
+hostname  : vm1426759844
+state     : running
+----------
 hostname  : server01
 state     : running
 ----------
@@ -38,6 +41,10 @@ state     : halted
         self.assertEqual(result.output, """hostname  : vm1426759833
 state     : running
 id        : 152966
+----------
+hostname  : vm1426759844
+state     : running
+id        : 152964
 ----------
 hostname  : server01
 state     : running
@@ -728,8 +735,8 @@ Deleting your Virtual Machine(s) 'server01, vm1426759833'.
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
 Sorry virtual machine server100 does not exist
-Please use one of the following: ['vm1426759833', 'server01', \
-'server02', '152966', '152967', '152968']""")
+Please use one of the following: ['vm1426759833', 'vm1426759844', 'server01', \
+'server02', '152966', '152964', '152967', '152968']""")
 
         self.assertEqual(result.exit_code, 0)
 
@@ -1092,6 +1099,16 @@ password: \nRepeat for confirmation: \n\
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_migrate_not_available(self):
+        args = ['vm1426759844']
+        result = self.invoke_with_exceptions(vm.migrate, args)
+        self.assertEqual(re.sub(r'\[#+\]', '[###]',
+                                result.output.strip()), """\
+Your VM vm1426759844 cannot be migrated yet. \
+Migration will be available when datacenter FR-SD5 is opened.""")
 
         self.assertEqual(result.exit_code, 0)
 

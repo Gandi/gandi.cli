@@ -339,6 +339,21 @@ class Iaas(GandiModule, SshkeyHelper):
                                         'finalization.' % resource)
 
     @classmethod
+    def check_can_migrate(cls, resource):
+        """Check if virtual machine can be migrated to another datacenter."""
+        vm_id = cls.usable_id(resource)
+        result = cls.call('hosting.vm.can_migrate', vm_id)
+
+        if not result['can_migrate']:
+            matched = result['matched'][0]
+            cls.echo('Your VM %s cannot be migrated yet. Migration will be '
+                     'available when datacenter %s is opened.'
+                     % (resource, matched))
+            return False
+
+        return True
+
+    @classmethod
     def migrate(cls, resource, background=False, finalize=False):
         """ Migrate a virtual machine to another datacenter. """
         vm_id = cls.usable_id(resource)

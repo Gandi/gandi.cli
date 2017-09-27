@@ -477,6 +477,17 @@ def vm_migrate(vm_id, finalize=False):
     return {'id': 9900, 'step': 'WAIT'}
 
 
+def vm_can_migrate(vm_id):
+    if vm_id == 152964:
+        return {'can_migrate': False,
+                'matched': ['FR-SD5'],
+                'can_migrate_to': []}
+
+    return {'can_migrate': True,
+            'matched': ['LU-BI1'],
+            'can_migrate_to': ['LU-BI1']}
+
+
 def vm_list(options):
 
     ret = [{'ai_active': 0,
@@ -490,6 +501,21 @@ def vm_list(options):
             'flex_shares': 0,
             'hostname': 'vm1426759833',
             'id': 152966,
+            'ifaces_id': [156572],
+            'memory': 256,
+            'state': 'running',
+            'vm_max_memory': 2048},
+           {'ai_active': 0,
+            'console': 0,
+            'cores': 1,
+            'datacenter_id': 3,
+            'date_created': DateTime('20141008T16:13:59'),
+            'date_updated': DateTime('20150319T11:11:31'),
+            'description': None,
+            'disks_id': [4969232],
+            'flex_shares': 0,
+            'hostname': 'vm1426759844',
+            'id': 152964,
             'ifaces_id': [156572],
             'memory': 256,
             'state': 'running',

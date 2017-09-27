@@ -510,6 +510,9 @@ def datacenters(gandi, id):
 @pass_gandi
 def migrate(gandi, resource, force, background, finalize):
     """ Migrate a virtual machine to another datacenter. """
+    if not gandi.iaas.check_can_migrate(resource):
+        return
+
     if not force:
         proceed = click.confirm('Are you sure you want to migrate VM %s ?'
                                 % resource)
