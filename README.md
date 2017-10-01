@@ -423,12 +423,12 @@ The default variables are:
 
 We <3 contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
-You can check the [contributors list](https://github.com/Gandi/gandi.cli/graphs/contributors).
+You can check the [contributors list](https://github.com/grigouze/gandi.cli/graphs/contributors).
 
 ## Code status
 
-[![Build Status](https://travis-ci.org/Gandi/gandi.cli.svg?branch=master)](https://travis-ci.org/Gandi/gandi.cli)
-[![Coverage Status](https://coveralls.io/repos/Gandi/gandi.cli/badge.svg?branch=master)](https://coveralls.io/r/Gandi/gandi.cli?branch=master)
+[![Build Status](https://travis-ci.org/grigouze/gandi.cli.svg?branch=master)](https://travis-ci.org/grigouze/gandi.cli)
+[![Coverage Status](https://coveralls.io/repos/grigouze/gandi.cli/badge.svg?branch=master)](https://coveralls.io/r/grigouze/gandi.cli?branch=master)
 [![Pip Version](https://img.shields.io/pypi/v/gandi.cli.svg)](https://pypi.python.org/pypi/gandi.cli)
 [![Python Version](https://img.shields.io/pypi/pyversions/gandi.cli.svg)](https://pypi.python.org/pypi/gandi.cli)
 [![Download Stat](https://img.shields.io/pypi/dm/gandi.cli.svg)](https://pypi.python.org/pypi/gandi.cli)
