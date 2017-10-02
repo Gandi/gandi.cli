@@ -362,7 +362,7 @@ class Iaas(GandiModule, SshkeyHelper):
             result = cls.call('hosting.vm.migrate', vm_id, True)
         else:
             verb = 'Starting'
-            result = cls.call('hosting.vm.migrate', vm_id)
+            result = cls.call('hosting.vm.migrate', vm_id, False)
 
         dcs = {}
         for dc in Datacenter.list():
