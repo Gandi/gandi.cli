@@ -1,6 +1,20 @@
 Changelog
 =========
 
+1.0
+----
+
+* New 'dns' namespace to manage DNS records/dnssec through LiveDNS API.
+* Add new 'gandi vm migrate' command.
+* Refactor internal click code usage. Remove hackish code to handle
+  nested commands which was limited to only 1 nested level.
+  - This change will break code of users which were using custom commands
+    on top of Gandi CLI, To fix this you have to use the proper click syntax
+    to declare a new group for your commands.
+  - This change also remove the automatic listing of all namespace commands
+    upon a typo or unknown/wrong command.
+* Fixes #224: DeprecationWarning makes tests fail with python 3.6.2
+
 0.22
 ----
 
