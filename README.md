@@ -61,11 +61,18 @@ Recommended tools
     $ ln -sf packages/debian debian && debuild -us -uc -b && echo "Bisou"
 
 ## Getting started
-
-1. To get started, you can create a [free Gandi account](https://www.gandi.net/contact/create) and get your Gandi Handle
-2. [Generate your Production API Token](https://www.gandi.net/admin/api_key) from the account admin section
-3. You may also want to [top-up your prepaid account](https://www.gandi.net/prepaid)
+Using our classic (V4) website:
+1. To get started, you can create a [free Gandi account](https://v4.gandi.net/contact/create) and get your Gandi Handle
+2. [Generate your Production API Token](https://v4.gandi.net/admin/api_key) from the account admin section
+3. You may also want to [top-up your prepaid account](https://v4.gandi.net/prepaid)
 4. To manipulate VM's, you also need to [purchase credits](https://www.gandi.net/credit/buy) (you can use funds from your prepaid account)
+
+Using our latest (V5) website:
+1. To get started, you can create a [free Gandi account](https://account.gandi.net/en/create_account) and get your Gandi username
+2. [Generate your Production API Token](https://account.gandi.net/en/) from within the account Security section
+3. You may also want to [top-up your prepaid account](https://admin.gandi.net/billing/)
+4. To manipulate VM's, you currently need to follow above steps to create an account on our classic (V4) website.
+
 
 Then run the setup
 
