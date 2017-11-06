@@ -72,6 +72,26 @@ class Dns(GandiModule):
         return cls.json_post(url, data=json.dumps(data))
 
     @classmethod
+    def update_record(cls, fqdn, name, type, value, ttl, content):
+        """Update all records for a domain."""
+        data = {
+            "rrset_name": name,
+            "rrset_type": type,
+            "rrset_values": value,
+        }
+        if ttl:
+            data['rrset_ttl'] = int(ttl)
+        meta = cls.get_fqdn_info(fqdn)
+        if content:
+            url = meta['domain_records_href']
+            kwargs = {'headers': {'Content-Type': 'text/plain'},
+                      'data': content}
+            return cls.json_put(url, **kwargs)
+
+        url = '%s/domains/%s/records/%s/%s' % (cls.api_url, fqdn, name, type)
+        return cls.json_put(url, data=json.dumps(data))
+
+    @classmethod
     def del_record(cls, fqdn, name, type):
         """Delete record for a domain."""
         meta = cls.get_fqdn_info(fqdn)

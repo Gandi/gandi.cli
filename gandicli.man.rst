@@ -94,6 +94,7 @@ Namespaces:
 *  dns keys list           List domain keys.
 *  dns keys recover        Recover deleted key for a domain.
 *  dns list                Display records for a domain.
+*  dns update              Update record entry for a domain.
 *  docker                  Manage docker instances.
 *  domain create           Buy a domain.
 *  domain renew            Renew a domain.
@@ -246,6 +247,8 @@ Details:
 * ``gandi dns domain.list`` will list all domains registered in LiveDNS, and manageable by the ``gandi dns`` commands through Gandi REST API.
 
 * ``gandi dns list domain.tld`` will display all records for domain ``domain.tld``. Possible parameters are ``NAME`` to filter records by name, ``RRSET_TYPE`` to filter records by type. Possible options are ``--sort [name|ttl|type|values]`` to sort results (does not work with ``--text`` option), ``--type [A|AAAA|CAA|CDS|CNAME|DNAME|DS|LOC|MX|NS|PTR|SPF|SRV|SSHFP|TLSA|TXT|WKS]`` to filter results by type (does not work with ``--text`` option), ``--text`` to output result in text format.
+
+* ``gandi dns update domain.tld`` will update record entry for domain ``domain.tld``. It takes 4 parameters, ``FQDN`` which is the domain on which to add the record, ``NAME`` which is the record relative name, ``TYPE`` which is the record type, ``VALUE`` which is the record value. Multiple values can be provided for ``VALUE`` parameter. Possible options are ``--ttl INTEGER`` to set record time to live value in seconds and ``--file`` which will ignore other parameters and overwrite current zone content with provided file content.
 
 * ``gandi dns keys create`` will create a new DNSKEY for a domain and have LiveDNS sign the zone for you. It takes 2 parameters, ``FQDN`` which is the domain for which we want to create the key and ``FLAG`` which is the flag value to use for creation.
 

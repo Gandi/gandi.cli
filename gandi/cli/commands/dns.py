@@ -1,5 +1,6 @@
 """ DNS namespace commands. """
 
+import sys
 import click
 
 from gandi.cli.core.cli import cli
@@ -87,6 +88,50 @@ def create(gandi, fqdn, name, type, value, ttl):
         return
 
     result = gandi.dns.add_record(fqdn, name, type, value, ttl)
+    gandi.echo(result['message'])
+
+
+@dns.command()
+@click.argument('fqdn')
+@click.argument('name', required=False)
+@click.argument('type', type=DNS_RECORDS, required=False)
+@click.argument('value', nargs=-1, required=False)
+@click.option('--ttl', default=None, type=click.INT, required=False,
+              help='Time to live, in seconds')
+@click.option('-f', '--file', type=click.File('rb'),
+              help='Zone content in a plain text file. If provided this will '
+                   'ignore all other parameters and overwrite current zone '
+                   'content')
+@pass_gandi
+def update(gandi, fqdn, name, type, value, ttl, file):
+    """Update record entry for a domain.
+
+    --file option will ignore other parameters and overwrite current zone
+    content with provided file content.
+    """
+    domains = gandi.dns.list()
+    domains = [domain['fqdn'] for domain in domains]
+    if fqdn not in domains:
+        gandi.echo('Sorry domain %s does not exist' % fqdn)
+        gandi.echo('Please use one of the following: %s' % ', '.join(domains))
+        return
+
+    content = ''
+    if file:
+        content = file.read()
+    elif not sys.stdin.isatty():
+        content = click.get_text_stream('stdin').read()
+
+    content = content.strip()
+    if not content and not name and not type and not value:
+        click.echo('Cannot find parameters for zone content to update.')
+        return
+
+    if name and type and not value:
+        click.echo('You must provide one or more value parameter.')
+        return
+
+    result = gandi.dns.update_record(fqdn, name, type, value, ttl, content)
     gandi.echo(result['message'])
 
 

@@ -21,3 +21,9 @@ try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
+
+
+try:
+    from cStringIO import StringIO as ReasonableBytesIO
+except ImportError:
+    from io import BytesIO as ReasonableBytesIO

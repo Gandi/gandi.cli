@@ -1,4 +1,4 @@
-from ..compat import mock
+from ..compat import mock, ReasonableBytesIO
 from .base import CommandTestCase
 from gandi.cli.commands import dns
 
@@ -153,6 +153,11 @@ pop 10800 IN CNAME access.mail.gandi.net.
 smtp 10800 IN CNAME relay.mail.gandi.net.
 webmail 10800 IN CNAME webmail.gandi.net.
 www 10800 IN CNAME webredir.vip.gandi.net.""" # noqa
+    content_hdr = kwargs.get('headers', {}).get('Content-Type')
+    if method == 'PUT' and content_hdr == 'text/plain':
+        content = {'message': 'DNS Record Created'}
+    if method == 'PUT' and url == 'https://dns.api.gandi.net/api/v5/domains/iheartcli.com/records/blog/CNAME': # noqa
+        content = {'message': 'DNS Record Created'}
     mock_resp = mock.Mock()
     mock_resp.status_code = 200
     mock_resp.content = content
@@ -323,6 +328,82 @@ www 10800 IN CNAME webredir.vip.gandi.net.
         args = ['iheartcli.com', 'blog', 'cname', 'blog.cli.sexy']
         result = self.invoke_with_exceptions(dns.create, args)
 
+        wanted = """DNS Record Created
+"""
+        self.assertEqual(result.output, wanted)
+        self.assertEqual(result.exit_code, 0)
+
+    @mock.patch('gandi.cli.core.client.requests.request')
+    def test_dns_update_missing(self, mock_request):
+        mock_request.side_effect = _mock_requests
+        args = ['iheartcli.com']
+        result = self.invoke_with_exceptions(dns.update, args)
+
+        wanted = """Cannot find parameters for zone content to update.
+"""
+        self.assertEqual(result.output, wanted)
+        self.assertEqual(result.exit_code, 0)
+
+    @mock.patch('gandi.cli.core.client.requests.request')
+    def test_dns_update_unknown(self, mock_request):
+        mock_request.side_effect = _mock_requests
+        args = ['example.com']
+        result = self.invoke_with_exceptions(dns.update, args)
+
+        wanted = """\
+Sorry domain example.com does not exist
+Please use one of the following: iheartcli.com, cli.sexy
+"""
+        self.assertEqual(result.output, wanted)
+        self.assertEqual(result.exit_code, 0)
+
+    @mock.patch('gandi.cli.core.client.requests.request')
+    def test_dns_update_argument_ok(self, mock_request):
+        mock_request.side_effect = _mock_requests
+        args = ['iheartcli.com', '--file', 'sandbox/example.txt']
+
+        content = """\
+blog 10800 IN CNAME blogs.vip.gandi.net.
+"""
+        result = self.isolated_invoke_with_exceptions(dns.update, args,
+                                                      temp_content=content)
+        wanted = """DNS Record Created
+"""
+        self.assertEqual(result.output, wanted)
+        self.assertEqual(result.exit_code, 0)
+
+    @mock.patch('gandi.cli.core.client.requests.request')
+    def test_dns_update_parameters_ok(self, mock_request):
+        mock_request.side_effect = _mock_requests
+        args = ['iheartcli.com', 'blog', 'cname', 'blog.cli.sexy']
+
+        result = self.invoke_with_exceptions(dns.update, args)
+        wanted = """DNS Record Created
+"""
+        self.assertEqual(result.output, wanted)
+        self.assertEqual(result.exit_code, 0)
+
+    @mock.patch('gandi.cli.core.client.requests.request')
+    def test_dns_update_parameters_ko(self, mock_request):
+        mock_request.side_effect = _mock_requests
+        args = ['iheartcli.com', 'blog', 'cname']
+
+        result = self.invoke_with_exceptions(dns.update, args)
+        wanted = """You must provide one or more value parameter.
+"""
+        self.assertEqual(result.output, wanted)
+        self.assertEqual(result.exit_code, 0)
+
+    @mock.patch('gandi.cli.core.client.requests.request')
+    def test_dns_update_pipe_ok(self, mock_request):
+        mock_request.side_effect = _mock_requests
+        args = ['iheartcli.com']
+
+        content = b"""\
+blog 10800 IN CNAME blogs.vip.gandi.net.
+"""
+        result = self.invoke_with_exceptions(dns.update, args,
+                                             input=ReasonableBytesIO(content))
         wanted = """DNS Record Created
 """
         self.assertEqual(result.output, wanted)
