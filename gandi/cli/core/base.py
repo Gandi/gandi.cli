@@ -44,7 +44,7 @@ class GandiModule(GandiConfig):
     @classmethod
     def get_api_connector(cls):
         """ Initialize an api connector for future use."""
-        if cls._api is None:
+        if cls._api is None:  # pragma: no cover
             cls.load_config()
             cls.debug('initialize connection to remote server')
             apihost = cls.get('api.host')
