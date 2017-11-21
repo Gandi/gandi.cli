@@ -371,8 +371,9 @@ def migrate(gandi, resource, force, background):
         # use the only one available
         datacenter_id = dc_choices[0]['id']
     else:
-        dc_choice = click.Choice(list([dc['dc_code'] for dc in dc_choices]))
-        dc_chosen = click.prompt('Select a datacenter',
+        choice_list = [dc['dc_code'] for dc in dc_choices]
+        dc_choice = click.Choice(choice_list)
+        dc_chosen = click.prompt('Select a datacenter [%s]' % '|'.join(choice_list),  # noqa
                                  type=dc_choice,
                                  show_default=True)
         datacenter_id = [dc['id'] for dc in dc_choices
