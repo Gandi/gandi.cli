@@ -134,7 +134,7 @@ def delete(gandi, background, force, resource):
 
 @vlan.command()
 @click.option('--name', required=True, help='Name of the vlan.')
-@option('--datacenter', type=DATACENTER, default='FR-SD3',
+@option('--datacenter', type=DATACENTER, default='FR-SD5',
         help='Datacenter where the vlan will be spawned.')
 @click.option('--subnet', help='The vlan subnet.')
 @click.option('--gateway', help='The vlan gateway.')
