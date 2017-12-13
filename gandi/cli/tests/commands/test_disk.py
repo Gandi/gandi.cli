@@ -699,7 +699,7 @@ step      : WAIT""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ VM server01 datacenter will be used instead of FR-SD3.
+/!\ VM server01 datacenter will be used instead of FR-SD5.
 Creating your disk.
 \rProgress: [###] 100.00%  00:00:00  \
 \nAttaching your disk.

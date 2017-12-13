@@ -200,6 +200,12 @@ name      : France, Paris
 country   : France
 dc_code   : FR-SD3
 closed for: paas
+----------
+iso       : FR
+name      : France, Paris
+country   : France
+dc_code   : FR-SD5
+closed for: paas
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -234,6 +240,13 @@ name      : France, Paris
 country   : France
 dc_code   : FR-SD3
 id        : 4
+closed for: paas
+----------
+iso       : FR
+name      : France, Paris
+country   : France
+dc_code   : FR-SD5
+id        : 5
 closed for: paas
 """)
         self.assertEqual(result.exit_code, 0)
@@ -339,6 +352,14 @@ version       : raw
 
 
 datacenter    : Bissen
+----------
+flavor        : linux-hvm
+version       : 3.12-x86_64 (hvm)
+version       : grub
+version       : raw
+
+
+datacenter    : France, Paris
 ----------
 flavor        : linux-hvm
 version       : 3.12-x86_64 (hvm)
@@ -528,6 +549,12 @@ kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 3316070
 datacenter    : FR-SD3
 ----------
+label         : Debian 8
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 3316070
+datacenter    : FR-SD5
+----------
 label         : Debian 8 (testing) 64 bits (HVM)
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
@@ -575,6 +602,12 @@ os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 1401492
 datacenter    : FR-SD3
+----------
+label         : Debian 7 64 bits (HVM)
+os_arch       : x86-64
+kernel_version: 3.12-x86_64 (hvm)
+disk_id       : 1401492
+datacenter    : FR-SD5
 ----------
 label         : Debian 7 64 bits (HVM)
 kernel_version: 3.12-x86_64 (hvm)
@@ -918,7 +951,7 @@ ssh root@95.142.160.181 sudo reboot""")
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
-, hostname: server500, datacenter: FR-SD3
+, hostname: server500, datacenter: FR-SD5
 Creating your Virtual Machine server500.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine server500 has been created.""")
@@ -935,7 +968,7 @@ Your Virtual Machine server500 has been created.""")
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
-, hostname: vm, datacenter: FR-SD3
+, hostname: vm, datacenter: FR-SD5
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -970,7 +1003,7 @@ Creating your iface.
 Your iface has been created with the following IP addresses:
 ip4:\t10.50.10.10
 * Configuration used: 1 cores, 256Mb memory, ip private, image Debian 8\
-, hostname: server400, datacenter: FR-SD3
+, hostname: server400, datacenter: FR-SD5
 Creating your Virtual Machine server400.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine server400 has been created.""")
@@ -988,7 +1021,7 @@ Your Virtual Machine server400 has been created.""")
 password: \nRepeat for confirmation: \n\
 * root and administrator users will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
-, hostname: vm, datacenter: FR-SD3
+, hostname: vm, datacenter: FR-SD5
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
@@ -1004,7 +1037,7 @@ Your Virtual Machine vm has been created.""")
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \n* root user will be created.
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
-, hostname: server500, datacenter: FR-SD3
+, hostname: server500, datacenter: FR-SD5
 * IAAS backend is now creating your VM and its associated resources in the \
 background.""")
 
@@ -1022,7 +1055,7 @@ background.""")
 * No password supplied for vm (required to enable emergency web console \
 access).
 * Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
-, hostname: vm, datacenter: FR-SD3
+, hostname: vm, datacenter: FR-SD5
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")

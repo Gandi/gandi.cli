@@ -225,7 +225,7 @@ Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
 
         self.assertEqual(result.exit_code, 0)
         params = self.api_calls['hosting.vlan.create'][0][0]
-        self.assertEqual(params['datacenter_id'], 4)
+        self.assertEqual(params['datacenter_id'], 5)
         self.assertEqual(params['name'], 'testvlanbg')
 
     def test_update(self):

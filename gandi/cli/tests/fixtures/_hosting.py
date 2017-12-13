@@ -187,6 +187,17 @@ def image_list(options):
             'size': 3072,
             'visibility': 'all'},
            {'author_id': 248842,
+            'datacenter_id': 5,
+            'date_created': DateTime('20141203T14:15:28'),
+            'date_updated': DateTime('20150116T11:24:56'),
+            'disk_id': 3316070,
+            'id': 178,
+            'kernel_version': '3.12-x86_64 (hvm)',
+            'label': 'Debian 8',
+            'os_arch': 'x86-64',
+            'size': 3072,
+            'visibility': 'all'},
+           {'author_id': 248842,
             'datacenter_id': 3,
             'date_created': DateTime('20141203T14:15:28'),
             'date_updated': DateTime('20150116T11:24:56'),
@@ -274,6 +285,17 @@ def image_list(options):
             'os_arch': 'x86-64',
             'size': 3072,
             'visibility': 'all'},
+           {'author_id': 248842,
+            'datacenter_id': 5,
+            'date_created': DateTime('20140417T18:38:53'),
+            'date_updated': DateTime('20141030T10:38:45'),
+            'disk_id': 1401492,
+            'id': 163,
+            'kernel_version': '3.12-x86_64 (hvm)',
+            'label': 'Debian 7 64 bits (HVM)',
+            'os_arch': 'x86-64',
+            'size': 3072,
+            'visibility': 'all'},
            ]
 
     for fkey in options:
@@ -318,7 +340,16 @@ def datacenter_list(options):
             'deactivate_at': None,
             'iaas_closed_for': 'NONE',
             'paas_closed_for': 'ALL',
-            'dc_code': 'FR-SD3'}]
+            'dc_code': 'FR-SD3'},
+           {'iso': 'FR',
+            'name': 'France, Paris',
+            'id': 5,
+            'can_migrate_to': [],
+            'country': 'France',
+            'deactivate_at': None,
+            'iaas_closed_for': 'NONE',
+            'paas_closed_for': 'ALL',
+            'dc_code': 'FR-SD5'}]
 
     options.pop('sort_by', None)
     for fkey in options:
@@ -982,7 +1013,7 @@ def disk_list_kernels(dc_id):
                       '3.12-x86_64'],
             'linux-hvm': ['3.12-x86_64 (hvm)', 'grub', 'raw']}}
 
-    return ret[dc_id]
+    return ret.get(dc_id, ret[4])
 
 
 def account_info():
