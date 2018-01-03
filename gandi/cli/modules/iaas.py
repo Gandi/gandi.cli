@@ -4,7 +4,6 @@ import math
 import os
 import socket
 import time
-import errno
 
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import randomstring
@@ -427,6 +426,7 @@ class Iaas(GandiModule, SshkeyHelper):
         cls.echo('Waiting for the vm to come online')
         version, ip_addr = cls.vm_ip(vm_id)
         give_up = time.time() + 300
+        last_error = None
         while time.time() < give_up:
             try:
                 inet = socket.AF_INET
@@ -438,12 +438,10 @@ class Iaas(GandiModule, SshkeyHelper):
                 sd.connect((ip_addr, 22))
                 sd.recv(1024)
                 return
-            except socket.error as err:
-                if err.errno == errno.ECONNREFUSED:
-                    time.sleep(1)
-            except Exception:
-                pass
-        cls.error('VM did not spin up')
+            except Exception as err:
+                last_error = err
+                time.sleep(1)
+        cls.error('VM did not spin up (last error: %s)' % last_error)
 
     @classmethod
     def ssh_keyscan(cls, vm_id):
