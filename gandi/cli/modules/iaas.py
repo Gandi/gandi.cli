@@ -4,6 +4,7 @@ import math
 import os
 import socket
 import time
+import errno
 
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import randomstring
@@ -438,6 +439,12 @@ class Iaas(GandiModule, SshkeyHelper):
                 sd.connect((ip_addr, 22))
                 sd.recv(1024)
                 return
+            except socket.error as err:
+                if err.errno == errno.EHOSTUNREACH and version == 6:
+                    cls.error('%s is not reachable, you may be missing '
+                              'IPv6 connectivity' % ip_addr)
+                last_error = err
+                time.sleep(1)
             except Exception as err:
                 last_error = err
                 time.sleep(1)
