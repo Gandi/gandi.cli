@@ -287,9 +287,10 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     try:
         gandi.datacenter.is_opened(datacenter, 'iaas')
     except DatacenterLimited as exc:
-        gandi.echo('/!\ Datacenter %s will be closed on %s, '
-                   'please consider using another datacenter.' %
-                   (datacenter, exc.date))
+        if exc.date:
+            gandi.echo('/!\ Datacenter %s will be closed on %s, '
+                       'please consider using another datacenter.' %
+                       (datacenter, exc.date))
 
     if gandi.image.is_deprecated(image, datacenter):
         gandi.echo('/!\ Image %s is deprecated and will soon be unavailable.'
