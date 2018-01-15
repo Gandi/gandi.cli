@@ -345,10 +345,13 @@ class Iaas(GandiModule, SshkeyHelper):
         result = cls.call('hosting.vm.can_migrate', vm_id)
 
         if not result['can_migrate']:
-            matched = result['matched'][0]
-            cls.echo('Your VM %s cannot be migrated yet. Migration will be '
-                     'available when datacenter %s is opened.'
-                     % (resource, matched))
+            if result['matched']:
+                matched = result['matched'][0]
+                cls.echo('Your VM %s cannot be migrated yet. Migration will '
+                         'be available when datacenter %s is opened.'
+                         % (resource, matched))
+            else:
+                cls.echo('Your VM %s cannot be migrated.' % resource)
             return False
 
         return True
