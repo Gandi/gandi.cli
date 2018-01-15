@@ -9,6 +9,7 @@ from gandi.cli.core.utils import (
     DatacenterLimited
 )
 from gandi.cli.core.utils.size import disk_check_size
+from gandi.cli.core.utils.password import mkpassword
 from gandi.cli.core.params import (
     pass_gandi, option, IntChoice, DATACENTER, DISK_IMAGE, SIZE
 )
@@ -260,10 +261,13 @@ def delete(gandi, background, force, resource):
 @click.option('--ssh', default=False, is_flag=True,
               help='Open a SSH session to the machine after creation '
                    '(default=False).')
+@click.option('--gen-password', default=False, is_flag=True,
+              help='Generate a random password to be set for the root '
+                   'account and the created login(default=False).')
 @pass_gandi
 def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
            password, hostname, image, run, background, sshkey, size, vlan, ip,
-           script, script_args, ssh):
+           script, script_args, ssh, gen_password):
     """Create a new virtual machine.
 
     you can specify a configuration entry named 'sshkey' containing
@@ -292,7 +296,10 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
                    % image)
 
     pwd = None
-    if password or not sshkey:
+    if gen_password:
+        pwd = mkpassword()
+
+    if password or (not pwd and not sshkey):
         pwd = click.prompt('password', hide_input=True,
                            confirmation_prompt=True)
 
@@ -310,12 +317,17 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
     # Display a short summary for creation
     if login:
         user_summary = 'root and %s users' % login
+        password_summary = 'Users root and %s' % login
     else:
         user_summary = 'root user'
+        password_summary = 'User root'
 
     gandi.echo('* %s will be created.' % user_summary)
     if sshkey:
         gandi.echo('* SSH key authorization will be used.')
+    if pwd and gen_password:
+        gandi.echo('* %s setup with password %s' %
+                   (password_summary, pwd))
     if not pwd:
         gandi.echo('* No password supplied for vm (required to enable '
                    'emergency web console access).')

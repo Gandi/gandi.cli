@@ -1062,6 +1062,46 @@ Your Virtual Machine vm has been created.""")
 
         self.assertEqual(result.exit_code, 0)
 
+    def test_create_gen_password_root_ok(self):
+        args = ['--gen-password']
+        result = self.invoke_with_exceptions(vm.create, args,
+                                             obj=GandiContextHelper())
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+        output = re.sub(r'vm\d+', 'vm', output)
+        output = re.sub(r'with password .*', 'with password FAKEPASSWORD',
+                        output)
+
+        self.assertEqual(output, """\
+* root user will be created.
+* User root setup with password FAKEPASSWORD
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
+, hostname: vm, datacenter: FR-SD5
+Creating your Virtual Machine vm.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your Virtual Machine vm has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+
+    def test_create_gen_password_user_ok(self):
+        args = ['--gen-password', '--login', 'myuser']
+        result = self.invoke_with_exceptions(vm.create, args,
+                                             obj=GandiContextHelper())
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+        output = re.sub(r'vm\d+', 'vm', output)
+        output = re.sub(r'with password .*', 'with password FAKEPASSWORD',
+                        output)
+
+        self.assertEqual(output, """\
+* root and myuser users will be created.
+* Users root and myuser setup with password FAKEPASSWORD
+* Configuration used: 1 cores, 256Mb memory, ip v6, image Debian 8\
+, hostname: vm, datacenter: FR-SD5
+Creating your Virtual Machine vm.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your Virtual Machine vm has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+
     def test_create_image_deprecated(self):
         args = ['--image', 'Debian 7 64 bits (HVM)',
                 '--sshkey', 'mysecretkey',
