@@ -442,7 +442,7 @@ You can check the [contributors list](https://github.com/Gandi/gandi.cli/graphs/
 
 ## License / Copying
 
-Copyright © 2014-2017 Gandi S.A.S
+Copyright © 2014-2018 Gandi S.A.S
 
 Gandi CLI is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
