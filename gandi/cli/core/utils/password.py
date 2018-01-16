@@ -25,7 +25,7 @@ def mkpassword(length=16, chars=None, punctuation=None):
     :rtype: ``str``
     """
     if chars is None:
-        chars = string.letters + string.digits
+        chars = string.ascii_letters + string.digits
 
     # Generate string from population
     data = [random.choice(chars) for _ in range(length)]
