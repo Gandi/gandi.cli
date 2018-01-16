@@ -1,3 +1,12 @@
+gandicli (1.2) unstable; urgency=medium
+
+  * Add support for paas size s+ for creation/update
+  * Fixes #232: Update 'gandi record update' command to allow filtering by name
+  * Fix bug when attempting to migrate a vm which cannot be migrated
+  * Only display DC closed warning if a date is set
+
+ -- Dejan Filipovic <sayoun@gandi.net>  Tue, 16 Jan 2018 16:27:30 +0100
+
 gandicli (1.1) unstable; urgency=medium
 
   * FR-SD5 is now the default datacenter.

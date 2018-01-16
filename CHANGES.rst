@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.2
+---
+
+* Add support for paas size s+ for creation/update
+* Fixes #232: Update 'gandi record update' command to allow filtering by name
+* Fix bug when attempting to migrate a vm which cannot be migrated
+* Only display DC closed warning if a date is set
+
 1.1
 ---
 
