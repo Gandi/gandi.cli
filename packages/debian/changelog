@@ -1,3 +1,16 @@
+gandicli (1.1) unstable; urgency=medium
+
+  * FR-SD5 is now the default datacenter.
+  * Add new 'gandi dns update' command.
+  * Fixes #228: Generate a user password at the creation of a VM
+  * Improve wait for ssh connectivity after 'gandi vm create' command to handle
+    ipv6
+  * Fix a bug with 'gandi disk migrate' command not working with multiple
+    datacenters choices
+  * Improve documentation for generating username/apikey with Gandi V5
+
+ -- Dejan Filipovic <sayoun@gandi.net>  Tue, 16 Jan 2018 13:56:25 +0100
+
 gandicli (1.0) unstable; urgency=medium
 
   * New 'dns' namespace to manage DNS records/dnssec through LiveDNS API.

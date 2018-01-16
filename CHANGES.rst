@@ -1,6 +1,16 @@
 Changelog
 =========
 
+1.1
+---
+
+* FR-SD5 is now the default datacenter.
+* Add new 'gandi dns update' command.
+* Fixes #228: Generate a user password at the creation of a VM
+* Improve wait for ssh connectivity after 'gandi vm create' command to handle ipv6
+* Fix a bug with 'gandi disk migrate' command not working with multiple datacenters choices
+* Improve documentation for generating username/apikey with Gandi V5
+
 1.0
 ----
 
