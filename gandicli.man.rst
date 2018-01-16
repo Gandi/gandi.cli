@@ -134,7 +134,9 @@ Namespaces:
 *  paas types              List types PaaS instances.
 *  paas update             Update a PaaS instance.
 *  record create           Create new DNS zone record entry for a domain.
+*  record delete           Delete a record entry for a domain.
 *  record list             List DNS zone records for a domain.
+*  record update           Update records entries for a domain.
 *  setup                   Initialize Gandi CLI configuration.
 *  snapshotprofile info    Display information about a snapshot profile.
 *  snapshotprofile list    List possible snapshot profiles.
@@ -333,7 +335,11 @@ Details:
 
 * ``gandi record create domain.tld`` will create new DNS zone record entry for specific domain ``domain.tld`` in a new zone version and activate it. Mandatory options are ``--zone-id INTEGER`` to specify a zone id to use, if not provided default zone will be used, ``--name TEXT`` to set record relative name, may contains leading wildcard, use @ for empty name, ``--type A|AAAA|CNAME|MX|NS|TXT|WKS|SRV|LOC|SPF`` to set record type, ``--value TEXT`` to set record value, may contains up to 1024 ascii characters. Possible options are ``--ttl INTEGER`` to set record time to live value.
 
+* ``gandi record delete domain.tld`` will delete DNS zone record entries for a specific domain ``domain.tld`` from a zone, and use a new zone version which will be activated after deletion. Mandatory options are ``--zone-id INTEGER`` to specify a zone id to use, if not provided default zone will be used, ``--name TEXT`` to specify relative name of record to delete, may contains leading wildcard, use @ for empty name, ``--type A|AAAA|CNAME|MX|NS|TXT|WKS|SRV|LOC|SPF`` to specify record type, ``--value TEXT`` for record to delete value, may contains up to 1024 ascii characters.
+
 * ``gandi record list domain.tld`` show the list of DNS zone records for specific domain ``domain.tld``. Possible options are ``--zone-id INTEGER`` to specify a zone id to use, if not provided default zone will be used, ``--limit INTEGER`` show a subset of the list.
+
+* ``gandi record update domain.tld`` will update DNS zone record entries for a specific domain ``domain.tld``. Mandatory options are ``--zone-id INTEGER`` to specify a zone id to use, if not provided default zone will be used. You can update an individual record using ``--record`` and ``--new-record`` parameters which both use the same format `'name TTL IN TYPE [A, AAAA, MX, TXT, SPF] value'`. Or you can use a plaintext file using ``--file FILENAME`` parameter to update all records of a DNS zone. Note that if you want to update an individual record and fail to provide all fields for ``--record`` parameter, it will try to retrieve the record entry using only the name, but if there are several records entries with the same name, only the first one will be updated.
 
 * ``gandi setup`` initialize the configuration for the tool.
 

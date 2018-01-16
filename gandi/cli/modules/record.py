@@ -98,8 +98,12 @@ class Record(GandiModule):
 
         old_record = old_record.replace(' IN', '')
         old_record = old_record.split(' ', 4)
-        params = {'name': old_record[0], 'ttl': int(old_record[1]),
-                  'type': old_record[2], 'value': old_record[3]}
+        try:
+            params = {'name': old_record[0], 'ttl': int(old_record[1]),
+                      'type': old_record[2], 'value': old_record[3]}
+        except IndexError:
+            # failed to retrieve all values, try only use the name
+            params = {'name': old_record[0]}
         record = cls.call('domain.zone.record.list', zone_id, new_version_id,
                           params)
 

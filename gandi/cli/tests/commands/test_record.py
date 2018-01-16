@@ -326,6 +326,19 @@ Activation of new zone version
 """)
         self.assertEqual(result.exit_code, 0)
 
+    def test_update_name(self):
+        args = ['iheartcli.com',
+                '--record', '*',
+                '--new-record', '@ 3600 A 127.0.0.1']
+        result = self.invoke_with_exceptions(record.update, args)
+
+        self.assertEqual(result.output, """\
+Creating new zone file
+Updating zone records
+Activation of new zone version
+""")
+        self.assertEqual(result.exit_code, 0)
+
     def test_update_file(self):
         args = ['iheartcli.com', '--file', 'sandbox/example.txt']
 

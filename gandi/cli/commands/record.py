@@ -128,7 +128,11 @@ def create(gandi, domain, zone_id, name, type, value, ttl):
                                  'WKS', 'SRV', 'LOC', 'SPF']),
               help='DNS record type')
 @click.option('--value', default=None,
-              type=StringConstraint(minlen=1, maxlen=1024))
+              type=StringConstraint(minlen=1, maxlen=1024),
+              help='Value for record. Semantics depends on the record type.'
+                   'Currently limited to 1024 ASCII characters.'
+                   'In case of TXT, each part between quotes is limited to 255'
+                   ' characters')
 @click.argument('domain', required=True)
 @pass_gandi
 def delete(gandi, domain, zone_id, name, type, value):
@@ -159,13 +163,23 @@ def delete(gandi, domain, zone_id, name, type, value):
 @click.option('--file', '-f', type=click.File('r'),
               required=False, help='Filename of the zone file.')
 @click.option('--record', '-r', default=None, required=False,
-              help="'name TTL IN TYPE [A, AAAA, MX, TXT, SPF] value'")
+              help="'name TTL IN TYPE [A, AAAA, MX, TXT, SPF] value' \n"
+              "Note that you can specify only a name, but in case of "
+              "multiple entries with the same name, only the first one will "
+              "be updated")
 @click.option('--new-record', default=None, required=False,
               help="'name TTL IN TYPE [A, AAAA, MX, TXT, SPF] value'")
 @click.argument('domain', required=True)
 @pass_gandi
 def update(gandi, domain, zone_id, file, record, new_record):
-    """Update records entries for a domain from a file"""
+    """Update records entries for a domain.
+
+    You can update an individual record using --record and --new-record
+    parameters
+
+    Or you can use a plaintext file to update all records of a DNS zone at
+    once with --file parameter.
+    """
     if not zone_id:
         result = gandi.domain.info(domain)
         zone_id = result['zone_id']
