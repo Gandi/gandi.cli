@@ -471,6 +471,28 @@ Your PaaS instance paas has been created.""")
         self.assertEqual(params['password'], 'ploki')
         self.assertTrue(params['name'].startswith('paas'))
 
+    def test_create_size(self):
+        args = ['--size', 's+']
+        result = self.invoke_with_exceptions(paas.create, args,
+                                             obj=GandiContextHelper(),
+                                             input='ploki\nploki\n')
+
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+
+        self.assertEqual(re.sub(r'paas\d+', 'paas', output), """\
+password: \nRepeat for confirmation: \n\
+Creating your PaaS instance.
+\rProgress: [###] 100.00%  00:00:00  \n\
+Your PaaS instance paas has been created.""")
+
+        self.assertEqual(result.exit_code, 0)
+        params = self.api_calls['paas.create'][0][0]
+        self.assertEqual(params['datacenter_id'], 3)
+        self.assertEqual(params['size'], 's+')
+        self.assertEqual(params['duration'], '1m')
+        self.assertEqual(params['password'], 'ploki')
+        self.assertTrue(params['name'].startswith('paas'))
+
     def test_create_name(self):
         args = ['--name', '123456']
         result = self.invoke_with_exceptions(paas.create, args,
