@@ -43,10 +43,13 @@ Example:
 
 `API_KEY` allow to specify an API key for the chosen environment. This option is useful when you work with multiple account.
 
+`APIREST_KEY` allow to specify a REST API key for the chosen environment. This option is useful when you work with multiple account.
+
+
 COMMAND-LINE OPTIONS
 =====================
 
--v          Enable or disable verbose mode.
+-v          Enable or disable verbose mode, can be used multiple times to increase verbose level.
 --version   Display version.
 
 Namespaces:
