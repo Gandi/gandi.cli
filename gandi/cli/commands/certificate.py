@@ -469,7 +469,8 @@ def change_dcv(gandi, resource, dcv_method):
     csr = oper['params']['csr']
     package = cert['package']
     altnames = oper['params'].get('altnames')
-    gandi.certificate.advice_dcv_method(csr, package, altnames, dcv_method)
+    gandi.certificate.advice_dcv_method(csr, package, altnames, dcv_method,
+                                        cert_id=id_)
 
 
 @certificate.command('resend-dcv')
