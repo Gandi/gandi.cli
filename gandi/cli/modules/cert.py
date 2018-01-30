@@ -233,9 +233,11 @@ class Certificate(GandiModule):
         return packages[0] if packages else None
 
     @classmethod
-    def advice_dcv_method(cls, csr, package, altnames, dcv_method):
+    def advice_dcv_method(cls, csr, package, altnames, dcv_method, cert_id=None):
         """ Display dcv_method information. """
         params = {'csr': csr, 'package': package, 'dcv_method': dcv_method}
+        if cert_id:
+            params['cert_id'] = cert_id
         result = cls.call('cert.get_dcv_params', params)
         if dcv_method == 'dns':
             cls.echo('You have to add these records in your domain zone :')
@@ -259,8 +261,6 @@ class Certificate(GandiModule):
             params['altnames'] = altnames
         if dcv_method:
             params['dcv_method'] = dcv_method
-            if dcv_method in ('dns', 'file'):
-                cls.advice_dcv_method(csr, package, altnames, dcv_method)
 
         try:
             result = cls.call('cert.create', params)
@@ -271,6 +271,9 @@ class Certificate(GandiModule):
             cls.error(msg)
             raise
 
+        if dcv_method in ('dns', 'file'):
+            cls.advice_dcv_method(csr, package, altnames, dcv_method,
+                                  cert_id=result['params'].get('cert_id'))
         return result
 
     @classmethod
