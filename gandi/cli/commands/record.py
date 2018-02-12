@@ -20,6 +20,8 @@ def record(gandi):
 @record.command()
 @click.option('--zone-id', '-z', default=None, type=click.INT,
               help='Zone ID to use, if not set default zone will be used.')
+@click.option('--name', '-n', default=None, required=False,
+              help='Name of entry to search')
 @click.option('--output', '-o', is_flag=True,
               help='Write the records into a file.')
 @click.option('--format', '-f', type=click.Choice(['text', 'json']),
@@ -28,11 +30,15 @@ def record(gandi):
               show_default=True)
 @click.argument('domain', required=True)
 @pass_gandi
-def list(gandi, domain, zone_id, output, format, limit):
+def list(gandi, domain, name, zone_id, output, format, limit):
     """List DNS zone records for a domain."""
     options = {
         'items_per_page': limit,
     }
+
+    if name is not None:
+        options['~name'] = '%%%s%%' % name
+
     output_keys = ['name', 'type', 'value', 'ttl']
 
     if not zone_id:
