@@ -37,7 +37,7 @@ def list(gandi, domain, name, zone_id, output, format, limit):
     }
 
     if name is not None:
-        options['~name'] = '%%%s%%' % name
+        options.update({'~name' : '%{}%'.format(name)})
 
     output_keys = ['name', 'type', 'value', 'ttl']
 
