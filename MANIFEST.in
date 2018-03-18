@@ -1,6 +1,9 @@
 include README.md
 include CHANGES.rst
 include LICENSE
+include gandi.completion
+include CONTRIBUTING.md
+include gandicli.man.rst
 recursive-include gandi *
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
