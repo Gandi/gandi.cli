@@ -2,6 +2,12 @@
 
 import click
 
+# define unicode for python3
+try:
+    unicode
+except NameError:
+    unicode = str
+
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_contact_info, output_domain
 from gandi.cli.core.params import pass_gandi
@@ -58,12 +64,15 @@ def info(gandi, resource):
               help='Billing contact handle.')
 @click.option('--nameserver', default=None,
               help='Nameserver', multiple=True)
+@click.option('--extra_parameter', default=None, nargs=2,
+              type=(unicode, unicode),
+              help='Extra parameters', multiple=True)
 @click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', metavar='DOMAIN', required=False)
 @pass_gandi
 def create(gandi, resource, domain, duration, owner, admin, tech, bill,
-           nameserver, background):
+           nameserver, extra_parameter, background):
     """Buy a domain."""
     if domain:
         gandi.echo('/!\ --domain option is deprecated and will be removed '
@@ -81,7 +90,7 @@ def create(gandi, resource, domain, duration, owner, admin, tech, bill,
         _domain = click.prompt('Name of the domain')
 
     result = gandi.domain.create(_domain, duration, owner, admin, tech, bill,
-                                 nameserver, background)
+                                 nameserver, extra_parameter, background)
     if background:
         gandi.pretty_echo(result)
 
