@@ -46,8 +46,13 @@ tests_require = ['pytest', 'pytest-cov', 'tox']
 if sys.version_info < (2, 7):
     tests_require += ['unittest2', 'importlib']
 
-if sys.version_info < (3, 3):
-    tests_require.append('mock')
+if sys.version_info < (3, 0):
+    tests_require += ['mock']
+else:
+    if sys.version_info < (3, 3):
+        raise RuntimeError(
+            "Python 3 earlier than 3.3 is not supported"
+            " (sys.version: {})".format(sys.version))
 
 extras_require = {
     'test': tests_require,
