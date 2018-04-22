@@ -6,11 +6,35 @@ import os
 import sys
 
 from setuptools import setup, find_packages
+from setuptools.command.test import test as TestCommand
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.md')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
+
+class PyTest(TestCommand):
+    user_options = [('pytest-args=', 'a', "Arguments to pass into py.test")]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        try:
+            from multiprocessing import cpu_count
+            self.pytest_args = ['-n', str(cpu_count()), '--boxed']
+            self.pytest_args = []
+        except (ImportError, NotImplementedError):
+             self.pytest_args = ['-n', '1', '--boxed']
+
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        import pytest
+
+        errno = pytest.main(self.pytest_args)
+        sys.exit(errno)
 
 with open(os.path.join(here, 'gandi', 'cli', '__init__.py')) as v_file:
     version = re.compile(r".*__version__ = '(.*?)'",
@@ -18,7 +42,7 @@ with open(os.path.join(here, 'gandi', 'cli', '__init__.py')) as v_file:
 
 requires = ['setuptools', 'pyyaml', 'click>=3.1', 'requests', 'IPy']
 
-tests_require = ['nose', 'coverage', 'tox']
+tests_require = ['pytest', 'pytest-cov', 'tox']
 if sys.version_info < (2, 7):
     tests_require += ['unittest2', 'importlib']
 
@@ -51,11 +75,11 @@ setup(name='gandi.cli',
     ],
     url='https://github.com/Gandi/gandi.cli',
     packages=find_packages(),
+    cmdclass={'test': PyTest},
     include_package_data=True,
     zip_safe=False,
     install_requires=requires,
     tests_require=tests_require,
-    test_suite='nose.collector',
     extras_require=extras_require,
     entry_points={
         'console_scripts': [
