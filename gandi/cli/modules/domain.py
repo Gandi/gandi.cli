@@ -28,7 +28,7 @@ class Domain(GandiModule):
 
     @classmethod
     def create(cls, fqdn, duration, owner, admin, tech, bill, nameserver,
-               background):
+               extra_parameter, background):
         """Create a domain."""
         fqdn = fqdn.lower()
         if not background and not cls.intty():
@@ -61,6 +61,11 @@ class Domain(GandiModule):
 
         if nameserver:
             domain_params['nameservers'] = nameserver
+
+        if extra_parameter:
+            domain_params['extra'] = {}
+            for extra in extra_parameter:
+                domain_params['extra'][extra[0]] = extra[1]
 
         result = cls.call('domain.create', fqdn, domain_params)
         if background:

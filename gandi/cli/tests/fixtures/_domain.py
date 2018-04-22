@@ -81,8 +81,12 @@ def available(domains):
 
 
 def create(domain, params):
-    return {'id': 400, 'step': 'WAIT'}
+    ret = {'id': 400, 'step': 'WAIT'}
 
+    if params and 'extra' in params:
+        ret['extra'] = params['extra']
+
+    return ret
 
 def renew(domain, params):
     return {'id': 400, 'step': 'WAIT'}

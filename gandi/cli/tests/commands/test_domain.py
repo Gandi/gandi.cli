@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import sys
 from datetime import datetime
 
 from .base import CommandTestCase
@@ -218,3 +219,21 @@ Duration [1]: \n\
                            '--tech', 'TECH1-GANDI',
                            '--bill', 'BILL1-GANDI',
                            ])
+
+    def test_create_background_argument_extra_parameter(self):
+        args = ['roflozor.com', '--background',
+                '--extra_parameter', 'x-aero_ens_authid', '1234',
+                '--extra_parameter', 'x-aero_ens_authkey', 'password']
+        result = self.invoke_with_exceptions(domain.create, args)
+
+        output = re.sub(r'\[#+\]', '[###]', result.output.strip())
+        if sys.version_info[0] == 2:
+            self.assertEqual(output, """\
+Duration [1]: \n{'extra': {u'x-aero_ens_authid': u'1234', u'x-aero_ens_authkey': u'password'},\n 'id': 400,\n 'step': 'WAIT'}""")
+        else:
+            self.assertEqual(output, """\
+Duration [1]: \n{'extra': {'x-aero_ens_authid': '1234', 'x-aero_ens_authkey': 'password'},\n 'id': 400,\n 'step': 'WAIT'}""")
+
+
+
+        self.assertEqual(result.exit_code, 0)
