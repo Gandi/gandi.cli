@@ -29,13 +29,13 @@ def _mock_output(git_content, command, *args, **kwargs):
         except:
             return ''
 
-    if command == 'git config --local --get remote.$(git config --local --get branch.stable.remote).url': # noqa
+    if command == 'git config --local --get remote.$(git config --local --get branch.stable.remote).url':  # noqa
         try:
             return config.get('remote "production"', 'url')
         except:
             return ''
 
-    if command == 'git config --local --get remote.$(git config --local --get branch.master.remote).url': # noqa
+    if command == 'git config --local --get remote.$(git config --local --get branch.master.remote).url':  # noqa
         try:
             return config.get('remote "origin"', 'url')
         except:

@@ -1,7 +1,5 @@
 """ PaaS instances namespace commands. """
 
-import os
-
 import click
 from click.exceptions import UsageError
 
@@ -126,7 +124,8 @@ def attach(gandi, name, vhost, remote):
 
 @cli.command()
 @click.option('--remote', default='gandi', help="Specify the remote's name")
-@click.option('--branch', default='master', help="Specify the branch to deploy")
+@click.option('--branch', default='master',
+              help="Specify the branch to deploy")
 @pass_gandi
 def deploy(gandi, remote, branch):
     """Deploy code on the instance's remote vhost corresponding to current

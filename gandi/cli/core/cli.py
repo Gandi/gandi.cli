@@ -23,6 +23,7 @@ def add_help_option(self):
     """Add a help option to the command."""
     click.help_option(*('--help', '-h'))(self)
 
+
 click.Command.add_help_option = add_help_option
 
 # XXX: patch each command with an epilog

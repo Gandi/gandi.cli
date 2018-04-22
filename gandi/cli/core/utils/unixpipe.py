@@ -191,6 +191,7 @@ def setup(addr, user, remote_path, local_key=None):
 
     return port
 
+
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'server':
         tcp4_to_unix(12042, sys.argv[2])

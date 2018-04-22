@@ -18,7 +18,6 @@ def webacc(gandi):
     """Commands related to hosting web accelerators."""
 
 
-
 @webacc.command()
 @click.option('--limit', help="Limit the number of results", default=100,
               show_default=True)

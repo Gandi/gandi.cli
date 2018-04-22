@@ -49,7 +49,7 @@ class Status(GandiModule):
         if current:
             current_params = [('current', 'true')]
 
-        filter_url = uparse.urlencode(sorted(list(filters.items())) + current_params) # noqa
+        filter_url = uparse.urlencode(sorted(list(filters.items())) + current_params)  # noqa
         events = cls.json_get('%s/events?%s' % (cls.api_url, filter_url),
                               empty_key=True, send_key=False)
         return events
