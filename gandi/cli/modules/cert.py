@@ -233,7 +233,8 @@ class Certificate(GandiModule):
         return packages[0] if packages else None
 
     @classmethod
-    def advice_dcv_method(cls, csr, package, altnames, dcv_method, cert_id=None):
+    def advice_dcv_method(cls, csr, package, altnames, dcv_method,
+                          cert_id=None):
         """ Display dcv_method information. """
         params = {'csr': csr, 'package': package, 'dcv_method': dcv_method}
         if cert_id:

@@ -47,7 +47,7 @@ def _mock_requests(status, method, url, *args, **kwargs):
                           {"description": "Email",
                           "name": "Email",
                           "status": "SUNNY"}]"""
-        if url == 'https://status.gandi.net/api/events?category=Incident&current=true': # noqa
+        if url == 'https://status.gandi.net/api/events?category=Incident&current=true':  # noqa
             content = """[]"""
 
     if status == 'STORMY':
@@ -73,7 +73,7 @@ def _mock_requests(status, method, url, *args, **kwargs):
                           {"description": "Email",
                           "name": "Email",
                           "status": "SUNNY"}]"""
-        if url == 'https://status.gandi.net/api/events?category=Incident&services=PAAS&current=true': # noqa
+        if url == 'https://status.gandi.net/api/events?category=Incident&services=PAAS&current=true':  # noqa
             content = """
                 [{"category": "Incident",
                 "date_end": "2014-10-08T06:20:00+00:00",
@@ -111,7 +111,7 @@ def _mock_requests(status, method, url, *args, **kwargs):
                           {"description": "Email",
                           "name": "Email",
                           "status": "SUNNY"}]"""
-        if url == 'https://status.gandi.net/api/events?category=Incident&current=true': # noqa
+        if url == 'https://status.gandi.net/api/events?category=Incident&current=true':  # noqa
             content = """
                 [{"category": "Incident",
                 "date_end": "2015-04-15T22:06:43+00:00",
