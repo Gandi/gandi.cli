@@ -191,7 +191,7 @@ Create a virtual machine with the default configuration and a random hostname.
 
     $ gandi vm update temp1415183684 --memory 2048 --cores 2
 
-Set the   VM's RAM to 2GB and add a CPU core on the fly.
+Set the VM's RAM to 2GB and add a CPU core on the fly.
 
 #### 3. Create a custom VM
 
@@ -340,7 +340,7 @@ And then create the vhost.
     $ gandi vhost create domain.tld --paas "PaasName" --ssl
 
 
-#### 3. You don't have any certificates but you plan to get one       at Gandi
+#### 3. You don't have any certificates but you plan to get one at Gandi
 
 
 Create the certificate.
