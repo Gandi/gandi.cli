@@ -65,13 +65,13 @@ Using our classic (V4) website:
 1. To get started, you can create a [free Gandi account](https://v4.gandi.net/contact/create) and get your Gandi Handle
 2. [Generate your Production API Token](https://v4.gandi.net/admin/api_key) from the account admin section
 3. You may also want to [top-up your prepaid account](https://v4.gandi.net/prepaid)
-4. To manipulate VM's, you also need to [purchase credits](https://www.gandi.net/credit/buy) (you can use funds from your prepaid account)
+4. To manipulate VMs, you also need to [purchase credits](https://www.gandi.net/credit/buy) (you can use funds from your prepaid account)
 
 Using our latest (V5) website:
 1. To get started, you can create a [free Gandi account](https://account.gandi.net/en/create_account) and get your Gandi username
 2. [Generate your Production API Token](https://account.gandi.net/en/) from within the account Security section
 3. You may also want to [top-up your prepaid account](https://admin.gandi.net/billing/)
-4. To manipulate VM's, you currently need to follow above steps to create an account on our classic (V4) website.
+4. To manipulate VMs, you currently need to follow above steps to create an account on our classic (V4) website.
 
 
 Then run the setup
@@ -94,11 +94,11 @@ See the [Advanced Usage](#advanced-usage) section for more details on configurat
 
 ### Registering a Domain Name
 
-Gandi is a domain name registrar since 1999. The oldest in France and one of the world's leading, Gandi is recognized for its No Bullshit™ trademark and approach to domain names.
+Gandi has been a domain name registrar since 1999. The oldest in France and one of the world's leading, Gandi is recognized for its No Bullshit™ trademark and approach to domain names.
 
 You can now buy and manage domains in any of the 500+ TLD's that Gandi offers from the command line.
 
-[Know more about Gandi Domains on the website](https://www.gandi.net/domain).
+[Learn more about Gandi Domains on the website](https://www.gandi.net/domain).
 
 #### 1. Buy a domain using the interactive prompt
 
@@ -263,7 +263,7 @@ Gandi CLI can choose the right certificate type for you depending on the number 
 
 #### 2. Create the Certificate
 
-WARNING : This command is billable.
+WARNING: This command is billable.
 
 To request a certificate, you need to use a private key to generate and sign a CSR (Certificate Signing Request) that will be supplied to Gandi.
 
@@ -316,7 +316,7 @@ Find information on how to use your certificate with different servers on [our w
 ### Adding a Web Application vhost with SSL
 
 
-Gandi allow you to associate a certificate with your vhost.
+Gandi allows you to associate a certificate with your vhost.
 
 
 #### 1. You already have the matching certificate at Gandi
@@ -340,7 +340,7 @@ And then create the vhost.
     $ gandi vhost create domain.tld --paas "PaasName" --ssl
 
 
-#### 3. You don't have any certificate and plan to get it at Gandi
+#### 3. You don't have any certificates but you plan to get one at Gandi
 
 
 Create the certificate.
@@ -422,7 +422,7 @@ Run `$ gandi setup` to configure your settings (see [Getting started](#getting-s
 Use `$ gandi config` to set and edit custom variables.
 The default variables are:
   * `sshkey`         # path to your public ssh key
-  * `api.host`       # the URL of the API endpoint to use (i.e OTE or Production)
+  * `api.host`       # the URL of the API endpoint to use (i.e. OTE or Production)
   * `api.key`        # the relevant API key for the chosen endpoint
 
 
