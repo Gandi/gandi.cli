@@ -242,3 +242,25 @@ def zone_record_update(zone_id, version, opts, data):
 
 def zone_record_set(zone_id, version, data):
     return
+
+
+def dnssec_delete(key_id):
+    return {'id': 666, 'step': 'WAIT'}
+
+
+def dnssec_list(domain):
+    return [{'algorithm': 5,
+             'date_created': datetime(2012, 2, 24, 17, 16, 8),
+             'digest': '457c626c008cc70d68133254abc4ee4eb79e4e6c99f9423b60b543fa8a69e6ac',
+             'digest_type': 2,
+             'flags': 257,
+             'id': 125,
+             'keytag': 9301,
+             'public_key': 'AwEAAdYixYvq9eJLRQcxUeYJWaxAGXiP/K1/C7XHbUWGzA8AHCRp81FA'
+                           'mfwcw1FrJ7bMViEegewPDGciQSv5HotPPOynUmkZbgztOeejH/+3Il/c'
+                           'M8SW4Et0i+99S7l9as+FI3AYOhsllDJK1WM9smn0S/9igfpR2dGmCyDU ZfeR1A49\n'}]
+
+
+
+def dnssec_create(domain, params):
+    return {'id': 667, 'step': 'WAIT'}

@@ -467,6 +467,28 @@ class DNSRecordsParamType(GandiChoice):
         return click.Choice.convert(self, value, param, ctx)
 
 
+class AlgorithmType(click.Choice):
+    """ Choice parameter to create DNSSEC key """
+
+    name = 'algorithm'
+    choices = [1, 2, 3, 5, 6, 7, 8, 10, 12, 13, 14, 15, 16, 253, 254]
+
+    def __init__(self):
+        """ Initialize choices list. """
+        pass
+
+
+class FlagsType(click.Choice):
+    """ Choice parameter to create DNSSEC key """
+
+    name = 'flags'
+    choices = [256, 257]
+
+    def __init__(self):
+        """ Initialize choices list. """
+        pass
+
+
 DATACENTER = DatacenterParamType()
 PAAS_TYPE = PaasTypeParamType()
 DISK_IMAGE = DiskImageParamType()
@@ -487,6 +509,8 @@ WEBACC_NAME = WebAccNameParamType()
 WEBACC_VHOST_NAME = WebAccVhostParamType()
 OPER_STEP = OperStepParamType()
 DNS_RECORDS = DNSRecordsParamType()
+DNSSEC_ALGORITHM = AlgorithmType()
+DNSSEC_FLAGS = FlagsType()
 
 
 class GandiOption(click.Option):
