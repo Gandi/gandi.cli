@@ -1,6 +1,15 @@
 Changelog
 =========
 
+1.3
+---
+
+* Use pytest instead of nose
+* Add extra parameter in domain create
+* Add support of Python 3.7
+* Fixes #245: Add support of DNSSEC
+* Fixes #250: Drop support of Python < 3.3
+
 1.2
 ---
 

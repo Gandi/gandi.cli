@@ -1,3 +1,13 @@
+gandicli (1.3) unstable; urgency=medium
+
+  * Use pytest instead of nose
+  * Add extra parameter in domain create
+  * Drop support of Python < 3.3
+  * Add support of Python 3.7
+  * Add support of DNSSEC
+
+ -- grigouze <grigouze@gandi.net>  Tue, 11 Sep 2018 19:20:51 +0200
+
 gandicli (1.2) unstable; urgency=medium
 
   * Add support for paas size s+ for creation/update
