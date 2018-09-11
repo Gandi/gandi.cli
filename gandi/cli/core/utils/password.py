@@ -9,7 +9,7 @@ import string
 PUNCTUATION = string.punctuation.replace(chr(0x5c), '')
 
 
-def mkpassword(length=16, chars=None, punctuation=None):
+def mkpassword(length=16, chars=None, punctuation=1):
     """Generates a random ascii string - useful to generate authinfos
 
     :param length: string wanted length
@@ -40,5 +40,10 @@ def mkpassword(length=16, chars=None, punctuation=None):
         for _ in range(punctuation):
             data.append(random.choice(PUNCTUATION))
         random.shuffle(data)
+
+    # Mandatory digit
+    data = data[:-1]
+    data.append(random.choice(string.digits))
+    random.shuffle(data)
 
     return ''.join(data)
