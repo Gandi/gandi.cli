@@ -88,6 +88,7 @@ def create(domain, params):
 
     return ret
 
+
 def renew(domain, params):
     return {'id': 400, 'step': 'WAIT'}
 
@@ -251,15 +252,16 @@ def dnssec_delete(key_id):
 def dnssec_list(domain):
     return [{'algorithm': 5,
              'date_created': datetime(2012, 2, 24, 17, 16, 8),
-             'digest': '457c626c008cc70d68133254abc4ee4eb79e4e6c99f9423b60b543fa8a69e6ac',
+             'digest': '457c626c008cc70d68133254abc4ee4eb79e4e6c99f9423b60b543'
+                       'fa8a69e6ac',
              'digest_type': 2,
              'flags': 257,
              'id': 125,
              'keytag': 9301,
-             'public_key': 'AwEAAdYixYvq9eJLRQcxUeYJWaxAGXiP/K1/C7XHbUWGzA8AHCRp81FA'
-                           'mfwcw1FrJ7bMViEegewPDGciQSv5HotPPOynUmkZbgztOeejH/+3Il/c'
-                           'M8SW4Et0i+99S7l9as+FI3AYOhsllDJK1WM9smn0S/9igfpR2dGmCyDU ZfeR1A49\n'}]
-
+             'public_key': 'AwEAAdYixYvq9eJLRQcxUeYJWaxAGXiP/K1/C7XHbUWGzA8AHC'
+                           'Rp81FAmfwcw1FrJ7bMViEegewPDGciQSv5HotPPOynUmkZbgzt'
+                           'OeejH/+3Il/cM8SW4Et0i+99S7l9as+FI3AYOhsllDJK1WM9sm'
+                           'n0S/9igfpR2dGmCyDU ZfeR1A49\n'}]
 
 
 def dnssec_create(domain, params):

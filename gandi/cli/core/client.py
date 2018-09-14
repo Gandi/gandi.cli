@@ -115,7 +115,7 @@ class JsonClient(object):
             if isinstance(err, requests.HTTPError):
                 try:
                     resp = response.json()
-                except:
+                except Exception:
                     msg = 'An unknown error has occurred: %s' % err
                     raise APICallFailed(msg)
 

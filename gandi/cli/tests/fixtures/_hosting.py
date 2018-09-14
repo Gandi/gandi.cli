@@ -1377,7 +1377,7 @@ def ssh_list(options):
     ret = [{'fingerprint': 'b3:11:67:10:2e:1b:a5:66:ed:16:24:98:3e:2e:ed:f5',
             'id': 134,
             'name': 'default',
-            'value': 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC63QZAW3tusdv+JuyzOoXTND9/wxKogMwZbxBPPtoN7Hjnyn0kUUHMJ6ji5xpbatRYKOeGAoZDW2TXojvbJdQj7tWsRr7ES0qB9qhDGVSDIJWRQ6f9MQCCLjV5tpBTAwb unknown@lol.cat'}, # noqa
+            'value': 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC63QZAW3tusdv+JuyzOoXTND9/wxKogMwZbxBPPtoN7Hjnyn0kUUHMJ6ji5xpbatRYKOeGAoZDW2TXojvbJdQj7tWsRr7ES0qB9qhDGVSDIJWRQ6f9MQCCLjV5tpBTAwb unknown@lol.cat'},  # noqa
            {'fingerprint': '09:11:21:e3:90:3c:7d:d5:06:d9:6f:f9:36:e1:99:a6',
             'id': 141,
             'name': 'mysecretkey'}]

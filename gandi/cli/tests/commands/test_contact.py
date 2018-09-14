@@ -155,4 +155,4 @@ Will save your apikey into the config file.""")
         self.assertTrue('api' in GandiModule._conffiles['global'])
 
         api_key = GandiModule._conffiles['global']['api'].get('key')
-        self.assertEqual(api_key,'apikey0002')
+        self.assertEqual(api_key, 'apikey0002')

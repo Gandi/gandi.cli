@@ -483,7 +483,7 @@ class Iaas(GandiModule, SshkeyHelper):
             ip_addr = '[%s]' % ip_addr
 
         cmd.extend((local_file, '%s@%s:%s' %
-                   (login, ip_addr, remote_file),))
+                    (login, ip_addr, remote_file),))
         cls.echo('Running %s' % ' '.join(cmd))
         for _ in range(5):
             ret = cls.execute(cmd, False)
@@ -569,7 +569,7 @@ class Image(GandiModule):
         """Retrieve disk image id associated to a label."""
         result = cls.list(datacenter=datacenter)
         image_labels = dict([(image['label'], image['disk_id'])
-                            for image in result])
+                             for image in result])
 
         return image_labels.get(label)
 

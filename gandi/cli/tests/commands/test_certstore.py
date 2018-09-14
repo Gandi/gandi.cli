@@ -23,7 +23,7 @@ subject   : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test3.domain.f
 subject   : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test4.domain.fr
 ----------
 subject   : /OU=Domain Control Validated/OU=Gandi Standard Wildcard SSL/CN=*.domain.fr
-""")
+""")  # noqa
         self.assertEqual(result.exit_code, 0)
 
     def test_list_all(self):
@@ -37,80 +37,81 @@ id          : 1
 subject     : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test1.domain.fr
 date_created: 20150407T00:00:00
 date_expire : 20160316T00:00:00
-	----------
-	fqdn      : test1.domain.fr
-	----------
-	vhost     : test1.domain.fr
-	type      : paas
+\t----------
+\tfqdn      : test1.domain.fr
+\t----------
+\tvhost     : test1.domain.fr
+\ttype      : paas
 ----------
 id          : 2
 subject     : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test1.domain.fr
 date_created: 20150407T00:00:00
 date_expire : 20160316T00:00:00
-	----------
-	fqdn      : test1.domain.fr
-	----------
-	vhost     : test1.domain.fr
-	type      : paas
+\t----------
+\tfqdn      : test1.domain.fr
+\t----------
+\tvhost     : test1.domain.fr
+\ttype      : paas
 ----------
 id          : 3
 subject     : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test2.domain.fr
 date_created: 20150408T00:00:00
 date_expire : 20160408T00:00:00
-	----------
-	fqdn      : test2.domain.fr
+\t----------
+\tfqdn      : test2.domain.fr
 ----------
 id          : 4
 subject     : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test3.domain.fr
 date_created: 20150408T00:00:00
 date_expire : 20160408T00:00:00
-	----------
-	fqdn      : test3.domain.fr
+\t----------
+\tfqdn      : test3.domain.fr
 ----------
 id          : 5
 subject     : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test4.domain.fr
 date_created: 20150408T00:00:00
 date_expire : 20160408T00:00:00
-	----------
-	fqdn      : test4.domain.fr
+\t----------
+\tfqdn      : test4.domain.fr
 ----------
 id          : 6
 subject     : /OU=Domain Control Validated/OU=Gandi Standard Wildcard SSL/CN=*.domain.fr
 date_created: 20150409T00:00:00
 date_expire : 20160409T00:00:00
-	----------
-	fqdn      : *.domain.fr
-	----------
-	vhost     : *.domain.fr
-	type      : paas
-""")
+\t----------
+\tfqdn      : *.domain.fr
+\t----------
+\tvhost     : *.domain.fr
+\ttype      : paas
+""")  # noqa
         self.assertEqual(result.exit_code, 0)
 
     def test_info_fqdn(self):
 
-        result = self.invoke_with_exceptions(certstore.info, ['test1.domain.fr'])
+        result = self.invoke_with_exceptions(
+            certstore.info, ['test1.domain.fr'])
 
         self.assertEqual(result.output, """\
 id          : 1
 subject     : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test1.domain.fr
 date_created: 20150407T00:00:00
 date_expire : 20160316T00:00:00
-	----------
-	fqdn      : test1.domain.fr
-	----------
-	vhost     : test1.domain.fr
-	type      : paas
+\t----------
+\tfqdn      : test1.domain.fr
+\t----------
+\tvhost     : test1.domain.fr
+\ttype      : paas
 ----------
 id          : 2
 subject     : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test1.domain.fr
 date_created: 20150407T00:00:00
 date_expire : 20160316T00:00:00
-	----------
-	fqdn      : test1.domain.fr
-	----------
-	vhost     : test1.domain.fr
-	type      : paas
-""")
+\t----------
+\tfqdn      : test1.domain.fr
+\t----------
+\tvhost     : test1.domain.fr
+\ttype      : paas
+""")  # noqa
         self.assertEqual(result.exit_code, 0)
 
     def test_info_id(self):
@@ -121,12 +122,12 @@ id          : 1
 subject     : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test1.domain.fr
 date_created: 20150407T00:00:00
 date_expire : 20160316T00:00:00
-	----------
-	fqdn      : test1.domain.fr
-	----------
-	vhost     : test1.domain.fr
-	type      : paas
-""")
+\t----------
+\tfqdn      : test1.domain.fr
+\t----------
+\tvhost     : test1.domain.fr
+\ttype      : paas
+""")  # noqa
         self.assertEqual(result.exit_code, 0)
 
     def test_create(self):
@@ -138,9 +139,9 @@ id          : 5
 subject     : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test4.domain.fr
 date_created: 20150408T00:00:00
 date_expire : 20160408T00:00:00
-	----------
-	fqdn      : test4.domain.fr
-""")
+\t----------
+\tfqdn      : test4.domain.fr
+""")  # noqa
         self.assertEqual(result.exit_code, 0)
 
     def test_create_id(self):
@@ -152,9 +153,9 @@ id          : 5
 subject     : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test4.domain.fr
 date_created: 20150408T00:00:00
 date_expire : 20160408T00:00:00
-	----------
-	fqdn      : test4.domain.fr
-""")
+\t----------
+\tfqdn      : test4.domain.fr
+""")  # noqa
         self.assertEqual(result.exit_code, 0)
 
     def test_create_missing(self):
@@ -176,9 +177,9 @@ id          : 5
 subject     : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test4.domain.fr
 date_created: 20150408T00:00:00
 date_expire : 20160408T00:00:00
-	----------
-	fqdn      : test4.domain.fr
-""")
+\t----------
+\tfqdn      : test4.domain.fr
+""")  # noqa
         self.assertEqual(result.exit_code, 0)
 
     def test_create_parameter_files(self):
@@ -198,9 +199,9 @@ id          : 5
 subject     : /OU=Domain Control Validated/OU=Gandi Standard SSL/CN=test4.domain.fr
 date_created: 20150408T00:00:00
 date_expire : 20160408T00:00:00
-	----------
-	fqdn      : test4.domain.fr
-""")
+\t----------
+\tfqdn      : test4.domain.fr
+""")  # noqa
         self.assertEqual(result.exit_code, 0)
 
     def test_delete(self):

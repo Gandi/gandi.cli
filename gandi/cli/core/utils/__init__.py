@@ -468,7 +468,7 @@ def output_json(gandi, format, value):
         gandi.echo(json.dumps(value, default=date_handler, sort_keys=True))
     elif format == 'pretty-json':
         gandi.echo(json.dumps(value, default=date_handler, sort_keys=True,
-                   indent=2, separators=(',', ': ')))
+                              indent=2, separators=(',', ': ')))
 
 
 def output_sub_line(gandi, key, val, justify):

@@ -10,8 +10,6 @@ try:
 except NameError:
     basestring = (str, bytes)
 
-type_list = list
-
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_cert, output_cert_oper, display_rows
 from gandi.cli.core.params import (pass_gandi, IntChoice,
@@ -19,6 +17,8 @@ from gandi.cli.core.params import (pass_gandi, IntChoice,
                                    CERTIFICATE_PACKAGE_TYPE,
                                    CERTIFICATE_PACKAGE_MAX,
                                    CERTIFICATE_PACKAGE_WARRANTY)
+
+type_list = list
 
 
 @cli.group(name='certificate')
