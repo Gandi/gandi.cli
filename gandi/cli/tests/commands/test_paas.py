@@ -449,7 +449,9 @@ step      : WAIT
 """)
         self.assertEqual(result.exit_code, 0)
 
-    def test_create_default(self):
+    @mock.patch('gandi.cli.modules.paas.hash_password')
+    def test_create_default(self, mock_hash_password):
+        mock_hash_password.return_value = '- hash pwd -'
         args = []
         result = self.invoke_with_exceptions(paas.create, args,
                                              obj=GandiContextHelper(),
@@ -468,10 +470,12 @@ Your PaaS instance paas has been created.""")
         self.assertEqual(params['datacenter_id'], 3)
         self.assertEqual(params['size'], 's')
         self.assertEqual(params['duration'], '1m')
-        self.assertEqual(params['password'], 'ploki')
+        self.assertEqual(params['password'], '- hash pwd -')
         self.assertTrue(params['name'].startswith('paas'))
 
-    def test_create_size(self):
+    @mock.patch('gandi.cli.modules.paas.hash_password')
+    def test_create_size(self, mock_hash_password):
+        mock_hash_password.return_value = '- hash pwd -'
         args = ['--size', 's+']
         result = self.invoke_with_exceptions(paas.create, args,
                                              obj=GandiContextHelper(),
@@ -490,7 +494,7 @@ Your PaaS instance paas has been created.""")
         self.assertEqual(params['datacenter_id'], 3)
         self.assertEqual(params['size'], 's+')
         self.assertEqual(params['duration'], '1m')
-        self.assertEqual(params['password'], 'ploki')
+        self.assertEqual(params['password'], '- hash pwd -')
         self.assertTrue(params['name'].startswith('paas'))
 
     def test_create_name(self):
@@ -553,7 +557,9 @@ Please give the private key for certificate id 706 (CN: inter.net)""")
 
         self.assertEqual(result.exit_code, 0)
 
-    def test_create_datacenter_limited(self):
+    @mock.patch('gandi.cli.modules.paas.hash_password')
+    def test_create_datacenter_limited(self, mock_hash_password):
+        mock_hash_password.return_value = '- hash pwd -'
         args = ['--datacenter', 'FR-SD2']
         result = self.invoke_with_exceptions(paas.create, args,
                                              obj=GandiContextHelper(),
@@ -574,7 +580,7 @@ Your PaaS instance paas has been created.""")
         self.assertEqual(params['datacenter_id'], 1)
         self.assertEqual(params['size'], 's')
         self.assertEqual(params['duration'], '1m')
-        self.assertEqual(params['password'], 'ploki')
+        self.assertEqual(params['password'], '- hash pwd -')
         self.assertTrue(params['name'].startswith('paas'))
 
         self.assertEqual(result.exit_code, 0)

@@ -8,6 +8,7 @@ import errno
 
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import randomstring
+from gandi.cli.core.utils.password import hash_password
 from gandi.cli.modules.datacenter import Datacenter
 from gandi.cli.modules.sshkey import SshkeyHelper
 from gandi.cli.core.utils import MigrationNotFinalized
@@ -180,7 +181,7 @@ class Iaas(GandiModule, SshkeyHelper):
             vm_params['console'] = console
 
         if password:
-            vm_params['password'] = password
+            vm_params['password'] = hash_password(password)
 
         if max_memory:
             vm_params['vm_max_memory'] = max_memory
@@ -224,7 +225,7 @@ class Iaas(GandiModule, SshkeyHelper):
             vm_params['run'] = run
 
         if password:
-            vm_params['password'] = password
+            vm_params['password'] = hash_password(password)
 
         if ip_version:
             vm_params['ip_version'] = ip_version

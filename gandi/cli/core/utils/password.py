@@ -1,7 +1,9 @@
 # coding: utf-8
 """Contains methods to generate a random password."""
 
+import crypt
 import random
+import re
 import string
 
 # remove backslash from generated password to avoid
@@ -42,3 +44,26 @@ def mkpassword(length=16, chars=None, punctuation=None):
         random.shuffle(data)
 
     return ''.join(data)
+
+
+def hash_password(password):
+    """
+    Hash (if not already done) a string valid for use with PAAS/IAAS password
+
+    WARNING: Using a hash password will make impossible for the API to
+             check/validate the password strength so you should check it
+             before.
+
+    :param password: The string to hash
+    :type  password: ``str``
+
+    :rtype: ``str``
+    """
+
+    # crypt SHA-512
+    if re.match('^\$6\$[a-zA-Z0-9\./]{16}\$[a-zA-Z0-9\./]{86}$', password):
+        return password
+
+    salt = mkpassword(length=16,
+                      chars=string.ascii_letters + string.digits + './')
+    return crypt.crypt(password, '$6$%s$' % (salt, ))

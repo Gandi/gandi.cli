@@ -834,7 +834,9 @@ Updating your Virtual Machine server01.
 """)
         self.assertEqual(result.exit_code, 0)
 
-    def test_update_password(self):
+    @mock.patch('gandi.cli.modules.iaas.hash_password')
+    def test_update_password(self, mock_hash_password):
+        mock_hash_password.return_value = '- hash pwd -'
         args = ['server01', '--password']
         result = self.invoke_with_exceptions(vm.update, args,
                                              input='plokiploki\nplokiploki\n')
@@ -842,6 +844,9 @@ Updating your Virtual Machine server01.
                                 result.output.strip()), """\
 password: \nRepeat for confirmation: \nUpdating your Virtual Machine server01.
 \rProgress: [###] 100.00%  00:00:00""")
+
+        params = self.api_calls['hosting.vm.update'][0][1]
+        self.assertEqual(params['password'], '- hash pwd -')
 
         self.assertEqual(result.exit_code, 0)
 
@@ -942,7 +947,9 @@ ssh root@95.142.160.181 sudo reboot""")
 
         self.assertEqual(result.exit_code, 0)
 
-    def test_create_default_hostname_ok(self):
+    @mock.patch('gandi.cli.modules.iaas.hash_password')
+    def test_create_default_hostname_ok(self, mock_hash_password):
+        mock_hash_password.return_value = '- hash pwd -'
         args = ['--hostname', 'server500']
         result = self.invoke_with_exceptions(vm.create, args,
                                              obj=GandiContextHelper(),
@@ -956,9 +963,14 @@ Creating your Virtual Machine server500.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine server500 has been created.""")
 
+        params = self.api_calls['hosting.vm.create_from'][0][0]
+        self.assertEqual(params['password'], '- hash pwd -')
+
         self.assertEqual(result.exit_code, 0)
 
-    def test_create_default_ok(self):
+    @mock.patch('gandi.cli.modules.iaas.hash_password')
+    def test_create_default_ok(self, mock_hash_password):
+        mock_hash_password.return_value = '- hash pwd -'
         args = []
         result = self.invoke_with_exceptions(vm.create, args,
                                              obj=GandiContextHelper(),
@@ -972,6 +984,9 @@ password: \nRepeat for confirmation: \n* root user will be created.
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
+
+        params = self.api_calls['hosting.vm.create_from'][0][0]
+        self.assertEqual(params['password'], '- hash pwd -')
 
         self.assertEqual(result.exit_code, 0)
 
@@ -1062,7 +1077,9 @@ Your Virtual Machine vm has been created.""")
 
         self.assertEqual(result.exit_code, 0)
 
-    def test_create_gen_password_root_ok(self):
+    @mock.patch('gandi.cli.modules.iaas.hash_password')
+    def test_create_gen_password_root_ok(self, mock_hash_password):
+        mock_hash_password.return_value = '- hash pwd -'
         args = ['--gen-password']
         result = self.invoke_with_exceptions(vm.create, args,
                                              obj=GandiContextHelper())
@@ -1079,6 +1096,9 @@ Your Virtual Machine vm has been created.""")
 Creating your Virtual Machine vm.
 \rProgress: [###] 100.00%  00:00:00  \n\
 Your Virtual Machine vm has been created.""")
+
+        params = self.api_calls['hosting.vm.create_from'][0][0]
+        self.assertEqual(params['password'], '- hash pwd -')
 
         self.assertEqual(result.exit_code, 0)
 
