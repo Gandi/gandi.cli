@@ -109,7 +109,7 @@ def info(gandi, resource, format):
             iface = gandi.iface.info(ip['iface_id'])
             server['name'] = gandi.iaas.info(iface['vm_id'])['hostname']
             output_servers = ['name', 'ip', 'port', 'state']
-        except:
+        except Exception:
             warningmsg = ('\tBackend with ip address %s no longer exists.'
                           '\n\tYou should remove it.' % server['ip'])
             gandi.echo(warningmsg)

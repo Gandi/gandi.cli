@@ -9,11 +9,11 @@ try:
 except NameError:
     basestring = (str, bytes)
 
-type_list = list
-
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import output_hostedcert
 from gandi.cli.core.params import pass_gandi
+
+type_list = list
 
 
 @cli.group(name='certstore')

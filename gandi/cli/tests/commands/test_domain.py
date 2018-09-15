@@ -229,11 +229,9 @@ Duration [1]: \n\
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
         if sys.version_info[0] == 2:
             self.assertEqual(output, """\
-Duration [1]: \n{'extra': {u'x-aero_ens_authid': u'1234', u'x-aero_ens_authkey': u'password'},\n 'id': 400,\n 'step': 'WAIT'}""")
+Duration [1]: \n{'extra': {u'x-aero_ens_authid': u'1234', u'x-aero_ens_authkey': u'password'},\n 'id': 400,\n 'step': 'WAIT'}""")  # noqa
         else:
             self.assertEqual(output, """\
-Duration [1]: \n{'extra': {'x-aero_ens_authid': '1234', 'x-aero_ens_authkey': 'password'},\n 'id': 400,\n 'step': 'WAIT'}""")
-
-
+Duration [1]: \n{'extra': {'x-aero_ens_authid': '1234', 'x-aero_ens_authkey': 'password'},\n 'id': 400,\n 'step': 'WAIT'}""")  # noqa
 
         self.assertEqual(result.exit_code, 0)

@@ -113,7 +113,7 @@ class Certificate(GandiModule):
             if len(set(hosts) - cert_hosts) == 0:
                 if (possible and possible['date_end'] < cert['date_end']
                         or not possible):
-                        possible = cert
+                    possible = cert
 
         return possible
 

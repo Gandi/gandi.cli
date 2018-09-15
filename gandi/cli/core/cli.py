@@ -14,7 +14,7 @@ from gandi.cli import __version__
 
 try:
     use_man_epilog = platform.system() == 'Linux'
-except:
+except Exception:
     pass
 
 
