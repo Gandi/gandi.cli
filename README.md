@@ -438,6 +438,8 @@ You can check the [contributors list](https://github.com/Gandi/gandi.cli/graphs/
 [![Coverage Status](https://coveralls.io/repos/Gandi/gandi.cli/badge.svg?branch=master)](https://coveralls.io/r/Gandi/gandi.cli?branch=master)
 [![Pip Version](https://img.shields.io/pypi/v/gandi.cli.svg)](https://pypi.python.org/pypi/gandi.cli)
 [![Python Version](https://img.shields.io/pypi/pyversions/gandi.cli.svg)](https://pypi.python.org/pypi/gandi.cli)
+[![Code Quality: Python](https://img.shields.io/lgtm/grade/python/g/Gandi/gandi.cli.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gandi/gandi.cli/context:python)
+[![Total Alerts](https://img.shields.io/lgtm/alerts/g/Gandi/gandi.cli.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gandi/gandi.cli/alerts)
 
 ## License / Copying
 
