@@ -41,7 +41,7 @@ with open(os.path.join(here, 'gandi', 'cli', '__init__.py')) as v_file:
     version = re.compile(r".*__version__ = '(.*?)'",
                          re.S).match(v_file.read()).group(1)
 
-requires = ['setuptools', 'pyyaml', 'click>=3.1', 'requests', 'IPy']
+requires = ['setuptools', 'pyyaml', 'click>=3.1, <6.7', 'requests', 'IPy']
 
 tests_require = ['pytest', 'pytest-cov', 'tox']
 if sys.version_info < (2, 7):
