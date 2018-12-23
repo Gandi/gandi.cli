@@ -112,7 +112,7 @@ def info(gandi, resource):
 
 
 @disk.command()
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
@@ -139,7 +139,7 @@ def detach(gandi, resource, background, force):
 
 
 @disk.command()
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('-r', '--read-only', default=False, is_flag=True,
               help='Attach disk as read-only')
@@ -197,7 +197,7 @@ def attach(gandi, disk, vm, position, read_only, background, force):
               default=None, type=SNAPSHOTPROFILE_VM)
 @click.option('--delete-snapshotprofile', default=False, is_flag=True,
               help='Remove snapshot profile associated to this disk.')
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
 @click.argument('resource')
@@ -233,7 +233,7 @@ def update(gandi, resource, cmdline, kernel, name, size,
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='run command in background mode (default=False).')
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
@@ -274,7 +274,7 @@ def delete(gandi, resource, force, background):
               help='Create a disk from a disk or a snapshot.')
 @option('--datacenter', type=DATACENTER, default='FR-SD5',
         help='Datacenter where the disk will be created.')
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
 def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
@@ -312,7 +312,7 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
 @disk.command()
 @click.option('--name', type=click.STRING, default=None,
               help='Snapshot name, will be generated if not provided.')
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource')
 @pass_gandi
@@ -331,7 +331,7 @@ def snapshot(gandi, name, resource, background):
 
 
 @disk.command()
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', required=True)
 @pass_gandi
@@ -345,7 +345,7 @@ def rollback(gandi, resource, background):
 
 
 @disk.command()
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
