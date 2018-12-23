@@ -273,10 +273,10 @@ def export(gandi, resource, output, force, intermediate):
 @certificate.command()
 @click.option('--csr', required=False,
               help='Csr of the new certificate (filename or content).')
-@click.option('--pk', '--private-key', required=False,
+@click.option('--private-key', '--pk', required=False,
               help='Private key to use to generate the CSR (filename or '
               'content).')
-@click.option('--cn', '--common-name', required=False,
+@click.option('--common-name', '--cn', required=False,
               help='Common name to use when generating the CSR.')
 @click.option('--country', required=False,
               help='The generated CSR country (C).')
@@ -369,17 +369,17 @@ def create(gandi, csr, private_key, common_name, country, state, city,
 @certificate.command()
 @click.argument('resource', nargs=1, required=True)
 @click.option('--csr', help='New csr for the certificate.', required=False)
-@click.option('--pk', '--private-key', required=False,
+@click.option('--private-key', '--pk', required=False,
               help='Private key to use to generate the CSR.')
-@click.option('--c', '--country', required=False,
+@click.option('--country', '--c', required=False,
               help='The generated CSR country (C).')
-@click.option('--st', '--state', required=False,
+@click.option('--state', '--st', required=False,
               help='The generated CSR state (ST).')
-@click.option('--l', '--city', required=False,
+@click.option('--city', '--l', required=False,
               help='The generated CSR location (L).')
-@click.option('--o', '--organisation', required=False,
+@click.option('--organisation', '--o', required=False,
               help='The generated CSR organisation (O).')
-@click.option('--ou', '--branch', required=False,
+@click.option('--branch', '--ou', required=False,
               help='The generated CSR branch (OU).')
 @click.option('--altnames', required=False, multiple=True,
               help='All the certificate altnames (comma separated text '
@@ -512,7 +512,7 @@ def resend_dcv(gandi, resource):
 
 @certificate.command()
 @click.argument('resource', nargs=1, required=True)
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'

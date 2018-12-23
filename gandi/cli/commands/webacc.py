@@ -138,7 +138,7 @@ def info(gandi, resource, format):
 @click.option('--vhost', '-v', help="Vhost to add in the webaccelerator",
               multiple=True)
 @click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
-@click.option('--pk', '--private-key',
+@click.option('--private-key', '--pk',
               help='Private key used to generate the ssl Certificate.')
 @click.option('--poll-cert', help='Will wait for the certificate creation.',
               is_flag=True)
@@ -244,7 +244,7 @@ def delete(gandi, webacc, vhost, backend, port):
 @click.option('--vhost', '-v', help="Add vhosts in the webaccelerator",
               multiple=True)
 @click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
-@click.option('--pk', '--private-key',
+@click.option('--private-key', '--pk',
               help='Private key used to generate the ssl Certificate.')
 @click.option('--poll-cert', help='Will wait for the certificate creation.',
               is_flag=True)

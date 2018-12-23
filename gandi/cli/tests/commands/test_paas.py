@@ -199,8 +199,9 @@ ssh 185290@console.dc2.gpaas.net""")
 
         self.assertEqual(result.output, """\
 Usage: clone [OPTIONS] NAME
+Try "clone --help" for help.
 
-Error: Missing argument "name".
+Error: Missing argument "NAME".
 """)
 
         self.assertEqual(result.exit_code, 2)

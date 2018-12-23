@@ -100,7 +100,7 @@ def info(gandi, resource, stat):
 
 
 @vm.command()
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
@@ -121,7 +121,7 @@ def stop(gandi, background, resource):
 
 
 @vm.command()
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
@@ -142,7 +142,7 @@ def start(gandi, background, resource):
 
 
 @vm.command()
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', nargs=-1, required=True)
 @pass_gandi
@@ -163,7 +163,7 @@ def reboot(gandi, background, resource):
 
 
 @vm.command()
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
@@ -243,7 +243,7 @@ def delete(gandi, background, force, resource):
                    'This command will run with root privileges in the ``/`` '
                    'directory at the end of its boot: network interfaces and '
                    'disks are mounted.')
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @option('--sshkey', multiple=True,
         help='Authorize ssh authentication for the given ssh key.')
@@ -355,7 +355,7 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
 @click.option('--password', default=False, is_flag=True,
               help='Will ask for a password to be set for the root account '
                    'and the created login.')
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--reboot', default=False, is_flag=True,
               help='Accept a VM reboot for non-live updates')
@@ -513,7 +513,7 @@ def datacenters(gandi, id):
 
 
 @vm.command()
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
