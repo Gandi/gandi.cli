@@ -187,7 +187,6 @@ class SnapshotParamType(GandiChoice):
         """ Initialize choices list. """
         self._choices = []
         self.target = target
-        self.case_sensitive = None
 
     def _get_choices(self, gandi):
         """ Internal method to get choices list """

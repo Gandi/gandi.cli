@@ -87,11 +87,11 @@ def info(gandi, resource):
 
 
 @certstore.command()
-@click.option('--private-key', '--pk', required=True,
+@click.option('--pk', '--private-key', required=True,
               help='Private key used to generate this CRT.')
-@click.option('--certificate', '--crt', required=False,
+@click.option('--crt', '--certificate', required=False,
               help='The certificate.')
-@click.option('--certificate-id', '--crt-id', type=click.INT, required=False,
+@click.option('--crt-id', '--certificate-id', type=click.INT, required=False,
               help='The certificate.')
 @pass_gandi
 def create(gandi, private_key, certificate, certificate_id):

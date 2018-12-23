@@ -67,7 +67,7 @@ def info(gandi, resource):
 @click.option('--extra_parameter', default=None, nargs=2,
               type=(unicode, unicode),
               help='Extra parameters', multiple=True)
-@click.option('--background', '--bg', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', metavar='DOMAIN', required=False)
 @pass_gandi
@@ -101,7 +101,7 @@ def create(gandi, resource, domain, duration, owner, admin, tech, bill,
 @click.option('--duration', default=1, prompt=True,
               type=click.IntRange(min=1, max=10),
               help='Registration period in years, between 1 and 10.')
-@click.option('--background', '--bg', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('domain')
 @pass_gandi

@@ -113,7 +113,7 @@ def info(gandi, resource):
 @ip.command()
 @click.argument('ip')
 @click.option('--reverse', help='Update reverse (PTR record) for this IP')
-@click.option('--background', '--bg', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
 def update(gandi, ip, reverse, background):
@@ -126,7 +126,7 @@ def update(gandi, ip, reverse, background):
 @ip.command()
 @click.argument('ip')
 @click.argument('vm')
-@click.option('--background', '--bg', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
@@ -171,7 +171,7 @@ def attach(gandi, ip, vm, background, force):
 @click.option('--vlan', help='The vlan to which attach this ip if any.')
 @click.option('--ip', help='The ip if you try to create a private ip.')
 @click.option('--attach', help='The vm you want to attach if any.')
-@click.option('--background', '--bg', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
 def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
@@ -211,7 +211,7 @@ def create(gandi, datacenter, bandwidth, ip_version, vlan, ip, attach,
 
 @ip.command()
 @click.argument('resource')
-@click.option('--background', '--bg', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
@@ -233,7 +233,7 @@ def detach(gandi, resource, background, force):
 
 @ip.command()
 @click.argument('resource', nargs=-1, required=True)
-@click.option('--background', '--bg', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'

@@ -128,7 +128,7 @@ def update(gandi, email, password, quota, fallback, alias_add, alias_del):
 
 
 @mail.command()
-@click.option('--background', '--bg', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'

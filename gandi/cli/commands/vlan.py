@@ -94,7 +94,7 @@ def info(gandi, resource, ip):
 
 
 @vlan.command()
-@click.option('--background', '--bg', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
@@ -138,7 +138,7 @@ def delete(gandi, background, force, resource):
         help='Datacenter where the vlan will be spawned.')
 @click.option('--subnet', help='The vlan subnet.')
 @click.option('--gateway', help='The vlan gateway.')
-@click.option('--background', '--bg', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @pass_gandi
 def create(gandi, name, datacenter, subnet, gateway, background):

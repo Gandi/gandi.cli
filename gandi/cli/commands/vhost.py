@@ -83,13 +83,13 @@ def info(gandi, resource, id):
 @click.option('--paas', required=True,
               help='PaaS instance on which to create it.')
 @click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
-@click.option('--private-key', '--pk',
+@click.option('--pk', '--private-key',
               help='Private key used to generate the ssl Certificate.')
 @click.option('--alter-zone', help='Will update the domain zone.',
               is_flag=True)
 @click.option('--poll-cert', help='Will wait for the certificate creation.',
               is_flag=True)
-@click.option('--background', '--bg', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('vhost', required=True)
 @pass_gandi
@@ -110,7 +110,7 @@ def create(gandi, vhost, paas, ssl, private_key, alter_zone, poll_cert,
 
 @vhost.command()
 @click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
-@click.option('--private-key', '--pk',
+@click.option('--pk', '--private-key',
               help='Private key used to generate the ssl Certificate.')
 @click.option('--poll-cert', help='Will wait for the certificate creation.',
               is_flag=True)
@@ -128,7 +128,7 @@ def update(gandi, resource, ssl, private_key, poll_cert):
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
                    ' without prompting. (default=False).')
-@click.option('--background', '--bg', default=False, is_flag=True,
+@click.option('--bg', '--background', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.argument('resource', required=True)
 @pass_gandi
