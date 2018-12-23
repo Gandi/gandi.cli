@@ -1,5 +1,10 @@
 # Gandi CLI
 
+[![Build Status](https://travis-ci.org/Gandi/gandi.cli.svg?branch=master)](https://travis-ci.org/Gandi/gandi.cli)
+[![Coverage Status](https://coveralls.io/repos/Gandi/gandi.cli/badge.svg?branch=master)](https://coveralls.io/r/Gandi/gandi.cli?branch=master)
+[![Pip Version](https://img.shields.io/pypi/v/gandi.cli.svg)](https://pypi.python.org/pypi/gandi.cli)
+[![Python Version](https://img.shields.io/pypi/pyversions/gandi.cli.svg)](https://pypi.python.org/pypi/gandi.cli)
+
 Use `$ gandi` to easily create and manage web resources from the command line.
 
 * `$ gandi domain` to buy and manage your domain names
@@ -431,13 +436,6 @@ The default variables are:
 We <3 contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 You can check the [contributors list](https://github.com/Gandi/gandi.cli/graphs/contributors).
-
-## Code status
-
-[![Build Status](https://travis-ci.org/Gandi/gandi.cli.svg?branch=master)](https://travis-ci.org/Gandi/gandi.cli)
-[![Coverage Status](https://coveralls.io/repos/Gandi/gandi.cli/badge.svg?branch=master)](https://coveralls.io/r/Gandi/gandi.cli?branch=master)
-[![Pip Version](https://img.shields.io/pypi/v/gandi.cli.svg)](https://pypi.python.org/pypi/gandi.cli)
-[![Python Version](https://img.shields.io/pypi/pyversions/gandi.cli.svg)](https://pypi.python.org/pypi/gandi.cli)
 
 ## License / Copying
 
