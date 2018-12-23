@@ -79,7 +79,6 @@ def _plans(gandi, with_name=False):
     ret = [labels]
 
     for package in packages:
-        params = package['name'].split('_')
         cat = package['name'].split('_')[1]
         warranty = str(int(package['name'].split('_')[3]) * 1000)
         if len(warranty) > 3:

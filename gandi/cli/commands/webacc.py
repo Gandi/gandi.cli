@@ -44,7 +44,7 @@ def list(gandi, limit, format):
         output_generic(gandi, webacc, output_keys, justify=14)
 
         gandi.echo('Vhosts :')
-        for num, vhost in enumerate(webacc['vhosts']):
+        for vhost in webacc['vhosts']:
             output_vhosts = ['vhost', 'ssl']
             vhost['vhost'] = vhost['name']
             vhost['ssl'] = 'Disable' if vhost['cert_id'] is None else 'Enabled'
