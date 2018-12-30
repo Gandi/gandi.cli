@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.4
+---
+* Fixes #268: Drop support of click < 7.0
+* Drop support of python 2.6 and 3.3
+* Add coverage
+* Test python 3.7 and pypy in travis
+* PEP8
+
 1.3
 ---
 

@@ -1,3 +1,13 @@
+gandicli (1.4) unstable; urgency=medium
+
+  * Fixes #268: Drop support of click < 7.0
+  * Drop support of python 2.6 and 3.3
+  * Add coverage
+  * Test python 3.7 and pypy in travis
+  * PEP8
+
+ -- grigouze <grigouze@gandi.net>  Tue, 30 Dec 2018 23:04:55 +0200
+
 gandicli (1.3) unstable; urgency=medium
 
   * Use pytest instead of nose
