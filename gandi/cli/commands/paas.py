@@ -135,7 +135,7 @@ def deploy(gandi, remote, branch):
 
 
 @paas.command()
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'
@@ -192,14 +192,14 @@ def delete(gandi, background, force, resource):
 @click.option('--vhosts', default=None,
               help='Virtual host(s) to be linked to the instance.')
 @click.option('--ssl', help='Get ssl on that vhost.', is_flag=True)
-@click.option('--pk', '--private-key',
+@click.option('--private-key', '--pk',
               help='Private key used to generate the ssl Certificate.')
 @click.option('--poll-cert', help='Will wait for the certificate creation.',
               is_flag=True)
 @click.option('--password', help='Use command-line supplied password.')
 @click.option('--snapshotprofile', default=None, type=SNAPSHOTPROFILE_PAAS,
               help='Set a snapshot profile associated to this paas disk.')
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @option('--sshkey', multiple=True,
         help='Authorize ssh authentication for the given ssh key.')
@@ -269,7 +269,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
               help='Set a snapshot profile associated to this paas disk.')
 @click.option('--reset-mysql-password', default=None,
               help='Reset mysql password for root.')
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--delete-snapshotprofile', default=False, is_flag=True,
               help='Remove a snapshot profile associated to this paas disk.')
@@ -306,7 +306,7 @@ def update(gandi, resource, name, size, quantity, password, sshkey,
 
 @paas.command()
 @click.argument('resource', nargs=-1, required=True)
-@click.option('--bg', '--background', default=False, is_flag=True,
+@click.option('--background', '--bg', default=False, is_flag=True,
               help='Run command in background mode (default=False).')
 @click.option('--force', '-f', is_flag=True,
               help='This is a dangerous option that will cause CLI to continue'

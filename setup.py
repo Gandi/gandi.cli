@@ -41,18 +41,16 @@ with open(os.path.join(here, 'gandi', 'cli', '__init__.py')) as v_file:
     version = re.compile(r".*__version__ = '(.*?)'",
                          re.S).match(v_file.read()).group(1)
 
-requires = ['setuptools', 'pyyaml', 'click>=3.1, <6.7', 'requests', 'IPy']
+requires = ['setuptools', 'pyyaml', 'click>=7.0', 'requests', 'IPy']
 
 tests_require = ['pytest', 'pytest-cov', 'tox']
-if sys.version_info < (2, 7):
-    tests_require += ['unittest2', 'importlib']
 
 if sys.version_info < (3, 0):
     tests_require += ['mock']
 else:
-    if sys.version_info < (3, 3):
+    if sys.version_info < (3, 4):
         raise RuntimeError(
-            "Python 3 earlier than 3.3 is not supported"
+            "Python 3 earlier than 3.4 is not supported"
             " (sys.version: {})".format(sys.version))
 
 extras_require = {
@@ -68,9 +66,7 @@ setup(name='gandi.cli',
       author_email='feedback@gandi.net',
       classifiers=[
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
