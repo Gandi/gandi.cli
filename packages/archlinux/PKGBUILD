@@ -1,16 +1,16 @@
 # Maintainer: Raphaël Doursenaud <rdoursenaud@gpcsolutions.fr>
 pkgname=gandi.cli
-pkgver=0.18
-pkgrel=1
+pkgver=1.4
+pkgrel=2
 pkgdesc="Gandi command line interface"
 arch=('any')
 url="http://cli.gandi.net"
 license=('GPL3')
 groups=()
-depends=('python3' 'python-yaml' 'python-click>=3.1' 'python-requests' 'python-ipy' 'openssl' 'openssh' 'git')
+depends=('python>=3.4' 'python-yaml' 'python-click>=7.0' 'python-requests' 'python-ipy' 'openssl' 'openssh' 'git')
 optdepends=('docker: gandi docker support')
 makedepends=('python-setuptools')
-checkdepends=('python-nose' 'python-coverage' 'python-tox' 'python-mock')
+checkdepends=('python-tox' 'python-pytest-cov' 'python-coverage')
 makedepends=('python-docutils')
 provides=()
 conflicts=()
@@ -19,7 +19,7 @@ backup=()
 options=(!emptydirs)
 install=
 source=("https://github.com/Gandi/$pkgname/archive/$pkgver.tar.gz")
-sha256sums=('c9d743713df2e08c97ec21e5a78fe4b57b7bd1eaf06ef9abd269ff11d46c87a2')
+sha256sums=('81333e6982b45c27938ae9e1ae4612ace1145bab69abf36373d2ac23dbd0090b')
 
 build() {
   # Building the manpage
@@ -29,7 +29,7 @@ build() {
 
 check() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  python setup.py nosetests
+  python setup.py test
 }
 
 package() {
