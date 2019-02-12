@@ -18,6 +18,7 @@ class GandiChoice(click.Choice):
     def __init__(self):
         """ Initialize choices list. """
         self._choices = []
+        self.case_sensitive = None
 
     def _get_choices(self, gandi):
         """ Internal method to get choices list """
