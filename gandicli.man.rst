@@ -458,11 +458,11 @@ Copyright (c) 2014-2018 - Gandi S.A.S
 CONTRIBUTORS
 ============
 
-* Dejan Filipovic <sayoun@gandi.net>
-* Olivier Roussy <olivier@gandi.net>
-* Guillaume Gauvrit <guillaume.gauvrit@gandi.net>
 * Alexandre Solleiro <alexandre.solleiro@gandi.net>
+* Dejan Filipovic <sayoun@gandi.net>
+* Guillaume Gauvrit <guillaume.gauvrit@gandi.net>
 * Nicolas Chipaux <aegiap@gandi.net>
+* Olivier Roussy <olivier@gandi.net>
 
 VERSION
 =======
