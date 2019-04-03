@@ -11,7 +11,6 @@ command line interface to Gandi.net products using the public API
 :Copyright: GPL-3
 :Version: 1.4
 :Manual section: 1
-:Manual group: python
 
 SYNOPSIS
 ========
