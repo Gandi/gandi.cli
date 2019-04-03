@@ -38,7 +38,8 @@ OPTIONS
 --version
     Display version.
 
-Namespaces:
+NAMESPACES
+==========
 
 * account info            Display information about hosting account.
 * api                     Display information about API used.
