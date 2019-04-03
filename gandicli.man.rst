@@ -33,24 +33,31 @@ GETTING STARTED
 ENVIRONMENT VARIABLES
 =====================
 
-`API_ENV` allow to switch between environment: the production API and the OT&E one.
+`API_ENV`
+    allow to switch between environment: the production API and the OT&E one.
 
-Example:
-  API_ENV=production gandi domain list
+    Example:
 
+        API_ENV=production gandi domain list
 
-`API_HOST` allow to specify a HTTP URL to connect and to send the API commands.
+`API_HOST`
+    allow to specify a HTTP URL to connect and to send the API commands.
 
-`API_KEY` allow to specify an API key for the chosen environment. This option is useful when you work with multiple account.
+`API_KEY`
+    allow to specify an API key for the chosen environment. This option is useful when you work with multiple account.
 
-`APIREST_KEY` allow to specify a REST API key for the chosen environment. This option is useful when you work with multiple account.
+`APIREST_KEY`
+    allow to specify a REST API key for the chosen environment. This option is useful when you work with multiple account.
 
 
 COMMAND-LINE OPTIONS
 =====================
 
--v          Enable or disable verbose mode, can be used multiple times to increase verbose level.
---version   Display version.
+-v
+    Enable or disable verbose mode, can be used multiple times to increase verbose level.
+
+--version
+    Display version.
 
 Namespaces:
 
@@ -439,7 +446,8 @@ The GANDI_CONFIG environment variable can be used to override the global configu
 FILES
 =====
 
-Configuration file is $HOME/.config/gandi/config.yaml, overriden by the GANDI_CONFIG environment variable as described above.
+`$HOME/.config/gandi/config.yaml`
+    Configuration file, overriden by the GANDI_CONFIG environment variable as described above.
 
 AUTHORS
 =======
