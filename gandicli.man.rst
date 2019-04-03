@@ -29,9 +29,8 @@ GETTING STARTED
 
   Run `gandi setup` or create `$HOME/.config/gandi/config.yaml` file.
 
-
-COMMAND-LINE OPTIONS
-=====================
+OPTIONS
+=======
 
 -v
     Enable or disable verbose mode, can be used multiple times to increase verbose level.
