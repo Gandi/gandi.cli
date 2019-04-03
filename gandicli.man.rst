@@ -59,7 +59,7 @@ NAMESPACES
 * certstore info          Display information about an hosted certificate.
 * certstore list          List hosted certificates.
 * config delete           Delete a key/value pair from loaded configuration and save.
-* config edit             Open configuration file in prefered editor.
+* config edit             Open configuration file in preferred editor.
 * config get              Get value of a given key from loaded configuration.
 * config list             List content of loaded configuration.
 * config set              Set a key/value pair in loaded configuration and save.
@@ -179,7 +179,7 @@ Details:
 
 * ``gandi certificate create``: Request the creation of a certificate. If a private key is present as ``--private-key`` and not a CSR, the CSR will be generated. If no CSR or private key are present in the parameters, both are generated. Possible options are ``--csr TEXT`` and ``--private-key TEXT`` which could be the content of a certificate request and a private key or path to the files, ``--country TEXT``, ``--state TEXT``, ``--city TEXT``, ``-organisation TEXT``, ``--branch TEXT`` to specify new administrative information, ``--duration INTEGER`` how many years of validity (up to 5 years), ``--package TEXT`` is the type of certificate as listed by ``gandi certificate package``, ``--package`` is now deprecated and should be replaced by ``--type``, ``--max-altname`` and ``--warranty``, ``--type`` is the certificate type in std (standard), bus (business) and pro, ``--max-altname`` is the maximum number of altnames that this multi domain certificate will be able to have (by default it's calculated on the number of ``--altnames`` param you have, but you can override it with a bigger value), ``--warranty`` is the value of the financial transaction under warranty (only appliable with Pro certificates), ``--altnames LIST`` is a list of all alternative names and ``--dcv-method TEXT`` where the method could be email, dns, file or auto.
 
-* ``gandi certificate delete resource`` delete a certificate. Possible option is ``--force`` (or ``-f``) to bypass the validation question; usefull in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``). Note that a resource can be a cn entry or an integer id.
+* ``gandi certificate delete resource`` delete a certificate. Possible option is ``--force`` (or ``-f``) to bypass the validation question; useful in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``). Note that a resource can be a cn entry or an integer id.
 
 * ``gandi certificate follow resource`` display the current status of a certificate operation. Resource is an operation id.
 
@@ -189,7 +189,7 @@ Details:
 
 * ``gandi certificate list`` Possible options are ``--id``, ``--altnames``, ``--csr``, ``--cert`` which show the integer id, the alternative names, the certificate request and the full certificate for each element of the list, ``--all-status`` show certificates without regards to their status, ``--status``, ``--dates`` show the status of the certificate and the creation and expiration dates, ``--limit INTEGER`` show a subset of the list.
 
-* ``gandi certificate packages`` show a full list of all available certificate types, this is depreacted, replace it by ``certificate plans``.
+* ``gandi certificate packages`` show a full list of all available certificate types, this is deprecated, replace it by ``certificate plans``.
 
 * ``gandi certificate plans`` show a full list of all available certificate plans.
 
@@ -221,7 +221,7 @@ Details:
 
   ``gandi disk list`` show a list of virtual disk. Possible options to filter the list are : ``--only-data`` and ``--only-snapshot`` which limit the list to regular disk and to snapshots, ``--attached`` which limit the list to only attached disks, ``--detached`` which limit the list to only detached disks,``--type`` add the type of the virtual disk, ``--id`` add the integer id of each virtual disk, ``--vm`` show the virtual machines by which the disk are used, ``--snapshotprofile`` show the profile of data retention associated, ``--datacenter`` which filter the output according to disk datacenter location and ``--limit INTEGER`` show only a limit amount of disks.
 
-* ``gandi disk update resource`` modify the options of a virtual disk. Possible options are ``--kernel KERNEL`` to setup or update disk kernel, ``--cmdline TEXT`` to change kernel cmdline, ``--name TEXT`` for the label of the virtual disk, ``--size [+]SIZE[M|G|T]`` for the new size of the disk, if optionnal + prefix is provided, size value will be added to current disk size, a size suffix (M for megabytes up to T for terabytes) is optional, megabytes is the default if no suffix is present, ``--snapshotprofile TEXT`` to select a profile of snapshot to apply to the disk for keeping multiple version of data in a timeline, ``--delete-snapshotprofile`` to remove snapshot profile associated to this virtual disk. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi disk update resource`` modify the options of a virtual disk. Possible options are ``--kernel KERNEL`` to setup or update disk kernel, ``--cmdline TEXT`` to change kernel cmdline, ``--name TEXT`` for the label of the virtual disk, ``--size [+]SIZE[M|G|T]`` for the new size of the disk, if optional + prefix is provided, size value will be added to current disk size, a size suffix (M for megabytes up to T for terabytes) is optional, megabytes is the default if no suffix is present, ``--snapshotprofile TEXT`` to select a profile of snapshot to apply to the disk for keeping multiple version of data in a timeline, ``--delete-snapshotprofile`` to remove snapshot profile associated to this virtual disk. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi disk attach disk vm`` attach the given disk to the given vm, if the disk is currently attached, it will start by detaching it. Possible options: ``--force`` to skip all questions about detaching and attaching; ``--position INTEGER`` (or ``-p``) to specify the position at which the disk should be attached (0 for system disk); ``--read-only`` (or ``-r``) to attach the disk in read-only mode. All these modification can be done as background process using the option ``--background`` (or ``--bg``).
 
@@ -235,7 +235,7 @@ Details:
 
 * ``gandi dnssec create`` will create a DNSSEC key for the domain ``domain.tld``. It taks 4 parameters, ``fqdn`` which is the domain for which we want to create the key and ``flag`` which is the flag to use for creation (ZSK or KSK) and ``algorithm`` for the choice of the algorithm for the key and the ``public_key`` in a base64 encoded form.
 
-* ``gandi dnssec delete ressource`` will remove a DNSSEC key identified by a ressource identificator.
+* ``gandi dnssec delete resource`` will remove a DNSSEC key identified by a resource identificator.
 
 * ``gandi dnssec list domain.tld`` will list DNSSEC keys for domain ``domain.tld``.
 
@@ -309,13 +309,13 @@ Details:
 
 * ``gandi oper list`` show all the running operation on your product at Gandi (for example Simple Hosting, domain, hosting). Possible option is ``--limit INTEGER`` which list only a subset of the full list of running operations (default is 100), ``--step`` to filter on specific step possible values are: BILL, WAIT, RUN, ERROR (default to BILL, WAIT, RUN).
 
-* ``gandi paas attach instance`` Add the Simple Hosting instance's vhost git remote to a local git repository. By default, the git remote's name is gandi; it can be overriden by using the ``--remote TEXT`` option.
+* ``gandi paas attach instance`` Add the Simple Hosting instance's vhost git remote to a local git repository. By default, the git remote's name is gandi; it can be overridden by using the ``--remote TEXT`` option.
 
-* ``gandi paas clone instance`` clone all files of a remote virtual host, for a given Simple Hosting instance, to a local git repository. Override the default vhost by passing ``--vhost TEXT``. The destination directory to clone to can be overriden by using the ``--directory`` option. By default the origin name is set to gandi, it can be overriden with the ``--origin TEXT`` option.
+* ``gandi paas clone instance`` clone all files of a remote virtual host, for a given Simple Hosting instance, to a local git repository. Override the default vhost by passing ``--vhost TEXT``. The destination directory to clone to can be overridden by using the ``--directory`` option. By default the origin name is set to gandi, it can be overridden with the ``--origin TEXT`` option.
 
 * ``gandi paas console resource`` open a console to the SimpleHosting. Note that resource could be a full qualified domain name or an integer id.
 
-* ``gandi paas create``: Create a Simple Hosting instance. Mandatory option is  ``--password TEXT`` for the password of the instance. Possible option are ``--name TEXT`` for the name of the instance (if not present, will be autogenerated), ``--size s|s+|m|x|xl|xxl`` for the size (amount of RAM and processes), ``--type TYPE`` for the type as listed by the ``gandi paas types`` command, ``--quantity INTEGER`` for the additional disk space, ``--duration TEXT`` for the number of month suffixed with 'm', ``--datacenter FR-SD2|LU-BI1|FR-SD3`` for the geographical datacenter as listed by ``gandi datacenters``, ``--vhosts TEXT`` for a list of virtual hosts to link to this instance, ``--ssl`` to activate SSL on all vhosts, ``--pk`` to give the private key used to generate the certificate if it's linked to the same account in certificate section, and ``--poll-cert`` to wait for certificate generation in case you want to get one with Gandi (certificate create can take some time to achieve), ``--snapshotprofile INTEGER`` for the snapshot profile for the disk of the instance, ``--delete-snapshotprofile`` to remove the snapshotprofile on the instance , ``--sshkey TEXT`` to specifiy a name of a SSH key. The operation can be done as background process using the option ``--background`` (or ``--bg``).
+* ``gandi paas create``: Create a Simple Hosting instance. Mandatory option is  ``--password TEXT`` for the password of the instance. Possible option are ``--name TEXT`` for the name of the instance (if not present, will be autogenerated), ``--size s|s+|m|x|xl|xxl`` for the size (amount of RAM and processes), ``--type TYPE`` for the type as listed by the ``gandi paas types`` command, ``--quantity INTEGER`` for the additional disk space, ``--duration TEXT`` for the number of month suffixed with 'm', ``--datacenter FR-SD2|LU-BI1|FR-SD3`` for the geographical datacenter as listed by ``gandi datacenters``, ``--vhosts TEXT`` for a list of virtual hosts to link to this instance, ``--ssl`` to activate SSL on all vhosts, ``--pk`` to give the private key used to generate the certificate if it's linked to the same account in certificate section, and ``--poll-cert`` to wait for certificate generation in case you want to get one with Gandi (certificate create can take some time to achieve), ``--snapshotprofile INTEGER`` for the snapshot profile for the disk of the instance, ``--delete-snapshotprofile`` to remove the snapshotprofile on the instance , ``--sshkey TEXT`` to specify a name of a SSH key. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
 * ``gandi paas delete resource`` delete a Simple Hosting instance. Possible option is ``--force`` (or ``-f``) to bypass the validation question; useful in non-interactive mode when scripting. The operation can be done as background process using the option ``--background`` (or ``--bg``).
 
@@ -343,7 +343,7 @@ Details:
 
 * ``gandi snapshotprofile list`` show the list of all profile for virtual disk snapshot. Possible options are ``--only-paas`` and ``--only-vm`` to filter the output and show only the subset of profile for the Simple Hosting or the Gandi Hosting.
 
-* ``gandi sshkey create --name label`` add a SSH key identified by ``label`` which could be used for authentification. Possible option are ``--value TEXT``  with the content of the SSH public key or ``--filename FILENAME`` with the path to a file containing the SSH public key.
+* ``gandi sshkey create --name label`` add a SSH key identified by ``label`` which could be used for authentication. Possible option are ``--value TEXT``  with the content of the SSH public key or ``--filename FILENAME`` with the path to a file containing the SSH public key.
 
 * ``gandi sshkey delete resource`` remove a SSH key. Resource can be a name or the specific id.
 
@@ -444,7 +444,7 @@ FILES
 =====
 
 `$HOME/.config/gandi/config.yaml`
-    Configuration file, overriden by the GANDI_CONFIG environment variable as described above.
+    Configuration file, overridden by the GANDI_CONFIG environment variable as described above.
 
 AUTHORS
 =======
