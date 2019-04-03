@@ -61,132 +61,132 @@ COMMAND-LINE OPTIONS
 
 Namespaces:
 
-*  account info            Display information about hosting account.
-*  api                     Display information about API used.
-*  certificate change-dcv  Change the DCV for a pending certificate.
-*  certificate create      Create a new certificate.
-*  certificate delete      Revoke the certificate.
-*  certificate follow      Follow the certificate operation run.
-*  certificate export      Write the certificate to <output> or <fqdn>.
-*  certificate info        Display information about a certificate.
-*  certificate list        List certificates.
-*  certificate packages    List certificate packages (deprecated).
-*  certificate plans       List certificate plans (replace packages).
-*  certificate resend-dcv  Resend the DCV mail for a pending certificate.
-*  certificate update      Update a certificate CSR.
-*  certstore create        Create an hosted certificate.
-*  certstore delete        Delete an hosted certificate.
-*  certstore info          Display information about an hosted certificate.
-*  certstore list          List hosted certificates.
-*  config delete           Delete a key/value pair from loaded configuration and save.
-*  config edit             Open configuration file in prefered editor.
-*  config get              Get value of a given key from loaded configuration.
-*  config list             List content of loaded configuration.
-*  config set              Set a key/value pair in loaded configuration and save.
-*  contact create          Create a new contact in interactive mode.
-*  datacenters             List available datacenters.
-*  deploy                  Deploy code on a remote vhost.
-*  disk attach             Attach a disk to a vm.
-*  disk create             Create a new disk.
-*  disk delete             Delete a disk.
-*  disk detach             Detach a disk from a vm.
-*  disk info               Display information about a disk.
-*  disk list               List disks.
-*  disk migrate            Migrate a disk to another datacenter.
-*  disk rollback           Rollback a disk from a snapshot.
-*  disk update             Update a disk.
-*  dns create              Create new record entry for a domain.
-*  dns delete              Delete record entry for a domain.
-*  dns domain.list         List domains manageable by REST API.
-*  dns keys create         Create key for a domain.
-*  dns keys delete         Delete a key for a domain.
-*  dns keys info           Display information about a domain key.
-*  dns keys list           List domain keys.
-*  dns keys recover        Recover deleted key for a domain.
-*  dns list                Display records for a domain.
-*  dns update              Update record entry for a domain.
-*  dnssec create           Create DNSSEC key.
-*  dnssec delete           Delete DNSSEC key.
-*  dnssec list             List DNSSEC keys.
-*  docker                  Manage docker instances.
-*  domain create           Buy a domain.
-*  domain renew            Renew a domain.
-*  domain info             Display information about a domain.
-*  domain list             List domains.
-*  forward create          Create a domain mail forward.
-*  forward delete          Delete a domain mail forward.
-*  forward list            List mail forwards for a domain.
-*  forward update          Update a domain mail forward.
-*  help                    Display help for a command.
-*  ip list                 List all ips.
-*  ip info                 Display information about an ip.
-*  ip create               Create a new ip.
-*  ip attach               Attach an ip to a vm.
-*  ip detach               Detach an ip from a vm.
-*  ip delete               Delete an ip.
-*  ip update               Update an ip.
-*  mail create             Create a mailbox.
-*  mail delete             Delete a mailbox.
-*  mail info               Display information about a mailbox.
-*  mail list               List mailboxes created on a domain.
-*  mail purge              Purge a mailbox.
-*  mail update             Update a mailbox.
-*  oper info               Display information about an operation.
-*  oper list               List operations.
-*  paas attach             Add an instance vhost's git remote to local git repository.
-*  paas clone              Clone a remote vhost in a local git repository.
-*  paas console            Open a console on a PaaS.
-*  paas create             Create a new PaaS instance and initialize associated git repository.
-*  paas delete             Delete a PaaS instance.
-*  paas info               Display information about a PaaS instance.
-*  paas list               List PaaS instances.
-*  paas restart            Restart a PaaS instance.
-*  paas types              List types PaaS instances.
-*  paas update             Update a PaaS instance.
-*  record create           Create new DNS zone record entry for a domain.
-*  record delete           Delete a record entry for a domain.
-*  record list             List DNS zone records for a domain.
-*  record update           Update records entries for a domain.
-*  setup                   Initialize Gandi CLI configuration.
-*  snapshotprofile info    Display information about a snapshot profile.
-*  snapshotprofile list    List possible snapshot profiles.
-*  sshkey create           Create a new SSH key.
-*  sshkey delete           Delete SSH keys.
-*  sshkey info             Display information about an SSH key.
-*  sshkey list             List SSH keys.
-*  status                  Display current status from status.gandi.net.
-*  vhost create            Create a new vhost.
-*  vhost delete            Delete a vhost.
-*  vhost info              Display information about a vhost.
-*  vhost list              List vhosts.
-*  vhost update            Update a vhost.
-*  vlan create             Create a new vlan
-*  vlan delete             Delete a vlan.
-*  vlan info               Display information about a vlan.
-*  vlan list               List vlans.
-*  vlan update             Update a vlan
-*  vm console              Open a console to virtual machine.
-*  vm create               Create a new virtual machine.
-*  vm delete               Delete a virtual machine.
-*  vm images               List available system images for virtual machines.
-*  vm info                 Display information about a virtual machine.
-*  vm kernels              List available kernels for virtual machines.
-*  vm list                 List virtual machines.
-*  vm migrate              Migrate a virtual machine to another datacenter.
-*  vm reboot               Reboot a virtual machine.
-*  vm ssh                  Spawn an SSH session to virtual machine.
-*  vm start                Start a virtual machine.
-*  vm stop                 Stop a virtual machine.
-*  vm update               Update a virtual machine.
-*  webacc add              Add a backend or a vhost on a webaccelerator
-*  webacc create           Create a webaccelerator
-*  webacc delete           Delete a webaccelerator, a vhost or a backend
-*  webacc disable          Disable a backend or a probe on a webaccelerator
-*  webacc enable           Enable a backend or a prove on a webaccelerator
-*  webacc info             Display information about a webaccelerator
-*  webacc list             List webaccelerators
-*  webacc probe            Manage a probe for a webaccelerator
-*  webacc update           Update a webaccelerator
+* account info            Display information about hosting account.
+* api                     Display information about API used.
+* certificate change-dcv  Change the DCV for a pending certificate.
+* certificate create      Create a new certificate.
+* certificate delete      Revoke the certificate.
+* certificate follow      Follow the certificate operation run.
+* certificate export      Write the certificate to <output> or <fqdn>.
+* certificate info        Display information about a certificate.
+* certificate list        List certificates.
+* certificate packages    List certificate packages (deprecated).
+* certificate plans       List certificate plans (replace packages).
+* certificate resend-dcv  Resend the DCV mail for a pending certificate.
+* certificate update      Update a certificate CSR.
+* certstore create        Create an hosted certificate.
+* certstore delete        Delete an hosted certificate.
+* certstore info          Display information about an hosted certificate.
+* certstore list          List hosted certificates.
+* config delete           Delete a key/value pair from loaded configuration and save.
+* config edit             Open configuration file in prefered editor.
+* config get              Get value of a given key from loaded configuration.
+* config list             List content of loaded configuration.
+* config set              Set a key/value pair in loaded configuration and save.
+* contact create          Create a new contact in interactive mode.
+* datacenters             List available datacenters.
+* deploy                  Deploy code on a remote vhost.
+* disk attach             Attach a disk to a vm.
+* disk create             Create a new disk.
+* disk delete             Delete a disk.
+* disk detach             Detach a disk from a vm.
+* disk info               Display information about a disk.
+* disk list               List disks.
+* disk migrate            Migrate a disk to another datacenter.
+* disk rollback           Rollback a disk from a snapshot.
+* disk update             Update a disk.
+* dns create              Create new record entry for a domain.
+* dns delete              Delete record entry for a domain.
+* dns domain.list         List domains manageable by REST API.
+* dns keys create         Create key for a domain.
+* dns keys delete         Delete a key for a domain.
+* dns keys info           Display information about a domain key.
+* dns keys list           List domain keys.
+* dns keys recover        Recover deleted key for a domain.
+* dns list                Display records for a domain.
+* dns update              Update record entry for a domain.
+* dnssec create           Create DNSSEC key.
+* dnssec delete           Delete DNSSEC key.
+* dnssec list             List DNSSEC keys.
+* docker                  Manage docker instances.
+* domain create           Buy a domain.
+* domain renew            Renew a domain.
+* domain info             Display information about a domain.
+* domain list             List domains.
+* forward create          Create a domain mail forward.
+* forward delete          Delete a domain mail forward.
+* forward list            List mail forwards for a domain.
+* forward update          Update a domain mail forward.
+* help                    Display help for a command.
+* ip list                 List all ips.
+* ip info                 Display information about an ip.
+* ip create               Create a new ip.
+* ip attach               Attach an ip to a vm.
+* ip detach               Detach an ip from a vm.
+* ip delete               Delete an ip.
+* ip update               Update an ip.
+* mail create             Create a mailbox.
+* mail delete             Delete a mailbox.
+* mail info               Display information about a mailbox.
+* mail list               List mailboxes created on a domain.
+* mail purge              Purge a mailbox.
+* mail update             Update a mailbox.
+* oper info               Display information about an operation.
+* oper list               List operations.
+* paas attach             Add an instance vhost's git remote to local git repository.
+* paas clone              Clone a remote vhost in a local git repository.
+* paas console            Open a console on a PaaS.
+* paas create             Create a new PaaS instance and initialize associated git repository.
+* paas delete             Delete a PaaS instance.
+* paas info               Display information about a PaaS instance.
+* paas list               List PaaS instances.
+* paas restart            Restart a PaaS instance.
+* paas types              List types PaaS instances.
+* paas update             Update a PaaS instance.
+* record create           Create new DNS zone record entry for a domain.
+* record delete           Delete a record entry for a domain.
+* record list             List DNS zone records for a domain.
+* record update           Update records entries for a domain.
+* setup                   Initialize Gandi CLI configuration.
+* snapshotprofile info    Display information about a snapshot profile.
+* snapshotprofile list    List possible snapshot profiles.
+* sshkey create           Create a new SSH key.
+* sshkey delete           Delete SSH keys.
+* sshkey info             Display information about an SSH key.
+* sshkey list             List SSH keys.
+* status                  Display current status from status.gandi.net.
+* vhost create            Create a new vhost.
+* vhost delete            Delete a vhost.
+* vhost info              Display information about a vhost.
+* vhost list              List vhosts.
+* vhost update            Update a vhost.
+* vlan create             Create a new vlan
+* vlan delete             Delete a vlan.
+* vlan info               Display information about a vlan.
+* vlan list               List vlans.
+* vlan update             Update a vlan
+* vm console              Open a console to virtual machine.
+* vm create               Create a new virtual machine.
+* vm delete               Delete a virtual machine.
+* vm images               List available system images for virtual machines.
+* vm info                 Display information about a virtual machine.
+* vm kernels              List available kernels for virtual machines.
+* vm list                 List virtual machines.
+* vm migrate              Migrate a virtual machine to another datacenter.
+* vm reboot               Reboot a virtual machine.
+* vm ssh                  Spawn an SSH session to virtual machine.
+* vm start                Start a virtual machine.
+* vm stop                 Stop a virtual machine.
+* vm update               Update a virtual machine.
+* webacc add              Add a backend or a vhost on a webaccelerator
+* webacc create           Create a webaccelerator
+* webacc delete           Delete a webaccelerator, a vhost or a backend
+* webacc disable          Disable a backend or a probe on a webaccelerator
+* webacc enable           Enable a backend or a prove on a webaccelerator
+* webacc info             Display information about a webaccelerator
+* webacc list             List webaccelerators
+* webacc probe            Manage a probe for a webaccelerator
+* webacc update           Update a webaccelerator
 
 
 Details:
@@ -458,11 +458,11 @@ Copyright (c) 2014-2018 - Gandi S.A.S
 CONTRIBUTORS
 ============
 
- - Dejan Filipovic <sayoun@gandi.net>
- - Olivier Roussy <olivier@gandi.net>
- - Guillaume Gauvrit <guillaume.gauvrit@gandi.net>
- - Alexandre Solleiro <alexandre.solleiro@gandi.net>
- - Nicolas Chipaux <aegiap@gandi.net>
+* Dejan Filipovic <sayoun@gandi.net>
+* Olivier Roussy <olivier@gandi.net>
+* Guillaume Gauvrit <guillaume.gauvrit@gandi.net>
+* Alexandre Solleiro <alexandre.solleiro@gandi.net>
+* Nicolas Chipaux <aegiap@gandi.net>
 
 VERSION
 =======
