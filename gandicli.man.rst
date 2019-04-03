@@ -27,7 +27,7 @@ on Gandi.net platform.
 GETTING STARTED
 ===============
 
-  Run `gandi setup` or create $HOME/.config/gandi/config.yaml file.
+  Run `gandi setup` or create `$HOME/.config/gandi/config.yaml` file.
 
 ENVIRONMENT VARIABLES
 =====================
