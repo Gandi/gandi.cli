@@ -459,6 +459,7 @@ CONTRIBUTORS
 ============
 
 * Alexandre Solleiro <alexandre.solleiro@gandi.net>
+* Ben Finney <ben+gandi@benfinney.id.au>
 * Dejan Filipovic <sayoun@gandi.net>
 * Guillaume Gauvrit <guillaume.gauvrit@gandi.net>
 * Nicolas Chipaux <aegiap@gandi.net>
