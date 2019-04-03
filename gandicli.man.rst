@@ -7,7 +7,7 @@ command line interface to Gandi.net products using the public API
 -----------------------------------------------------------------
 
 :Author: aegiap@gandi.net
-:Date: 2014-06-30
+:Date: 2019-04-03
 :Copyright: GPL-3
 :Version: 0.1
 :Manual section: 1
