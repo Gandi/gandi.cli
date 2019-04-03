@@ -9,7 +9,7 @@ command line interface to Gandi.net products using the public API
 :Author: aegiap@gandi.net
 :Date: 2019-04-03
 :Copyright: GPL-3
-:Version: 0.1
+:Version: 1.4
 :Manual section: 1
 :Manual group: python
 
@@ -459,7 +459,7 @@ CONTRIBUTORS
 VERSION
 =======
 
-This is version 0.1.
+This is Gandi-cli version 1.4.
 
 CHANGELOG
 =========
