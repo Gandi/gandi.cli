@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.5
+---
+* Fixes #280: Problem with new record
+* Fixes #284: Manpage errors
+* Fixes #287: Problem with dnssec create with algorithm/flags
+
 1.4
 ---
 * Fixes #268: Drop support of click < 7.0

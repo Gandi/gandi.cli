@@ -1,3 +1,11 @@
+gandicli (1.5) unstable; urgency=medium
+
+  * Fixes #280: Problem with new record
+  * Fixes #284: Manpage errors
+  * Fixes #287: Problem with dnssec create with algorithm/flags
+
+ -- grigouze <grigouze@luna.gandi.net>  Thu, 09 May 2019 11:38:26 +0200
+
 gandicli (1.4) unstable; urgency=medium
 
   * Fixes #268: Drop support of click < 7.0
