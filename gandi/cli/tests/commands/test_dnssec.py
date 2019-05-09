@@ -20,8 +20,8 @@ class DnssecTestCase(CommandTestCase):
         result = self.invoke_with_exceptions(
             dnssec.create,
             ['iheartcli.com',
-             '--flags', 257,
-             '--algorithm', 5,
+             '--flags', '257',
+             '--algorithm', '5',
              '--public_key', 'AwEAAdYixYvq9eJLRQcxUeYJWaxAGXiP/K1/C7XHbUWGzA8A'
                              'HCRp81FAmfwcw1FrJ7bMViEegewPDGciQSv5HotPPOynUmkZ'
                              'bgztOeejH/+3Il/cM8SW4Et0i+99S7l9as+FI3AYOhsllDJK'
@@ -36,4 +36,13 @@ class DnssecTestCase(CommandTestCase):
         result = self.invoke_with_exceptions(dnssec.delete, ['125'])
 
         self.assertEqual(result.output, """Delete successful.\n""")
+        self.assertEqual(result.exit_code, 0)
+
+    def test_help(self):
+
+        result = self.invoke_with_exceptions(dnssec.create, ['--help'])
+
+        self.assertIn('--algorithm [1|2|3|5|6|7|8|10|12|13|14|15|16|253|254]', result.output)
+        self.assertIn('--flags [256|257]', result.output)
+
         self.assertEqual(result.exit_code, 0)

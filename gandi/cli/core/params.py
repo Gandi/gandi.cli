@@ -473,7 +473,8 @@ class AlgorithmType(click.Choice):
     """ Choice parameter to create DNSSEC key """
 
     name = 'algorithm'
-    choices = [1, 2, 3, 5, 6, 7, 8, 10, 12, 13, 14, 15, 16, 253, 254]
+    choices = ['1', '2', '3', '5', '6', '7', '8', '10', '12', '13', '14', '15',
+               '16', '253', '254']
 
     def __init__(self):
         """ Initialize choices list. """
@@ -484,7 +485,7 @@ class FlagsType(click.Choice):
     """ Choice parameter to create DNSSEC key """
 
     name = 'flags'
-    choices = [256, 257]
+    choices = ['256', '257']
 
     def __init__(self):
         """ Initialize choices list. """
