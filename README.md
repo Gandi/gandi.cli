@@ -274,7 +274,7 @@ To request a certificate, you need to use a private key to generate and sign a C
 
 The `create` command will take care of this for you if you don't have them already, or you can supply your CSR directly.
 
-Check out the examples below or [our wiki](http://wiki.gandi.net/ssl) for more information on how SSL certificates work.
+Check out the examples below or [our wiki](https://docs.gandi.net/en/ssl/) for more information on how SSL certificates work.
 
 To create a single domain Standard certificate:
 
@@ -315,7 +315,7 @@ You can also retrieve intermediate certificates if needed.
 
     $ gandi certificate export "domain.tld" --intermediate
 
-Find information on how to use your certificate with different servers on [our wiki](http://wiki.gandi.net/en/ssl).
+Find information on how to use your certificate with different servers on [our wiki](https://docs.gandi.net/en/ssl/).
 
 
 ### Adding a Web Application vhost with SSL
@@ -362,9 +362,7 @@ And then create the vhost.
 
 You can use Gandi CLI to create and setup your private VLANs. For more detailed information on how VLANs and networking in general works at Gandi, please check out our resources:
 
-* [Creating a private VLAN with Gandi CLI](http://wiki.gandi.net/en/tutorials/cli/pvlan)
-* [VLAN on Gandi Wiki](http://wiki.gandi.net/en/iaas/references/network/pvlan)
-* [Networking on Gandi Wiki](http://wiki.gandi.net/en/iaas/references/network)
+* [Networking on Gandi Wiki](https://docs.gandi.net/en/cloud/resource_management/network_interface_management.html)
 
 #### Create a VLAN
 
@@ -393,7 +391,6 @@ In fact there's no such thing as a "Private VM", but you can create a VM and onl
 
 Please note that a private VM cannot be accessed through the emergency console. You'll need a public VM that also has a private interface on the same VLAN to gain access.
 
-You can check out [our tutorial](http://wiki.gandi.net/en/tutorials/cli/pvlan) for an example of how to achieve this.
 
 #### More options
 
