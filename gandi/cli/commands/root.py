@@ -65,44 +65,64 @@ def help(ctx, command):
 def status(gandi, service):
     """Display current status from status.gandi.net."""
 
-    if not service:
-        global_status = gandi.status.status()
-        if global_status['status'] == 'FOGGY':
-            # something is going on but not affecting services
-            filters = {
-                'category': 'Incident',
-                'current': True,
-            }
-            events = gandi.status.events(filters)
-            for event in events:
-                if event['services']:
-                    # do not process services
-                    continue
-                event_url = gandi.status.event_timeline(event)
-                service_detail = '%s - %s' % (event['title'], event_url)
-                gandi.echo(service_detail)
+    summary = gandi.status.summary()
 
-    # then check other services
-    descs = gandi.status.descriptions()
-    needed = services = gandi.status.services()
-    if service:
-        needed = [serv for serv in services
-                  if serv['name'].lower() == service.lower()]
+    # * create a dict with service id as key
+    # * collect leaf services
+    serv_by_id = {}
+    leaf_serv = []
+    for serv in summary[u"components"]:
+        serv_by_id[serv[u"id"]] = serv
 
-    for serv in needed:
-        if serv['status'] != 'STORMY':
-            output_service(gandi, serv['name'], descs[serv['status']])
+        if not serv[u"group"]:
+            leaf_serv.append(serv)
+
+    # * compute long service name (parent groupe name + service name)
+    # * filter wanted service
+    serv_by_name = {}
+    for serv in leaf_serv:
+        if serv[u"group_id"] is None:
+            group_name = None
+            service_name = serv['name']
+        else:
+            group_name = serv_by_id[serv[u"group_id"]][u"name"]
+            service_name = '%s - %s' % (group_name, serv['name'],)
+
+        # does the user picked a specific services ?
+        if service is not None:
+            if service not in (serv['name'], group_name, service_name):
+                continue
+
+        serv_by_name[service_name] = serv
+
+    # process each service leaf
+    services_report = []
+    for service_name in sorted(serv_by_name.keys()):
+        serv = serv_by_name[service_name]
+
+        # this is a relevant service, add it to report
+        services_report.append({
+            u'name': serv[u'name'],
+            u'status': serv[u'status'],
+            u'description': serv[u'description'],
+        })
+
+        # no major outage for this service, just print service status
+        if serv[u'status'] != 'major_outage':
+            output_service(gandi, service_name, serv['status'], justify=30)
             continue
 
-        filters = {
-            'category': 'Incident',
-            'services': serv['name'],
-            'current': True,
-        }
-        events = gandi.status.events(filters)
-        for event in events:
-            event_url = gandi.status.event_timeline(event)
-            service_detail = '%s - %s' % (event['title'], event_url)
-            output_service(gandi, serv['name'], service_detail)
+        # a major outage is in progress for that service
+        # print every related incidents
+        for incident in summary[u'incidents']:
+            for incident_component in incident[u"components"]:
+                if serv[u"id"] == incident_component[u"id"]:
+                    break
+            else:
+                continue
 
-    return services
+            service_detail = '%s - %s'
+            service_detail %= (incident[u'name'], incident[u'shortlink'])
+            output_service(gandi, service_name, service_detail, justify=30)
+
+    return services_report

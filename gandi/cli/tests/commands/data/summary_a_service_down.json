@@ -1,0 +1,687 @@
+{
+  "page": {
+    "id": "xnm08yh10bv5",
+    "name": "Gandi.net Status",
+    "url": "https://gandi.statuspage.io",
+    "time_zone": "Etc/UTC",
+    "updated_at": "2020-01-15T10:12:20.345Z"
+  },
+  "components": [
+    {
+      "id": "3cl14sk43r6k",
+      "name": "Domain name registration",
+      "status": "operational",
+      "created_at": "2019-04-22T20:00:03.240Z",
+      "updated_at": "2020-01-13T15:07:30.292Z",
+      "position": 1,
+      "description": null,
+      "showcase": false,
+      "group_id": null,
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "nn621m9h5njs",
+      "name": "www.gandi.net",
+      "status": "operational",
+      "created_at": "2019-04-22T19:50:17.470Z",
+      "updated_at": "2019-11-05T09:06:01.880Z",
+      "position": 1,
+      "description": null,
+      "showcase": false,
+      "group_id": "2cggxn8q3hzd",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "k466qqxbp2qr",
+      "name": "LiveDNS",
+      "status": "operational",
+      "created_at": "2019-04-22T19:26:46.646Z",
+      "updated_at": "2019-11-05T08:59:34.833Z",
+      "position": 1,
+      "description": "LiveDNS service",
+      "showcase": false,
+      "group_id": "p8gh4dnndnyp",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "ssp5pygxn42v",
+      "name": "PUBLIC API v4",
+      "status": "operational",
+      "created_at": "2019-04-22T19:58:02.531Z",
+      "updated_at": "2020-01-13T14:44:25.102Z",
+      "position": 1,
+      "description": null,
+      "showcase": false,
+      "group_id": "q6hxh6z6dv09",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "txlpp0s2l69v",
+      "name": "PAAS FR-SD3",
+      "status": "operational",
+      "created_at": "2019-04-22T19:38:25.848Z",
+      "updated_at": "2019-04-22T19:54:15.701Z",
+      "position": 1,
+      "description": null,
+      "showcase": false,
+      "group_id": "cj3mqbm2n7km",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "jhmd6hcbk95m",
+      "name": "SMTP in",
+      "status": "operational",
+      "created_at": "2019-04-22T19:29:50.442Z",
+      "updated_at": "2019-11-05T09:02:49.461Z",
+      "position": 1,
+      "description": "SMTP used to receive emails for Gandimail customers",
+      "showcase": false,
+      "group_id": "gghfxcdq0xnk",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "wgtyj8zkfgdr",
+      "name": "PAAS FR-SD5",
+      "status": "operational",
+      "created_at": "2019-04-22T19:38:48.273Z",
+      "updated_at": "2020-01-15T09:50:12.830Z",
+      "position": 2,
+      "description": null,
+      "showcase": false,
+      "group_id": "cj3mqbm2n7km",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "xn5w8bybwqh2",
+      "name": "PUBLIC API v5",
+      "status": "operational",
+      "created_at": "2019-04-22T19:58:31.000Z",
+      "updated_at": "2019-11-06T09:15:47.973Z",
+      "position": 2,
+      "description": null,
+      "showcase": false,
+      "group_id": "q6hxh6z6dv09",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "p8gh4dnndnyp",
+      "name": "DNS",
+      "status": "operational",
+      "created_at": "2019-04-22T19:26:46.633Z",
+      "updated_at": "2019-04-22T20:00:32.084Z",
+      "position": 2,
+      "description": null,
+      "showcase": false,
+      "group_id": null,
+      "page_id": "xnm08yh10bv5",
+      "group": true,
+      "only_show_if_degraded": false,
+      "components": [
+        "k466qqxbp2qr",
+        "2hjdv57h7157",
+        "6rkfxd09l4kb"
+      ]
+    },
+    {
+      "id": "2hjdv57h7157",
+      "name": "{abc}.dns.gandi.net",
+      "status": "operational",
+      "created_at": "2019-04-22T19:27:07.170Z",
+      "updated_at": "2019-11-05T09:02:44.660Z",
+      "position": 2,
+      "description": null,
+      "showcase": false,
+      "group_id": "p8gh4dnndnyp",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "qdv8sq63rnb6",
+      "name": "SMTP out",
+      "status": "operational",
+      "created_at": "2019-04-22T19:30:41.951Z",
+      "updated_at": "2019-11-05T09:02:52.236Z",
+      "position": 2,
+      "description": "SMTP used by customers to send emails",
+      "showcase": false,
+      "group_id": "gghfxcdq0xnk",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "6rkfxd09l4kb",
+      "name": "ns6.gandi.net",
+      "status": "operational",
+      "created_at": "2019-04-22T19:27:38.853Z",
+      "updated_at": "2019-11-05T09:02:47.107Z",
+      "position": 3,
+      "description": "secondary dns service",
+      "showcase": false,
+      "group_id": "p8gh4dnndnyp",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "jnq9855zb4pd",
+      "name": "Roundcube webmail",
+      "status": "operational",
+      "created_at": "2019-04-22T19:33:26.816Z",
+      "updated_at": "2019-11-05T09:02:55.793Z",
+      "position": 3,
+      "description": null,
+      "showcase": false,
+      "group_id": "gghfxcdq0xnk",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "gghfxcdq0xnk",
+      "name": "Gandimail",
+      "status": "operational",
+      "created_at": "2019-04-22T19:29:50.432Z",
+      "updated_at": "2019-04-22T20:00:32.098Z",
+      "position": 3,
+      "description": null,
+      "showcase": false,
+      "group_id": null,
+      "page_id": "xnm08yh10bv5",
+      "group": true,
+      "only_show_if_degraded": false,
+      "components": [
+        "jhmd6hcbk95m",
+        "qdv8sq63rnb6",
+        "jnq9855zb4pd",
+        "75840d8zb43v",
+        "7wglplfblkyc"
+      ]
+    },
+    {
+      "id": "4mn6n7z1p9qh",
+      "name": "PAAS FR-SD6",
+      "status": "operational",
+      "created_at": "2019-04-22T19:38:59.864Z",
+      "updated_at": "2019-04-22T19:54:42.045Z",
+      "position": 3,
+      "description": null,
+      "showcase": false,
+      "group_id": "cj3mqbm2n7km",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "cj3mqbm2n7km",
+      "name": "Hosting",
+      "status": "major_outage",
+      "created_at": "2019-04-22T19:38:25.839Z",
+      "updated_at": "2019-04-22T20:00:32.109Z",
+      "position": 4,
+      "description": null,
+      "showcase": false,
+      "group_id": null,
+      "page_id": "xnm08yh10bv5",
+      "group": true,
+      "only_show_if_degraded": false,
+      "components": [
+        "txlpp0s2l69v",
+        "wgtyj8zkfgdr",
+        "4mn6n7z1p9qh",
+        "ztbrfyff8zgd",
+        "jg1wr6q3x8zj",
+        "jmbh9g38q273",
+        "c7hszlhjnvkn",
+        "lh3pzn39t285"
+      ]
+    },
+    {
+      "id": "ztbrfyff8zgd",
+      "name": "IAAS FR-SD3",
+      "status": "operational",
+      "created_at": "2019-04-22T19:39:22.901Z",
+      "updated_at": "2019-04-22T19:54:54.342Z",
+      "position": 4,
+      "description": null,
+      "showcase": false,
+      "group_id": "cj3mqbm2n7km",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "75840d8zb43v",
+      "name": "Sogo webmail",
+      "status": "operational",
+      "created_at": "2019-04-22T19:33:47.267Z",
+      "updated_at": "2019-11-05T09:03:00.079Z",
+      "position": 4,
+      "description": null,
+      "showcase": false,
+      "group_id": "gghfxcdq0xnk",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "7wglplfblkyc",
+      "name": "Access (IMAP/POP3)",
+      "status": "operational",
+      "created_at": "2019-04-22T19:35:12.038Z",
+      "updated_at": "2019-11-05T09:05:58.490Z",
+      "position": 5,
+      "description": "IMAP/POP3 access for customers",
+      "showcase": false,
+      "group_id": "gghfxcdq0xnk",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "2cggxn8q3hzd",
+      "name": "Portal",
+      "status": "operational",
+      "created_at": "2019-04-22T19:50:17.460Z",
+      "updated_at": "2019-04-22T20:00:32.121Z",
+      "position": 5,
+      "description": null,
+      "showcase": false,
+      "group_id": null,
+      "page_id": "xnm08yh10bv5",
+      "group": true,
+      "only_show_if_degraded": false,
+      "components": [
+        "nn621m9h5njs"
+      ]
+    },
+    {
+      "id": "jg1wr6q3x8zj",
+      "name": "IAAS FR-SD5",
+      "status": "operational",
+      "created_at": "2019-04-22T19:39:36.219Z",
+      "updated_at": "2019-04-22T19:55:08.947Z",
+      "position": 5,
+      "description": null,
+      "showcase": false,
+      "group_id": "cj3mqbm2n7km",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "jmbh9g38q273",
+      "name": "IAAS FR-SD6",
+      "status": "operational",
+      "created_at": "2019-04-22T19:39:55.043Z",
+      "updated_at": "2019-04-22T19:55:24.933Z",
+      "position": 6,
+      "description": null,
+      "showcase": false,
+      "group_id": "cj3mqbm2n7km",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "q6hxh6z6dv09",
+      "name": "APIs",
+      "status": "operational",
+      "created_at": "2019-04-22T19:58:02.521Z",
+      "updated_at": "2019-04-22T20:00:32.138Z",
+      "position": 6,
+      "description": null,
+      "showcase": false,
+      "group_id": null,
+      "page_id": "xnm08yh10bv5",
+      "group": true,
+      "only_show_if_degraded": false,
+      "components": [
+        "ssp5pygxn42v",
+        "xn5w8bybwqh2"
+      ]
+    },
+    {
+      "id": "c7hszlhjnvkn",
+      "name": "PAAS LU-BI1",
+      "status": "major_outage",
+      "created_at": "2019-04-22T19:40:28.899Z",
+      "updated_at": "2020-01-15T10:12:20.299Z",
+      "position": 7,
+      "description": null,
+      "showcase": false,
+      "group_id": "cj3mqbm2n7km",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "nc7prv059tcl",
+      "name": "Web redirection services",
+      "status": "operational",
+      "created_at": "2019-04-22T20:04:02.853Z",
+      "updated_at": "2019-11-05T09:06:09.255Z",
+      "position": 7,
+      "description": null,
+      "showcase": false,
+      "group_id": null,
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "lh3pzn39t285",
+      "name": "IAAS LU-BI1",
+      "status": "operational",
+      "created_at": "2019-04-22T19:40:48.772Z",
+      "updated_at": "2019-04-22T19:55:58.083Z",
+      "position": 8,
+      "description": null,
+      "showcase": false,
+      "group_id": "cj3mqbm2n7km",
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    },
+    {
+      "id": "n5rwlz4n179c",
+      "name": "Network",
+      "status": "operational",
+      "created_at": "2019-05-27T08:41:50.983Z",
+      "updated_at": "2019-12-11T03:49:27.759Z",
+      "position": 8,
+      "description": null,
+      "showcase": false,
+      "group_id": null,
+      "page_id": "xnm08yh10bv5",
+      "group": false,
+      "only_show_if_degraded": false
+    }
+  ],
+  "incidents": [
+    {
+      "id": "4vtwdck61r3w",
+      "name": "Hard drive issues",
+      "status": "investigating",
+      "created_at": "2020-01-15T10:12:20.270Z",
+      "updated_at": "2020-01-15T10:12:20.342Z",
+      "monitoring_at": null,
+      "resolved_at": null,
+      "impact": "major",
+      "shortlink": "http://stspg.io/stc35fvwr5nt",
+      "started_at": "2020-01-15T10:12:20.260Z",
+      "page_id": "xnm08yh10bv5",
+      "incident_updates": [
+        {
+          "id": "4k2jbtvphqxl",
+          "status": "investigating",
+          "body": "we are currently validating this new status",
+          "incident_id": "4vtwdck61r3w",
+          "created_at": "2020-01-15T10:12:20.339Z",
+          "updated_at": "2020-01-15T10:12:20.339Z",
+          "display_at": "2020-01-15T10:12:20.339Z",
+          "affected_components": [
+            {
+              "code": "c7hszlhjnvkn",
+              "name": "Hosting - PAAS LU-BI1",
+              "old_status": "under_maintenance",
+              "new_status": "major_outage"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "c7hszlhjnvkn",
+          "name": "PAAS LU-BI1",
+          "status": "major_outage",
+          "created_at": "2019-04-22T19:40:28.899Z",
+          "updated_at": "2020-01-15T10:12:20.299Z",
+          "position": 7,
+          "description": null,
+          "showcase": false,
+          "group_id": "cj3mqbm2n7km",
+          "page_id": "xnm08yh10bv5",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ]
+    },
+    {
+      "id": "4vt3dck64r31",
+      "name": "Hard drive issues",
+      "status": "investigating",
+      "created_at": "2020-01-15T10:12:20.270Z",
+      "updated_at": "2020-01-15T10:12:20.342Z",
+      "monitoring_at": null,
+      "resolved_at": null,
+      "impact": "major",
+      "shortlink": "http://stspg.io/sec36fvwr5nt",
+      "started_at": "2020-01-15T10:12:20.260Z",
+      "page_id": "xnd08yh10cv5",
+      "incident_updates": [
+        {
+          "id": "4k2jghyphqxl",
+          "status": "investigating",
+          "body": "we are currently validating this new status",
+          "incident_id": "4vtwdck61r3w",
+          "created_at": "2020-01-15T10:12:20.339Z",
+          "updated_at": "2020-01-15T10:12:20.339Z",
+          "display_at": "2020-01-15T10:12:20.339Z",
+          "affected_components": [
+            {
+              "code": "lh3pzn39t285",
+              "name": "Hosting - IAAS LU-BI1",
+              "old_status": "under_maintenance",
+              "new_status": "major_outage"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "lh3pzn39t285",
+          "name": "IAAS LU-BI1",
+          "status": "operational",
+          "created_at": "2019-04-22T19:40:48.772Z",
+          "updated_at": "2019-04-22T19:55:58.083Z",
+          "position": 8,
+          "description": null,
+          "showcase": false,
+          "group_id": "cj3mqbm2n7km",
+          "page_id": "xnm08yh10bv5",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ]
+    }
+  ],
+  "scheduled_maintenances": [
+    {
+      "id": "hz8p0x7hmls9",
+      "name": "[Production] Registry Eurid Maintenance",
+      "status": "scheduled",
+      "created_at": "2020-01-15T09:55:19.084Z",
+      "updated_at": "2020-01-15T09:55:19.133Z",
+      "monitoring_at": null,
+      "resolved_at": null,
+      "impact": "maintenance",
+      "shortlink": "http://stspg.io/189y831zqh4x",
+      "started_at": "2020-01-15T09:55:19.079Z",
+      "page_id": "xnm08yh10bv5",
+      "incident_updates": [
+        {
+          "id": "qynz70pn0n0b",
+          "status": "scheduled",
+          "body": "Registry Eurid Maintenance\n\n            List of TLD(s) impacted:\neu, xn--e1a4c\n\n            Maintenance Window: 2020-01-22 05:00AM UTC - 2020-01-22 08:00AM UTC\n\n            No action on these domains will be possible during this outage.",
+          "incident_id": "hz8p0x7hmls9",
+          "created_at": "2020-01-15T09:55:19.130Z",
+          "updated_at": "2020-01-15T09:55:19.130Z",
+          "display_at": "2020-01-15T09:55:19.130Z",
+          "affected_components": [
+            {
+              "code": "3cl14sk43r6k",
+              "name": "Domain name registration",
+              "old_status": "operational",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": false,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "3cl14sk43r6k",
+          "name": "Domain name registration",
+          "status": "operational",
+          "created_at": "2019-04-22T20:00:03.240Z",
+          "updated_at": "2020-01-13T15:07:30.292Z",
+          "position": 1,
+          "description": null,
+          "showcase": false,
+          "group_id": null,
+          "page_id": "xnm08yh10bv5",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ],
+      "scheduled_for": "2020-01-22T05:00:00.000Z",
+      "scheduled_until": "2020-01-22T08:00:00.000Z"
+    },
+    {
+      "id": "k75cdm2g4m0n",
+      "name": "[Production] Registry Nominet Maintenance",
+      "status": "scheduled",
+      "created_at": "2020-01-15T09:56:10.013Z",
+      "updated_at": "2020-01-15T09:56:10.083Z",
+      "monitoring_at": null,
+      "resolved_at": null,
+      "impact": "maintenance",
+      "shortlink": "http://stspg.io/1k7rd25stv6w",
+      "started_at": "2020-01-15T09:56:10.006Z",
+      "page_id": "xnm08yh10bv5",
+      "incident_updates": [
+        {
+          "id": "0hqfsnw1pl6c",
+          "status": "scheduled",
+          "body": "Registry Nominet Maintenance\n\n            List of TLD(s) impacted:\nme.uk, org.uk, co.uk, uk\n\n            Maintenance Window: 2020-01-22 10:00AM UTC - 2020-01-22 11:00AM UTC\n\n            No action on these domains will be possible during this outage.",
+          "incident_id": "k75cdm2g4m0n",
+          "created_at": "2020-01-15T09:56:10.079Z",
+          "updated_at": "2020-01-15T09:56:10.079Z",
+          "display_at": "2020-01-15T09:56:10.079Z",
+          "affected_components": [
+            {
+              "code": "3cl14sk43r6k",
+              "name": "Domain name registration",
+              "old_status": "operational",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": false,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "3cl14sk43r6k",
+          "name": "Domain name registration",
+          "status": "operational",
+          "created_at": "2019-04-22T20:00:03.240Z",
+          "updated_at": "2020-01-13T15:07:30.292Z",
+          "position": 1,
+          "description": null,
+          "showcase": false,
+          "group_id": null,
+          "page_id": "xnm08yh10bv5",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ],
+      "scheduled_for": "2020-01-22T10:00:00.000Z",
+      "scheduled_until": "2020-01-22T11:00:00.000Z"
+    },
+    {
+      "id": "4j4c18c4r7nq",
+      "name": "Registry Maintenance SWITCH",
+      "status": "scheduled",
+      "created_at": "2019-10-31T09:46:32.530Z",
+      "updated_at": "2019-10-31T09:46:32.576Z",
+      "monitoring_at": null,
+      "resolved_at": null,
+      "impact": "maintenance",
+      "shortlink": "http://stspg.io/89a2d2633",
+      "started_at": "2019-10-31T09:46:32.525Z",
+      "page_id": "xnm08yh10bv5",
+      "incident_updates": [
+        {
+          "id": "dl32dp8blkfk",
+          "status": "scheduled",
+          "body": "We notify you of an important maintenance shutdown of SWITCH registry impacting the TLDs listed below:\n\nList of TLD(s) impacted: .CH, .LI\n\nMaintenance Window: 2020-01-30 05:00AM UTC - 2020-01-30 05:30AM UTC Implications: Total Outage\n\nNo action on these domains will be possible during this outage.",
+          "incident_id": "4j4c18c4r7nq",
+          "created_at": "2019-10-31T09:46:32.573Z",
+          "updated_at": "2019-10-31T09:46:32.573Z",
+          "display_at": "2019-10-31T09:46:32.573Z",
+          "affected_components": [
+            {
+              "code": "3cl14sk43r6k",
+              "name": "Domain name registration",
+              "old_status": "operational",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": false,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "3cl14sk43r6k",
+          "name": "Domain name registration",
+          "status": "operational",
+          "created_at": "2019-04-22T20:00:03.240Z",
+          "updated_at": "2020-01-13T15:07:30.292Z",
+          "position": 1,
+          "description": null,
+          "showcase": false,
+          "group_id": null,
+          "page_id": "xnm08yh10bv5",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ],
+      "scheduled_for": "2020-01-30T05:00:00.000Z",
+      "scheduled_until": "2020-01-30T05:30:00.000Z"
+    }
+  ],
+  "status": {
+    "indicator": "minor",
+    "description": "Partially Degraded Service"
+  }
+}
