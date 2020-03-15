@@ -9,6 +9,15 @@ from click.decorators import _param_memo
 from gandi.cli.core.base import GandiContextHelper
 
 
+def str_type(what):
+    """
+    python2 / click compatibilty:
+    assert that "str" type is used (not unicode)
+    """
+    if not isinstance(what, str):
+        return what.encode('utf-8')
+    return what
+
 class GandiChoice(click.Choice):
 
     """ Base class for custom Choice parameters. """
@@ -36,12 +45,14 @@ class GandiChoice(click.Choice):
                            "api '%s' and that it's running." % (api.host))
                 sys.exit(1)
 
+            self._choices = [str_type(val) for val in self._choices]
+
         return self._choices
 
     def convert(self, value, param, ctx):
         """ Internal method to use correct context. """
         self.gandi = ctx.obj
-        return click.Choice.convert(self, value, param, ctx)
+        return click.Choice.convert(self, str_type(value), param, ctx)
 
     def convert_deprecated_value(self, value):
         """ To override when needed """
@@ -62,13 +73,14 @@ class DatacenterParamType(GandiChoice):
             iso_codes.append(item['iso'])
             if item.get('dc_code'):
                 dc_codes.append(item['dc_code'])
+
         return dc_codes + iso_codes
 
     def convert(self, value, param, ctx):
         """ Convert value to uppercase. """
         self.gandi = ctx.obj
         value = value.upper()
-        return click.Choice.convert(self, value, param, ctx)
+        return click.Choice.convert(self, str_type(value), param, ctx)
 
     def convert_deprecated_value(self, value):
         """ To update the configuration with the new datacenter naming """
@@ -280,6 +292,7 @@ class CertificateDcvMethod(click.Choice):
 
     name = 'certificate dcv method'
     choices = ['email', 'dns', 'file', 'auto']
+    case_sensitive = True
 
     def __init__(self):
         """ Initialize choices list. """
@@ -295,6 +308,7 @@ class IpType(click.Choice):
 
     name = 'ip type'
     choices = ['private', 'public']
+    case_sensitive = True
 
     def __init__(self):
         """ Initialize choices list. """
@@ -446,6 +460,7 @@ class OperStepParamType(click.Choice):
 
     name = 'oper step'
     choices = ['BILL', 'WAIT', 'RUN', 'ERROR']
+    case_sensitive = True
 
     def __init__(self):
         """ Initialize choices list. """
@@ -466,7 +481,7 @@ class DNSRecordsParamType(GandiChoice):
         """ Convert value to uppercase. """
         self.gandi = ctx.obj
         value = value.upper()
-        return click.Choice.convert(self, value, param, ctx)
+        return click.Choice.convert(self, str_type(value), param, ctx)
 
 
 class AlgorithmType(click.Choice):
@@ -475,6 +490,7 @@ class AlgorithmType(click.Choice):
     name = 'algorithm'
     choices = ['1', '2', '3', '5', '6', '7', '8', '10', '12', '13', '14', '15',
                '16', '253', '254']
+    case_sensitive = True
 
     def __init__(self):
         """ Initialize choices list. """
@@ -486,6 +502,7 @@ class FlagsType(click.Choice):
 
     name = 'flags'
     choices = ['256', '257']
+    case_sensitive = True
 
     def __init__(self):
         """ Initialize choices list. """
