@@ -120,7 +120,11 @@ def update(gandi, fqdn, name, type, value, ttl, file):
     if file:
         content = file.read()
     elif not sys.stdin.isatty():
-        content = click.get_text_stream('stdin').read()
+        try:
+            content = click.get_text_stream('stdin').read()
+        except IOError:
+            # stdin may not be available
+            pass
 
     content = content.strip()
     if not content and not name and not type and not value:
