@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.6
+---
+* Fixes #289: Spelling errors in manual page
+* Gandi change its documentation URL
+* Update status command to use statuspage in place of bahobab
+* Fix type issue with click >= 7.1
+
 1.5
 ---
 * Fixes #280: Problem with new record

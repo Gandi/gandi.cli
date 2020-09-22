@@ -1,10 +1,19 @@
+gandicli (1.6) unstable; urgency=medium
+
+  * Fixes #289: Spelling errors in manual page
+  * Gandi change its documentation URL
+  * Update status command to use statuspage in place of bahobab
+  * Fix type issue with click >= 7.1
+
+ -- grigouze <grigouze@gandi.net>  Tue, 22 Sep 2020 17:46:43 +0200
+
 gandicli (1.5) unstable; urgency=medium
 
   * Fixes #280: Problem with new record
   * Fixes #284: Manpage errors
   * Fixes #287: Problem with dnssec create with algorithm/flags
 
- -- grigouze <grigouze@luna.gandi.net>  Thu, 09 May 2019 11:38:26 +0200
+ -- grigouze <grigouze@gandi.net>  Thu, 09 May 2019 11:38:26 +0200
 
 gandicli (1.4) unstable; urgency=medium
 
