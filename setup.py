@@ -62,6 +62,7 @@ setup(name='gandi.cli',
       version=version,
       description='Gandi command line interface',
       long_description=README + '\n\n' + CHANGES,
+      long_description_content_type='text/markdown',
       author='Gandi',
       author_email='feedback@gandi.net',
       classifiers=[
