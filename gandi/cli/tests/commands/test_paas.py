@@ -197,7 +197,8 @@ ssh 185290@console.dc2.gpaas.net""")
     def test_clone_missing(self):
         result = self.invoke_with_exceptions(paas.clone, [])
 
-        self.assertEqual(result.output, """\
+        # output differs between click < 7.1 and >: 7.1 (' -> ")
+        self.assertEqual(result.output.replace("'", '"'), """\
 Usage: clone [OPTIONS] NAME
 Try "clone --help" for help.
 
