@@ -38,7 +38,7 @@ Use `$ gandi` to easily create and manage web resources from the command line.
 ## Requirements
 
 * A compatible operating system (Linux, BSD, Mac OS X/Darwin, Windows)
-* Python 2.7/3.4/3.5/3.6/3.7
+* Python 2.7/3.4/3.5/3.6/3.7/3.8
 * openssl
 * openssh
 * git
