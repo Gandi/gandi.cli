@@ -1,12 +1,12 @@
 language: python
 python:
   - "2.7"
-  - "3.4"
-  - "3.5"
+#  - "3.4"
+#  - "3.5"
   - "3.6"
   - "3.8"
-  - pypy
-  - pypy3
+#  - pypy
+#  - pypy3
 matrix:
   include:
     - python: 3.7
