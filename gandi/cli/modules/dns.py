@@ -20,6 +20,7 @@ class Dns(GandiModule):
 
     """
 
+    # API documentation: https://doc.livedns.gandi.net/
     api_url = 'https://dns.api.gandi.net/api/v5'
 
     @classmethod
