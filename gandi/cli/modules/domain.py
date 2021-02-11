@@ -15,16 +15,17 @@ class Domain(GandiModule):
     $ gandi domain list
 
     """
+    api_url = 'https://api.gandi.net/v5/domain'
 
     @classmethod
-    def list(cls, options):
+    def list(cls, limit=100):
         """List operation."""
-        return cls.call('domain.list', options)
+        return cls.json_get(f"{cls.api_url}/domains?per_page={limit}")
 
     @classmethod
     def info(cls, fqdn):
         """Display information about a domain."""
-        return cls.call('domain.info', fqdn)
+        return cls.json_get(f"{cls.api_url}/domains/{fqdn}")
 
     @classmethod
     def create(cls, fqdn, duration, owner, admin, tech, bill, nameserver,

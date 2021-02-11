@@ -137,9 +137,9 @@ class GandiModule(GandiConfig):
                 sys.exit(1)
             if send_key:
                 if 'headers' in kwargs:
-                    kwargs['headers'].update({'X-Api-Key': apikey})
+                    kwargs["headers"].update({"Authorization": "Apikey " + apikey})
                 else:
-                    kwargs['headers'] = {'X-Api-Key': apikey}
+                    kwargs["headers"] = {"Authorization": "Apikey " + apikey}
         except MissingConfiguration:
             if not empty_key:
                 return []
