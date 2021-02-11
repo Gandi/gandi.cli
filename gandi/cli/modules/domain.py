@@ -2,6 +2,8 @@
 
 import time
 
+from dateutil.parser import isoparse
+
 from gandi.cli.core.base import GandiModule
 from gandi.cli.core.utils import DomainNotAvailable
 
@@ -86,7 +88,7 @@ class Domain(GandiModule):
 
         domain_info = cls.info(fqdn)
 
-        current_year = domain_info['date_registry_end'].year
+        current_year = isoparse(domain_info['dates']['registry_ends_at']).year
         domain_params = {
             'duration': duration,
             'current_year': current_year,

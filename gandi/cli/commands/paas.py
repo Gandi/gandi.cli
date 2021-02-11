@@ -226,7 +226,7 @@ def create(gandi, name, size, type, quantity, duration, datacenter, vhosts,
     try:
         gandi.datacenter.is_opened(datacenter, 'paas')
     except DatacenterLimited as exc:
-        gandi.echo('/!\ Datacenter %s will be closed on %s, '
+        gandi.echo('/!\\ Datacenter %s will be closed on %s, '
                    'please consider using another datacenter.' %
                    (datacenter, exc.date))
 
@@ -363,6 +363,6 @@ def console(gandi, resource):
 
     Resource can be a hostname or an ID
     """
-    gandi.echo('/!\ Use ~. ssh escape key to exit.')
+    gandi.echo('/!\\ Use ~. ssh escape key to exit.')
 
     gandi.paas.console(resource)

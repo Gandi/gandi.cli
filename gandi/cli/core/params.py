@@ -406,10 +406,12 @@ class BackendParamType(click.ParamType):
 
     def convert(self, value, param, ctx):
         """ Validate value using regexp. """
-        rxp = "^(((([1]?\d)?\d|2[0-4]\d|25[0-5])\.){3}(([1]?\d)?\d|2[0-4]\d|"\
-              "25[0-5]))|([\da-fA-F]{1,4}(\:[\da-fA-F]{1,4}){7})|(([\da-fA-F]"\
-              "{1,4}:){0,5}::([\da-fA-F]{1,4}:)"\
-              "{0,5}[\da-fA-F]{1,4})$"
+        rxp = (
+            r"^(((([1]?\d)?\d|2[0-4]\d|25[0-5])\.){3}(([1]?\d)?\d|2[0-4]\d|"
+            r"25[0-5]))|([\da-fA-F]{1,4}(\:[\da-fA-F]{1,4}){7})|(([\da-fA-F]"
+            r"{1,4}:){0,5}::([\da-fA-F]{1,4}:)"
+            r"{0,5}[\da-fA-F]{1,4})$"
+        )
         regex = re.compile(rxp, re.I)
         backend = {}
         if value.count(':') == 0:

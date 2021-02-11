@@ -187,7 +187,7 @@ rubymongodb
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Use ~. ssh escape key to exit.
+/!\\ Use ~. ssh escape key to exit.
 Activation of the console on your PaaS instance
 \rProgress: [###] 100.00%  00:00:00  \n\
 ssh 185290@console.dc2.gpaas.net""")
@@ -564,7 +564,7 @@ Please give the private key for certificate id 706 (CN: inter.net)""")
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
 
         self.assertEqual(re.sub(r'paas\d+', 'paas', output), """\
-/!\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider using \
+/!\\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider using \
 another datacenter.
 password: \nRepeat for confirmation: \n\
 Creating your PaaS instance.
@@ -590,7 +590,7 @@ Your PaaS instance paas has been created.""")
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
 
         self.assertEqual(re.sub(r'paas\d+', 'paas', output), """\
-Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
+Error: /!\\ Datacenter US-BA1 is closed, please choose another datacenter.""")
 
         self.assertEqual(result.exit_code, 1)
 

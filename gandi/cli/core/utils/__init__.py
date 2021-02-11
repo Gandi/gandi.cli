@@ -339,8 +339,7 @@ def output_snapshot_profile(gandi, profile, output_keys, justify=13):
 
 def format_contact(contact):
     """Return a formatted contact object, as a single line."""
-    return (f"{contact['city']} {contact['country']} {contact['given']} "
-            f"{contact['family']} {contact['email']} {contact['orgname']}")
+    return f"{contact['given']} {contact['family']}"
 
 
 def output_contact_info(gandi, data, output_keys, justify=10):
@@ -536,7 +535,7 @@ def output_domain(gandi, domain, output_keys, justify=12):
     output_generic(gandi, domain, output_keys, justify)
 
     if "created" in output_keys:
-        output_line(gandi, "created", domain["dates"]["created_at"], justify)
+        output_line(gandi, "created", isoparse(domain["dates"]["created_at"]), justify)
 
     if "expires" in output_keys:
         date_end = isoparse(domain["dates"]["registry_ends_at"])
@@ -547,7 +546,7 @@ def output_domain(gandi, domain, output_keys, justify=12):
                     justify)
 
     if 'updated' in output_keys:
-        output_line(gandi, "updated", domain["dates"]["updated_at"], justify)
+        output_line(gandi, "updated", isoparse(domain["dates"]["updated_at"]), justify)
 
 
 def output_mailbox(gandi, mailbox, output_keys, justify=16):

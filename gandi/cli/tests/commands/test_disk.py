@@ -649,7 +649,7 @@ Creating your disk.
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
+Error: /!\\ Datacenter US-BA1 is closed, please choose another datacenter.""")
         self.assertEqual(result.exit_code, 1)
 
     def test_create_datacenter_limited(self):
@@ -660,7 +660,7 @@ Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider using \
+/!\\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider using \
 another datacenter.
 Creating your disk.
 \rProgress: [###] 100.00%  00:00:00""")
@@ -699,7 +699,7 @@ step      : WAIT""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ VM server01 datacenter will be used instead of FR-SD5.
+/!\\ VM server01 datacenter will be used instead of FR-SD5.
 Creating your disk.
 \rProgress: [###] 100.00%  00:00:00  \
 \nAttaching your disk.

@@ -12,7 +12,7 @@ class CertTestCase(CommandTestCase):
 
         result = self.invoke_with_exceptions(certificate.packages, [])
 
-        wanted = ("""/!\ "gandi certificate packages" is deprecated.
+        wanted = ("""/!\\ "gandi certificate packages" is deprecated.
 Please use "gandi certificate plans".
 Description            | Name               | Max altnames | Type
 -----------------------+--------------------+--------------+-----

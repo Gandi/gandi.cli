@@ -146,7 +146,7 @@ def create(gandi, name, datacenter, subnet, gateway, background):
     try:
         gandi.datacenter.is_opened(datacenter, 'iaas')
     except DatacenterLimited as exc:
-        gandi.echo('/!\ Datacenter %s will be closed on %s, '
+        gandi.echo('/!\\ Datacenter %s will be closed on %s, '
                    'please consider using another datacenter.' %
                    (datacenter, exc.date))
 

@@ -507,7 +507,7 @@ kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 1401491
 datacenter    : US-BA1
 ----------
-label         : Debian 7 64 bits (HVM) /!\ DEPRECATED
+label         : Debian 7 64 bits (HVM) /!\\ DEPRECATED
 os_arch       : x86-64
 kernel_version: 3.12-x86_64 (hvm)
 disk_id       : 1349810
@@ -1111,9 +1111,9 @@ Your Virtual Machine vm has been created.""")
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
 
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
-/!\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider \
+/!\\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider \
 using another datacenter.
-/!\ Image Debian 7 64 bits (HVM) is deprecated and will soon be unavailable.
+/!\\ Image Debian 7 64 bits (HVM) is deprecated and will soon be unavailable.
 * root user will be created.
 * SSH key authorization will be used.
 * No password supplied for vm (required to enable emergency web console \
@@ -1151,7 +1151,7 @@ Your Virtual Machine vm has been created.""")
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
 
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
-Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
+Error: /!\\ Datacenter US-BA1 is closed, please choose another datacenter.""")
 
         self.assertEqual(result.exit_code, 1)
 
@@ -1163,7 +1163,7 @@ Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
 
         self.assertEqual(re.sub(r'vm\d+', 'vm', output), """\
-/!\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider \
+/!\\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider \
 using another datacenter.
 password: \nRepeat for confirmation: \n\
 * root user will be created.

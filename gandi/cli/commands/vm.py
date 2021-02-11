@@ -288,12 +288,12 @@ def create(gandi, datacenter, memory, cores, ip_version, bandwidth, login,
         gandi.datacenter.is_opened(datacenter, 'iaas')
     except DatacenterLimited as exc:
         if exc.date:
-            gandi.echo('/!\ Datacenter %s will be closed on %s, '
+            gandi.echo('/!\\ Datacenter %s will be closed on %s, '
                        'please consider using another datacenter.' %
                        (datacenter, exc.date))
 
     if gandi.image.is_deprecated(image, datacenter):
-        gandi.echo('/!\ Image %s is deprecated and will soon be unavailable.'
+        gandi.echo('/!\\ Image %s is deprecated and will soon be unavailable.'
                    % image)
 
     pwd = None
@@ -397,10 +397,10 @@ def console(gandi, resource):
 
     Resource can be a Hostname or an ID
     """
-    gandi.echo('/!\ Please be aware that if you didn\'t provide a password '
+    gandi.echo('/!\\ Please be aware that if you didn\'t provide a password '
                'during creation, console service will be unavailable.')
-    gandi.echo('/!\ You can use "gandi vm update" command to set a password.')
-    gandi.echo('/!\ Use ~. ssh escape key to exit.')
+    gandi.echo('/!\\ You can use "gandi vm update" command to set a password.')
+    gandi.echo('/!\\ Use ~. ssh escape key to exit.')
 
     gandi.iaas.console(resource)
 
