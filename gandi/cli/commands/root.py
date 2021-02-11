@@ -16,6 +16,13 @@ def setup(gandi):
     """
     intro = """Welcome to GandiCLI, let's configure a few things before we \
 start.
+
+If you don't already have them, you can generate API keys from
+your Gandi account:
+
+=> https://account.gandi.net/ for the v5 (REST API)
+=> https://v4.gandi.net for the v4 (XMLRPC API)
+
 """
 
     outro = """
