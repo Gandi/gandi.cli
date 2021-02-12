@@ -169,7 +169,6 @@ You should use 'gandi domain create roflozor.com' instead.
         self.assertEqual(result.exit_code, 0)
 
     def test_renew(self):
-        mp.setattr("gandi.cli.core.client.JsonClient", FakeJsonClient)
         result = self.invoke_with_exceptions(domain.renew,
                                              ['iheartcli.com',
                                               '--duration', 1,
