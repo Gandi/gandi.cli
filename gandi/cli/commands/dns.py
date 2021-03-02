@@ -39,7 +39,7 @@ def domain_list(gandi):
 @pass_gandi
 def list(gandi, fqdn, name, sort, type, rrset_type, text):
     """Display records for a domain."""
-    domains = gandi.dns.list()
+    domains = gandi.domain.list()
     domains = [domain['fqdn'] for domain in domains]
     if fqdn not in domains:
         gandi.echo('Sorry domain %s does not exist' % fqdn)
