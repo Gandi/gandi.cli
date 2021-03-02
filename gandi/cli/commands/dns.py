@@ -80,7 +80,7 @@ def create(gandi, fqdn, name, type, value, ttl):
 
     multiple value parameters can be provided.
     """
-    domains = gandi.dns.list()
+    domains = gandi.domain.list()
     domains = [domain['fqdn'] for domain in domains]
     if fqdn not in domains:
         gandi.echo('Sorry domain %s does not exist' % fqdn)
@@ -109,7 +109,7 @@ def update(gandi, fqdn, name, type, value, ttl, file):
     --file option will ignore other parameters and overwrite current zone
     content with provided file content.
     """
-    domains = gandi.dns.list()
+    domains = gandi.domain.list()
     domains = [domain['fqdn'] for domain in domains]
     if fqdn not in domains:
         gandi.echo('Sorry domain %s does not exist' % fqdn)
@@ -145,7 +145,7 @@ def update(gandi, fqdn, name, type, value, ttl, file):
 @pass_gandi
 def delete(gandi, fqdn, name, type, force):
     """Delete record entry for a domain."""
-    domains = gandi.dns.list()
+    domains = gandi.domain.list()
     domains = [domain['fqdn'] for domain in domains]
     if fqdn not in domains:
         gandi.echo('Sorry domain %s does not exist' % fqdn)
