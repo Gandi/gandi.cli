@@ -5,7 +5,7 @@ import click
 from gandi.cli.core.cli import cli
 from gandi.cli.core.utils import (
     output_vm, output_image, output_generic, output_datacenter,
-    output_kernels, output_metric,
+    output_kernels, output_metric, output_json,
     DatacenterLimited
 )
 from gandi.cli.core.utils.size import disk_check_size
@@ -28,8 +28,10 @@ def vm(gandi):
 @click.option('--id', help='Display ids.', is_flag=True)
 @click.option('--limit', help='Limit number of results.', default=100,
               show_default=True)
+@click.option('--format', type=click.Choice(['json', 'pretty-json']),
+              required=False, help="Choose the output format")
 @pass_gandi
-def list(gandi, state, id, limit, datacenter):
+def list(gandi, state, id, limit, datacenter, format):
     """List virtual machines."""
     options = {
         'items_per_page': limit,
@@ -45,9 +47,15 @@ def list(gandi, state, id, limit, datacenter):
 
     result = gandi.iaas.list(options)
     for num, vm in enumerate(result):
-        if num:
+        if num and not format:
             gandi.separator_line()
-        output_vm(gandi, vm, [], output_keys)
+        
+        vm['ifaces'] = [ gandi.iface.info(iface_id) for iface_id in vm['ifaces_id'] ]
+
+        if format:
+            output_json(gandi, format, vm)
+        else:
+            output_vm(gandi, vm, [], output_keys)
 
     return result
 

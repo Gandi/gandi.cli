@@ -63,6 +63,14 @@ gandi.1
 # gh-pages
 node_modules/
 
+# Other
+bin/
+include/
+local/
+man/
+share/
+
+
 # ArchLinux sources and binaries
 packages/archlinux/pkg/
 packages/archlinux/src/
