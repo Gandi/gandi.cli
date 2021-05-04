@@ -57,7 +57,6 @@ id        : 152968
         self.assertEqual(result.exit_code, 0)
 
     def test_list_json(self):
-	#self.maxDiff = None
         args = ['--format', 'json']
         result = self.invoke_with_exceptions(vm.list, args)
 
