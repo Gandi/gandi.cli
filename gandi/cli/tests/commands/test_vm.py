@@ -56,6 +56,39 @@ id        : 152968
 """)
         self.assertEqual(result.exit_code, 0)
 
+    def test_list_json(self):
+        args = ['--format', 'json']
+        result = self.invoke_with_exceptions(vm.list, args)
+
+        self.assertEqual(result.output, """\
+{"ai_active": 0, "console": 0, "cores": 1, "datacenter_id": 3,\
+ "date_created": "20141008T16:13:59", "date_updated": "20150319T11:11:31",\
+ "description": null, "disks_id": [4969232], "flex_shares": 0, "hostname": "vm1426759833",\
+ "id": 152966, "ifaces": [{"bandwidth": 204800.0, "datacenter_id": 1, "date_created": "20150105T00:00:00",\
+ "date_updated": "20150105T00:00:00", "id": 156572, "ips": [{"datacenter_id": 3, "date_created": "20150319T11:10:34",\
+ "date_updated": "20150319T11:10:36", "id": 204557, "iface_id": 156572, "ip": "10.50.10.10", "num": 0, "reverse": "xvm6-dc2-fece-e25f.ghst.net",\
+ "state": "created", "version": 4}], "ips_id": [204557], "num": null, "state": "free", "type": "private", "vlan": null, "vm_id": null}], "ifaces_id": [156572],\
+ "memory": 256, "state": "running", "vm_max_memory": 2048}
+{"ai_active": 0, "console": 0, "cores": 1, "datacenter_id": 3,\
+ "date_created": "20141008T16:13:59", "date_updated": "20150319T11:11:31", "description": null,\
+ "disks_id": [4969232], "flex_shares": 0, "hostname": "vm1426759844", "id": 152964, "ifaces": [{"bandwidth": 204800.0,\
+ "datacenter_id": 1, "date_created": "20150105T00:00:00", "date_updated": "20150105T00:00:00", "id": 156572, "ips": [{"datacenter_id": 3, "date_created": "20150319T11:10:34",\
+ "date_updated": "20150319T11:10:36", "id": 204557, "iface_id": 156572, "ip": "10.50.10.10", "num": 0, "reverse": "xvm6-dc2-fece-e25f.ghst.net", "state": "created", "version": 4}],\
+ "ips_id": [204557], "num": null, "state": "free", "type": "private", "vlan": null, "vm_id": null}], "ifaces_id": [156572],\
+ "memory": 256, "state": "running", "vm_max_memory": 2048}
+{"ai_active": 0, "console": 0, "cores": 1, "datacenter_id": 1, "date_created": "20150319T11:14:13", "date_updated": "20150319T11:14:55",\
+ "description": null, "disks_id": [4969249], "flex_shares": 0, "hostname": "server01", "id": 152967, "ifaces": [{"bandwidth": 102400.0,\
+ "datacenter_id": 1, "date_created": "20140423T00:00:00", "date_updated": "20140423T00:00:00", "id": 156573, "ips": [{"datacenter_id": 1,\
+ "date_created": "20150317T16:20:10", "date_updated": "20150319T11:14:13", "id": 203968, "iface_id": 156573, "ip": "95.142.160.181", "num": 0, "reverse": "xvm-160-181.dc0.ghst.net",\
+ "state": "created", "version": 4}, {"datacenter_id": 1, "date_created": "20150319T11:14:16", "date_updated": "20150319T11:14:16", "id": 204558,\
+ "iface_id": 156573, "ip": "2001:4b98:dc0:47:216:3eff:feb2:3862", "num": 1, "reverse": "xvm6-dc0-feb2-3862.ghst.net", "state": "created", "version": 6}],\
+ "ips_id": [203968, 204558], "num": 0, "state": "used", "type": "public", "vlan": null, "vm_id": 152967}], "ifaces_id": [156573],\
+ "memory": 256, "state": "running", "vm_max_memory": 2048}
+{"ai_active": 0, "console": 0, "cores": 1, "datacenter_id": 1, "date_created": "20150319T11:14:13", "date_updated": "20150319T11:14:55",\
+ "description": null, "disks_id": [4969250], "flex_shares": 0, "hostname": "server02", "id": 152968, "ifaces": [null], "ifaces_id": [156574],\
+ "memory": 256, "state": "halted", "vm_max_memory": 2048}
+""")
+
     def test_list_filter_state(self):
 
         result = self.invoke_with_exceptions(vm.list, ['--state', 'halted'])

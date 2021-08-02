@@ -1292,7 +1292,8 @@ def iface_info(iface_id):
 
     ifaces = iface_list({})
     ifaces = dict([(iface['id'], iface) for iface in ifaces])
-    return ifaces[iface_id]
+
+    return ifaces.get(iface_id, None)
 
 
 def ip_list(options):
