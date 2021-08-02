@@ -1,5 +1,13 @@
 # Contributing to the Gandi CLi
 
+> We have decided not to continue to maintain the CLI project. The existing project will remain as-is. Anyone interested in taking over and forking the project can let us know and we can inform our users and/or link to it.
+>
+> If you have any questions, please feel free to [contact our team](https://help.gandi.net/en/contact/feedback).
+>
+> Sincerely,
+>
+> The Gandi.net team
+
 ## Topics
 
 * [Reporting Issues](#reporting-issues)
