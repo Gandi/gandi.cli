@@ -4,6 +4,7 @@ import re
 import sys
 
 from gandi.cli.core.base import GandiModule
+from gandi.cli.core.utils.password import hash_password
 from gandi.cli.modules.metric import Metric
 from gandi.cli.modules.vhost import Vhost
 from gandi.cli.modules.datacenter import Datacenter
@@ -208,7 +209,7 @@ remote repository yet,
             paas_params['quantity'] = quantity
 
         if password:
-            paas_params['password'] = password
+            paas_params['password'] = hash_password(password)
 
         paas_params.update(cls.convert_sshkey(sshkey))
 
@@ -251,7 +252,7 @@ remote repository yet,
         }
 
         if password:
-            paas_params['password'] = password
+            paas_params['password'] = hash_password(password)
 
         if quantity:
             paas_params['quantity'] = quantity
