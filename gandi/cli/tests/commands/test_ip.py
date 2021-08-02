@@ -341,7 +341,7 @@ ip6:\t2001:4b98:dc0:47:216:3eff:feb2:3862""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider using \
+/!\\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider using \
 another datacenter.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
@@ -363,7 +363,7 @@ ip6:\t2001:4b98:dc0:47:216:3eff:feb2:3862""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
+Error: /!\\ Datacenter US-BA1 is closed, please choose another datacenter.""")
 
         self.assertEqual(result.exit_code, 1)
 
@@ -375,7 +375,7 @@ Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Datacenter FR will be closed on 25/12/2017, please consider using \
+/!\\ Datacenter FR will be closed on 25/12/2017, please consider using \
 another datacenter.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
@@ -408,7 +408,7 @@ You must have an --ip-version to 4 when having a vlan.""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Datacenter FR will be closed on 25/12/2017, please consider using \
+/!\\ Datacenter FR will be closed on 25/12/2017, please consider using \
 another datacenter.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
@@ -442,7 +442,7 @@ You must have a --vlan when giving an --ip.""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Datacenter FR will be closed on 25/12/2017, please consider using \
+/!\\ Datacenter FR will be closed on 25/12/2017, please consider using \
 another datacenter.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
@@ -477,7 +477,7 @@ vm you want to attach to.""")
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Datacenter FR will be closed on 25/12/2017, please consider using \
+/!\\ Datacenter FR will be closed on 25/12/2017, please consider using \
 another datacenter.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \
@@ -504,7 +504,7 @@ Attaching your iface.
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Datacenter FR will be closed on 25/12/2017, please consider using \
+/!\\ Datacenter FR will be closed on 25/12/2017, please consider using \
 another datacenter.
 Creating your iface.
 \rProgress: [###] 100.00%  00:00:00  \

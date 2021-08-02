@@ -283,7 +283,7 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
     try:
         gandi.datacenter.is_opened(datacenter, 'iaas')
     except DatacenterLimited as exc:
-        gandi.echo('/!\ Datacenter %s will be closed on %s, '
+        gandi.echo('/!\\ Datacenter %s will be closed on %s, '
                    'please consider using another datacenter.' %
                    (datacenter, exc.date))
 
@@ -292,7 +292,7 @@ def create(gandi, name, vm, size, snapshotprofile, datacenter, source,
         vm_dc_id = vm_dc['datacenter_id']
         dc_id = int(gandi.datacenter.usable_id(datacenter))
         if vm_dc_id != dc_id:
-            gandi.echo('/!\ VM %s datacenter will be used instead of %s.'
+            gandi.echo('/!\\ VM %s datacenter will be used instead of %s.'
                        % (vm, datacenter))
         datacenter = vm_dc_id
 

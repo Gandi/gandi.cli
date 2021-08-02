@@ -4,11 +4,13 @@ Also custom exceptions and method to generate a random string.
 """
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 import json
 from click.formatting import measure_table
 from click import ClickException
+from dateutil.parser import isoparse
+
 
 from .ascii_sparks import sparks
 
@@ -221,7 +223,7 @@ def output_image(gandi, image, datacenters, output_keys, justify=14,
         if key in image:
             if (key == 'label' and image['visibility'] == 'deprecated' and
                     warn_deprecated):
-                image[key] = '%s /!\ DEPRECATED' % image[key]
+                image[key] = '%s /!\\ DEPRECATED' % image[key]
             output_line(gandi, key, image[key], justify)
 
     dc_name = 'Nowhere'
@@ -335,11 +337,16 @@ def output_snapshot_profile(gandi, profile, output_keys, justify=13):
             output_generic(gandi, schedule, schedule_keys, justify)
 
 
+def format_contact(contact):
+    """Return a formatted contact object, as a single line."""
+    return f"{contact['given']} {contact['family']}"
+
+
 def output_contact_info(gandi, data, output_keys, justify=10):
     """Helper to output chosen contacts info."""
     for key in output_keys:
-        if data[key]:
-            output_line(gandi, key, data[key]['handle'], justify)
+        if data.get(key):
+            output_line(gandi, key, format_contact(data[key]), justify)
 
 
 def output_cert_oper(gandi, oper, justify=12):
@@ -527,19 +534,19 @@ def output_domain(gandi, domain, output_keys, justify=12):
 
     output_generic(gandi, domain, output_keys, justify)
 
-    if 'created' in output_keys:
-        output_line(gandi, 'created', domain['date_created'], justify)
+    if "created" in output_keys:
+        output_line(gandi, "created", isoparse(domain["dates"]["created_at"]), justify)
 
-    if 'expires' in output_keys:
-        date_end = domain.get('date_registry_end')
+    if "expires" in output_keys:
+        date_end = isoparse(domain["dates"]["registry_ends_at"])
         if date_end:
-            days_left = (date_end - datetime.now()).days
+            days_left = (date_end - datetime.now(timezone.utc)).days
         output_line(gandi, 'expires',
                     '%s (in %d days)' % (date_end, days_left),
                     justify)
 
     if 'updated' in output_keys:
-        output_line(gandi, 'updated', domain['date_updated'], justify)
+        output_line(gandi, "updated", isoparse(domain["dates"]["updated_at"]), justify)
 
 
 def output_mailbox(gandi, mailbox, output_keys, justify=16):

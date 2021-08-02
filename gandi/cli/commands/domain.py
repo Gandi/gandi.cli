@@ -25,8 +25,7 @@ def domain(gandi):
 @pass_gandi
 def list(gandi, limit):
     """List domains."""
-    options = {'items_per_page': limit}
-    domains = gandi.domain.list(options)
+    domains = gandi.domain.list(limit=limit)
     for domain in domains:
         gandi.echo(domain['fqdn'])
 
@@ -75,12 +74,12 @@ def create(gandi, resource, domain, duration, owner, admin, tech, bill,
            nameserver, extra_parameter, background):
     """Buy a domain."""
     if domain:
-        gandi.echo('/!\ --domain option is deprecated and will be removed '
+        gandi.echo('/!\\ --domain option is deprecated and will be removed '
                    'upon next release.')
         gandi.echo("You should use 'gandi domain create %s' instead." % domain)
 
     if (domain and resource) and (domain != resource):
-        gandi.echo('/!\ You specified both an option and an argument which '
+        gandi.echo('/!\\ You specified both an option and an argument which '
                    'are different, please choose only one between: %s and %s.'
                    % (domain, resource))
         return

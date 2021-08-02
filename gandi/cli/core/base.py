@@ -17,6 +17,7 @@ import click
 from click.exceptions import UsageError
 
 from .client import XMLRPCClient, APICallFailed, DryRunException, JsonClient
+from gandi.cli.core import client
 from .conf import GandiConfig
 
 
@@ -137,9 +138,9 @@ class GandiModule(GandiConfig):
                 sys.exit(1)
             if send_key:
                 if 'headers' in kwargs:
-                    kwargs['headers'].update({'X-Api-Key': apikey})
+                    kwargs["headers"].update({"Authorization": "Apikey " + apikey})
                 else:
-                    kwargs['headers'] = {'X-Api-Key': apikey}
+                    kwargs["headers"] = {"Authorization": "Apikey " + apikey}
         except MissingConfiguration:
             if not empty_key:
                 return []
@@ -147,7 +148,7 @@ class GandiModule(GandiConfig):
         cls.debug('calling url: %s %s' % (method, url))
         cls.debug('with params: %r' % kwargs)
         try:
-            resp, resp_headers = JsonClient.request(method, url, **kwargs)
+            resp, resp_headers = client.JsonClient.request(method, url, **kwargs)
             cls.dump('responded: %r' % resp)
             if return_header:
                 return resp, resp_headers

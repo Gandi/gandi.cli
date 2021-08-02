@@ -190,7 +190,7 @@ Creating your vlan.
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-/!\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider using \
+/!\\ Datacenter FR-SD2 will be closed on 25/12/2017, please consider using \
 another datacenter.
 Creating your vlan.
 \rProgress: [###] 100.00%  00:00:00  \
@@ -211,7 +211,7 @@ Creating your vlan.
 
         self.assertEqual(re.sub(r'\[#+\]', '[###]',
                                 result.output.strip()), """\
-Error: /!\ Datacenter US-BA1 is closed, please choose another datacenter.""")
+Error: /!\\ Datacenter US-BA1 is closed, please choose another datacenter.""")
 
         self.assertEqual(result.exit_code, 1)
 

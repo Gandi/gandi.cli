@@ -33,7 +33,7 @@ def packages(gandi):
     """ List certificate packages.
     /!\\ deprecated call.
     """
-    gandi.echo('/!\ "gandi certificate packages" is deprecated.')
+    gandi.echo('/!\\ "gandi certificate packages" is deprecated.')
     gandi.echo('Please use "gandi certificate plans".')
     return _plans(gandi, with_name=True)
 
@@ -337,7 +337,7 @@ def create(gandi, csr, private_key, common_name, country, state, city,
         return
 
     if package:
-        gandi.echo('/!\ Using --package is deprecated, please replace it by '
+        gandi.echo('/!\\ Using --package is deprecated, please replace it by '
                    '--type (in std, pro or bus) and --max-altname to set '
                    'the max number of altnames.')
     elif type or max_altname or warranty:

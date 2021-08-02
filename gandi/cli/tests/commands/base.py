@@ -1,6 +1,9 @@
 import os
 from click.testing import CliRunner
 
+from pytest import MonkeyPatch
+
+from gandi.cli.tests.fixtures.json import FakeJsonClient
 from gandi.cli.core.base import GandiModule
 from ..compat import unittest, mock
 from ..fixtures.api import Api
@@ -32,11 +35,13 @@ class CommandTestCase(unittest.TestCase):
         GandiModule._poll_freq = 0.1
 
         self.api_calls = GandiModule._api._calls
+        self.mp = MonkeyPatch()
+        self.mp.setattr("gandi.cli.core.client.JsonClient", FakeJsonClient)
 
     def tearDown(self):
         GandiModule._api = None
         GandiModule._conffiles = {}
-
+        self.mp.undo()
         for dummy in reversed(self.mocks):
             dummy.stop()
 

@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 from .base import CommandTestCase
 from ..compat import mock
 from gandi.cli.commands import domain
 from gandi.cli.core.utils import DomainNotAvailable
 
-
 class DomainTestCase(CommandTestCase):
-
+    maxDiff = None
     def test_list(self):
-
         result = self.invoke_with_exceptions(domain.list, [])
-
         self.assertEqual(result.output, """iheartcli.com
 cli.sexy
 """)
@@ -22,26 +19,25 @@ cli.sexy
 
     def test_info(self):
         with mock.patch('gandi.cli.core.utils.datetime') as mock_datetime:
-            mock_datetime.now.return_value = datetime(2015, 7, 1)
+            mock_datetime.now.return_value = datetime(2015, 7, 1, tzinfo=timezone.utc)
             mock_datetime.side_effect = lambda *args, **kw: datetime(*args,
                                                                      **kw)
 
             result = self.invoke_with_exceptions(domain.info,
                                                  ['iheartcli.com'])
 
-        self.assertEqual(result.output, """owner       : AA1-GANDI
-admin       : AA2-GANDI
-bill        : AA3-GANDI
-tech        : AA5-GANDI
-reseller    : AA4-GANDI
+        self.assertEqual(result.output, """\
+owner       : Serge Lapin
+admin       : Serge Lapin
+bill        : Serge Lapin
+tech        : Serge Lapin
 fqdn        : iheartcli.com
-nameservers : a.dns.gandi.net, b.dns.gandi.net, c.dns.gandi.net
-services    : gandidns
-zone_id     : 424242
-tags        : bla
-created     : 2010-09-22 15:06:18
-expires     : 2015-09-22 00:00:00 (in 83 days)
-updated     : 2014-09-21 03:10:07
+nameservers : ns-4-a.gandi.net, ns-176-b.gandi.net, ns-148-c.gandi.net
+services    : gandilivedns, mailboxv2
+tags        :
+created     : 2010-09-22 15:06:18+00:00
+expires     : 2015-09-22 00:00:00+00:00 (in 83 days)
+updated     : 2014-09-21 03:10:07+00:00
 """)
         self.assertEqual(result.exit_code, 0)
 
@@ -81,7 +77,7 @@ Your domain idontlike.website has been created.""")
 
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
         self.assertEqual(output, """\
-/!\ --domain option is deprecated and will be removed upon next release.
+/!\\ --domain option is deprecated and will be removed upon next release.
 You should use 'gandi domain create idontlike.website' instead.
 Creating your domain.
 \rProgress: [###] 100.00%  00:00:00  \n\
@@ -120,9 +116,9 @@ Your domain idontlike.website has been created.""")
 
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
         self.assertEqual(output, """\
-/!\ --domain option is deprecated and will be removed upon next release.
+/!\\ --domain option is deprecated and will be removed upon next release.
 You should use 'gandi domain create idontlike.bike' instead.
-/!\ You specified both an option and an argument which are different, \
+/!\\ You specified both an option and an argument which are different, \
 please choose only one between: idontlike.bike and idontlike.website.""")
 
         self.assertEqual(result.exit_code, 0)
@@ -140,7 +136,7 @@ please choose only one between: idontlike.bike and idontlike.website.""")
 
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
         self.assertEqual(output, """\
-/!\ --domain option is deprecated and will be removed upon next release.
+/!\\ --domain option is deprecated and will be removed upon next release.
 You should use 'gandi domain create idontlike.website' instead.
 Creating your domain.
 \rProgress: [###] 100.00%  00:00:00  \n\
@@ -166,7 +162,7 @@ Duration [1]: \n\
         output = re.sub(r'\[#+\]', '[###]', result.output.strip())
         self.assertEqual(output, """\
 Duration [1]: \n\
-/!\ --domain option is deprecated and will be removed upon next release.
+/!\\ --domain option is deprecated and will be removed upon next release.
 You should use 'gandi domain create roflozor.com' instead.
 {'id': 400, 'step': 'WAIT'}""")
 
